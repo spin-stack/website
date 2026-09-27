@@ -1,0 +1,88 @@
+---
+title: Operating hosts
+description: Drain, activate and revoke runners, see what runs where, replace a runner's machine, and add a runner outside the autoscaling group.
+---
+
+Runners are also called **hosts**. An administrator manages them in **Admin → Runners** or with
+`spin admin runner`. For how runners join, scale and go away, see
+[Runners and hosts](/concepts/runners/).
+
+## Seeing them
+
+```bash
+spin admin runner list
+spin admin versions          # the control plane's release, and each runner's and its machine's
+```
+
+A runner's page in the dashboard shows its state, its capacity and its workspaces.
+
+## Drain and activate
+
+```bash
+spin admin runner drain <runner-id>             # takes no new workspace; the running ones stay
+spin admin runner drain <runner-id> --suspend   # and moves the running ones off, with memory
+spin admin runner activate <runner-id>
+```
+
+Drain a runner that should stop taking work for a while. It stays drained until someone activates
+it. If workspaces wait for a host while a runner is up, check that the runner is not drained: the
+waiting workspace says *the connected runners take no new workspace*.
+
+A runner whose local disk is more than 70% full is cordoned automatically, and uncordoned when it
+falls under 65%. The automatic cordon never clears one a person set.
+
+## Revoke
+
+```bash
+spin admin runner revoke <runner-id>
+```
+
+Revoke is for a machine that should never connect again: it is being replaced, or it may be
+compromised. Its credentials are deleted and it is disconnected. **It cannot be undone**: the
+runner's id is burned, and the capacity comes back only with a new machine, which joins as a new
+runner. If the machine may be compromised, do not reuse its disk.
+
+A runner that holds workspaces' disks is refused, and the refusal names them. Delete or move them
+first, or revoke anyway with `--leave-workspaces`; each of them can then run again only once it is
+recovered onto another runner, losing what the revoked one had not uploaded.
+
+## Replacing a runner's machine on AWS
+
+After a revoke, or when a runner is wedged, terminate its instance without lowering the group's
+size. The group starts another, which joins by its role:
+
+```bash
+aws autoscaling describe-auto-scaling-instances \
+  --query 'AutoScalingInstances[?AutoScalingGroupName==`<name>-runners`].[InstanceId,LifecycleState,HealthStatus]' \
+  --output table
+aws autoscaling terminate-instance-in-auto-scaling-group \
+  --instance-id <i-...> --no-should-decrement-desired-capacity
+```
+
+If nothing is waiting for a host, the control plane may already have scaled the group to zero,
+and there is nothing to replace.
+
+## Workspaces on a runner that is gone
+
+A workspace whose runner was revoked or is gone stops, in the record. Its owner moves it with
+**Move to another runner** on its page, or `spin workspace recover`. See
+[Workspaces](/concepts/workspaces/#when-a-runner-is-lost).
+
+To have the control plane move them on its own when little would be lost, set
+`rehome_after_seconds` and `rehome_max_unpublished_bytes` in the
+[installation settings](/admin/configuration/).
+
+## A runner outside the group
+
+A machine that is not in the autoscaling group joins with a registration token:
+
+```bash
+spin admin token create --description "lab machine" --expires 1h
+```
+
+A token is one-time unless `--reusable`, lasts 24 hours unless `--expires` says otherwise (at
+most 30 days), and is shown once. `--team` makes a runner that only takes the team's workspaces.
+The same flags set what the runner advertises and whether it is preemptible.
+
+Such a machine needs KVM, and must run a release of Spin no newer than the control plane's and no
+more than 90 days older.

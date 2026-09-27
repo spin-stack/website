@@ -1,0 +1,49 @@
+version: '3'
+
+# The site: Astro Starlight under src/, and two Go tools under tools/ - refgen writes the
+# reference pages from the sources they describe, linkcheck fails on a link the build did not
+# produce. SPIN and TERRAFORM are checkouts of spin-stack/spin and spin-stack/spin-terraform-aws.
+
+vars:
+  SPIN: '{{.SPIN | default "../spin"}}'
+  TERRAFORM: '{{.TERRAFORM | default "../spin-terraform-aws"}}'
+  BASE_PATH: '{{.BASE_PATH | default "/website"}}'
+
+tasks:
+  install:
+    desc: Install the site's dependencies from the lockfile.
+    cmds:
+      - pnpm install --frozen-lockfile
+
+  dev:
+    desc: Serve the site with live reload.
+    cmds:
+      - pnpm dev
+
+  reference:
+    desc: Write the reference pages (CLI, Terraform, config file) from the spin and spin-terraform-aws checkouts.
+    cmds:
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}}
+
+  reference:check:
+    desc: Fail if a reference page is not what the sources say.
+    cmds:
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -check
+
+  build:
+    desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page.
+    cmds:
+      - pnpm build
+
+  links:
+    desc: Fail on a link to a page or an anchor the build did not produce.
+    cmds:
+      - go run ./tools/linkcheck -base {{.BASE_PATH}} dist
+
+  check:
+    desc: Everything CI runs, and the reference against the sources.
+    cmds:
+      - task: reference:check
+      - go vet ./...
+      - task: build
+      - task: links

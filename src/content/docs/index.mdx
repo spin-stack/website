@@ -1,0 +1,52 @@
+---
+title: Spin
+description: Self-hosted sandboxes in your own AWS account. Every workspace is its own virtual machine, with snapshots that keep memory, rollback, and a diff of what changed.
+template: splash
+hero:
+  tagline: Sandboxes you run in your own AWS account. Each workspace is its own virtual machine. Take a snapshot at any moment, go back to it, and see exactly which files changed.
+  actions:
+    - text: What is Spin
+      link: overview/
+      icon: right-arrow
+    - text: Install on AWS
+      link: aws/overview/
+      variant: minimal
+---
+
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Experimental">
+Spin is experimental. APIs will change and data may be lost. Read [Status and limitations](/overview/limitations/) before you rely on it.
+</Aside>
+
+## What you get
+
+<CardGrid>
+	<Card title="A machine per workspace" icon="laptop">
+		Each workspace is a KVM virtual machine with its own kernel, root access, a persistent disk and SSH. Workspaces share no kernel with each other or with the host.
+	</Card>
+	<Card title="Snapshots, with memory" icon="document">
+		Take a snapshot of a running workspace's disk, or of its disk and memory. From a memory snapshot, processes continue from the instant it was taken.
+	</Card>
+	<Card title="Rollback and diff" icon="random">
+		Put a workspace back to any snapshot. List every file that was added, removed or modified between two snapshots.
+	</Card>
+	<Card title="Egress you decide" icon="approve-check">
+		By default a workspace's network is closed. Network policies name what it may reach, and you can see what it did reach.
+	</Card>
+	<Card title="In your account" icon="seti:terraform">
+		One OpenTofu module installs the whole thing in your AWS account. Runners start when a workspace needs one and scale back to none when nothing is running.
+	</Card>
+	<Card title="For people and agents" icon="rocket">
+		Use it from the dashboard, from the CLI, from VS Code over SSH, or from an agent with an API key.
+	</Card>
+</CardGrid>
+
+## Where to start
+
+<CardGrid>
+	<LinkCard title="How it works" href="overview/how-it-works/" description="The control plane, runners, the proxy, and where a workspace's disk lives." />
+	<LinkCard title="Quickstart" href="quickstart/" description="Sign in, create a workspace, take a snapshot, break something, and go back." />
+	<LinkCard title="Install on AWS" href="aws/overview/" description="What the module creates, what it costs, and how to install it." />
+	<LinkCard title="Security model" href="security/" description="What isolates a workspace, what is encrypted, and what is still open." />
+</CardGrid>

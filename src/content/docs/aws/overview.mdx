@@ -1,0 +1,71 @@
+---
+title: Install on AWS
+description: What an installation on AWS is made of, what the OpenTofu module creates in your account, and the choices it makes for you.
+---
+
+import Architecture from '../../../components/Architecture.astro';
+
+An installation of Spin lives in one AWS account and one region. It is created by one OpenTofu
+module, [spin-terraform-aws](https://github.com/spin-stack/spin-terraform-aws):
+
+```hcl
+module "spin" {
+  source       = "github.com/spin-stack/spin-terraform-aws?ref=<tag>"
+  spin_version = "v20260927.03"
+  domain       = "spin.example.com"
+}
+```
+
+<Architecture />
+
+## What it creates
+
+- **A VPC** of its own, with public subnets and no NAT gateway. The bucket is reached through the
+  free S3 gateway endpoint.
+- **The control plane**, on one `t8i.small` machine, in an autoscaling group of one.
+- **The proxy**, on one `t8i.micro` machine with an elastic IP, in an autoscaling group of one.
+- **The runners**, an autoscaling group of spot machines with 32 or 48 vCPUs and local NVMe, which
+  the control plane sizes from zero.
+- **PostgreSQL 18 on RDS** (`db.t4g.micro`), in subnets with no route out of the VPC, with seven
+  days of point-in-time recovery.
+- **Three S3 buckets**: one for volumes, with versioning and Object Lock; one for logs, traces
+  and metric backups; and one for the proxy's certificates.
+- **Two Route 53 zones**: your domain's public zone, and a private zone (`spin.internal`) the
+  machines find each other by.
+- **The installation's secrets**, in SSM Parameter Store: its CA, its encryption key and the
+  first administrator's password.
+- **IAM roles** for each machine, all under one permissions boundary.
+- **A VPC flow log**, kept in CloudWatch for 30 days.
+
+Every machine boots **Spin OS**, an image you build for the release and publish in your account.
+
+## The choices it makes
+
+These are made for you, and each one has a reason:
+
+| Choice | Why |
+|---|---|
+| Every machine is replaced to update, never patched | Its root filesystem is read-only and verified; a machine runs exactly what the release signed. |
+| The proxy is the only machine the internet reaches | The control plane, the runners and the database take no connection from outside the VPC. |
+| No SSH on any machine | A shell is AWS Session Manager, decided by IAM and logged by AWS. |
+| No NAT gateway | It would cost more than the machines that run all the time. |
+| Runners are spot and start from zero | They are the largest cost, and they only cost while a workspace runs. |
+| Runners join by their IAM role | There is no join token to create, store, rotate or leak. |
+| No role can grant itself more | A permissions boundary on every role denies IAM writes, parameter writes, and lifting the bucket's lock. |
+| Telemetry stays in the installation | Logs, traces and metrics are kept on the control plane's machine, over the logs bucket. |
+
+## Before you begin
+
+Read [Before you start](/aws/prerequisites/): you need a domain of the installation's own, room
+in your account's spot quota, and a Spin OS image for the release.
+
+## Pages in this section
+
+- [Before you start](/aws/prerequisites/): tools, domain, quotas and the image.
+- [Install](/aws/setup/): the commands, in order.
+- [Network](/aws/network/): what reaches what, and how to close the installation to your own
+  networks.
+- [Cost](/aws/cost/): what runs all the time, and what runs only while workspaces do.
+- [Update](/aws/update/): moving to a new release.
+- [Remove](/aws/remove/): deleting an installation on purpose.
+- [Troubleshooting](/aws/troubleshooting/): where to look when something does not come up.

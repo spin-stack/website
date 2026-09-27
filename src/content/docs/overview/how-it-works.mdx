@@ -1,0 +1,92 @@
+---
+title: How it works
+description: The pieces of an installation — control plane, proxy, runners, database and bucket — how they connect, and how a workspace comes to run.
+---
+
+import Architecture from '../../../components/Architecture.astro';
+
+An installation has five parts. Two small machines run all the time: the **control plane** and
+the **proxy**. **Runners** are large machines that run workspaces, and there are none while
+nothing is running. A **PostgreSQL database** holds the installation's state, and an **S3
+bucket** holds every workspace's disk.
+
+<Architecture />
+
+## The pieces
+
+**Control plane.** Serves the API and the dashboard, decides which runner each workspace runs
+on, and tells each runner what it should be running. It is the only thing that writes to the
+database. Only one control plane leads at a time: before it writes, it claims a *term*, and a
+control plane whose term has been taken stops. On AWS it also sizes the runners' autoscaling
+group.
+
+**Proxy.** [Caddy](https://caddyserver.com), with certificates from Let's Encrypt. It is the
+only machine the internet can reach, on ports 80 and 443. It serves the dashboard at
+`app.<domain>`, a workspace's ports at `<port>-<workspace>.ws.<domain>`, and the **relay**
+that joins you to a workspace for SSH, a terminal or a port.
+
+**Runners.** Each runner runs many workspaces, each one a QEMU/KVM virtual machine. A runner
+opens every connection it has: to the control plane for its instructions, and to the relay
+for sessions into its workspaces. No connection is ever opened *to* a runner.
+
+**Database.** PostgreSQL 18 on RDS. It holds users, teams, workspaces, snapshots, settings and
+the installation's secrets, sealed under a key the database does not hold.
+
+**Bucket.** S3, with versioning and Object Lock. It is the only place a workspace's disk is
+durable. A runner keeps a local copy on its NVMe disks, and that copy can always be rebuilt
+from the bucket.
+
+## How a workspace comes to run
+
+1. You ask for a workspace from an image. An image is a published snapshot, so creating the
+   workspace is a **clone**: a new volume that reads through the image's layers. Nothing is
+   copied.
+2. The control plane places the workspace on a runner with room for it. If there is no runner,
+   the workspace waits in *Waiting for a host* while the control plane starts one.
+3. The runner fetches the layers it does not already have from the bucket. It checks each
+   layer against a digest only the control plane can write, decrypts it, and builds the disk
+   as a chain of qcow2 files.
+4. The runner starts a virtual machine on that disk. Inside, `vminitd` starts and hands over to
+   the image's own systemd. A small supervisor that Spin provides runs as a systemd service,
+   and speaks to the runner over vsock, not the network.
+5. The runner reports what it is running. The control plane shows the workspace as RUNNING.
+
+The control plane does not send commands that could be lost. It writes what it wants — this
+workspace running, that one stopped — and sends each runner the **whole list** of what should
+run on it, every time something changes and once a minute. The runner makes it so, and reports
+the whole list of what it has. If a start fails three times, the workspace is FAILED and
+stays that way until you start it again.
+
+## Where your work is stored
+
+A running workspace writes to the top layer of its disk on the runner. The runner seals that
+layer and uploads it to the bucket once about 32 MiB has been written, when you take a
+snapshot, and when the workspace stops. Each layer is compressed, encrypted with the volume's
+own key, and uploaded before the pointer to it moves.
+
+This means a runner that disappears takes with it only what was written since its last
+upload. Nothing moves a workspace off a dead runner without asking. The workspace's owner runs
+`spin workspace recover`, which says how much unpublished work would be lost, and does nothing
+until they accept. An administrator can allow small losses to be recovered automatically. See
+[Runners and hosts](/concepts/runners/).
+
+## How runners come and go
+
+On AWS, runners are an autoscaling group that the control plane sizes. It asks for one runner
+when a workspace is waiting and none is up, adds another if a workspace has waited longer than
+a runner takes to start, and goes back to none when nothing has run for `runner_idle_minutes`.
+
+A runner joins by proving who it is: it signs an AWS request with its instance role, and the
+control plane asks AWS whose signature it is. No token is created, stored or rotated.
+
+When AWS takes a spot runner back, or the group removes one, the runner **drains**: it
+suspends each workspace, with its memory, to the bucket. Each resumes on another runner where
+it left off.
+
+## Updates
+
+Every machine boots Spin OS, an image with a read-only root that the kernel verifies block by
+block, and with a release of spin already inside. A machine never downloads or installs
+software. To update, you publish the new release's image and change `spin_version`. Each
+machine is then replaced by a new one, which starts before the old one stops. See
+[Update](/aws/update/).

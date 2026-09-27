@@ -1,0 +1,64 @@
+:root {
+	--sl-color-accent-low: #0b3b37;
+	--sl-color-accent: #0f766e;
+	--sl-color-accent-high: #b8efe6;
+	--sl-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+:root[data-theme='light'] {
+	--sl-color-accent-low: #ccf2ec;
+	--sl-color-accent: #0f766e;
+	--sl-color-accent-high: #0b3b37;
+}
+
+.diagram {
+	margin: 1.5rem 0;
+	overflow-x: auto;
+}
+.diagram svg {
+	display: block;
+	width: 100%;
+	min-width: 560px;
+	height: auto;
+	font-family: var(--sl-font);
+}
+.diagram .box {
+	fill: var(--sl-color-gray-6);
+	stroke: var(--sl-color-gray-4);
+	stroke-width: 1.25;
+}
+.diagram .zone {
+	fill: none;
+	stroke: var(--sl-color-gray-4);
+	stroke-dasharray: 5 4;
+	stroke-width: 1;
+}
+.diagram .accent {
+	fill: var(--sl-color-accent-low);
+	stroke: var(--sl-color-accent);
+	stroke-width: 1.5;
+}
+.diagram .line {
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1.5;
+	fill: none;
+}
+.diagram .t {
+	fill: var(--sl-color-white);
+	font-size: 13px;
+	font-weight: 600;
+}
+.diagram .s {
+	fill: var(--sl-color-gray-2);
+	font-size: 11px;
+}
+.diagram .z {
+	fill: var(--sl-color-gray-3);
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.diagram figcaption {
+	color: var(--sl-color-gray-3);
+	font-size: var(--sl-text-sm);
+	margin-top: 0.5rem;
+}
