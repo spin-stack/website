@@ -1,6 +1,6 @@
 // Command refgen writes the site's reference pages from what they describe: the CLI's own
-// help, the Terraform modules' variables and outputs, and the installation's example config
-// file. A reference page written by hand is a list nothing checks; these are regenerated, and
+// help, the Terraform modules' variables and outputs, the installation's example config file and
+// the control plane's OpenAPI document. A reference page written by hand is a list nothing checks; these are regenerated, and
 // -check fails when one on disk is not what the sources say.
 package main
 
@@ -25,6 +25,7 @@ func main() {
 		func() (map[string][]byte, error) { return cliPages(*spin) },
 		func() (map[string][]byte, error) { return terraformPages(*tf) },
 		func() (map[string][]byte, error) { return configPages(*spin) },
+		func() (map[string][]byte, error) { return apiPages(*spin) },
 	} {
 		p, err := gen()
 		if err != nil {
@@ -51,7 +52,7 @@ func main() {
 // longer produce is removed, since a command that is gone must not keep a page.
 func sync(out string, pages map[string][]byte, check bool) ([]string, error) {
 	var stale []string
-	for _, dir := range []string{"cli", "terraform", "configuration"} {
+	for _, dir := range []string{"cli", "terraform", "configuration", "api"} {
 		matches, err := filepath.Glob(filepath.Join(out, dir, "*.md"))
 		if err != nil {
 			return nil, err

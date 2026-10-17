@@ -73,6 +73,7 @@ export const nav = [
 			['CLI', 'reference/cli'],
 			['Terraform', 'reference/terraform'],
 			['Configuration', 'reference/configuration'],
+			['API', 'reference/api'],
 		],
 	},
 ];
