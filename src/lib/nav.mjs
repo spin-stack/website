@@ -7,6 +7,7 @@ export const nav = [
 			['What is Spin', 'overview'],
 			['How it works', 'overview/how-it-works'],
 			['Quickstart', 'quickstart'],
+			['Try it on one machine', 'overview/one-machine'],
 			['Status and limitations', 'overview/limitations'],
 		],
 	},
