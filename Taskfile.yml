@@ -21,7 +21,7 @@ tasks:
       - pnpm dev
 
   reference:
-    desc: Write the reference pages (CLI, Terraform, config file) from the spin and spin-terraform-aws checkouts.
+    desc: Write the reference pages (CLI, Terraform, config file, API) from the spin and spin-terraform-aws checkouts.
     cmds:
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}}
 
