@@ -42,7 +42,7 @@ func terraformPages(tf string) (map[string][]byte, error) {
 			if vars[a].Required != vars[b].Required {
 				return vars[a].Required
 			}
-			return vars[a].Pos.Line < vars[b].Pos.Line
+			return before(vars[a].Pos, vars[b].Pos)
 		})
 		if len(vars) > 0 {
 			b.WriteString("## Variables\n\n")
@@ -69,7 +69,7 @@ func terraformPages(tf string) (map[string][]byte, error) {
 		for _, o := range mod.Outputs {
 			outs = append(outs, o)
 		}
-		sort.Slice(outs, func(a, b int) bool { return outs[a].Pos.Line < outs[b].Pos.Line })
+		sort.Slice(outs, func(a, b int) bool { return before(outs[a].Pos, outs[b].Pos) })
 		if len(outs) > 0 {
 			b.WriteString("## Outputs\n\n| Output | What it is |\n|---|---|\n")
 		}
@@ -79,6 +79,15 @@ func terraformPages(tf string) (map[string][]byte, error) {
 		pages[filepath.Join("terraform", m.slug+".md")] = []byte(b.String())
 	}
 	return pages, nil
+}
+
+// before orders declarations by file, then by line: a module's are spread over several files,
+// and tfconfig hands them over in a map, so the line alone orders two files' at random.
+func before(a, b tfconfig.SourcePos) bool {
+	if a.Filename != b.Filename {
+		return a.Filename < b.Filename
+	}
+	return a.Line < b.Line
 }
 
 func oneLine(s string) string {
