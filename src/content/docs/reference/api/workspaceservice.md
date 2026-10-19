@@ -129,6 +129,7 @@ Create a new workspace
 | `networkTags` | list of string | network_tags are the network policies this workspace runs under, by name - the same idea as a GCP instance's network tags. The host's ruleset names the tag and holds the set of machines carrying it, so this decides which rules apply without naming a rule. Empty runs the workspace under the installation's default, and under "offline" where it declares none: a create that names nothing reaches nothing, rather than everything. A tag the host has no policy for fails the start rather than being ignored: a workspace asking for a policy the node does not have is a question with two answers, and quietly choosing "run it without" is how one ends up less contained than whoever launched it believes. |
 | `projectId` | string | A project of a team the caller is in: the workspace is the project's - its team, image, preset and tags, which the request then names none of - and its guest clones the project's repository at ref, the project's own when empty. |
 | `ref` | string |  |
+| `requestId` | string | Optional, at most 128 bytes: the client's key for this create, so a retry after an answer it never got is answered with the workspace the first attempt made. The same key with another request is refused (FAILED_PRECONDITION). |
 
 **Response**
 
@@ -903,6 +904,7 @@ Update workspace properties (name, env)
 | `id` | string | Required: workspace ID or name |
 | `name` | string | Optional: new name |
 | `env` | map of string to string | Optional: replace environment variables |
+| `wakeOnAccess` | boolean or null | Note: resource changes require stop/start Optional: Workspace.wake_on_access |
 
 **Response**
 

@@ -27,13 +27,42 @@ settings:
   # nothing at all. Leave the key out for the installation's default.
   allowed_images:
     - ghcr.io/acme/sandbox:v1
-  # Whether a workspace has to belong to a team.
-  require_team_for_workspace: false
   # Zero is no limit.
   max_workspaces_per_user: 10
+  # Who a workspace's identity token may be for - a cloud's STS, a Vault, a cluster's API server.
+  # Leave the key out for anybody; a relying party still decides which workspaces it admits.
+  identity_audiences:
+    - sts.amazonaws.com
+  # How many days a deleted workspace stays in the trash - its disk, snapshots and keys kept - for
+  # its owner to undelete, before it is erased. 0 is no trash: a delete erases at once. At most 90.
+  workspace_trash_days: 7
+  # How far behind the object store a workspace's disk may fall, in seconds, where its preset does
+  # not say: what a host lost without warning may lose of a workspace that writes. 300 where left
+  # out; 0 commits on size and snapshots alone; otherwise 60 to 86400.
+  volume_rpo_seconds: 300
+  # How a host's disk is lent. A disk holds what its workspace wrote, not its size: a host is
+  # charged this percent of each new disk's size until it writes more, and takes workspaces up to
+  # 80% of its device. 1 to 100; 100 charges every disk its full size.
+  disk_reserve_percent: 50
+  # How much of its device a host may be promised, its disks' sizes summed: what it would need if
+  # every one filled at once. 100 to 400; 100 promises nothing past the device.
+  disk_commit_max_percent: 200
   # Whether the object store's garbage collection, a daily job, only says what nothing reaches
   # rather than deleting it. The delete is a marker the bucket expires after its Object Lock.
   storage_gc_report_only: false
+  # Whether a team's admins may declare egress policies of their own, for the team's workspaces:
+  # named and only allowing - nothing brokered. Any team may then reach past what the policies
+  # below allow, so it is off unless decided.
+  team_network_policies: false
+  # Whether the control plane fetches VS Code servers from Microsoft on its own: the newest stable
+  # release, looked for daily, and the server of a client's commit the installation has not
+  # released. Off, it fetches none, and workspaces get the server the image carries or one an
+  # administrator published.
+  vscode_fetch: false
+  # The IAM role a team's secret kept in Secrets Manager is read under, in a session tagged
+  # spin-team-id with the team; it reads only a secret tagged the same. Unset, a team's secrets
+  # are sealed in the database and none is a reference.
+  # team_secrets_role: arn:aws:iam::123456789012:role/spin-team-secrets
   # What a workspace created without a tag of its own runs under, by policy name - the
   # network_policies block below, or a host's own. Unset, it is "offline", the policy every
   # host has and which allows nothing: a workspace nobody chose a policy for reaches nothing
@@ -68,6 +97,12 @@ settings:
   # it; a change of bucket is applied by restarting it. How many days each index keeps what it
   # holds is read again every minute; 30, 7 and 7 where a key is left out.
   logs_bucket: acme-spin-logs
+  # Which of the cloud's costs are this installation's, and its budget, as the cloud names them:
+  # on AWS the value of its spin:installation tag and the budget's ARN, which spin-terraform-aws
+  # writes. The control plane reads the bill a few times a day for Admin → Costs; without a scope
+  # it reads none.
+  bill_scope: acme-spin
+  bill_budget: arn:aws:budgets::123456789012:budget/acme-spin-monthly
   logs_platform_retention_days: 30
   logs_workspace_retention_days: 7
   traces_retention_days: 7
@@ -90,17 +125,27 @@ registration:
     - contractor@example.com
 
 # What a person may choose when creating a workspace. One preset may be the default.
+# burst says how a workspace of it grows: fixed (the default) runs at its size; to_preset
+# starts at the floor (burst_floor_cpu, burst_floor_memory_mb; 1 and 1024 if left out) and
+# grows to its size; to_host starts at the floor and grows to what its host has.
+# bandwidth_mbps is what its network carries each way (left out: unshaped); ssh, the editor
+# and forwarded ports are not held to it. rpo_seconds is how far behind the object store its
+# disk may fall (left out: the installation's volume_rpo_seconds).
 presets:
   - name: small
     description: For an agent doing one task at a time
     cpu: 2
     memory_mb: 4096
     disk_gb: 20
+    bandwidth_mbps: 100
     default: true
   - name: large
     cpu: 8
     memory_mb: 16384
     disk_gb: 100
+    burst: to_preset
+    burst_floor_cpu: 2
+    burst_floor_memory_mb: 4096
 
 # Egress policies, by name. A workspace created with --network-tag agent runs under this one.
 #
@@ -114,27 +159,41 @@ presets:
 # Tags compose as a union: a workspace created with two of them reaches everything either one
 # allows, and the order they are named in does not change that.
 #
-# allow is IPv4 prefixes; allowNames are names, each exact or with a single leading "*.",
-# enforced through the workspace's own lookups - the host opens the address its resolver
-# answered that workspace with, for as long as the answer lives. allowPorts are destination
-# ports at any address, "443" being TCP, which is what a bare number means; UDP is asked for
-# by name ("53/udp"), because opening UDP to anywhere is the shape of a tunnel, and "icmp" is a
-# ping - an echo request, no other ICMP type. A workspace needs no port for DNS: its resolver
-# is the host's, which answers under every policy.
+# A policy is a list of rules, and allows what any of them allows. A rule is destinations on
+# ports, each destination on each port: allow is IPv4 prefixes; allowNames are names, each
+# exact or with a single leading "*.", enforced through the workspace's own lookups - the host
+# opens the address its resolver answered that workspace with, for as long as the answer
+# lives. ports are destination ports, "443" being TCP, which is what a bare number means; UDP
+# is asked for by name ("53/udp"), because opening UDP to anywhere is the shape of a tunnel; a
+# range is "8000-8100" or "8000-8100/udp"; and "icmp" is a ping - an echo request, no other
+# ICMP type. A rule with no destination is its ports anywhere, and one with no port is every
+# port at its destinations. Two things on two sets of ports are two rules: one rule of both
+# would open each port at each destination. A workspace needs no port for DNS: its resolver is
+# the host's, which answers under every policy.
 #
 # A policy is as exact as DNS: an address serving several names is open to all of them once
-# one is allowed. See docs/network/README.md.
+# one is allowed - unless the rule says verifySNI: true, which passes a TLS connection only when
+# its hello names one of the rule's names (TCP only, 443 where it names no port). That holds a
+# client that says which host it wants, not one that lies. See docs/network/README.md.
 network_policies:
   - name: agent
-    allowNames:
-      - github.com
-      - "*.githubusercontent.com"
-      - registry.npmjs.org
-    allow:
-      - 140.82.112.0/20
+    rules:
+      - allowNames:
+          - github.com
+          - "*.githubusercontent.com"
+          - registry.npmjs.org
+        allow:
+          - 140.82.112.0/20
   # The web and nothing else: no address at all, so it composes with any other tag.
   - name: web
-    allowPorts:
-      - 80
-      - 443
+    rules:
+      - ports:
+          - 80
+          - 443
+  # A resolver of the workspace's own on UDP, and ping anywhere: two rules, not their product.
+  - name: diagnostics
+    rules:
+      - allow: [1.1.1.1/32]
+        ports: ["53/udp"]
+      - ports: [icmp]
 ```

@@ -22,18 +22,23 @@ Available Commands:
   api-key     Manage API keys
   code        Open a workspace in VS Code
   completion  Generate the autocompletion script for the specified shell
+  cp          Copy files to or from a workspace
   exec        Run a command in a workspace
   help        Help about any command
   login       Authenticate with the platform
-  logout      Clear stored credentials
+  logout      End the profile's session and forget its login
   port        Manage exposed ports for workspaces
+  project     Manage a team's projects: a repository and the workspace that opens it
   settings    Manage user settings
   share       Manage snapshot sharing
+  sign        Sign what only you can: your keyring and your teams' rosters
+  smoke       Check an installation does what its API promises, with a workspace of its own
   snapshot    Take, list and delete a workspace's snapshots
   ssh         SSH into a workspace
   ssh-config  Make every workspace reachable with plain ssh, as the host spin.<workspace>
   ssh-key     Manage SSH keys
   team        Manage teams
+  trust       What this machine trusts of an installation
   version     Print version information
   whoami      Show current user info
   workspace   Manage workspaces
@@ -42,7 +47,7 @@ Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -h, --help             help for spin
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 
 Use "spin [command] --help" for more information about a command.
 ```
@@ -50,17 +55,22 @@ Use "spin [command] --help" for more information about a command.
 - [`spin admin`](/reference/cli/admin/): Administrative commands
 - [`spin api-key`](/reference/cli/api-key/): Manage API keys
 - [`spin code`](/reference/cli/code/): Open a workspace in VS Code
+- [`spin cp`](/reference/cli/cp/): Copy files to or from a workspace
 - [`spin exec`](/reference/cli/exec/): Run a command in a workspace
 - [`spin login`](/reference/cli/login/): Authenticate with the platform
-- [`spin logout`](/reference/cli/logout/): Clear stored credentials
+- [`spin logout`](/reference/cli/logout/): End the profile's session and forget its login
 - [`spin port`](/reference/cli/port/): Manage exposed ports for workspaces
+- [`spin project`](/reference/cli/project/): Manage a team's projects: a repository and the workspace that opens it
 - [`spin settings`](/reference/cli/settings/): Manage user settings
 - [`spin share`](/reference/cli/share/): Manage snapshot sharing
+- [`spin sign`](/reference/cli/sign/): Sign what only you can: your keyring and your teams' rosters
+- [`spin smoke`](/reference/cli/smoke/): Check an installation does what its API promises, with a workspace of its own
 - [`spin snapshot`](/reference/cli/snapshot/): Take, list and delete a workspace's snapshots
 - [`spin ssh`](/reference/cli/ssh/): SSH into a workspace
 - [`spin ssh-config`](/reference/cli/ssh-config/): Make every workspace reachable with plain ssh, as the host spin.<workspace>
 - [`spin ssh-key`](/reference/cli/ssh-key/): Manage SSH keys
 - [`spin team`](/reference/cli/team/): Manage teams
+- [`spin trust`](/reference/cli/trust/): What this machine trusts of an installation
 - [`spin version`](/reference/cli/version/): Print version information
 - [`spin whoami`](/reference/cli/whoami/): Show current user info
 - [`spin workspace`](/reference/cli/workspace/): Manage workspaces

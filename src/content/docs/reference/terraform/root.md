@@ -27,7 +27,7 @@ The base domain: the dashboard is app.&lt;domain>, workspaces are \*.ws.&lt;doma
 
 ### name
 
-Prefix for every resource and the SSM path; modules/controlplane's default is spin.
+The installation's name, one per region of an account (two regions may share it): every resource's prefix, the SSM path /spin/&lt;name>/, and with the region every IAM name. 2 to 26 characters; modules/controlplane's default is spin.
 
 - Type: `string`
 - Default: `null` (the module's own default)
@@ -62,7 +62,7 @@ Where users reach the proxy on 443 from; modules/controlplane's default is anywh
 
 ### instance_type
 
-The control plane's machine; modules/controlplane's default is t8i.small.
+The control plane's machine; modules/controlplane's default is t8i.medium.
 
 - Type: `string`
 - Default: `null` (the module's own default)
@@ -74,19 +74,33 @@ The proxy's machine; modules/controlplane's default is t8i.micro.
 - Type: `string`
 - Default: `null` (the module's own default)
 
-### database
-
-The database's RDS instance, as modules/controlplane's database object: engine_version, instance_class, storage_gb, max_storage_gb, multi_az, backup_retention_days, deletion_protection, apply_immediately, insights.
-
-- Type: `any`
-- Default: `null` (the module's own default)
-
 ### collector
 
-The collector, as modules/controlplane's collector object: the metric interval and the Alloy package pinned. Where it sends is set in the dashboard.
+The collector, as modules/controlplane's collector object: how often metrics are pushed to it; modules/controlplane's default is 60s. Where it sends is set in the dashboard.
 
-- Type: `any`
-- Default: `{}`
+- Type: `object({ metric_interval = optional(string) })`
+- Default: `null` (the module's own default)
+
+### controlplane_volume_gb
+
+The control plane's disk, which /var - the database and the stores - takes all of past the OS; modules/controlplane's default is 40.
+
+- Type: `number`
+- Default: `null` (the module's own default)
+
+### image_ids
+
+Spin OS AMIs of your own, one per role - control-plane, runner and proxy - instead of those images.json names for spin_version in this region.
+
+- Type: `map(string)`
+- Default: `null` (the module's own default)
+
+### image_measurements
+
+The builds of each role's image - control-plane, runner and proxy - oldest first, each the PCRs an instance of it measures (its manifest's measurements), instead of measurements.json's: the control plane's key is answered to the control plane's builds, a host joins only as the runner's, and the proxy is given its token only as the proxy's. The control plane's and the runner's also carry statement and bundle, base64, as spin-os images sign writes them. The last of a role's is the image image_ids names. Required with image_ids, and for a release published before its PCRs were.
+
+- Type: `map(list(object({ pcr4 = string pcr7 = string pcr12 = string statement = optional(string) bundle = optional(string) revoked = optional(string) })))`
+- Default: `null` (the module's own default)
 
 ### installation_config
 
@@ -158,6 +172,34 @@ The most runners the group may have; the control plane decides how many it has. 
 - Type: `number`
 - Default: `null` (the module's own default)
 
+### runner_rollout
+
+How a new release reaches the runners: idle, when the fleet next empties, moving no workspace (modules/runners' default); or rolling, replacing them at once, their workspaces suspended and resumed on the new hosts.
+
+- Type: `string`
+- Default: `null` (the module's own default)
+
+### decommission
+
+Set to true and apply before `tofu destroy`: the buckets lose their VPC-only policies and a destroy empties them, data included (README.md, "Removing an installation"). modules/controlplane's default is false.
+
+- Type: `bool`
+- Default: `null` (the module's own default)
+
+### monthly_budget_usd
+
+What the installation may cost in a month, in US dollars: an AWS Budget the control plane reads and whose alerts go to budget_emails. Null is no budget.
+
+- Type: `number`
+- Default: `null` (the module's own default)
+
+### budget_emails
+
+Who is emailed when the month's cost passes 80 % or 100 % of monthly_budget_usd, or is forecast to pass it.
+
+- Type: `list(string)`
+- Default: `null` (the module's own default)
+
 ### tags
 
 Tags on everything both modules create.
@@ -175,8 +217,9 @@ Tags on everything both modules create.
 | `name_servers` | The domain's zone's nameservers: what its registrar, or its parent's zone, points at. |
 | `proxy_ip` | The proxy's elastic IP, where app.&lt;domain>, tunnel.app.&lt;domain> and \*.ws.&lt;domain> point: the one address of the installation the internet reaches. |
 | `controlplane_group` | The control plane's group of one; its machine is reached with `aws ssm start-session --target &lt;instance>`. |
-| `update_status` | After an apply that changed a machine: how its replacement went. Successful, InProgress, or RollbackSuccessful with the reason - in which case the old machine is still serving. |
-| `boot_log` | What every machine's boot said, including the ones that are gone. |
+| `update_status` | After an apply that changed a machine: how its replacement went. Successful, InProgress, or RollbackSuccessful with the reason - after which the old machine serves again, at once or, for a control plane that had handed its database over, once its watch has restored it from the archive. |
+| `update_abort` | After an apply whose new machine will not come up: the command that stops waiting for it - rolls the refresh back and abandons the launch the hook still holds - so the next apply can change the group (task update:abort). |
+| `boot_log` | By role, the command that reads what its machines' boots said - the ones that are gone included - and follows the next one's. |
 | `runners_group` | The runners' group, which the control plane sizes: empty until a workspace waits for one. |
 | `controlplane` | Everything modules/controlplane outputs. |
 | `runners` | Everything modules/runners outputs. |

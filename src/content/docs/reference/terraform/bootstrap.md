@@ -11,6 +11,13 @@ Source: `github.com/spin-stack/spin-terraform-aws//bootstrap?ref=<tag>`. Generat
 
 ## Variables
 
+### cost_allocation_tags
+
+Activate spin's tags as cost allocation tags in this account: true once an installation has run a day here, in one bootstrap per account.
+
+- Type: `bool`
+- Default: `false`
+
 ### github_repositories
 
 Repositories that apply an installation from GitHub Actions, as owner/name => the prefix of their OIDC subject (sub_claim_prefix, above): each gets a plan role and an apply role.
@@ -25,6 +32,20 @@ The region the installations are in.
 - Type: `string`
 - Default: `"us-west-2"`
 
+### image_publishers
+
+Repositories that publish Spin OS from GitHub Actions, as owner/name => the prefix of their OIDC subject (github.tf): each gets a publish role.
+
+- Type: `map(string)`
+- Default: `{}`
+
+### publish_regions
+
+The regions a publish role writes snapshots and registers images in; none is this bootstrap's region.
+
+- Type: `list(string)`
+- Default: `[]`
+
 ## Outputs
 
 | Output | What it is |
@@ -33,3 +54,5 @@ The region the installations are in.
 | `bucket` | The bucket every installation's state is in. |
 | `kms_alias` | The key every installation's state is encrypted with. |
 | `init` | Run this in an installation's directory (examples/complete, or your own copy of it) instead of a bare tofu init. |
+| `secure_boot_keys` | Each role's Secure Boot key, by the alias spin-stack/ami signs that role's image with. |
+| `publish_roles` | For each repository that publishes Spin OS, the role its workflow assumes. |

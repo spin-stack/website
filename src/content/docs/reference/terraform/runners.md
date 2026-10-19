@@ -15,7 +15,7 @@ Source: `github.com/spin-stack/spin-terraform-aws//modules/runners?ref=<tag>`. G
 
 The control plane module's outputs, as they are: its name, where the runners go, their document, and what a runner's machine runs at its first boot.
 
-- Type: `object({ name = string vpc_id = string subnet_ids = list(string) security_group_id = string runner_config_parameter_arn = string runner_user_data = string image = object({ id = string, root_device = string }) boot_log_policy_arn = string standard_vcpus = number boundary_arn = string collector = string session_manager_policy_arn = string })`
+- Type: `object({ name = string iam_name = string vpc_id = string subnet_ids = list(string) security_group_id = string runner_document_arn = string runner_user_data = string images = map(object({ id = string, root_device = string })) boot_log_policy_arn = string standard_vcpus = number boundary_arn = string })`
 - **Required**
 
 ### instance_types
@@ -64,6 +64,13 @@ The most runners the group may have. How many it has is the control plane's to d
 - Type: `number`
 - Default: `1`
 
+### rollout
+
+How a new release reaches the runners. idle: when the fleet next empties - no workspace running, starting or being saved - the next host boots it, and no workspace is moved for it; a host keeps the old release until then, which its control plane allows for 90 days. rolling: the hosts are replaced at once, one at a time, each old one's workspaces suspended to the bucket and resumed on the new one - for a fleet that never empties.
+
+- Type: `string`
+- Default: `"idle"`
+
 ### drain_seconds
 
 How long a host the group is taking away is held while it empties itself: the termination hook's timeout. At least the pool token's --shutdown-grace; the hook is left to expire, so this is also how long each scale-in takes.
@@ -85,13 +92,6 @@ The runner's root disk: the OS and the machine's files; its data is on the insta
 - Type: `number`
 - Default: `30`
 
-### session_manager
-
-Let Session Manager reach the hosts. There is no SSH either way.
-
-- Type: `bool`
-- Default: `true`
-
 ### tags
 
 Tags on everything this module creates.
@@ -103,5 +103,5 @@ Tags on everything this module creates.
 
 | Output | What it is |
 |---|---|
-| `autoscaling_group` |  |
-| `security_group_id` |  |
+| `autoscaling_group` | The runners' group, which the control plane sizes: empty until a workspace waits for a host. |
+| `security_group_id` | The runners' security group: nothing in, everything out - a workspace's egress is filtered on the host by spin. |

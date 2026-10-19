@@ -73,11 +73,11 @@ BaseImage is the base image of one machine release, as published.
 | `version` | string | The machine release it was taken from. |
 | `publishedAt` | `Timestamp` |  |
 | `clones` | string (int64) | How many volumes were cloned from it: every workspace disk that began as it, and still is. |
-| `retired` | boolean | Offered no more: no new workspace gets it, the disks cloned from it go on reading it. |
+| `untagged` | boolean | Its ref was taken off it: no new workspace gets it, the disks cloned from it go on reading it. |
 | `given` | boolean | What a workspace that names no image is given now. |
 | `pinned` | boolean | The one this control plane's release pins; given once it is published. |
 | `volumeId` | string | Its volume in the store, which RemoveStoredVolume takes when removable. |
-| `removable` | boolean | No disk was cloned from it and it is not the one given: RemoveStoredVolume retires it on the way and removes it. |
+| `removable` | boolean | No disk was cloned from it and it is not the one given: RemoveStoredVolume untags it on the way and removes it. |
 
 ## BillDay
 
@@ -261,6 +261,8 @@ HeaderInjection is a header the egress proxy sets: header, to prefix and then a 
 | `prefix` | string | What goes before the value, as "Bearer ". |
 | `identity` | string | The audience of a token of the workspace's identity, issued for the proxy to present: bound to no key, and saying so (spin.via = egress-proxy). |
 | `forge` | string | The forge whose credential for the workspace's team goes in the header, whole: "github" is an installation token of the team's GitHub App, minted by the control plane (TeamService.SetForge). |
+| `methods` | list of string | The requests the header is set on: these methods, and paths under path_prefix by whole segments. Another request to the rule's names is answered 403. None of either is every request. |
+| `pathPrefix` | string |  |
 
 ## HealthCheckResult
 
@@ -333,9 +335,11 @@ HostPolicy is what an installation decides about one host. An unset field is the
 | `maxWorkspaceCpuCores` | integer or null (int32) | The ceiling one workspace may grow to here, for the machines it starts afterwards. |
 | `maxWorkspaceMemoryMb` | integer or null (int32) |  |
 | `revision` | string | revision names the content, and is what a host reports it is running under. |
-| `writebackLimitBytes` | string or null (int64) | The host's writeback thresholds (spin.agent.v1.HostPolicy says why): both or neither, the background below the limit. Unset is what the host booted with. Numbered as the host's message numbers them, which is why they come before running_revision. |
+| `writebackLimitBytes` | string or null (int64) | The host's writeback thresholds (spin.agent.v1.HostPolicy says why): both or neither, the background below the limit. Unset is what the host booted with. |
 | `writebackBackgroundBytes` | string or null (int64) |  |
 | `runningRevision` | string | running_revision is what the host last said, empty where it has not said or is not connected. Different from revision is a policy still on its way, which is normal for the seconds after a write and a fault after that. |
+| `maxWorkspaceIoMbPerSecond` | integer or null (int32) | What one machine may read and write per second here, in MiB and in operations, for the machines it starts afterwards. Unset is no bound. |
+| `maxWorkspaceIoOpsPerSecond` | integer or null (int32) |  |
 
 ## HostState
 
@@ -361,7 +365,7 @@ Image is one name a workspace can be created from: a publication in this install
 
 | Field | Type | What it is |
 |---|---|---|
-| `ref` | string | The key a workspace records, which names one publication for good: it carries a version. |
+| `ref` | string | The name a workspace asks for. It moves: a publish under it tags new bytes, and what a disk began as is its volume's parent snapshot, not this. |
 | `virtualSizeBytes` | string (int64) | What the disk cloned from it will hold before the workspace writes anything. |
 | `publishedAt` | `Timestamp` | When the publication this ref resolves to was made. |
 | `name` | string | What a person choosing a disk is shown: its name ("base image") and what it is ready for. An empty name is a publication made before one was asked for; show the ref. |
@@ -390,6 +394,7 @@ InstallationSettings contains global settings for the Spin installation
 | `workspaceIdleSuspendMinutes` | integer (int32) | How many minutes a running workspace may go unused - nobody working over its ssh, editor or forwarded ports, and its cores all but still - before it is suspended with its processes, which its next start resumes. 0 suspends none; 60 is what an installation that says nothing keeps, and a week is the most. |
 | `workspaceMaxRunningMinutes` | integer (int32) | How many minutes a workspace may run at a stretch, used or not, before it is suspended the same way: a process that keeps its cores busy is use to the rule above, and this is what ends it. Counted from its machine's start, which a resume is too. 0 caps none; 720 is what an installation that says nothing keeps, and a week is the most. |
 | `workspaceLeaseMaxMinutes` | integer (int32) | How many minutes a process may keep its workspace awake at a stretch (a lease: `spin-supervisor keep -- &lt;cmd>`, a .spin.yaml task with keep_awake). While a lease is held and within this of its start, nobody is asked, nothing idle is suspended, and the running cap waits for the lease's end. 0 honours no lease; 480 is what an installation that says nothing keeps, and a week is the most. |
+| `teamSecretsRole` | string | The IAM role a team's secret kept in Secrets Manager is read under, in a session tagged spin-team-id with the team: its policy lets that session read only what carries the same tag. Empty, no secret is kept as a reference. |
 
 ## Job
 
@@ -486,6 +491,7 @@ NetworkPolicy is a tag a workspace can be created with, and what the hosts repor
 | `hosts` | list of [HostNetworkPolicy](/reference/api/types/#hostnetworkpolicy) | What each host reporting this tag says it enforces. |
 | `declared` | boolean | declared says the installation has this policy, and rules are what it allows. A policy with no hosts is declared and not yet enforced anywhere. |
 | `rules` | list of [NetworkRule](/reference/api/types/#networkrule) |  |
+| `teamId` | string | The team whose admins declared it, which only its workspaces and those of the teams below it may run under; empty is the installation's. |
 
 ## NetworkPolicyRule
 
@@ -508,6 +514,7 @@ NetworkRule is one thing a network policy allows: these destinations on these po
 | `broker` | boolean | The host's egress proxy stands in for these names, on HTTPS only: a machine reaches them through it and never directly, and it adds what the machine never holds. Names only. |
 | `inject` | list of [HeaderInjection](/reference/api/types/#headerinjection) | Headers the proxy sets on a brokered rule's requests, each from a secret of the workspace's team (or the nearest team above it with one by that name). Brokered rules only. |
 | `cloud` | [CloudAccess](/reference/api/types/#cloudaccess) | The principal the proxy authorizes a brokered rule's requests as, on its cloud: the host takes its credentials as the workspace, with a token of its identity. Brokered rules naming that cloud's endpoints only, and not with inject. |
+| `verifySni` | boolean | The host's egress proxy reads the TLS server name of each connection to these names and passes on, untouched, only one this rule names: an address shared with other names opens only these to a client that says which it wants. A connection with no name, or one hiding it (ECH), goes nowhere. Names only, on TCP, never with broker; it does not stop a client that lies. |
 
 ## ObservedDestination
 
@@ -938,7 +945,7 @@ StoredVolume is one volume in the store: what is under volumes/&lt;volume_id>/, 
 | `layers` | [StorageTally](/reference/api/types/#storagetally) |  |
 | `checkpoints` | [StorageTally](/reference/api/types/#storagetally) | Its checkpoints' memory and records. |
 | `removable` | boolean | Whether RemoveStoredVolume would take it: an image no ref names and nothing was cloned from, an extension release nothing runs, an unclaimed volume or an orphan. |
-| `retirable` | boolean | An image its ref still offers, which RetireImage stops offering. |
+| `untaggable` | boolean | An image its ref still names, which UntagImage takes the ref off. |
 | `keptBecause` | string | Why it stays, in words, where it is an image or a release that may not go. |
 
 ## StoredVolumeKind
@@ -1028,6 +1035,7 @@ One of: `TEAM_ROLE_UNSPECIFIED`, `TEAM_ROLE_OWNER`, `TEAM_ROLE_ADMIN`, `TEAM_ROL
 | `name` | string |  |
 | `updatedAt` | `Timestamp` |  |
 | `hosts` | list of string |  |
+| `ref` | string | Where the team keeps the value; empty where the control plane does. |
 
 ## TelemetryFlow
 
@@ -1120,6 +1128,7 @@ One of: `VS_CODE_SERVER_PUBLISH_STATE_UNSPECIFIED`, `VS_CODE_SERVER_PUBLISH_STAT
 | `leases` | list of [WorkspaceLease](/reference/api/types/#workspacelease) | The leases its processes hold, as its supervisor last reported them: while one is held and within the installation's workspace_lease_max_minutes of its start, nobody is asked, nothing idle is suspended, and the running cap waits for the lease's end. |
 | `projectId` | string | The project it opened and the ref it was opened at; empty for a workspace that opened none. |
 | `ref` | string |  |
+| `wakeOnAccess` | boolean | Suspended, it is resumed by a signed-in visitor of one of its published ports (OpenWorkspaceProxySession). Never by an anonymous one: that would undo the idle suspension for whoever has a public port's URL. |
 
 ## WorkspaceAction
 
@@ -1223,7 +1232,7 @@ WorkspaceProgress is a transition under way.
 
 Proxy status for workspace access
 
-One of: `WORKSPACE_PROXY_STATUS_UNSPECIFIED`, `WORKSPACE_PROXY_STATUS_ACCESSIBLE`, `WORKSPACE_PROXY_STATUS_NOT_RUNNING`, `WORKSPACE_PROXY_STATUS_NOT_FOUND`, `WORKSPACE_PROXY_STATUS_PORT_NOT_EXPOSED`.
+One of: `WORKSPACE_PROXY_STATUS_UNSPECIFIED`, `WORKSPACE_PROXY_STATUS_ACCESSIBLE`, `WORKSPACE_PROXY_STATUS_NOT_RUNNING`, `WORKSPACE_PROXY_STATUS_NOT_FOUND`, `WORKSPACE_PROXY_STATUS_PORT_NOT_EXPOSED`, `WORKSPACE_PROXY_STATUS_WAKING`.
 
 ## WorkspaceRuntime
 

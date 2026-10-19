@@ -12,8 +12,9 @@ Open a workspace in VS Code over Remote-SSH, at path (default /root).
 
 The workspace is reached as the host spin.<workspace> (see 'spin ssh-config', which this
 runs). Before VS Code connects, the workspace is asked whether it has the server for your
-VS Code: an installation publishes the servers it keeps up to date, and a VS Code of another
-version downloads its own server into the workspace (about 220 MB), which this says.
+VS Code. When it has not, it is given it while it runs - published first if this installation
+has not got that version, which takes minutes once and is said as it goes. Where that cannot
+be done, VS Code downloads its own server into the workspace (about 220 MB), which this says.
 
 Needs VS Code's 'code' command and the Remote-SSH extension.
 
@@ -29,11 +30,11 @@ Flags:
   -h, --help               help for code
   -i, --identity string    Identity file (private key); default: the first of ~/.ssh/id_ed25519, id_rsa, id_ecdsa
       --start              Start the workspace first if it is stopped
-      --timeout duration   How long to wait for the workspace to be running (default 5m0s)
+      --timeout duration   How long to wait for the workspace to be running; by default, until the control plane gives up on it
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
