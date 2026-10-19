@@ -572,22 +572,6 @@ Remove an image, an extension release, an unclaimed volume or an orphan from the
 
 No fields: `{}`.
 
-## RetireImage
-
-`POST /spin.v1.AdminService/RetireImage`
-
-Stop offering an image to new workspaces; the disks cloned from it go on reading it. Audited.
-
-**Request**
-
-| Field | Type | What it is |
-|---|---|---|
-| `ref` | string |  |
-
-**Response**
-
-No fields: `{}`.
-
 ## RetryPlatformImages
 
 `POST /spin.v1.AdminService/RetryPlatformImages`
@@ -652,6 +636,22 @@ Set registration mode
 | Field | Type | What it is |
 |---|---|---|
 | `mode` | [RegistrationMode](/reference/api/types/#registrationmode) |  |
+
+## UntagImage
+
+`POST /spin.v1.AdminService/UntagImage`
+
+Take a ref off what it names: no new workspace gets those bytes by it, the disks cloned from them go on reading them, and a later publish under the ref tags the new bytes. Audited.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `ref` | string |  |
+
+**Response**
+
+No fields: `{}`.
 
 ## UpdateInstallationSettings
 

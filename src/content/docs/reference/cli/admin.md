@@ -17,6 +17,8 @@ Usage:
   spin admin [command]
 
 Available Commands:
+  costs       What the installation cost this month, by service, its forecast and its budget
+  jobs        The control plane's periodic work, and running a job now
   logs        Search what the installation's processes logged
   runner      Manage registered runners
   storage     What the object store holds, and taking out what nothing needs
@@ -29,9 +31,115 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 
 Use "spin admin [command] --help" for more information about a command.
+```
+
+### spin admin costs
+
+```
+What the installation cost in a month, as its cloud's bill says, by service; what the month
+is forecast to end at, and its budget. As the control plane last read the bill - a few times a day -
+never the cloud itself.
+
+Usage:
+  spin admin costs [flags]
+  spin admin costs [command]
+
+Available Commands:
+  by          What each workspace, team or owner cost this month, and what nobody did
+
+Flags:
+  -h, --help           help for costs
+      --month string   the month, as 2026-10 (default: this month)
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+
+Use "spin admin costs [command] --help" for more information about a command.
+```
+
+#### spin admin costs by
+
+```
+A month of the bill shared out: the runners by what each workspace held of them - cores and
+memory, half each - and the volumes' bucket by what its volumes kept. What nobody caused is said
+apart and never spread: the runners' capacity nobody held (idle), the bucket's bytes no workspace
+keeps (images, unreferenced), and the platform's own cost by service.
+
+Usage:
+  spin admin costs by <workspace|team|owner> [flags]
+
+Flags:
+  -h, --help           help for by
+      --month string   the month, as 2026-10 (default: this month)
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+### spin admin jobs
+
+```
+The control plane's periodic work, and running a job now
+
+Usage:
+  spin admin jobs [flags]
+  spin admin jobs [command]
+
+Available Commands:
+  list        Every job, how often it runs and how its last run went
+  run         Run a job now rather than when it is next due
+
+Flags:
+  -h, --help   help for jobs
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+
+Use "spin admin jobs [command] --help" for more information about a command.
+```
+
+#### spin admin jobs list
+
+```
+Every job, how often it runs and how its last run went
+
+Usage:
+  spin admin jobs list [flags]
+
+Flags:
+  -h, --help   help for list
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+#### spin admin jobs run
+
+```
+Run a job now rather than when it is next due. It is not waited for: spin admin jobs list
+says how it went. Refused while it is running.
+
+Usage:
+  spin admin jobs run <job> [flags]
+
+Flags:
+  -h, --help   help for run
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin admin logs
@@ -57,7 +165,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin admin runner
@@ -82,7 +190,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 
 Use "spin admin runner [command] --help" for more information about a command.
 ```
@@ -103,7 +211,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin runner drain
@@ -114,20 +222,23 @@ Stop a runner taking new workspaces, until it is activated (spin admin runner ac
 Existing workspaces continue to run until stopped.
 
 With --suspend, every running workspace is suspended off the runner: its memory
-and disk go to the object store, and its next start resumes it, on this runner
-or another. The command returns once each is suspended or has failed to be.
+and disk go to the object store, and it is resumed on another runner on its own.
+The command returns once each is suspended or has failed to be. With
+--leave-stopped as well - a drain that shrinks the fleet - they stay stopped,
+and each resumes on another runner when its owner starts it.
 
 Usage:
   spin admin runner drain <runner-id> [flags]
 
 Flags:
-  -h, --help      help for drain
-      --suspend   Suspend the runner's running workspaces so they resume elsewhere
+  -h, --help            help for drain
+      --leave-stopped   With --suspend: leave them stopped until their owners start them (a drain that shrinks the fleet)
+      --suspend         Suspend the runner's running workspaces so they resume elsewhere
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin runner list
@@ -144,7 +255,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin runner policy
@@ -165,22 +276,25 @@ Usage:
   spin admin runner policy <runner-id> [flags]
 
 Flags:
-      --boot-from-template               restore workspaces on this runner from one frozen machine instead of booting each; every machine there then shares one kernel memory layout (KASLR)
-      --cpu-cores int32                  cores this runner advertises; unset advertises what it has
-      --disk-gb int32                    disk this runner advertises; unset advertises what it has
-  -h, --help                             help for policy
-      --max-workspace-cpu-cores int32    the cores one workspace may grow to there
-      --max-workspace-memory-mb int32    the memory one workspace may grow to there
-      --memory-mb int32                  memory this runner advertises; unset advertises what it has
-      --preemptible                      a stop on this runner is the machine being taken away, not a restart
-      --preemption-metadata-url string   where that cloud's metadata service answers; empty is its own link-local address
-      --preemption-source string         the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
-      --shutdown-grace duration          how long this runner stays up after a stop signal so its workspaces can be moved off it
+      --cpu-cores int32                         cores this runner advertises; unset advertises what it has
+      --disk-gb int32                           disk this runner advertises; unset advertises what it has
+  -h, --help                                    help for policy
+      --max-workspace-cpu-cores int32           the cores one workspace may grow to there
+      --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
+      --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
+      --max-workspace-memory-mb int32           the memory one workspace may grow to there
+      --memory-mb int32                         memory this runner advertises; unset advertises what it has
+      --preemptible                             a stop on this runner is the machine being taken away, not a restart
+      --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
+      --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
+      --shutdown-grace duration                 how long this runner stays up after a stop signal so its workspaces can be moved off it
+      --writeback-background-bytes int          dirty page cache at which this runner starts writing back (vm.dirty_background_bytes), below the limit
+      --writeback-limit-bytes int               dirty page cache this runner holds before a writer waits (vm.dirty_bytes); unset is what it booted with
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin runner revoke
@@ -208,7 +322,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin admin storage
@@ -221,9 +335,9 @@ Usage:
   spin admin storage [command]
 
 Available Commands:
-  list         Every volume in the store, whose it is and whether it may be removed
-  remove       Remove an image, an extension release, an unclaimed volume or an orphan from the store
-  retire-image Stop offering an image to new workspaces
+  list        Every volume in the store, whose it is and whether it may be removed
+  remove      Remove an image, an extension release, an unclaimed volume or an orphan from the store
+  untag-image Take a ref off the image it names
 
 Flags:
   -h, --help   help for storage
@@ -231,7 +345,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 
 Use "spin admin storage [command] --help" for more information about a command.
 ```
@@ -251,7 +365,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin storage remove
@@ -260,7 +374,7 @@ Global Flags:
 Remove an image, an extension release, an unclaimed volume or an orphan from the store:
 its row, then its volume, whose key is destroyed. Its layers go at storage-gc's next run.
 
-An image its ref still offers is retired first (spin admin storage retire-image); the newest
+An image its ref still names is untagged first (spin admin storage untag-image); the newest
 release of an extension, one a workspace runs, and a workspace's disk are refused.
 
 Usage:
@@ -273,25 +387,26 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
-#### spin admin storage retire-image
+#### spin admin storage untag-image
 
 ```
-Stop offering an image to new workspaces. The disks already cloned from it go on reading
+Take a ref off the image it names: no new workspace is given it by that ref, and the next
+publish under the ref is what it names. The disks already cloned from it go on reading
 it; once none does, it can be removed (spin admin storage remove).
 
 Usage:
-  spin admin storage retire-image <ref> [flags]
+  spin admin storage untag-image <ref> [flags]
 
 Flags:
-  -h, --help   help for retire-image
+  -h, --help   help for untag-image
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin admin token
@@ -314,7 +429,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 
 Use "spin admin token [command] --help" for more information about a command.
 ```
@@ -345,26 +460,29 @@ Usage:
   spin admin token create [flags]
 
 Flags:
-      --boot-from-template               restore workspaces on each host it registers from one frozen machine instead of booting each; every machine there then shares one kernel memory layout (KASLR)
-      --cpu-cores int32                  cores each host it registers advertises; unset advertises what it has
-      --description string               Description for the token
-      --disk-gb int32                    disk each host it registers advertises; unset advertises what it has
-      --expires duration                 how long the token registers hosts; unset is the control plane's 24 hours, and at most 30 days
-  -h, --help                             help for create
-      --max-workspace-cpu-cores int32    the cores one workspace may grow to there
-      --max-workspace-memory-mb int32    the memory one workspace may grow to there
-      --memory-mb int32                  memory each host it registers advertises; unset advertises what it has
-      --preemptible                      a stop on each host it registers is the machine being taken away, not a restart
-      --preemption-metadata-url string   where that cloud's metadata service answers; empty is its own link-local address
-      --preemption-source string         the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
-      --reusable                         a pool's token: it registers every host that presents it until it expires
-      --shutdown-grace duration          how long each host it registers stays up after a stop signal so its workspaces can be moved off it
-      --team string                      Team ID to scope the runner to
+      --cpu-cores int32                         cores each host it registers advertises; unset advertises what it has
+      --description string                      Description for the token
+      --disk-gb int32                           disk each host it registers advertises; unset advertises what it has
+      --expires duration                        how long the token registers hosts; unset is the control plane's 24 hours, and at most 30 days
+  -h, --help                                    help for create
+      --max-workspace-cpu-cores int32           the cores one workspace may grow to there
+      --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
+      --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
+      --max-workspace-memory-mb int32           the memory one workspace may grow to there
+      --memory-mb int32                         memory each host it registers advertises; unset advertises what it has
+      --preemptible                             a stop on each host it registers is the machine being taken away, not a restart
+      --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
+      --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
+      --reusable                                a pool's token: it registers every host that presents it until it expires
+      --shutdown-grace duration                 how long each host it registers stays up after a stop signal so its workspaces can be moved off it
+      --team string                             Team ID to scope the runner to
+      --writeback-background-bytes int          dirty page cache at which each host it registers starts writing back (vm.dirty_background_bytes), below the limit
+      --writeback-limit-bytes int               dirty page cache each host it registers holds before a writer waits (vm.dirty_bytes); unset is what it booted with
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin token list
@@ -382,7 +500,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 #### spin admin token revoke
@@ -399,7 +517,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin admin versions
@@ -416,6 +534,6 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 

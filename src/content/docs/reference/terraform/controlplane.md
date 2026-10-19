@@ -25,12 +25,12 @@ The base domain: the dashboard is app.&lt;domain>, workspaces are \*.ws.&lt;doma
 - Type: `string`
 - **Required**
 
-### name
+### identity_record_days
 
-Prefix for every resource, and the SSM path (/&lt;name>/...) each machine's document is at.
+How many days the record of each identity a host signs is kept (identity/issued/ in the volumes bucket): longer than the bucket's lock, and long enough to answer who took an identity when.
 
-- Type: `string`
-- Default: `"spin"`
+- Type: `number`
+- Default: `400`
 
 ### collector
 
@@ -38,6 +38,13 @@ The collector: how often metrics are pushed to it. Which Alloy it is, is the ima
 
 - Type: `object({ metric_interval = optional(string, "60s") })`
 - Default: `{}`
+
+### name
+
+The installation's name, one per region of an account: every resource's prefix, the SSM path (/spin/&lt;name>/...) each machine's document is at, and - with the region - every IAM name. Two installations of one account may share a name in two regions, and not in one (claim.tf).
+
+- Type: `string`
+- Default: `"spin"`
 
 ### internal_zone
 
@@ -55,38 +62,31 @@ The address Let's Encrypt writes to; empty is admin@&lt;domain>.
 
 ### vpc_cidr
 
-The VPC's range. One /20 public subnet per availability zone is carved from it.
+The VPC's range, a /16. One /20 public subnet per availability zone is carved from its first half, and one /24 for the proxy per zone from x.x.136.0 on.
 
 - Type: `string`
 - Default: `"10.42.0.0/16"`
 
 ### availability_zones
 
-How many zones to make subnets in. The control plane uses the first; runners spread across all, which is what gives a spot group somewhere to go when one zone runs out.
+How many zones to make subnets in. The control plane, the proxy and the runners may each be started in any of them, which is what gives a group somewhere to go when a zone runs out.
 
 - Type: `number`
 - Default: `3`
 
 ### instance_type
 
-The control plane's machine: the control plane, the collector, and the store of logs and traces it runs (Quickwit). Its database is RDS; the store is what sizes it.
+The control plane's machine: the control plane, its database (PostgreSQL), the collector, and the stores of logs, traces and metrics it runs.
 
 - Type: `string`
-- Default: `"t8i.small"`
+- Default: `"t8i.medium"`
 
-### database
+### root_volume_gb
 
-The database's RDS instance. db.t4g.micro and 20 GB are the free tier's where the account has
-one; the database is rows about workspaces and volumes, not their data, which is the bucket's.
-deletion_protection keeps a destroy from taking it: turn it off, apply, then destroy.
-apply_immediately makes a change to the instance - its class, its version - during the apply
-that asks for it, a minute or two of the database restarting; false leaves it for RDS's
-maintenance window.
-insights keeps seven days of Performance Insights: which statements take the time, and what
-they wait on.
+The control plane's disk: beside the read-only OS, /var takes the rest - the database, the logs' and metrics' stores and their caches. A new size is a new machine, replaced beside the old.
 
-- Type: `object({ engine_version = optional(string, "18") instance_class = optional(string, "db.t4g.micro") storage_gb = optional(number, 20) max_storage_gb = optional(number, 100) multi_az = optional(bool, false) backup_retention_days = optional(number, 7) deletion_protection = optional(bool, true) apply_immediately = optional(bool, true) insights = optional(bool, true) })`
-- Default: `{}`
+- Type: `number`
+- Default: `40`
 
 ### admin_email
 
@@ -104,7 +104,7 @@ Keep the VPC's flow log in CloudWatch: every connection a security group accepte
 
 ### dns_query_logs
 
-Keep the VPC resolver's query log in CloudWatch: every name looked up, a workspace's included. It is Route 53 Resolver's, and off unless asked for.
+Keep the VPC resolver's query log in CloudWatch: every name looked up, a workspace's included. It is Route 53 Resolver's, and off unless asked for. Each installation that turns it on takes one of the ten CloudWatch Logs resource policies a region of an account may have.
 
 - Type: `bool`
 - Default: `false`
@@ -130,12 +130,26 @@ The proxy's machine: Caddy and nothing else, the one address the internet reache
 - Type: `string`
 - Default: `"t8i.micro"`
 
+### decommission
+
+Set to true, and applied, before destroying the installation: its buckets lose the policies that refuse every object write from outside the VPC - the destroy runs from outside it - and a destroy empties every bucket, data included, bypassing the GOVERNANCE retention once the legal holds are lifted (README.md, "Removing an installation"). Never set on an installation that is to keep its data.
+
+- Type: `bool`
+- Default: `false`
+
 ### object_lock_days
 
 The bucket's default Object Lock retention, in GOVERNANCE mode. A deleted object's bytes last this long, and the bucket's lifecycle (bucket.tf) removes them a day after.
 
 - Type: `number`
 - Default: `30`
+
+### database_lock_days
+
+The database archive's default Object Lock retention, in GOVERNANCE mode: how long what a delete or an overwrite left there can still be restored. The lifecycle removes it a day after (database_bucket.tf).
+
+- Type: `number`
+- Default: `14`
 
 ### runner_policy
 
@@ -183,39 +197,65 @@ Tags on everything this module creates.
 - Type: `map(string)`
 - Default: `{}`
 
-### image_id
+### image_ids
 
-A Spin OS AMI of this account for every machine, instead of the newest one tagged spin:version = spin_version. It must carry that release: a machine refuses a document of another.
+Spin OS AMIs of your own, one per role - control-plane, runner and proxy - instead of those images.json names for spin_version in this region. Each must carry that release, laid for that role: a machine refuses a document of another release, and an image laid for another role.
 
-- Type: `string`
-- Default: `""`
+- Type: `map(string)`
+- Default: `{}`
+
+### monthly_budget_usd
+
+What the installation may cost in a month, in US dollars: an AWS Budget on its spin:installation tag (budget.tf), which the control plane reads and alerts reach. Null is no budget.
+
+- Type: `number`
+- Default: `null` (the module's own default)
+
+### budget_emails
+
+Who AWS emails when the month's cost passes 80 % or 100 % of monthly_budget_usd, or is forecast to pass it.
+
+- Type: `list(string)`
+- Default: `[]`
+
+### image_measurements
+
+The builds of each role's image - control-plane, runner and proxy - oldest first, each the PCRs an instance of it measures (its manifest's measurements, SHA384 in lowercase hex), instead of measurements.json's: the control plane's key is answered to the control plane's builds (attested_key.tf), a host joins only as the runner's, and the proxy is given its token only as the proxy's (host_attestation). The control plane's and the runner's also carry statement and bundle, base64, as spin-os images sign writes them: what their images' publisher signed of those PCRs. The last of a role's is the image image_ids names. Required with image_ids, and for a release published before its PCRs were.
+
+- Type: `map(list(object({ pcr4 = string pcr7 = string pcr12 = string statement = optional(string) bundle = optional(string) # Why the build is not to be run, as measurements.json says of a revoked one: no machine of it # is trusted, and a release whose newest build is revoked is not installed (attested_key.tf). revoked = optional(string) })))`
+- Default: `null` (the module's own default)
 
 ## Outputs
 
 | Output | What it is |
 |---|---|
-| `name` | The installation's name, which the runners' group, role and SSM path are named for. |
+| `name` | The installation's name, claimed in its region (claim.tf), which the runners' group and security group are named for. |
+| `iam_name` | What the installation's IAM names begin with: its name and its region, since IAM is the account's and two regions may each have an installation of one name. The runners' role and instance profile are named for it. |
 | `vpc_id` | The VPC the runners go in. |
 | `subnet_ids` | One public subnet per zone, for the runners' group. |
 | `security_group_id` | The control plane's group; the runners module opens 8080 on it to its own. |
 | `session_manager_policy_arn` | Session Manager into a machine, and nothing else of SSM: what the runners' role is given in place of AmazonSSMManagedInstanceCore, which reads every parameter. |
 | `url` | The control plane as runners reach it, the address its certificate names. |
 | `ca_cert` | The installation's CA certificate, which every component trusts the control plane by. |
-| `runner_config_parameter_arn` | The runners' document, which the runners' role reads and nothing else of SSM. |
+| `runner_document_arn` | The runners' document, the one object of the documents' bucket the runners' role reads. |
 | `runner_user_data` | A runner's user data: its role and the runners' document, as the systemd credentials Spin OS's spin-boot takes. |
-| `image` | The Spin OS image of the installation's release, which the runners boot too: its id and its root device. |
-| `boot_log_group` | The CloudWatch log group every machine's boot writes to, a stream per instance. |
+| `images` | The Spin OS images of the installation's release, by role - the control plane's, the runners' and the proxy's: each one's id and root device. The runners module boots the runner's. |
+| `boot_log_group` | The CloudWatch log group every machine's boot writes to, a stream per &lt;role>/&lt;step>/&lt;instance-id>: a role's machines are one stream prefix. |
 | `boot_log_policy_arn` | Writing a machine's boot to that group, and nothing else: the runners module attaches it to the runners' role. |
 | `standard_vcpus` | The on-demand standard vCPUs the control plane's and the proxy's machines take at most: two of each while an update replaces one. The runners module counts them against the quota on-demand runners share. |
 | `name_servers` | The domain's public zone's nameservers, which its registrar points at. |
 | `domain` | The base domain; the runners' relay is tunnel.app.&lt;domain>, dialled at relay_dial. |
+| `public_zone_id` | The domain's public zone, where modules/identity-issuer puts id.&lt;domain>. |
+| `identity_key_arn` | The KMS key the installation's identity key is sealed under, which only an attested runner opens. |
+| `identity_documents` | The commands that write the identity issuer's documents - discovery, key set, allowed signers and SPIFFE bundle - for modules/identity-issuer to publish: the identity key as the control plane keeps it in its bucket (its public half is all that is read) and the X.509 CA the first host to sign an SVID made beside it, then the documents from them. Run them with credentials that may read both, and commit what they write. |
 | `internal_zone_id` | The private zone the components reach each other by, cp.&lt;internal_zone> and proxy.&lt;internal_zone>. |
 | `relay_dial` | Where a runner dials the relay, host:port: the proxy inside the VPC, by the name the proxy of the moment points at itself. |
 | `collector` | Where every process of the installation pushes its telemetry, host:port. Where the collector sends it is set in the dashboard. |
 | `boundary_arn` | The permissions boundary every role of the installation carries; the runners module puts it on the runners' role. |
 | `proxy_ip` | The proxy's elastic IP, where app.&lt;domain>, tunnel.app.&lt;domain> and \*.ws.&lt;domain> point: the one address of the installation the internet reaches. |
 | `proxy_group` | The proxy's group of one. Its machine, for `aws ssm start-session --target` (it has no SSH): aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names &lt;this> --query 'AutoScalingGroups[0].Instances[0].InstanceId'. |
-| `bucket` |  |
+| `bucket` | The volumes' bucket: every workspace's disk, versioned under Object Lock, reached only through the VPC's endpoint. |
+| `database_bucket` | The database's archive: the base backups and WAL the control plane ships as it writes, and restores from when its machine is replaced. Its role alone reaches it. |
 | `controlplane_group` | The control plane's group of one. `aws autoscaling start-instance-refresh --auto-scaling-group-name &lt;this>` replaces its machine beside itself; its machine is reached with `aws ssm start-session`, as the proxy's is. |
 | `admin_email` | Who the first administrator signs in as. |
 | `admin_password_parameter` | The SSM SecureString holding the first administrator's one-time password: aws ssm get-parameter --with-decryption --name &lt;this>. The first sign-in asks for a new one. |

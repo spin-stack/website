@@ -29,7 +29,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 
 Use "spin api-key [command] --help" for more information about a command.
 ```
@@ -61,14 +61,14 @@ Usage:
   spin api-key create <name> [flags]
 
 Flags:
-      --expires string   Expiration duration, at most a year (e.g., 30d, 1y, 90d) (default "90d")
+      --expires string   How long the key lasts, at most a year: a whole number of d, w or y (30d, 2w, 1y), or a duration like 36h (default "90d")
   -h, --help             help for create
       --scope strings    Scopes for the key (can be repeated)
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin api-key list
@@ -85,7 +85,7 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin api-key revoke
@@ -103,6 +103,6 @@ Flags:
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
   -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use (default "default")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 

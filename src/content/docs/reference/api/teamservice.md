@@ -128,6 +128,21 @@ No fields: `{}`.
 
 No fields: `{}`.
 
+## DeleteNetworkPolicy
+
+`POST /spin.v1.TeamService/DeleteNetworkPolicy`
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+| `name` | string |  |
+
+**Response**
+
+No fields: `{}`.
+
 ## DeleteProject
 
 `POST /spin.v1.TeamService/DeleteProject`
@@ -375,6 +390,24 @@ A team's forges: the app it installed on its organization, from which the contro
 
 No fields: `{}`.
 
+## SetNetworkPolicy
+
+`POST /spin.v1.TeamService/SetNetworkPolicy`
+
+A team's egress policies: named, and only allowing - no rule brokers - for the workspaces of the team and the teams below it. Set and deleted by its admins where the installation lets teams declare them (team_network_policies); listed by WorkspaceService.ListNetworkPolicies.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+| `name` | string |  |
+| `rules` | list of [NetworkRule](/reference/api/types/#networkrule) |  |
+
+**Response**
+
+No fields: `{}`.
+
 ## SetSecret
 
 `POST /spin.v1.TeamService/SetSecret`
@@ -389,6 +422,7 @@ A team's secrets: what a brokered network rule has the host's egress proxy add t
 | `name` | string | Lower-case letters, digits and dashes, starting with a letter; what a rule names it by. |
 | `value` | string | At most 8 KiB of visible ASCII. Replaces what the name held. |
 | `hosts` | list of string | The exact names the secret may be sent to, 1 to 16: a brokered rule that injects it and names any other host is refused it. |
+| `ref` | string | In place of value: the ARN of a Secrets Manager secret the team keeps it in, read as the team (InstallationSettings.team_secrets_role) now and whenever a host asks for it. |
 
 **Response**
 
