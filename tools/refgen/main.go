@@ -1,7 +1,8 @@
 // Command refgen writes the site's reference pages from what they describe: the CLI's own
 // help, the Terraform modules' variables and outputs, the installation's example config file and
 // the control plane's OpenAPI document. A reference page written by hand is a list nothing checks; these are regenerated, and
-// -check fails when one on disk is not what the sources say.
+// -check fails when one on disk is not what the sources say. The hand-written pages are held to
+// the same sources: every spin and task command they quote must be one spin has.
 package main
 
 import (
@@ -14,23 +15,41 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, "refgen:", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	spin := flag.String("spin", "../spin", "a checkout of spin-stack/spin")
 	tf := flag.String("terraform", "../spin-terraform-aws", "a checkout of spin-stack/spin-terraform-aws")
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
+	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	flag.Parse()
 
+	// The CLI is built once, here, and runs with this empty directory as its HOME.
+	home, err := os.MkdirTemp("", "refgen")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(home)
+	bin, err := buildCLI(*spin, home)
+	if err != nil {
+		return err
+	}
+
 	pages := map[string][]byte{}
 	for _, gen := range []func() (map[string][]byte, error){
-		func() (map[string][]byte, error) { return cliPages(*spin) },
+		func() (map[string][]byte, error) { return cliPages(bin, home) },
 		func() (map[string][]byte, error) { return terraformPages(*tf) },
 		func() (map[string][]byte, error) { return configPages(*spin) },
 		func() (map[string][]byte, error) { return apiPages(*spin) },
 	} {
 		p, err := gen()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "refgen:", err)
-			os.Exit(1)
+			return err
 		}
 		for k, v := range p {
 			pages[k] = v
@@ -39,13 +58,22 @@ func main() {
 
 	stale, err := sync(*out, pages, *check)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "refgen:", err)
-		os.Exit(1)
+		return err
 	}
-	if *check && len(stale) > 0 {
-		fmt.Fprintf(os.Stderr, "refgen: out of date, run `task reference`: %v\n", stale)
-		os.Exit(1)
+	bad, err := checkCommands(*docs, *spin, bin, home)
+	if err != nil {
+		return err
 	}
+	for _, b := range bad {
+		fmt.Fprintln(os.Stderr, "refgen:", b)
+	}
+	switch {
+	case *check && len(stale) > 0:
+		return fmt.Errorf("out of date, run `task reference`: %v", stale)
+	case len(bad) > 0:
+		return fmt.Errorf("%d commands on the pages that spin does not have", len(bad))
+	}
+	return nil
 }
 
 // sync makes the generated directories under out hold exactly pages: a page the sources no

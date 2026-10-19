@@ -13,10 +13,12 @@ A workspace starts from an **image** or from a **snapshot**. Both are the same t
 underneath: a published, read-only disk. Creating a workspace clones it, which copies nothing.
 
 ```bash
-spin workspace create --name api --cpu 2 --memory 4096 --disk 20 --wait
+spin workspace create --name api --preset large --wait
 spin workspace create --name retry --from-snapshot <snapshot-id> --wait
 ```
 
+- **Size.** `--preset` names one of the installation's presets; without it, the default one.
+  See [Resources](#resources).
 - **Name.** Lower-case letters, digits and hyphens, starting with a letter, at most 55
   characters. Names are unique in the installation, because a workspace's name is its host
   name. Every command takes the name or the id.
@@ -30,19 +32,17 @@ spin workspace create --name retry --from-snapshot <snapshot-id> --wait
 
 ## Resources
 
-| | Default | Bounds |
-|---|---|---|
-| CPU | 1 core | up to 128 |
-| Memory | 512 MB | 256 MB to 512 GB |
-| Free disk | 10 GB | 1 GB to 2 TB |
+A workspace is sized by a **preset**: its cores, its memory and its free disk. An administrator
+defines the presets (for example `small` and `large`) and marks one as the default. See
+[Installation settings](/admin/configuration/). An installation with no default preset gives
+1 core, 512 MB and 10 GB of free disk.
 
-These are the defaults of an installation with no presets. An administrator can define
-**presets** (for example `small` and `large`) and mark one as the default; a preset can also be
-a ceiling. See [Installation settings](/admin/configuration/).
-
-A running workspace can **grow**: while it runs, the runner can give it more CPU and memory
-than it started with, up to its maximum, which by default is as much as the runner has to
-lend. The disk is the image's size plus the free space you asked for.
+A preset is fixed, starting at its size and staying there, or it bursts: it starts at a floor
+and may grow up to its size, or up to whatever its runner has room for. A running workspace
+can **grow**: the runner lends it more CPU and memory, up to that ceiling, and takes them back.
+`spin workspace grant` gives it cores and memory of its own, kept until
+`spin workspace release` gives them back. The disk is the image's size plus the preset's free
+space.
 
 ## States
 
