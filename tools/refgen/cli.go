@@ -12,24 +12,23 @@ import (
 // Commands the CLI carries that are not the product's: cobra's own.
 var cliSkip = map[string]bool{"help": true, "completion": true}
 
-// cliPages builds the CLI from the checkout and writes a page per top-level command, each
-// holding the --help of it and of every command under it. The help is the CLI's own words,
-// so the page cannot say a flag the binary does not have.
-func cliPages(spin string) (map[string][]byte, error) {
-	tmp, err := os.MkdirTemp("", "refgen")
-	if err != nil {
-		return nil, err
-	}
-	defer os.RemoveAll(tmp)
-	bin := filepath.Join(tmp, "spin")
+// buildCLI builds the CLI from the checkout into dir.
+func buildCLI(spin, dir string) (string, error) {
+	bin := filepath.Join(dir, "spin")
 	build := exec.Command("go", "build", "-o", bin, "./cmd/cli")
 	build.Dir = spin
 	build.Stderr = os.Stderr
 	if err := build.Run(); err != nil {
-		return nil, fmt.Errorf("building the CLI in %s: %w", spin, err)
+		return "", fmt.Errorf("building the CLI in %s: %w", spin, err)
 	}
+	return bin, nil
+}
 
-	top, err := help(bin, tmp, nil)
+// cliPages writes a page per top-level command, each holding the --help of it and of every
+// command under it. The help is the CLI's own words, so the page cannot say a flag the binary
+// does not have. home is the empty HOME the CLI runs with.
+func cliPages(bin, home string) (map[string][]byte, error) {
+	top, err := help(bin, home, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +40,7 @@ func cliPages(spin string) (map[string][]byte, error) {
 	for i, c := range top.subs {
 		var b strings.Builder
 		b.WriteString(frontmatter("spin "+c.name, "spin "+c.name+": "+c.short+".", i+1))
-		if err := walk(bin, tmp, []string{c.name}, &b, 2); err != nil {
+		if err := walk(bin, home, []string{c.name}, &b, 2); err != nil {
 			return nil, err
 		}
 		pages[filepath.Join("cli", c.name+".md")] = []byte(b.String())
