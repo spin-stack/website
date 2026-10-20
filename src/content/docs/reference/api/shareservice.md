@@ -48,6 +48,7 @@ List users who have access to a snapshot
 |---|---|---|
 | `shares` | list of [SnapshotShare](/reference/api/types/#snapshotshare) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
+| `outsideTeam` | [OutsideShareState](/reference/api/types/#outsidesharestate) | outside_team is the snapshot's share outside its team: what a clone by somebody of another team stands on, made when the snapshot is first shared outside the team or made public. A clone of it outside the team is refused until it is ready. |
 
 ## SetSnapshotVisibility
 

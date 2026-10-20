@@ -24,6 +24,7 @@ Available Commands:
   storage     What the object store holds, and taking out what nothing needs
   token       Manage runner registration tokens
   versions    What is running where: this control plane, each runner and its machine
+  volume      Re-key a workspace's disk
 
 Flags:
   -h, --help   help for admin
@@ -530,6 +531,69 @@ Usage:
 
 Flags:
   -h, --help   help for versions
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+### spin admin volume
+
+```
+Re-key a workspace's disk
+
+Usage:
+  spin admin volume [flags]
+  spin admin volume [command]
+
+Available Commands:
+  rekey       Copy a workspace's disk under a key of its own and destroy the old one
+  rekeys      The disks being re-keyed, and the ones a revoked host's keys marked for it
+
+Flags:
+  -h, --help   help for volume
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+
+Use "spin admin volume [command] --help" for more information about a command.
+```
+
+#### spin admin volume rekey
+
+```
+Copy a workspace's disk, whole, under a key of its own, point the workspace at the copy and
+delete the disk - which destroys the key it was under, and every snapshot of the disk with it: those
+are what that key opens. What to do when the key is assumed taken, by a host that held it.
+
+The workspace must be stopped or quarantined. A disk something was cloned from is refused.
+
+Usage:
+  spin admin volume rekey <workspace> [flags]
+
+Flags:
+  -h, --help   help for rekey
+  -y, --yes    Skip confirmation
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+#### spin admin volume rekeys
+
+```
+The disks being re-keyed, and the ones a revoked host's keys marked for it
+
+Usage:
+  spin admin volume rekeys [flags]
+
+Flags:
+  -h, --help   help for rekeys
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
