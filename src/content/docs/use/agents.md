@@ -46,6 +46,9 @@ egress](/concepts/network/).
 
 Afterwards, `spin workspace egress <workspace>` shows what it reached and what it was refused.
 
+The key the agent talks to its provider with need not be on the disk at all: see [An agent
+without keys](/use/agent-keys/).
+
 ## Review, then keep or undo
 
 The pattern that makes an agent's work safe to accept:
