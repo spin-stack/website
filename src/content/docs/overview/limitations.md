@@ -1,10 +1,12 @@
 ---
-title: Status and limitations
-description: What Spin does not do yet, where it runs, and the limits you should know before you rely on it.
+title: Limitations
+description: Where Spin runs and the limits you should know before you rely on it; what is built and what is not is on the status page.
 ---
 
-Spin is **experimental**. APIs will change, and data may be lost. This page lists what it does
-not do today, so that each one is something you know about before you meet it.
+Spin is **experimental**. APIs will change, and data may be lost. What is built, what is partly
+there and what is not built yet is the [status page](/reference/status/), written from the tree
+by a test. This page is the limits: what Spin does not do by design, or by where it runs today.
+Each bullet here is a limit row of that same list, and the build fails when the two disagree.
 
 ## Where it runs
 
@@ -12,19 +14,17 @@ not do today, so that each one is something you know about before you meet it.
   install Spin. The platform itself is not tied to AWS, but nothing else is packaged or tested.
 - **x86-64 only.** Runners are x86-64 machines with nested virtualization. There are no Arm
   runners.
-- **The CLI** is built for Linux (x86-64) and macOS (Apple silicon).
+- **The CLI runs on Linux x86-64 and macOS Apple silicon.**
 - **One region, one control plane.** An installation lives in one AWS region. The control plane
   and the proxy are each a single machine; an update replaces them without stopping workspaces,
   but a machine that fails is replaced in minutes, not seconds.
 
 ## Workspaces
 
-- **No idle stop.** A workspace runs until someone stops it. Runners scale to zero, but only
-  when no workspace is running.
 - **No GPUs.** There is no way to ask for a runner of a particular kind.
-- **Linux guests only**, booted with the kernel Spin provides.
-- **No IPv6** inside a workspace. The resolver a workspace uses drops AAAA answers.
-- **TCP only** for published ports.
+- **Linux guests only.** Booted with the kernel Spin provides.
+- **No IPv6 inside a workspace.** The resolver a workspace uses drops AAAA answers.
+- **TCP only for published ports.**
 - **A diff does not see everything.** It hashes a file only when its size, inode or times
   changed, so a change hidden by setting the times and the clock back is not reported. Extended
   attributes are not compared.
@@ -37,20 +37,16 @@ not do today, so that each one is something you know about before you meet it.
 
 ## Durability
 
-- **Work since the last upload can be lost.** A runner uploads a workspace's writes in layers,
-  and on snapshot and stop. If the runner is lost, what it had not uploaded is lost with it. See
-  [How it works](/overview/how-it-works/#where-your-work-is-stored).
-- **Nothing tells you a workspace is stranded.** When a runner disappears, its workspaces wait
-  for their owner to run `spin workspace recover`. Nothing notifies the owner.
-- **The database's backups are RDS's**: point-in-time recovery for seven days, and a final
-  snapshot. The control plane does not copy the database anywhere else.
+- **Work since the last upload can be lost.** A runner uploads a workspace's writes in layers:
+  on the installation's RPO, on snapshot and on stop. If the runner is lost, what it had not
+  uploaded is lost with it. See [How it works](/overview/how-it-works/#where-your-work-is-stored).
 
 ## Identity and access
 
-- **No multi-factor authentication** of Spin's own. Sign in through GitHub or an OIDC provider
+- **No multi-factor authentication of Spin's own.** Sign in through GitHub or an OIDC provider
   that enforces it.
 - **No invitations.** A person must sign in once before they can be added to a team.
-- **Team roles are fixed**: owner, admin and member.
+- **Team roles are fixed.** Owner, admin and member.
 
 ## Security
 

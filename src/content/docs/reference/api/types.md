@@ -531,6 +531,12 @@ ObservedDestination is one address the workspace was allowed to reach, with what
 | `packetsReceived` | string (int64) | What came back to the workspace from there. |
 | `bytesReceived` | string (int64) |  |
 
+## OutsideShareState
+
+OutsideShareState is how far a snapshot's share outside its team is.
+
+One of: `OUTSIDE_SHARE_STATE_UNSPECIFIED`, `OUTSIDE_SHARE_STATE_PREPARING`, `OUTSIDE_SHARE_STATE_READY`.
+
 ## OwnerWord
 
 OwnerWord is a workspace's access, as its owner signed it with a key of their keyring (internal/ownerword): document is the access as framed JSON, signature the key's SSH signature over it (sshsig, namespace "spin-access") - what `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent.
@@ -708,6 +714,12 @@ One of: `REGISTRATION_MODE_UNSPECIFIED`, `REGISTRATION_MODE_OPEN`, `REGISTRATION
 | `usedByHostId` | string | Host ID that used this token; a reusable token's last one |
 | `reusable` | boolean | A pool's token: it registers every host that presents it until it expires or is revoked. |
 | `hostPolicy` | [HostPolicy](/reference/api/types/#hostpolicy) | What every host it registers is told (HostPolicy without its host_id); unset tells them nothing, and they keep their own defaults until an operator says otherwise. |
+
+## RekeyState
+
+RekeyState is how far a disk's re-key is.
+
+One of: `REKEY_STATE_UNSPECIFIED`, `REKEY_STATE_PENDING`, `REKEY_STATE_COPYING`, `REKEY_STATE_READY`.
 
 ## RepositoryConfig
 
@@ -1086,6 +1098,19 @@ VSCodeServerPublish is this control plane's publish: the last one, or the one un
 ## VSCodeServerPublishState
 
 One of: `VS_CODE_SERVER_PUBLISH_STATE_UNSPECIFIED`, `VS_CODE_SERVER_PUBLISH_STATE_IDLE`, `VS_CODE_SERVER_PUBLISH_STATE_WORKING`, `VS_CODE_SERVER_PUBLISH_STATE_PUBLISHED`, `VS_CODE_SERVER_PUBLISH_STATE_FAILED`.
+
+## VolumeRekey
+
+VolumeRekey is a workspace's disk to re-key or being re-keyed.
+
+| Field | Type | What it is |
+|---|---|---|
+| `volumeId` | string |  |
+| `workspaceId` | string |  |
+| `workspaceName` | string |  |
+| `state` | [RekeyState](/reference/api/types/#rekeystate) |  |
+| `hostId` | string | The host copying it, empty while pending. |
+| `reason` | string |  |
 
 ## Workspace
 

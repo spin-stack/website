@@ -1,8 +1,10 @@
 // Command refgen writes the site's reference pages from what they describe: the CLI's own
-// help, the Terraform modules' variables and outputs, the installation's example config file and
-// the control plane's OpenAPI document. A reference page written by hand is a list nothing checks; these are regenerated, and
-// -check fails when one on disk is not what the sources say. The hand-written pages are held to
-// the same sources: every spin and task command they quote must be one spin has.
+// help, the Terraform modules' variables and outputs, the installation's example config file,
+// the control plane's OpenAPI document and spin's feature board (`spin features`). A reference
+// page written by hand is a list nothing checks; these are regenerated, and -check fails when one
+// on disk is not what the sources say. The hand-written pages are held to the same sources: every
+// spin and task command they quote must be one spin has, and every bullet of the limitations page
+// is a limit row of the board.
 package main
 
 import (
@@ -40,7 +42,11 @@ func run() error {
 		return err
 	}
 
-	pages := map[string][]byte{}
+	rows, err := board(bin, home)
+	if err != nil {
+		return err
+	}
+	pages := statusPage(rows)
 	for _, gen := range []func() (map[string][]byte, error){
 		func() (map[string][]byte, error) { return cliPages(bin, home) },
 		func() (map[string][]byte, error) { return terraformPages(*tf) },
@@ -64,6 +70,11 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	limits, err := checkLimits(*docs, rows)
+	if err != nil {
+		return err
+	}
+	bad = append(bad, limits...)
 	for _, b := range bad {
 		fmt.Fprintln(os.Stderr, "refgen:", b)
 	}
@@ -71,7 +82,7 @@ func run() error {
 	case *check && len(stale) > 0:
 		return fmt.Errorf("out of date, run `task reference`: %v", stale)
 	case len(bad) > 0:
-		return fmt.Errorf("%d commands on the pages that spin does not have", len(bad))
+		return fmt.Errorf("%d lines on the pages that spin does not have", len(bad))
 	}
 	return nil
 }
@@ -80,7 +91,7 @@ func run() error {
 // longer produce is removed, since a command that is gone must not keep a page.
 func sync(out string, pages map[string][]byte, check bool) ([]string, error) {
 	var stale []string
-	for _, dir := range []string{"cli", "terraform", "configuration", "api"} {
+	for _, dir := range []string{"status", "cli", "terraform", "configuration", "api"} {
 		matches, err := filepath.Glob(filepath.Join(out, dir, "*.md"))
 		if err != nil {
 			return nil, err

@@ -8,7 +8,8 @@ export const nav = [
 			['How it works', 'overview/how-it-works'],
 			['Quickstart', 'quickstart'],
 			['Try it on one machine', 'overview/one-machine'],
-			['Status and limitations', 'overview/limitations'],
+			['Status', 'reference/status'],
+			['Limitations', 'overview/limitations'],
 		],
 	},
 	{

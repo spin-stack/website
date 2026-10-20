@@ -462,6 +462,22 @@ No fields: `{}`.
 |---|---|---|
 | `jobs` | list of [Job](/reference/api/types/#job) |  |
 
+## ListRekeys
+
+`POST /spin.v1.AdminService/ListRekeys`
+
+The disks being re-keyed, and the ones a revoked host's keys marked for it.
+
+**Request**
+
+No fields: `{}`.
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `rekeys` | list of [VolumeRekey](/reference/api/types/#volumerekey) |  |
+
 ## ListResourcePresets
 
 `POST /spin.v1.AdminService/ListResourcePresets`
@@ -539,6 +555,24 @@ Publish the servers of the newest stable VS Code releases, or of the commits nam
 **Response**
 
 No fields: `{}`.
+
+## RekeyVolume
+
+`POST /spin.v1.AdminService/RekeyVolume`
+
+Re-key a workspace's disk: copy it whole under a key of its own, point the workspace at the copy, and delete the disk - which shreds the key assumed taken and every snapshot of the disk, since those are what that key opens. The workspace must be stopped or quarantined. Refused for a disk something descends from. Audited.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaceId` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `targetVolumeId` | string |  |
 
 ## RemoveAllowedEmail
 
