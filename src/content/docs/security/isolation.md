@@ -1,6 +1,6 @@
 ---
 title: Isolation
-description: What keeps a workspace from reaching the runner, other workspaces and the cloud — the virtual machine, how its QEMU is confined, and how untrusted disk bytes are parsed.
+description: What keeps a workspace from the runner, other workspaces and the cloud: the virtual machine, its confined QEMU, and how disk bytes are parsed.
 ---
 
 ## A virtual machine per workspace

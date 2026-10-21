@@ -1,6 +1,6 @@
 ---
 title: Update
-description: Move an installation to a new release — publish its Spin OS image, change spin_version, apply — and what happens to machines and workspaces while it rolls out.
+description: Move an installation to a new release, and what happens to its machines and workspaces while it rolls out.
 ---
 
 A machine of an installation is never updated in place. Its root filesystem is read-only and

@@ -1,6 +1,6 @@
 ---
 title: Security model
-description: What Spin protects, from whom, and how — isolation, network, data, identity and supply chain — and where to read about each.
+description: What Spin protects, from whom, and how: isolation, network, data, identity and supply chain, and where to read about each.
 ---
 
 Spin runs code its operators do not fully trust, on machines in their own account. Its security

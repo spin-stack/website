@@ -1,6 +1,6 @@
 ---
 title: Cost
-description: What an installation costs on AWS — the small part that runs all the time and the runners that run only while workspaces do — and the settings that change it.
+description: What an installation costs on AWS: the small part that runs all the time, the runners that run only while workspaces do, and the settings that change it.
 ---
 
 An installation has two kinds of cost: a small one that runs all the time, and runners, which

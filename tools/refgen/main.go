@@ -95,6 +95,17 @@ func run() error {
 	}
 	bad = append(bad, limits...)
 	bad = append(bad, releases...)
+	for _, c := range []func() ([]string, error){
+		func() ([]string, error) { return checkDescriptions(*docs) },
+		func() ([]string, error) { return checkEnv(*docs, *spin) },
+		func() ([]string, error) { return checkStates(*docs, pages) },
+	} {
+		b, err := c()
+		if err != nil {
+			return err
+		}
+		bad = append(bad, b...)
+	}
 	for _, b := range bad {
 		fmt.Fprintln(os.Stderr, "refgen:", b)
 	}

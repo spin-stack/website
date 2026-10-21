@@ -15,13 +15,7 @@ Create an API key with only the scopes the agent needs:
 spin api-key create "review-bot" --scope workspace:read --scope workspace:write --expires 30d
 ```
 
-| Scope | Allows |
-|---|---|
-| `workspace:read` | Reading workspaces, snapshots and ports |
-| `workspace:write` | Creating, starting, stopping and changing workspaces; opening a terminal |
-| `workspace:delete` | Deleting workspaces |
-| `team:read`, `team:write` | Reading and managing teams and their members |
-| `settings:read`, `settings:write` | Reading and changing user settings and SSH keys |
+Every scope, and what it allows, is in [`spin api-key`](/reference/cli/api-key/).
 
 A key can never create another key, approve a login, or administer the installation. It lasts
 at most a year. The secret is shown once.

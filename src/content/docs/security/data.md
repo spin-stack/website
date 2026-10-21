@@ -1,6 +1,6 @@
 ---
 title: Data and encryption
-description: How workspace disks, memory snapshots and the installation's secrets are encrypted, where each key lives, who can open what, and what each kind of delete destroys.
+description: How disks, memory snapshots and the installation's secrets are encrypted, where each key lives, and what each kind of delete destroys.
 ---
 
 ## Disks

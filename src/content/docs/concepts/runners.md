@@ -1,6 +1,6 @@
 ---
 title: Runners and hosts
-description: What a runner is, how it joins an installation, how workspaces are placed on it, how runners scale from zero, and what happens when one is drained, reclaimed or lost.
+description: What a runner is, how it joins, how workspaces are placed on it, how runners scale from zero, and what happens when one is lost.
 ---
 
 A **runner** is a machine that runs workspaces. In the dashboard and the API a runner is also
