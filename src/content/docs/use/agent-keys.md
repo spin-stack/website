@@ -40,9 +40,13 @@ and says exactly which host it may be sent to. A rule that names any other host 
 printf %s "$ANTHROPIC_API_KEY" | spin team secret set <team> anthropic-api-key --host api.anthropic.com
 ```
 
+A team is named by its id, its path or `me`: your personal team, which every workspace you
+create without naming a team is in. A key for your own workspaces alone is `spin team secret
+set me ...`, and nobody else holds it.
+
 The value is sealed in the control plane's database under the installation's key, or, with
-`--ref`, kept in the team's own AWS Secrets Manager and read by the control plane as the team
-whenever a host asks. It is never answered back to a client, and a host is given it only for a
+`--ref`, kept in the team's own AWS Secrets Manager or Parameter Store and read by the control
+plane as the team whenever a host asks. It is never answered back to a client, and a host is given it only for a
 workspace of the team that is running under a rule that injects it.
 
 ## 3. The workspace runs under the policy
@@ -65,7 +69,40 @@ spin settings set env.OPENAI_API_KEY spin
 
 That is the whole recipe. The CLI talks to `api.anthropic.com` by its real name, the guest's
 trust store holds the installation's egress root once the owner's word names it, and the
-request leaves the host with the team's key on it.
+request leaves the host with the team's key on it. HTTP/1.1, HTTP/2 and WebSockets all go
+through: a WebSocket's handshake is a request like any other, and what follows its 101 is
+carried as bytes.
+
+## Your own services: an identity, not a key
+
+A key is for a provider that takes nothing else. For a service the team runs itself - a model
+gateway, an internal API, a Vault - there is nothing to set and nothing to rotate: the rule names
+an `identity`, the audience the token is for, and the proxy sets a five-minute token of the
+workspace's identity in the header instead. No secret exists, in the database or anywhere.
+
+```yaml
+network_policies:
+  - name: gateway
+    rules:
+      - allowNames: [gateway.internal.example]
+        broker: true
+        inject: [{header: authorization, identity: https://gateway.internal.example, prefix: "Bearer "}]
+```
+
+Two things name who may receive it. The installation lists the audiences a workspace's identity
+may be given for (`identity_audiences` in the config file), and the workspace's owner names the
+ones theirs may go to:
+
+```bash
+spin workspace audiences agent-1 --add https://gateway.internal.example
+```
+
+The service verifies the token against the installation's issuer, `https://id.<domain>`, whose
+discovery document and key set the installation publishes. The token's subject is
+`spiffe://<domain>/t/<team>/w/<workspace>/p` - the `/p` says the proxy presented it on the
+workspace's behalf, so the service admits what it chooses to: this workspace, every workspace of
+the team, or any of the installation. It is bound to no key and says so; the proxy holds none of
+the workspace's.
 
 ## Seeing it work, and what went wrong
 
@@ -81,8 +118,8 @@ the team holds what it is set from.
 
 ## What the proxy cannot do
 
-- HTTP/1.1 only, and no upgrades: a tool that insists on WebSockets to its provider has to be
-  told to use HTTP (Codex has such a setting; Claude Code uses HTTP).
+- An upgrade to anything but a WebSocket - h2c, for one - is refused with 501: what would follow
+  it is nothing a rule can read.
 - A request body is read whole only when a rule signs it as a cloud principal, up to 16 MiB.
 - Nothing but HTTPS on 443 is brokered: `git` over SSH is not, and `git` over HTTPS with the
   team's forge app is the way to a private repository.
