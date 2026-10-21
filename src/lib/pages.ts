@@ -102,7 +102,20 @@ export function toMarkdown(d: Doc, base: string): string {
 		`](${base}${path === '' ? '/index' : path}.md${hash})`,
 	);
 	body = body.replace(/\n{3,}/g, '\n\n');
+	untranslated(d, body);
 	return `# ${d.data.title}\n\n> ${d.data.description}\n\n${body.trim()}\n`;
+}
+
+/**
+ * untranslated refuses a twin that still carries MDX: a component, an expression or a directive
+ * left in would reach a model as markup. Code blocks are left alone, since what they quote is
+ * meant literally; braces are MDX only in an MDX page.
+ */
+function untranslated(d: Doc, body: string): void {
+	const prose = body.replace(/^```[\s\S]*?^```/gm, '').replace(/`[^`\n]*`/g, '');
+	const mdx = d.filePath?.endsWith('.mdx') ?? false;
+	const left = prose.match(/<\/?[A-Z]\w*[\s/>]/) ?? prose.match(/^:{2,3}\w/m) ?? (mdx ? prose.match(/[{}]/) : null);
+	if (left) throw new Error(`${d.id}: its Markdown twin still carries MDX: ${JSON.stringify(left[0])}`);
 }
 
 /** The site's address with its base and no trailing slash: what every absolute link starts with. */

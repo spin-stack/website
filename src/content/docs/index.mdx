@@ -1,11 +1,12 @@
 ---
 title: Spin
-description: Self-hosted sandboxes in your own AWS account. Every workspace is its own virtual machine, with snapshots that keep memory, rollback, and a diff of what changed.
+description: Self-hosted sandboxes in your own AWS account, a virtual machine per workspace, with snapshots, rollback and a diff of what changed.
 template: splash
 hero:
-  tagline: Sandboxes you run in your own AWS account. Each workspace is its own virtual machine. Take a snapshot at any moment, go back to it, and see exactly which files changed.
+  title: A virtual machine per workspace. A snapshot before, a diff after.
+  tagline: Sandboxes for people and agents that run in your own AWS account. Take a snapshot with the memory of the running processes, see exactly which files changed, and roll back. A workspace's network stays closed until you open it.
   actions:
-    - text: What is Spin
+    - text: Evaluate
       link: overview/
       icon: right-arrow
     - text: Install on AWS
@@ -13,40 +14,44 @@ hero:
       variant: minimal
 ---
 
-import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 <Aside type="caution" title="Experimental">
-Spin is experimental. APIs will change and data may be lost. Read [Status and limitations](/overview/limitations/) before you rely on it.
+APIs will change and data may be lost. [Status](/reference/status/) lists what is built and what proves it.
 </Aside>
 
-## What you get
+## What it looks like
+
+```bash
+spin workspace create --name demo --wait
+spin snapshot create demo --description clean --with-memory --wait
+spin exec demo -- sh -c 'echo hello > /etc/greeting; rm /etc/issue'
+spin snapshot create demo --description after --wait
+spin snapshot diff demo <after-id> --from <clean-id> --under /etc
+spin workspace restore demo <clean-id> --with-memory
+spin workspace delete demo
+```
+
+A workspace is a KVM virtual machine with its own kernel, a persistent disk and root. The diff
+runs in a separate machine and lists every file added, removed or modified between two snapshots.
+A restore from a memory snapshot puts the processes back as they were.
+
+## Straight answers
+
+- **AWS only.** One OpenTofu module installs Spin in your account. There is no hosted version.
+- **x86-64 only.** Runners are x86-64 machines with nested virtualization.
+- **Linux guests only.** A workspace boots the kernel Spin provides.
+- **No GPUs.** There is no way to ask for a runner of a particular kind.
+- **One region, one control plane.** An installation lives in one AWS region.
+
+Each answer is a limit row of the [status page](/reference/status/), held to the code by a test.
+The rest are on [Limitations](/overview/limitations/).
+
+## Where to go
 
 <CardGrid>
-	<Card title="A machine per workspace" icon="laptop">
-		Each workspace is a KVM virtual machine with its own kernel, root access, a persistent disk and SSH. Workspaces share no kernel with each other or with the host.
-	</Card>
-	<Card title="Snapshots, with memory" icon="document">
-		Take a snapshot of a running workspace's disk, or of its disk and memory. From a memory snapshot, processes continue from the instant it was taken.
-	</Card>
-	<Card title="Rollback and diff" icon="random">
-		Put a workspace back to any snapshot. List every file that was added, removed or modified between two snapshots.
-	</Card>
-	<Card title="Egress you decide" icon="approve-check">
-		By default a workspace's network is closed. Network policies name what it may reach, and you can see what it did reach.
-	</Card>
-	<Card title="In your account" icon="seti:terraform">
-		One OpenTofu module installs the whole thing in your AWS account. Runners start when a workspace needs one and scale back to none when nothing is running.
-	</Card>
-	<Card title="For people and agents" icon="rocket">
-		Use it from the dashboard, from the CLI, from VS Code over SSH, or from an agent with an API key.
-	</Card>
-</CardGrid>
-
-## Where to start
-
-<CardGrid>
-	<LinkCard title="How it works" href="overview/how-it-works/" description="The control plane, runners, the proxy, and where a workspace's disk lives." />
-	<LinkCard title="Quickstart" href="quickstart/" description="Sign in, create a workspace, take a snapshot, break something, and go back." />
-	<LinkCard title="Install on AWS" href="aws/overview/" description="What the module creates, what it costs, and how to install it." />
-	<LinkCard title="Security model" href="security/" description="What isolates a workspace, what is encrypted, and what is still open." />
+	<LinkCard title="Evaluate" href="overview/" description="Who Spin is for, what it gives you, and why it is built this way." />
+	<LinkCard title="Install" href="aws/overview/" description="What the module creates in your AWS account, what it costs, and how to install it." />
+	<LinkCard title="Use" href="quickstart/" description="Sign in, create a workspace, take a snapshot, change something, see the diff, and go back." />
+	<LinkCard title="Agents" href="use/agents/" description="API keys, JSON output, and a workspace an agent can break and you can undo." />
 </CardGrid>

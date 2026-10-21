@@ -17,13 +17,15 @@ task check        # the reference against the sources, the build, and every link
 - **The status page** `reference/status/` is written from `spin features`, the feature board a
   test in spin holds to the tree. The bullets of `overview/limitations.md` are its limit rows,
   and `task reference:check` fails on a bullet that is not one, or a row no bullet leads with.
+  The landing page's straight answers are limit rows too, and the check fails on one that is not.
 - **Commands on the other pages** are held to the same checkouts: every `spin` command in a
   shell block must be one the CLI has, with flags its help lists, and every `task` one spin's
   Taskfile has (after a `cd` into another checkout, that one's). `task reference:check` fails
   on one that is not.
 - **For models**, the build writes `llms.txt` (every page, with its description),
   `llms-full.txt` (every page's Markdown) and a `.md` twin of each page, all from the same
-  content (`src/pages/`).
+  content (`src/pages/`). The build fails on a twin that still carries MDX: a component, an
+  expression or a directive `src/lib/pages.ts` does not translate.
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spin-stack.github.io` and
   `/website` (a GitHub project page). Content links from the root (`/concepts/network/`) and the
   build puts the base in front; `task links` fails on one it cannot resolve.

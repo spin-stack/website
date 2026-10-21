@@ -5,10 +5,10 @@ export const nav = [
 		label: 'Start here',
 		items: [
 			['What is Spin', 'overview'],
+			['Status', 'reference/status'],
 			['How it works', 'overview/how-it-works'],
 			['Quickstart', 'quickstart'],
 			['Try it on one machine', 'overview/one-machine'],
-			['Status', 'reference/status'],
 			['Limitations', 'overview/limitations'],
 		],
 	},

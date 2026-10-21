@@ -30,7 +30,7 @@ func checkCommands(docs, spin, bin, home string) ([]string, error) {
 		if d.IsDir() && d.Name() == "reference" {
 			return fs.SkipDir
 		}
-		if d.IsDir() || filepath.Ext(path) != ".md" {
+		if d.IsDir() || !page(path) {
 			return nil
 		}
 		lines, err := shellLines(path)
@@ -73,6 +73,13 @@ func checkCommands(docs, spin, bin, home string) ([]string, error) {
 		return nil
 	})
 	return bad, err
+}
+
+// page says whether a file is one of the site's pages: Markdown, or MDX for the pages that use
+// a component.
+func page(path string) bool {
+	ext := filepath.Ext(path)
+	return ext == ".md" || ext == ".mdx"
 }
 
 var (
