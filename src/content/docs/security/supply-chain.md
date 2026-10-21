@@ -58,11 +58,13 @@ only the control plane writes to the database. A runner refuses a history that d
 anchor. An image's layers are also measured with fs-verity on the runner's disk, and the kernel
 verifies every block read from them.
 
-## What it does not cover yet
+## Boot, verified
 
-- **Boot is measured, not verified.** The kernel image is not signed and the image carries no
-  Secure Boot keys, so nothing refuses a modified image at boot.
-- **The disk image is not bit-for-bit reproducible.** The kernel and the packages are, but file
-  times in the root filesystem differ between builds.
-- The digest chain does not cover a volume's current writer, the commits of about one heartbeat
-  before its last report, or a database that was itself compromised.
+Each role's image is signed for Secure Boot by a key of that role held in KMS, and an instance
+boots only what its role's key signed. Every build records the measurements an instance of it
+takes in its NitroTPM. A runner joins an installation only by proving those measurements in an
+attestation document, and the keys that open volumes are released only to a runner that proves
+them. What is still open is on [Known gaps](/reference/security/known-gaps/).
+
+A commit built again comes out with the same root hash, kernel image and boot measurement. The
+disk's bytes differ only in the times on its EFI partition, which nothing measures.
