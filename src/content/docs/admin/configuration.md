@@ -1,6 +1,6 @@
 ---
 title: Installation settings
-description: How an installation is configured: the file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal.
+description: "How an installation is configured: the file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal."
 ---
 
 An installation's settings live in its database, and an administrator edits all of them in the

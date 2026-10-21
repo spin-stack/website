@@ -1,6 +1,6 @@
 ---
 title: Remove
-description: Delete an installation on purpose: what refuses to be destroyed, why, and the steps to remove it anyway.
+description: "Delete an installation on purpose: what refuses to be destroyed, why, and the steps to remove it anyway."
 ---
 
 Some parts of an installation refuse to be destroyed, because a plan that replaced them by

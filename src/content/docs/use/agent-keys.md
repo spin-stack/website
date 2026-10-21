@@ -1,6 +1,6 @@
 ---
 title: An agent without keys
-description: Run a coding agent that needs a provider key inside a workspace, with the key never on its disk: a brokered policy, a team secret and a tag.
+description: "Run a coding agent that needs a provider key inside a workspace, with the key never on its disk: a brokered policy, a team secret and a tag."
 ---
 
 A coding agent needs a key to talk to its provider, and a key on a workspace's disk is in every
