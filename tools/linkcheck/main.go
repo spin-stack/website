@@ -32,10 +32,28 @@ const (
 
 func main() {
 	base := flag.String("base", "", "the path the site is served under, such as /website")
+	ext := flag.Bool("external", false, "open every link out of the site and every ghcr.io reference instead, with no credential")
+	site := flag.String("site", "https://spin-stack.github.io", "where the site is served, whose own links -external leaves alone")
 	flag.Parse()
 	dist := "dist"
 	if flag.NArg() > 0 {
 		dist = flag.Arg(0)
+	}
+	if *ext {
+		failed, err := external(dist, *site)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "linkcheck:", err)
+			os.Exit(1)
+		}
+		for _, f := range failed {
+			fmt.Fprintln(os.Stderr, f)
+		}
+		if len(failed) > 0 {
+			fmt.Fprintf(os.Stderr, "linkcheck: %d links out of the site do not open\n", len(failed))
+			os.Exit(1)
+		}
+		fmt.Println("linkcheck: every link out of the site opens")
+		return
 	}
 	prefix := strings.TrimSuffix(*base, "/")
 	pages := map[string]string{} // the path a file is served at -> its HTML

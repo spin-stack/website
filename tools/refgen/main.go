@@ -119,6 +119,7 @@ func run() error {
 		func() ([]string, error) { return checkDescriptions(*docs) },
 		func() ([]string, error) { return checkEnv(*docs, *spin) },
 		func() ([]string, error) { return checkStates(*docs, pages) },
+		func() ([]string, error) { return checkRepos(*docs) },
 	} {
 		b, err := c()
 		if err != nil {

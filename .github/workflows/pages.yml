@@ -1,8 +1,9 @@
 name: Pages
 
-# Builds the site on every push and pull request, fails on a broken link, and publishes main to
-# GitHub Pages. The reference pages are committed: `task reference:check` holds them to spin and
-# spin-terraform-aws, which this repository cannot read while spin is private.
+# Builds the site on every push and pull request, fails on a broken link or a page without the
+# experimental notice, and publishes main to GitHub Pages. The reference pages are committed, and
+# `task reference:check` holds them to checkouts of spin and spin-terraform-aws; this job runs it
+# once it can check spin out.
 
 on:
   push:

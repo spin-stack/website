@@ -40,6 +40,11 @@ tasks:
     cmds:
       - go run ./tools/linkcheck -base {{.BASE_PATH}} dist
 
+  links:external:
+    desc: Open every link out of the site and every ghcr.io reference, as a reader with no credential would. Run it on the day the repositories go public.
+    cmds:
+      - go run ./tools/linkcheck -external dist
+
   check:
     desc: Everything CI runs, and the reference against the sources.
     cmds:
