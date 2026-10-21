@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { experimentalMarkdown } from './experimental';
 import { nav } from './nav.mjs';
 
 type Doc = CollectionEntry<'docs'>;
@@ -98,13 +99,17 @@ export function toMarkdown(d: Doc, base: string): string {
 	});
 	// MDX nests components with tabs; left in, Markdown reads the text inside them as code.
 	body = body.replace(/^\t+/gm, '');
-	// A link within the site is to the page's Markdown twin, absolute, so it works out of context.
-	body = body.replace(/\]\((\/[^)\s#]*?)\/?(#[^)\s]*)?\)/g, (_, path: string, hash = '') =>
-		`](${base}${path === '' ? '/index' : path}.md${hash})`,
-	);
+	body = links(body, base);
 	body = body.replace(/\n{3,}/g, '\n\n');
 	untranslated(d, body);
-	return `# ${d.data.title}\n\n> ${d.data.description}\n\n${body.trim()}\n`;
+	return `# ${d.data.title}\n\n${links(experimentalMarkdown, base)}\n\n> ${d.data.description}\n\n${body.trim()}\n`;
+}
+
+/** A link within the site is to the page's Markdown twin, absolute, so it works out of context. */
+function links(md: string, base: string): string {
+	return md.replace(/\]\((\/[^)\s#]*?)\/?(#[^)\s]*)?\)/g, (_, path: string, hash = '') =>
+		`](${base}${path === '' ? '/index' : path}.md${hash})`,
+	);
 }
 
 /**

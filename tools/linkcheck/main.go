@@ -1,6 +1,7 @@
 // Command linkcheck fails when a page of the built site links to a path on the site that the
 // build did not produce, or to an anchor the target page does not have. A broken link is found
-// here rather than by a reader.
+// here rather than by a reader. It also fails a page that does not say Spin is experimental:
+// every HTML page carries the banner once, and every Markdown twin and llms file the sentence.
 package main
 
 import (
@@ -13,12 +14,20 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 )
 
 var (
 	href = regexp.MustCompile(`href="([^"]+)"`)
 	id   = regexp.MustCompile(`\sid="([^"]+)"`)
+)
+
+// The experimental notice as the build writes it: the banner's attribute on an HTML page
+// (src/components/Banner.astro), the sentence in a twin (src/lib/experimental.ts).
+const (
+	banner   = "data-experimental"
+	sentence = "Spin is experimental: APIs change and data may be lost."
 )
 
 func main() {
@@ -30,6 +39,7 @@ func main() {
 	}
 	prefix := strings.TrimSuffix(*base, "/")
 	pages := map[string]string{} // the path a file is served at -> its HTML
+	var unmarked []string
 	err := filepath.WalkDir(dist, func(p string, d fs.DirEntry, err error) error {
 		if err != nil || d.IsDir() {
 			return err
@@ -43,12 +53,25 @@ func main() {
 			served = strings.TrimSuffix(served, "index.html")
 		}
 		body := ""
-		if strings.HasSuffix(p, ".html") {
+		switch ext := filepath.Ext(p); {
+		case ext == ".html":
 			b, err := os.ReadFile(p)
 			if err != nil {
 				return err
 			}
 			body = string(b)
+			if n := strings.Count(body, banner); n != 1 && !strings.HasSuffix(served, "/404.html") {
+				unmarked = append(unmarked, fmt.Sprintf("%s: the experimental banner %d times, not once", served, n))
+			}
+		case ext == ".md" || strings.HasPrefix(path.Base(served), "llms"):
+			b, err := os.ReadFile(p)
+			if err != nil {
+				return err
+			}
+			// It opens the file: within its first lines, before any of the page's own text.
+			if !strings.Contains(string(b[:min(len(b), 400)]), sentence) {
+				unmarked = append(unmarked, served+": does not open with "+strconv.Quote(sentence))
+			}
 		}
 		pages[served] = body
 		return nil
@@ -87,12 +110,16 @@ func main() {
 			}
 		}
 	}
+	sort.Strings(unmarked)
+	for _, u := range unmarked {
+		fmt.Fprintln(os.Stderr, u)
+	}
 	sort.Strings(broken)
 	for _, b := range broken {
 		fmt.Fprintln(os.Stderr, b)
 	}
-	if len(broken) > 0 {
-		fmt.Fprintf(os.Stderr, "linkcheck: %d broken links\n", len(broken))
+	if len(broken) > 0 || len(unmarked) > 0 {
+		fmt.Fprintf(os.Stderr, "linkcheck: %d broken links, %d pages without the experimental notice\n", len(broken), len(unmarked))
 		os.Exit(1)
 	}
 	fmt.Printf("linkcheck: %d pages, every link resolves\n", len(pages))

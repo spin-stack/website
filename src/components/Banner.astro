@@ -1,0 +1,28 @@
+---
+// Every page opens with the experimental notice: Starlight's Banner, which shows a page's own
+// `banner` only, made unconditional. Search leaves it out, or every page would match it.
+import { experimental } from '../lib/experimental';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<div class="sl-banner" data-pagefind-ignore data-experimental>
+	<strong>{experimental}</strong>
+	<a href={`${base}/reference/status/`}>Status</a> lists what is built and what proves it.
+</div>
+
+<style>
+	.sl-banner {
+		--__sl-banner-text: var(--sl-color-banner-text, var(--sl-color-text-invert));
+		padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
+		background-color: var(--sl-color-banner-bg, var(--sl-color-bg-accent));
+		color: var(--__sl-banner-text);
+		line-height: var(--sl-line-height-headings);
+		text-align: center;
+		text-wrap: balance;
+		box-shadow: var(--sl-shadow-sm);
+	}
+	.sl-banner a {
+		color: var(--__sl-banner-text);
+	}
+</style>
