@@ -31,6 +31,8 @@ func run() error {
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
 	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
 	featuresData := flag.String("features", "src/data/features.json", "the feature board, for the pages' feature: links")
+	assets := flag.String("diagrams", "src/assets/diagrams", "where the diagrams the source repositories draw are copied")
+	figuresData := flag.String("figures", "src/data/figures.json", "each diagram's source and words, for its Markdown twin")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	flag.Parse()
 
@@ -97,6 +99,15 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	tfCommit, err := git(*tf, "rev-parse", "HEAD")
+	if err != nil {
+		return err
+	}
+	drawn, err := diagramFiles(*spin, *tf, commit, tfCommit, *assets, *figuresData, *check)
+	if err != nil {
+		return err
+	}
+	stale = append(stale, drawn...)
 	board, err := json.MarshalIndent(rows, "", "\t")
 	if err != nil {
 		return err

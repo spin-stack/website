@@ -2,6 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { experimentalMarkdown } from './experimental';
 import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
+import figures from '../data/figures.json';
 import { statusLine } from './reference';
 
 type Doc = CollectionEntry<'docs'>;
@@ -61,18 +62,6 @@ export function mdPath(d: Doc): string {
 	return d.id === 'index' ? '/index.md' : `/${d.id}.md`;
 }
 
-// What a picture says, for a reader that gets no picture. A component used in the content and
-// missing here fails the build, so a new diagram cannot vanish from the Markdown silently.
-const figures: Record<string, string> = {
-	Architecture:
-		'An installation in one AWS account and VPC: users and agents reach the proxy on 443; the proxy ' +
-		'forwards to the control plane on 8080; the control plane runs PostgreSQL on its own machine and ' +
-		'archives it to an S3 bucket of its own; ' +
-		'runners, an autoscaling group of 0..n machines each running many workspaces as KVM virtual ' +
-		'machines, dial out to the control plane and to the proxy\'s relay; runners and the control plane ' +
-		'read and write volumes in S3. Nothing opens a connection into a runner or a workspace.',
-};
-
 /**
  * A page's source as Markdown a model can read: the MDX imports go, and the few components the
  * content uses become the Markdown they stand for.
@@ -95,10 +84,11 @@ export function toMarkdown(d: Doc, base: string): string {
 	);
 	body = body.replace(/<\/Aside>/g, '');
 	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
-	body = body.replace(/<([A-Z]\w*)\s*\/>/g, (_, name: string) => {
-		const text = figures[name];
-		if (!text) throw new Error(`${d.id}: <${name} /> has no text in src/lib/pages.ts figures`);
-		return `*Diagram: ${text}*`;
+	// A diagram is its caption, its words in the order the picture has them, and where it is drawn.
+	body = body.replace(/<Figure\s+name="([\w-]+)"\s+caption="([^"]*)"\s*\/>/g, (_, name: string, caption: string) => {
+		const f = (figures as Record<string, { source: string; words: string[] }>)[name];
+		if (!f) throw new Error(`${d.id}: <Figure name="${name}"> is no diagram in src/data/figures.json`);
+		return `*Diagram: ${caption}* Its labels: ${f.words.join(' · ')}. ([source](${f.source}))`;
 	});
 	// MDX nests components with tabs; left in, Markdown reads the text inside them as code.
 	body = body.replace(/^\t+/gm, '');

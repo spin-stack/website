@@ -3,6 +3,8 @@ title: Network and egress
 description: How network policies control where a workspace connects, what is always blocked, how DNS works, and how to see what it reached.
 ---
 
+import Figure from '../../../components/Figure.astro';
+
 A workspace reaches only what its **network policies** allow. Policies are allowlists with
 names, such as `web` or `registry-only`, and a workspace runs under one or more of them, called
 its **tags**. They are enforced on the runner, outside the virtual machine, so nothing done
@@ -17,6 +19,8 @@ every runner has and which allows nothing.
 No setting means "open". An installation that wants workspaces to reach the internet by
 default declares a policy that says so, for example `allow: ["0.0.0.0/0"]`, and names it in
 `default_network_tags`. What a workspace can reach always has a name somebody chose.
+
+<Figure name="datapath" caption="How a packet leaves a workspace: the guest, its machine's network namespace, the host's egress namespace, and the node." />
 
 ## Always blocked
 
@@ -57,6 +61,10 @@ allows them all.
 **DNS always works.** A workspace's resolver is the runner's, which answers under every policy,
 so no policy needs to open port 53. It removes from its answers any address of the runner's own
 networks, and every IPv6 answer.
+
+<Figure name="egress-policy" caption="What the host's forward chain decides for a packet from a workspace, in order." />
+
+<Figure name="isolation" caption="Two workspaces with the same address on different segments: why one cannot reach the other." />
 
 ## Changing a workspace's policies
 

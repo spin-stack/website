@@ -3,14 +3,14 @@ title: How it works
 description: The pieces of an installation (control plane, proxy, runners, database, bucket), how they connect, and how a workspace comes to run.
 ---
 
-import Architecture from '../../../components/Architecture.astro';
+import Figure from '../../../components/Figure.astro';
 
 An installation has five parts. Two small machines run all the time: the **control plane** and
 the **proxy**. **Runners** are large machines that run workspaces, and there are none while
 nothing is running. A **PostgreSQL database** holds the installation's state, and an **S3
 bucket** holds every workspace's disk.
 
-<Architecture />
+<Figure name="installation" caption="An installation on AWS: what the module creates in your account, and who connects to whom." />
 
 ## The pieces
 
