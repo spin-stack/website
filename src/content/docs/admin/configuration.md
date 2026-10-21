@@ -1,6 +1,6 @@
 ---
 title: Installation settings
-description: How an installation is configured — the config file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal an administrator applies or dismisses.
+description: How an installation is configured: the file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal.
 ---
 
 An installation's settings live in its database, and an administrator edits all of them in the
@@ -40,12 +40,10 @@ The whole file, with the comment on every field, is in the
 
 ## What it holds
 
-| Block | What it decides |
-|---|---|
-| `settings` | Which images may be used, how many workspaces a user may have, whether a workspace must belong to a team, the default network policies, when workspaces on a silent runner are moved, log and trace retention, and whether workspaces' console output is collected |
-| `registration` | Who may create an account: nobody (`closed`, the default), anyone (`open`), or listed addresses and domains (`whitelist`) |
-| `presets` | Named sizes of workspace — CPU, memory, disk — and which one is the default |
-| `network_policies` | The policies workspaces may run under. See [Network and egress](/concepts/network/). |
+The installation's settings, who may register, the sizes a workspace may be created with, and the
+network policies it may run under. Each block, with every field and its default, is in the
+[config file reference](/reference/configuration/file/), written from the example file the
+control plane's own test reads.
 
 On AWS the module adds what it knows itself: the domain, which machines join as runners, and the
 autoscaling settings.

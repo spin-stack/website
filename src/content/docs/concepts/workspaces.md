@@ -55,7 +55,8 @@ space.
 | `STOPPING` | The machine is shutting down. |
 | `STOPPED` | Not running. Its disk is kept. |
 | `FAILED` | A start or a stop failed. The state says which part failed. |
-| `DELETED` | Gone. |
+| `QUARANTINED` | An administrator holds it with `spin workspace quarantine`. It does not run until released. |
+| `DELETED` | In the trash, with its disk. `spin workspace undelete` brings it back, stopped. |
 
 A runner tries a start three times. After that, the workspace is `FAILED`, and it stays that way
 until you start it again. `spin workspace status` says why a workspace is not behaving, and

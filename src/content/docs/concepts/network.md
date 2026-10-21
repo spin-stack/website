@@ -1,6 +1,6 @@
 ---
 title: Network and egress
-description: How a workspace's outbound network is controlled with network policies, what is always blocked, how DNS works, and how to see what a workspace reached or was refused.
+description: How network policies control where a workspace connects, what is always blocked, how DNS works, and how to see what it reached.
 ---
 
 A workspace reaches only what its **network policies** allow. Policies are allowlists with

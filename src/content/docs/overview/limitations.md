@@ -1,6 +1,6 @@
 ---
 title: Limitations
-description: Where Spin runs and the limits you should know before you rely on it; what is built and what is not is on the status page.
+description: Where Spin runs and the limits to know before you rely on it. What is built and what is not is on the status page.
 ---
 
 Spin is **experimental**. APIs will change, and data may be lost. What is built, what is partly
