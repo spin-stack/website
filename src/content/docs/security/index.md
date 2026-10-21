@@ -36,8 +36,9 @@ else is built so that being root in a workspace gives nothing outside it.
 
 ## Rules with gates
 
-Spin keeps its security rules in a table in its repository, `docs/security/README.md`, numbered
-I1 to I16. Each rule names the code that keeps it and the test that fails the build when it is
-broken. A rule no test keeps says so, and is listed in [Known gaps](/security/known-gaps/).
+Spin keeps its security rules in a table in its repository, `docs/security/README.md`. Each rule
+names the code that keeps it and the test that fails the build when it is broken, and a rule no
+test keeps says so. The site prints that table, [Rules and their gates](/reference/security/rules/),
+and the README's open items, [Known gaps](/reference/security/known-gaps/), from spin itself.
 
 To report a problem, see [Reporting a vulnerability](/security/reporting/).

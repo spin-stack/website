@@ -28,5 +28,5 @@ A problem in one of these that you found through another goes in spin's advisory
 - What they get, and the steps that show it.
 
 The model these are measured against is on [Security model](/security/), and the problems Spin
-already knows of are on [Known gaps](/security/known-gaps/): one of those is not a new report,
+already knows of are on [Known gaps](/reference/security/known-gaps/): one of those is not a new report,
 though a way to make it worse is.

@@ -83,8 +83,14 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	for k, v := range images {
-		pages[k] = v
+	security, err := securityPages(*spin, commit)
+	if err != nil {
+		return err
+	}
+	for _, more := range []map[string][]byte{images, security} {
+		for k, v := range more {
+			pages[k] = v
+		}
 	}
 	stale, err := sync(*out, pages, *check)
 	if err != nil {
@@ -136,7 +142,7 @@ func run() error {
 // longer produce is removed, since a command that is gone must not keep a page.
 func sync(out string, pages map[string][]byte, check bool) ([]string, error) {
 	var stale []string
-	for _, dir := range []string{"status", "cli", "terraform", "configuration", "api"} {
+	for _, dir := range []string{"status", "cli", "terraform", "configuration", "api", "security"} {
 		matches, err := filepath.Glob(filepath.Join(out, dir, "*.md"))
 		if err != nil {
 			return nil, err

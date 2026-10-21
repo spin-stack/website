@@ -11,13 +11,14 @@ runner:
 - Each layer is compressed, then sealed with **AES-256-GCM** under its volume's **data key**
   (DEK), in 64 KiB frames, each with a nonce derived from the volume, the layer and the frame's
   position.
-- The DEK is wrapped under the installation's **key-encryption key** (KEK). The wrapping is bound
-  to the volume's id and the key's version, so a wrapped key copied onto another volume opens
-  nothing.
+- Every volume has a DEK of its own, a clone too. On AWS each is a KMS data key, wrapped under a
+  KMS key the installation keeps for volumes.
 - The bucket also encrypts every object at rest (SSE-S3).
 
-A runner never holds the KEK. It asks the control plane for the DEK of a volume placed on it, or
-of the volumes that one was cloned from, and keeps it in memory only.
+**The control plane never sees a DEK.** It makes each one without its plaintext, and grants a
+runner the wrapped key with a session that decrypts only that volume's owner's keys, and only
+answered to a NitroTPM attestation document whose measurements are the runner's image's. No
+other role in the account decrypts them, the control plane's included.
 
 ## Memory snapshots
 
@@ -29,25 +30,12 @@ the memory, including older versions of the object that Object Lock still keeps.
 Memory is never shared. A shared or public snapshot hands over the disk only, and a memory
 restore is only allowed on a snapshot of the workspace asking for it.
 
-## Clones share a key
+## Clones and deletes
 
-A clone reads its parent's layers, so it must be able to decrypt them: a workspace created from a
-snapshot or an image carries **the same DEK** as the volume it was cloned from, wrapped under its
-own id. Every workspace descended from one image shares that image's key.
-
-This decides what deleting can destroy:
-
-| Deleting | The key | The bytes |
-|---|---|---|
-| A snapshot's memory | Destroyed at once | Unreadable at once; the object expires after the retention |
-| A snapshot | Kept: it belongs to the lineage | Kept while a clone still reads them |
-| A workspace | Kept while the volume it was cloned from exists | Delete markers now; the versions expire after the retention |
-| The last volume of a lineage | Destroyed | Unreadable from then on |
-
-Because every workspace descends from a base image, and an image is never the last member of its
-lineage, **deleting a workspace does not destroy its data key**. Its bytes are gone when Object
-Lock's retention ([`object_lock_days`](/reference/terraform/controlplane/#object_lock_days)) runs out. If you need a workspace's contents to become
-unreadable at once, today only memory snapshots offer that.
+A clone reads its parent's layers, opened with the parent's key, and writes its own under a key of
+its own. So a volume with clones cannot be deleted while they read it. Deleting a workspace's
+volume destroys its key once the versions of its descriptor expire, and with it every layer it
+wrote. A snapshot's memory has a key of its own (above), destroyed at once.
 
 ## The installation's secrets
 

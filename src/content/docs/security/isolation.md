@@ -58,4 +58,4 @@ reach the control plane over vsock, through the runner.
 
 Two of these protections need the runner's kernel to support them: vsock namespaces and core
 scheduling. On a kernel without them, the runner says so once in its log and starts machines
-anyway. See [Known gaps](/security/known-gaps/).
+anyway. See [Known gaps](/reference/security/known-gaps/).

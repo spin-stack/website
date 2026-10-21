@@ -50,7 +50,7 @@ Each bullet here is a limit row of that same list, and the build fails when the 
 
 ## Security
 
-The open items of the security model are listed in [Known gaps](/security/known-gaps/).
+The open items of the security model are listed in [Known gaps](/reference/security/known-gaps/).
 
 ## Operations
 
