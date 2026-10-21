@@ -1,13 +1,125 @@
+/* Spin's identity: the spin-stack mark's colors - navy, cyan, blue, mint - over grays tinted
+   toward the navy, and IBM Plex, served from the site itself. */
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+
 :root {
-	--sl-color-accent-low: #0b3b37;
-	--sl-color-accent: #0f766e;
-	--sl-color-accent-high: #b8efe6;
-	--sl-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--spin-navy: #0b1120;
+	--spin-cyan: #27bfe8;
+	--spin-blue: #2f6be3;
+	--spin-deep: #0c3c84;
+	--spin-mint: #5fe3d6;
+	--spin-frost: #eaf0f6;
+
+	--sl-font: 'IBM Plex Sans', system-ui, sans-serif;
+	--sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+	--sl-color-accent-low: #0a2a46;
+	--sl-color-accent: var(--spin-cyan);
+	--sl-color-accent-high: #c4f0fc;
+	--sl-color-white: #f5f8fc;
+	--sl-color-gray-1: #e2e8f0;
+	--sl-color-gray-2: #c3cddb;
+	--sl-color-gray-3: #8492a8;
+	--sl-color-gray-4: #46536a;
+	--sl-color-gray-5: #253047;
+	--sl-color-gray-6: #141d30;
+	--sl-color-black: var(--spin-navy);
+	--sl-color-banner-bg: #0f2a4d;
+	--sl-color-banner-text: var(--spin-frost);
 }
 :root[data-theme='light'] {
-	--sl-color-accent-low: #ccf2ec;
-	--sl-color-accent: #0f766e;
-	--sl-color-accent-high: #0b3b37;
+	--sl-color-accent-low: #dff5fd;
+	--sl-color-accent: #0b6fa0;
+	--sl-color-accent-high: var(--spin-deep);
+	--sl-color-white: #0b1120;
+	--sl-color-gray-1: #141d30;
+	--sl-color-gray-2: #253047;
+	--sl-color-gray-3: #46536a;
+	--sl-color-gray-4: #8492a8;
+	--sl-color-gray-5: #c3cddb;
+	--sl-color-gray-6: #e6ecf4;
+	--sl-color-gray-7: #f3f6fa;
+	--sl-color-black: #ffffff;
+	--sl-color-banner-bg: #dff5fd;
+	--sl-color-banner-text: var(--spin-deep);
+}
+
+/* Headings in the mono face: a site about machines, set like their consoles. */
+.sl-markdown-content :is(h1, h2, h3, h4),
+h1#_top,
+.site-title {
+	font-family: var(--sl-font-mono);
+	letter-spacing: -0.015em;
+}
+.sl-markdown-content :is(h2, h3) {
+	font-weight: 600;
+}
+.site-title {
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
+/* The experimental notice: one line, quiet, never a second hero. */
+.sl-banner {
+	font-size: var(--sl-text-sm);
+	border-bottom: 1px solid var(--sl-color-hairline);
+	box-shadow: none;
+}
+
+/* A claim tied to the feature board: a hairline under it, the board's row on hover. */
+a[data-feature='built'] {
+	text-decoration-style: dotted;
+	text-underline-offset: 0.2em;
+}
+
+/* The landing page's sections below the hero, on the splash template: each opens with a small
+   label in the mono face across a hairline, and the straight answers sit in a grid. */
+:root {
+	--spin-label: var(--spin-mint);
+}
+:root[data-theme='light'] {
+	--spin-label: #0b6fa0;
+}
+[data-has-hero] .sl-markdown-content {
+	max-width: 64rem;
+}
+[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) {
+	border-top: 1px solid var(--sl-color-hairline-light);
+	padding-top: 2rem;
+	margin-top: 3.5rem;
+}
+[data-has-hero] .sl-markdown-content .sl-heading-wrapper > a {
+	display: none;
+}
+[data-has-hero] .sl-markdown-content h2 {
+	font-size: var(--sl-text-sm);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--spin-label);
+}
+[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) + ul {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+	gap: 0.75rem;
+	padding: 0;
+	list-style: none;
+}
+[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) + ul > li {
+	margin: 0;
+	padding: 1rem 1.1rem;
+	border: 1px solid var(--sl-color-hairline-light);
+	border-radius: 0.5rem;
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-gray-2);
+}
+.status-counts {
+	font-family: var(--sl-font-mono);
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-3);
 }
 
 .diagram {
@@ -61,4 +173,18 @@
 	color: var(--sl-color-gray-3);
 	font-size: var(--sl-text-sm);
 	margin-top: 0.5rem;
+}
+
+/* The sidebar's current page: the accent as a tint, not a block of it. */
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+	background-color: var(--sl-color-accent-low);
+	color: var(--sl-color-accent-high);
+	font-weight: 600;
+}
+.sl-markdown-content :is(h1, h2, h3),
+h1#_top {
+	letter-spacing: -0.035em;
+	word-spacing: -0.12em;
 }

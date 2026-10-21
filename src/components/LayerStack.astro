@@ -1,0 +1,93 @@
+---
+// What a workspace's disk is, drawn: a chain of layers, from the image up to the one the running
+// machine writes. A snapshot seals the top; a diff compares two; a restore goes back to one. The
+// landing page's hero; its text is the title and description below.
+const layers = [
+	{ y: 270, side: '#0c3c84', top: '#1d4fa8', label: 'image · ubuntu' },
+	{ y: 200, side: '#1d4fa8', top: '#2f6be3', label: 'snapshot · clean' },
+	{ y: 130, side: '#1597c7', top: '#27bfe8', label: 'snapshot · after' },
+];
+---
+
+<svg class="layer-stack" viewBox="0 0 480 360" role="img" aria-labelledby="ls-t ls-d">
+	<title id="ls-t">A workspace's disk, as layers</title>
+	<desc id="ls-d">Four layers stacked: the image at the bottom, a snapshot called clean, a snapshot called after, and on top the layer the running workspace writes. A bracket marks a diff between clean and after; an arrow marks a restore from the top back to clean.</desc>
+	<defs>
+		<marker id="ls-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+			<path d="M0 0L10 5L0 10z" class="mark" />
+		</marker>
+	</defs>
+	{
+		layers.map((l) => (
+			<g transform={`translate(0 ${l.y})`}>
+				<path d="M60 0v34a100 28 0 0 0 200 0V0z" fill={l.side} />
+				<ellipse cx="160" cy="0" rx="100" ry="28" fill={l.top} />
+				<line x1="268" x2="300" y1="0" y2="0" class="leader" />
+				<text x="308" y="4" class="label">{l.label}</text>
+			</g>
+		))
+	}
+	<g transform="translate(0 60)">
+		<path d="M60 0v34a100 28 0 0 0 200 0V0" class="live" />
+		<ellipse cx="160" cy="0" rx="100" ry="28" class="live live-top" />
+		<line x1="268" x2="300" y1="0" y2="0" class="leader" />
+		<text x="308" y="4" class="label">running · writes here</text>
+	</g>
+	<path class="bracket" d="M460 130h8v70h-8" />
+	<text class="cmd" x="474" y="165" transform="rotate(90 474 165)" text-anchor="middle">diff</text>
+	<path class="bracket" d="M44 66C14 100 14 172 50 196" marker-end="url(#ls-arr)" />
+	<text class="cmd" x="18" y="132" transform="rotate(-90 18 132)" text-anchor="middle">restore</text>
+</svg>
+
+<style>
+	.layer-stack {
+		width: 100%;
+		max-width: 32rem;
+		height: auto;
+		font-family: var(--sl-font-mono);
+		--ls-ink: var(--spin-mint);
+	}
+	:root[data-theme='light'] .layer-stack {
+		--ls-ink: #0b6fa0;
+	}
+	.label {
+		fill: var(--sl-color-gray-2);
+		font-size: 13px;
+	}
+	.leader {
+		stroke: var(--sl-color-gray-4);
+		stroke-width: 1;
+	}
+	.cmd {
+		fill: var(--ls-ink);
+		font-size: 12px;
+		letter-spacing: 0.06em;
+	}
+	.mark {
+		fill: var(--ls-ink);
+	}
+	.bracket {
+		fill: none;
+		stroke: var(--ls-ink);
+		stroke-width: 1.5;
+	}
+	.live {
+		fill: none;
+		stroke: var(--ls-ink);
+		stroke-width: 1.5;
+		stroke-dasharray: 6 5;
+	}
+	.live-top {
+		fill: color-mix(in srgb, var(--ls-ink) 12%, transparent);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.live {
+			animation: ls-write 1.6s linear infinite;
+		}
+		@keyframes ls-write {
+			to {
+				stroke-dashoffset: -22;
+			}
+		}
+	}
+</style>

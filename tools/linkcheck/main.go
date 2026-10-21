@@ -19,8 +19,11 @@ import (
 )
 
 var (
-	href = regexp.MustCompile(`href="([^"]+)"`)
-	id   = regexp.MustCompile(`\sid="([^"]+)"`)
+	// An asset the page loads from another site: a script, a stylesheet, a font, an image or a
+	// frame. The site serves every one of its own, so a reader's visit reaches nobody else.
+	remoteAsset = regexp.MustCompile(`<(?:script|img|iframe|source)\b[^>]*\bsrc="(https?:)?//|<link\b[^>]*\brel="(?:stylesheet|preload|modulepreload|icon)"[^>]*\bhref="(https?:)?//|url\((?:'|")?(https?:)?//`)
+	href        = regexp.MustCompile(`href="([^"]+)"`)
+	id          = regexp.MustCompile(`\sid="([^"]+)"`)
 )
 
 // The experimental notice as the build writes it: the banner's attribute on an HTML page
@@ -78,6 +81,9 @@ func main() {
 				return err
 			}
 			body = string(b)
+			if m := remoteAsset.FindString(body); m != "" {
+				unmarked = append(unmarked, fmt.Sprintf("%s: loads an asset from another site: %s", served, m))
+			}
 			if n := strings.Count(body, banner); n != 1 && !strings.HasSuffix(served, "/404.html") {
 				unmarked = append(unmarked, fmt.Sprintf("%s: the experimental banner %d times, not once", served, n))
 			}
@@ -137,7 +143,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, b)
 	}
 	if len(broken) > 0 || len(unmarked) > 0 {
-		fmt.Fprintf(os.Stderr, "linkcheck: %d broken links, %d pages without the experimental notice\n", len(broken), len(unmarked))
+		fmt.Fprintf(os.Stderr, "linkcheck: %d broken links, %d pages that break a rule above\n", len(broken), len(unmarked))
 		os.Exit(1)
 	}
 	fmt.Printf("linkcheck: %d pages, every link resolves\n", len(pages))

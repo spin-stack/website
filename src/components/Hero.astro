@@ -1,0 +1,81 @@
+---
+// The landing page's hero: Starlight's, with the drawing of a workspace's disk beside it and the
+// project's name above the title.
+import { LinkButton } from '@astrojs/starlight/components';
+import LayerStack from './LayerStack.astro';
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline, actions = [] } = data.hero || {};
+---
+
+<div class="hero">
+	<div class="copy">
+		<p class="eyebrow">spin-stack · self-hosted sandboxes</p>
+		<h1 id="_top" data-page-title set:html={title} />
+		{tagline && <p class="tagline" set:html={tagline} />}
+		<div class="actions">
+			{
+				actions.map(({ link: href, text, variant, icon }) => (
+					<LinkButton {href} {variant} icon={icon?.name}>
+						{text}
+					</LinkButton>
+				))
+			}
+		</div>
+	</div>
+	<div class="art"><LayerStack /></div>
+</div>
+
+<style>
+	.hero {
+		display: grid;
+		gap: 2rem;
+		align-items: center;
+		padding-block: 2rem 1rem;
+	}
+	.copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+	.eyebrow {
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-sm);
+		color: var(--spin-mint);
+		letter-spacing: 0.04em;
+	}
+	:root[data-theme='light'] .eyebrow {
+		color: var(--spin-deep);
+	}
+	h1 {
+		font-family: var(--sl-font-mono);
+		font-size: clamp(2rem, 1rem + 3.4vw, 3.4rem);
+		line-height: 1.08;
+		letter-spacing: -0.03em;
+		font-weight: 600;
+		color: var(--sl-color-white);
+		margin: 0;
+	}
+	.tagline {
+		font-size: var(--sl-text-lg);
+		color: var(--sl-color-gray-2);
+		max-width: 38rem;
+		margin: 0;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 1.5rem;
+		align-items: center;
+	}
+	.art {
+		display: flex;
+		justify-content: center;
+	}
+	@media (min-width: 56rem) {
+		.hero {
+			grid-template-columns: 7fr 5fr;
+			padding-block: 4rem 2rem;
+		}
+	}
+</style>
