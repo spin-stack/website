@@ -1,0 +1,48 @@
+---
+// A diagram the source repositories draw (tools/refgen copies them into src/assets/diagrams):
+// shown on a light panel in both themes, as drawn, and opened full size on a click. Its words are
+// in src/data/figures.json, which the page's Markdown twin carries instead of the picture.
+import figures from '../data/figures.json';
+
+interface Props {
+	name: keyof typeof figures;
+	caption: string;
+}
+const { name, caption } = Astro.props;
+const files = import.meta.glob<string>('../assets/diagrams/*.svg', { query: '?url', import: 'default', eager: true });
+const url = files[`../assets/diagrams/${name}.svg`];
+if (!url) throw new Error(`Figure: no diagram ${name} in src/assets/diagrams`);
+const { source, width } = figures[name];
+// The size refgen chose for it (tools/refgen/diagrams.go): a wide one scrolls rather than
+// shrinking its words into a smudge, and 0 fits the column.
+const style = width ? `width: max(100%, ${width}px)` : 'width: 100%';
+---
+
+<figure class="spin-figure">
+	<a href={url} title="Open full size"><img src={url} alt={caption} loading="lazy" {style} /></a>
+	<figcaption>{caption} A click opens it full size; <a href={source}>its source</a>.</figcaption>
+</figure>
+
+<style>
+	.spin-figure {
+		margin: 1.5rem 0;
+	}
+	.spin-figure > a {
+		display: block;
+		background: #fff;
+		border: 1px solid var(--sl-color-hairline-light);
+		border-radius: 0.5rem;
+		padding: 1rem;
+		overflow-x: auto;
+	}
+	.spin-figure img {
+		display: block;
+		max-width: none;
+		height: auto;
+	}
+	figcaption {
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+		margin-top: 0.5rem;
+	}
+</style>

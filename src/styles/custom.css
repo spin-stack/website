@@ -122,59 +122,6 @@ a[data-feature='built'] {
 	color: var(--sl-color-gray-3);
 }
 
-.diagram {
-	margin: 1.5rem 0;
-	overflow-x: auto;
-}
-.diagram svg {
-	display: block;
-	width: 100%;
-	min-width: 560px;
-	height: auto;
-	font-family: var(--sl-font);
-}
-.diagram .box {
-	fill: var(--sl-color-gray-6);
-	stroke: var(--sl-color-gray-4);
-	stroke-width: 1.25;
-}
-.diagram .zone {
-	fill: none;
-	stroke: var(--sl-color-gray-4);
-	stroke-dasharray: 5 4;
-	stroke-width: 1;
-}
-.diagram .accent {
-	fill: var(--sl-color-accent-low);
-	stroke: var(--sl-color-accent);
-	stroke-width: 1.5;
-}
-.diagram .line {
-	stroke: var(--sl-color-gray-3);
-	stroke-width: 1.5;
-	fill: none;
-}
-.diagram .t {
-	fill: var(--sl-color-white);
-	font-size: 13px;
-	font-weight: 600;
-}
-.diagram .s {
-	fill: var(--sl-color-gray-2);
-	font-size: 11px;
-}
-.diagram .z {
-	fill: var(--sl-color-gray-3);
-	font-size: 11px;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-.diagram figcaption {
-	color: var(--sl-color-gray-3);
-	font-size: var(--sl-text-sm);
-	margin-top: 0.5rem;
-}
-
 /* The sidebar's current page: the accent as a tint, not a block of it. */
 .sidebar-content a[aria-current='page'],
 .sidebar-content a[aria-current='page']:hover,

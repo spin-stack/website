@@ -44,6 +44,10 @@ is checked against checkouts of spin and spin-terraform-aws beside this one (`SP
   shell block must be one the CLI has, with flags its help lists, and every `task` one spin's
   Taskfile has (after a `cd` into another checkout, that one's). `task reference:check` fails
   on one that is not.
+- **Diagrams** are the ones spin and spin-terraform-aws draw beside their sources (`.dot`, `.d2`):
+  `task reference` copies each into `src/assets/diagrams` and writes its words to
+  `src/data/figures.json`, which a Markdown twin carries in the picture's place. The site draws
+  none of its own. `<Figure name="…" caption="…" />` shows one.
 - **For models**, the build writes `llms.txt` (every page, with its description),
   `llms-full.txt` (every page's Markdown) and a `.md` twin of each page, all from the same
   content (`src/pages/`). The build fails on a twin that still carries MDX: a component, an

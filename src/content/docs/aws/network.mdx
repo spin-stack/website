@@ -3,6 +3,8 @@ title: Network
 description: What the internet can reach in an installation, which machine talks to which on what port, and how to close the installation to your own networks.
 ---
 
+import Figure from '../../../components/Figure.astro';
+
 ## What the internet reaches
 
 Only the **proxy**, on two ports:
@@ -31,6 +33,8 @@ serving, so a replaced machine is a record changed, not an address in every conf
 
 Runners reach the relay inside the VPC, at `proxy.spin.internal`, so the proxy's port 443 does
 not need to be open to wherever runners are.
+
+<Figure name="traffic" caption="Every connection in an installation, opened in the direction of its arrow; nothing else is let in." />
 
 ## Closing the installation to your networks
 
