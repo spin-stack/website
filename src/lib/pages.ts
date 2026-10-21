@@ -63,7 +63,8 @@ export function mdPath(d: Doc): string {
 const figures: Record<string, string> = {
 	Architecture:
 		'An installation in one AWS account and VPC: users and agents reach the proxy on 443; the proxy ' +
-		'forwards to the control plane on 8080; the control plane keeps its state in RDS PostgreSQL; ' +
+		'forwards to the control plane on 8080; the control plane runs PostgreSQL on its own machine and ' +
+		'archives it to an S3 bucket of its own; ' +
 		'runners, an autoscaling group of 0..n machines each running many workspaces as KVM virtual ' +
 		'machines, dial out to the control plane and to the proxy\'s relay; runners and the control plane ' +
 		'read and write volumes in S3. Nothing opens a connection into a runner or a workspace.',

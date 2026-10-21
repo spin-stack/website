@@ -23,7 +23,6 @@ public address is only a way out. A runner has no inbound rule at all. No machin
 | Runners | Control plane | 8080 | TLS under the installation's CA, and the runner's token |
 | Runners | Proxy (relay) | 443 | The relay's certificate, and a one-time token per session |
 | Proxy, runners | Collector on the control plane | 4317 | Only the security group |
-| Control plane | RDS | 5432 | TLS verified against RDS's CA, IAM authentication |
 | Control plane, runners | S3 | 443 | Instance roles; the buckets refuse object requests from anywhere but the VPC's gateway endpoint |
 
 Machines find each other by name in a private zone, `spin.internal`: `cp.spin.internal` and

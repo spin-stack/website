@@ -22,14 +22,14 @@ module "spin" {
 
 - **A VPC** of its own, with public subnets and no NAT gateway. The bucket is reached through the
   free S3 gateway endpoint.
-- **The control plane**, on one `t8i.small` machine, in an autoscaling group of one.
+- **The control plane**, on one `t8i.medium` machine, in an autoscaling group of one. It also
+  runs the installation's PostgreSQL 18 and its log and metric stores.
 - **The proxy**, on one `t8i.micro` machine with an elastic IP, in an autoscaling group of one.
 - **The runners**, an autoscaling group of spot machines with 32 or 48 vCPUs and local NVMe, which
   the control plane sizes from zero.
-- **PostgreSQL 18 on RDS** (`db.t4g.micro`), in subnets with no route out of the VPC, with seven
-  days of point-in-time recovery.
-- **Three S3 buckets**: one for volumes, with versioning and Object Lock; one for logs, traces
-  and metric backups; and one for the proxy's certificates.
+- **S3 buckets, each with one owner**: the volumes, with versioning and Object Lock; the
+  database's archive, under Object Lock too; logs, traces and metric backups; the proxy's
+  certificates; and what each machine starts from.
 - **Two Route 53 zones**: your domain's public zone, and a private zone (`spin.internal`) the
   machines find each other by.
 - **The installation's secrets**, in SSM Parameter Store: its CA, its encryption key and the

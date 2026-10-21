@@ -11,11 +11,10 @@ run only while workspaces do. Prices depend on your region and change; use the
 
 | Resource | Default size |
 |---|---|
-| Control plane | `t8i.small` |
+| Control plane | `t8i.medium`, which also runs the database |
 | Proxy | `t8i.micro`, and an elastic IP |
-| RDS PostgreSQL | `db.t4g.micro`, 7 days of backups |
 | Route 53 | Two hosted zones, $0.50 a month each |
-| S3 | What the volumes, logs and metric backups hold |
+| S3 | What the volumes, the database's archive, logs and metric backups hold |
 | CloudWatch | The flow log and the machines' boot logs, 30 days |
 
 There is no NAT gateway, no load balancer and no interface endpoint.
@@ -33,7 +32,9 @@ cost only while they are up:
 A runner holds many workspaces, so one runner is often enough for a team. `max_runners` caps
 how many can be up.
 
-A workspace that nobody stops keeps a runner up: Spin does not stop idle workspaces.
+A workspace nobody uses is suspended, and so is one that runs past the installation's limit, so
+a forgotten workspace does not keep a runner up all night. See
+[Workspaces](/concepts/workspaces/).
 
 ## Settings that change the cost
 
@@ -45,7 +46,6 @@ A workspace that nobody stops keeps a runner up: Spin does not stop idle workspa
 | `runner_spot = false` | On-demand runners: more expensive, never reclaimed |
 | `runner_instance_types` | Smaller or larger runners |
 | `instance_type`, `proxy_instance_type` | The size of the control plane and the proxy |
-| `database` | The RDS instance class, storage, Multi-AZ and backup retention |
 | `flow_logs`, `log_retention_days` | What is kept in CloudWatch |
 
 ## Storage

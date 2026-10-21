@@ -67,7 +67,8 @@ state on purpose, which is why the state is encrypted with KMS.
 
 - Browsers and the CLI reach the proxy over **TLS** with Let's Encrypt certificates.
 - The proxy and the runners reach the control plane over TLS under **the installation's own CA**.
-- The control plane reaches RDS over TLS verified against RDS's CA, and signs in with IAM.
+- The control plane reaches its database on its own machine's loopback, with a password derived
+  from the installation's key, so nothing stores it.
 - SSH is end to end between your client and the workspace: the relay carries bytes it cannot
   read.
 - A port exposed with `--https` is the one exception: the proxy speaks TLS to the workspace without
