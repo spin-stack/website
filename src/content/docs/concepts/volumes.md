@@ -1,6 +1,6 @@
 ---
 title: Disks and storage
-description: How a workspace's disk is stored: layers in the bucket, a cache on the runner, encryption, when work is uploaded, and what deleting removes.
+description: "How a workspace's disk is stored: layers in the bucket, a cache on the runner, encryption, when work is uploaded, and what deleting removes."
 ---
 
 A workspace's disk is a **volume**. You never manage one directly: a volume is created with its
