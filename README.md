@@ -48,6 +48,10 @@ is checked against checkouts of spin and spin-terraform-aws beside this one (`SP
   `llms-full.txt` (every page's Markdown) and a `.md` twin of each page, all from the same
   content (`src/pages/`). The build fails on a twin that still carries MDX: a component, an
   expression or a directive `src/lib/pages.ts` does not translate.
+- **The look** is Spin's own: the spin-stack mark's colors and IBM Plex, served from the site
+  (`src/styles/custom.css`), and a hero that draws a workspace's disk as its layers
+  (`src/components/Hero.astro`, `LayerStack.astro`). `task links` fails a page that loads a script,
+  a stylesheet, a font or an image from another site.
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spin-stack.github.io` and
   `/website` (a GitHub project page). Content links from the root (`/concepts/network/`) and the
   build puts the base in front; `task links` fails on one it cannot resolve.
