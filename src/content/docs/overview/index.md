@@ -25,7 +25,7 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 
 | You want to | Spin gives you |
 |---|---|
-| Start from a known state | A workspace cloned from an image or from any snapshot, in about a second once a runner is up |
+| Start from a known state | A workspace cloned from an image or from any snapshot, without copying a disk |
 | Keep a point to come back to | A snapshot of the disk, or of the disk and memory together |
 | Undo | Restore the disk to a snapshot, or resume a memory snapshot with its processes |
 | See what changed | A file-by-file diff between two snapshots, computed in a separate machine |
@@ -35,6 +35,30 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 
 See [Workspaces](/concepts/workspaces/) and [Snapshots and rollback](/concepts/snapshots/) for
 the details.
+
+## Questions people ask first
+
+### Is there a hosted version?
+
+No. Spin runs in your AWS account, installed by one OpenTofu module. See
+[Install on AWS](/aws/overview/).
+
+### What does it cost?
+
+A small part runs all the time, and runners run only while workspaces do. See [Cost](/aws/cost/).
+
+### Can I try it without AWS?
+
+Yes, on one Linux machine with KVM: [Try it on one machine](/overview/one-machine/).
+
+### Does it need Kubernetes?
+
+No. An installation is a handful of EC2 machines, buckets and roles that the module creates.
+
+### What does it not do yet?
+
+[Status](/reference/status/) lists every feature with the test that proves it, and what is not
+built. [Limitations](/overview/limitations/) lists what Spin does not do by design.
 
 ## Why it is built this way
 
