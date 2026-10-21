@@ -10,7 +10,7 @@ inside the workspace — even as root — can change them.
 
 ## The default is closed
 
-A workspace created without `--network-tag` runs under the installation's
+[Egress is closed by default](<feature:Egress is closed by default; policies, by tag, name what a workspace may reach>). A workspace created without `--network-tag` runs under the installation's
 `default_network_tags`. If the installation has not set any, it runs under **`offline`**, which
 every runner has and which allows nothing.
 

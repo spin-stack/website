@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { experimentalMarkdown } from './experimental';
+import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
 import { statusLine } from './reference';
 
@@ -101,6 +102,8 @@ export function toMarkdown(d: Doc, base: string): string {
 	});
 	// MDX nests components with tabs; left in, Markdown reads the text inside them as code.
 	body = body.replace(/^\t+/gm, '');
+	// A claim's link to the feature board is a link to the row's area on the status page.
+	body = body.replace(/\]\(<?feature:([^>)]+)>?\)/g, (_, name: string) => `](${featureHref(name).href})`);
 	body = links(body, base);
 	body = body.replace(/\n{3,}/g, '\n\n');
 	untranslated(d, body);

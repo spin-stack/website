@@ -29,9 +29,9 @@ spin workspace restore demo <clean-id> --with-memory
 spin workspace delete demo
 ```
 
-A workspace is a KVM virtual machine with its own kernel, a persistent disk and root. The diff
-runs in a separate machine and lists every file added, removed or modified between two snapshots.
-A restore from a memory snapshot puts the processes back as they were.
+A workspace is [a KVM virtual machine](<feature:A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH>) with its own kernel, a persistent disk and root. The diff
+runs in a separate machine and [lists every file added, removed or modified](<feature:A diff of the files that changed between two snapshots>) between two snapshots.
+A restore from [a memory snapshot](<feature:Snapshots with memory, resumed with their processes>) puts the processes back as they were.
 
 ## Straight answers
 

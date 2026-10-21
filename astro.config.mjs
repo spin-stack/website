@@ -2,6 +2,7 @@
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import { rehypeBaseLinks } from './src/lib/base-links.mjs';
+import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
 import { sidebar } from './src/lib/nav.mjs';
 
 // Where the site is served: a GitHub project page is https://<org>.github.io/<repo>/. The
@@ -13,7 +14,7 @@ export default defineConfig({
 	site,
 	base,
 	trailingSlash: 'always',
-	markdown: { rehypePlugins: [[rehypeBaseLinks, { base }]] },
+	markdown: { rehypePlugins: [rehypeFeatureLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [
 		starlight({
 			title: 'Spin',
