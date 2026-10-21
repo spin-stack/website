@@ -13,6 +13,8 @@ spin snapshot create api --description "before the migration" --wait
 spin snapshot create api --with-memory --wait
 ```
 
+Both are built features with the tests that prove them: [disk snapshots](<feature:Snapshots of a running workspace's disk>) and [snapshots with memory](<feature:Snapshots with memory, resumed with their processes>).
+
 A snapshot is taken of a **running** workspace. The runner seals the disk at that moment and
 uploads what changed since the last snapshot. It is usable once it is *published*; `--wait`
 returns then.

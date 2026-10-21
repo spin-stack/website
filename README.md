@@ -35,6 +35,11 @@ is checked against checkouts of spin and spin-terraform-aws beside this one (`SP
   test in spin holds to the tree. The bullets of `overview/limitations.md` are its limit rows,
   and `task reference:check` fails on a bullet that is not one, or a row no bullet leads with.
   The landing page's straight answers are limit rows too, and the check fails on one that is not.
+- **What a page says Spin does** is a link to the feature board's row that says so:
+  `[idle suspend](<feature:Idle suspend, with a question before it that a keep answers>)`. The
+  build points it at the row's area on the status page (`src/lib/feature-links.mjs`) and fails on
+  a row the board does not have; `task reference:check` also fails on a row that is not built.
+  The board is `src/data/features.json`, written by `task reference`.
 - **Commands on the other pages** are held to the same checkouts: every `spin` command in a
   shell block must be one the CLI has, with flags its help lists, and every `task` one spin's
   Taskfile has (after a `cd` into another checkout, that one's). `task reference:check` fails

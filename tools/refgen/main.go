@@ -30,6 +30,7 @@ func run() error {
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
 	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
+	featuresData := flag.String("features", "src/data/features.json", "the feature board, for the pages' feature: links")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	flag.Parse()
 
@@ -96,10 +97,16 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	if differs, err := syncFile(*data, ref, *check); err != nil {
+	board, err := json.MarshalIndent(rows, "", "\t")
+	if err != nil {
 		return err
-	} else if differs {
-		stale = append(stale, *data)
+	}
+	for path, want := range map[string][]byte{*data: ref, *featuresData: append(board, '\n')} {
+		if differs, err := syncFile(path, want, *check); err != nil {
+			return err
+		} else if differs {
+			stale = append(stale, path)
+		}
 	}
 	releases, err := pinReleases(*docs, r.Spin.Release, *check)
 	if err != nil {
@@ -120,6 +127,7 @@ func run() error {
 		func() ([]string, error) { return checkEnv(*docs, *spin) },
 		func() ([]string, error) { return checkStates(*docs, pages) },
 		func() ([]string, error) { return checkRepos(*docs) },
+		func() ([]string, error) { return checkFeatureLinks(*docs, rows) },
 	} {
 		b, err := c()
 		if err != nil {

@@ -26,12 +26,12 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 | You want to | Spin gives you |
 |---|---|
 | Start from a known state | A workspace cloned from an image or from any snapshot, without copying a disk |
-| Keep a point to come back to | A snapshot of the disk, or of the disk and memory together |
-| Undo | Restore the disk to a snapshot, or resume a memory snapshot with its processes |
-| See what changed | A file-by-file diff between two snapshots, computed in a separate machine |
-| Control what code reaches | Network policies: a workspace reaches nothing until a policy lets it |
+| Keep a point to come back to | [A snapshot of the disk](<feature:Snapshots of a running workspace's disk>), or [of the disk and memory together](<feature:Snapshots with memory, resumed with their processes>) |
+| Undo | [Restore the disk to a snapshot](<feature:Restore a workspace to a snapshot>), or resume a memory snapshot with its processes |
+| See what changed | [A file-by-file diff between two snapshots](<feature:A diff of the files that changed between two snapshots>), computed in a separate machine |
+| Control what code reaches | [Network policies](<feature:Egress is closed by default; policies, by tag, name what a workspace may reach>): a workspace reaches nothing until a policy lets it |
 | Reach a service inside | `https://<port>-<workspace>.ws.<your domain>`, private to you until you share it |
-| Hand work to an agent | API keys with scopes, and a CLI that prints JSON |
+| Hand work to an agent | [API keys with scopes](<feature:API keys for scripts and agents>), and a CLI that prints JSON |
 
 Each is a built feature with the test that proves it on the status page:
 [workspaces](/reference/status/#workspaces), [snapshots](/reference/status/#snapshots) and
