@@ -103,24 +103,22 @@ func proof(p string) string {
 var limitLead = regexp.MustCompile(`(?m)^- \*\*(.+?)\.?\*\*`)
 
 // checkLimits holds the limitations page to the board's limit rows, both ways: a bullet whose
-// lead is no limit row, and a limit row no bullet leads with, are each one line to fix.
+// lead is no limit row, and a limit row no bullet leads with, are each one line to fix. The
+// landing page's straight answers are limit rows too, a few of them: each must be one.
 func checkLimits(docs string, rows []feature) ([]string, error) {
-	page := filepath.Join(docs, "overview", "limitations.md")
-	raw, err := os.ReadFile(page)
-	if err != nil {
-		return nil, err
-	}
-	leads := map[string]bool{}
-	for _, m := range limitLead.FindAllSubmatch(raw, -1) {
-		leads[string(bytes.TrimSpace(m[1]))] = true
-	}
 	limits := map[string]bool{}
 	for _, r := range rows {
 		if r.State == "limit" {
 			limits[r.Name] = true
 		}
 	}
+	page := filepath.Join(docs, "overview", "limitations.md")
+	raw, err := os.ReadFile(page)
+	if err != nil {
+		return nil, err
+	}
 	var bad []string
+	leads := bulletLeads(raw)
 	for lead := range leads {
 		if !limits[lead] {
 			bad = append(bad, fmt.Sprintf("%s: the bullet %q is not a limit row of spin's feature board", page, lead))
@@ -131,5 +129,46 @@ func checkLimits(docs string, rows []feature) ([]string, error) {
 			bad = append(bad, fmt.Sprintf("%s: no bullet leads with %q, a limit row of spin's feature board", page, limit))
 		}
 	}
+
+	landing := filepath.Join(docs, "index.mdx")
+	raw, err = os.ReadFile(landing)
+	if err != nil {
+		return nil, err
+	}
+	answers := section(raw, "## Straight answers")
+	if answers == nil {
+		return append(bad, landing+": no \"## Straight answers\" section"), nil
+	}
+	leads = bulletLeads(answers)
+	if len(leads) == 0 {
+		bad = append(bad, landing+": the straight answers have no bullet")
+	}
+	for lead := range leads {
+		if !limits[lead] {
+			bad = append(bad, fmt.Sprintf("%s: the straight answer %q is not a limit row of spin's feature board", landing, lead))
+		}
+	}
 	return bad, nil
+}
+
+// bulletLeads is the bold lead of every bullet in raw.
+func bulletLeads(raw []byte) map[string]bool {
+	leads := map[string]bool{}
+	for _, m := range limitLead.FindAllSubmatch(raw, -1) {
+		leads[string(bytes.TrimSpace(m[1]))] = true
+	}
+	return leads
+}
+
+// section is the text under a heading, up to the next heading of any level, or nil when the
+// page has no such heading.
+func section(raw []byte, heading string) []byte {
+	_, after, ok := bytes.Cut(raw, []byte("\n"+heading+"\n"))
+	if !ok {
+		return nil
+	}
+	if i := bytes.Index(after, []byte("\n#")); i >= 0 {
+		after = after[:i]
+	}
+	return after
 }
