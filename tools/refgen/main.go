@@ -48,7 +48,14 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	pages := statusPage(rows)
+	commit, err := git(*spin, "rev-parse", "HEAD")
+	if err != nil {
+		return err
+	}
+	pages, err := statusPage(rows, *spin, commit)
+	if err != nil {
+		return err
+	}
 	for _, gen := range []func() (map[string][]byte, error){
 		func() (map[string][]byte, error) { return cliPages(bin, home) },
 		func() (map[string][]byte, error) { return terraformPages(*tf) },

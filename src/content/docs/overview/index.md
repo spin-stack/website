@@ -33,8 +33,10 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 | Reach a service inside | `https://<port>-<workspace>.ws.<your domain>`, private to you until you share it |
 | Hand work to an agent | API keys with scopes, and a CLI that prints JSON |
 
-See [Workspaces](/concepts/workspaces/) and [Snapshots and rollback](/concepts/snapshots/) for
-the details.
+Each is a built feature with the test that proves it on the status page:
+[workspaces](/reference/status/#workspaces), [snapshots](/reference/status/#snapshots) and
+[network](/reference/status/#network). See [Workspaces](/concepts/workspaces/) and
+[Snapshots and rollback](/concepts/snapshots/) for the details.
 
 ## Questions people ask first
 
