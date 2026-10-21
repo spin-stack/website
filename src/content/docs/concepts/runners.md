@@ -48,7 +48,7 @@ a workspace is waiting, and when the last one stopped.
 - With no runner up, the first workspace to start waits in *Waiting for a host* while the control
   plane asks for one. It is placed on the runner as soon as it registers.
 - If a workspace has waited longer than a runner takes to start, the control plane adds one.
-- When nothing has run for `runner_idle_minutes` (60 by default), it scales the group back to
+- When nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it scales the group back to
   none. During the installation's `quiet_hours`, it does so as soon as nothing is running.
 - It never asks for more than `max_runners`.
 

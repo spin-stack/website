@@ -24,7 +24,7 @@ aws ssm delete-parameter --name /<name>/controlplane-encryption-key
 ```
 
 The destroy stops at the volumes bucket. Its objects are kept until the Object Lock retention
-(`object_lock_days`, 30 by default) runs out, and images carry a legal hold. To remove it now,
+([`object_lock_days`](/reference/terraform/controlplane/#object_lock_days)) runs out, and images carry a legal hold. To remove it now,
 lift the holds and delete every version bypassing the governance retention, with credentials
 allowed `s3:PutObjectLegalHold` and `s3:BypassGovernanceRetention`, then destroy again:
 

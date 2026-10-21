@@ -64,11 +64,22 @@ func run() error {
 		}
 	}
 
-	stale, err := sync(*out, pages, *check)
+	ref, err := referenceData(*spin, *tf, rows)
 	if err != nil {
 		return err
 	}
-	ref, err := referenceData(*spin, *tf, rows)
+	var r reference
+	if err := json.Unmarshal(ref, &r); err != nil {
+		return err
+	}
+	images, err := imagesPage(*tf, r.Spin.Release)
+	if err != nil {
+		return err
+	}
+	for k, v := range images {
+		pages[k] = v
+	}
+	stale, err := sync(*out, pages, *check)
 	if err != nil {
 		return err
 	}
@@ -76,10 +87,6 @@ func run() error {
 		return err
 	} else if differs {
 		stale = append(stale, *data)
-	}
-	var r reference
-	if err := json.Unmarshal(ref, &r); err != nil {
-		return err
 	}
 	releases, err := pinReleases(*docs, r.Spin.Release, *check)
 	if err != nil {

@@ -3,8 +3,8 @@ title: Install
 description: Install Spin in an AWS account step by step, from the state bucket to the first sign-in and the first workspace.
 ---
 
-This takes about half an hour, most of it waiting. Read [Before you start](/aws/prerequisites/)
-first: the Spin OS image for the release must already be in the account.
+Read [Before you start](/aws/prerequisites/) first: the region must be one the release has
+images in.
 
 ## 1. A home for the state
 
@@ -105,7 +105,17 @@ In **Admin → Security**:
 
 Then disable password sign-in for the first administrator, once a provider works.
 
-## 8. The first workspace
+## 8. Check it
 
-Install the CLI and create one. See the [Quickstart](/quickstart/). No runner is up yet, so the
-first workspace waits a few minutes in *Waiting for a host* while the control plane starts one.
+Install the CLI and sign in as in the [Quickstart](/quickstart/), then run the installation's
+own check:
+
+```bash
+spin smoke
+```
+
+It creates a workspace of its own, runs a command in it, checks the workspace cannot reach the
+cloud's metadata service, suspends and resumes it, and erases it. It exits 0 when every step
+passed; [`spin smoke`](/reference/cli/smoke/) lists the other exit codes. No runner is up yet,
+so the first workspace waits a few minutes in *Waiting for a host* while the control plane
+starts one.

@@ -11,8 +11,8 @@ run only while workspaces do. Prices depend on your region and change; use the
 
 | Resource | Default size |
 |---|---|
-| Control plane | `t8i.medium`, which also runs the database |
-| Proxy | `t8i.micro`, and an elastic IP |
+| Control plane | One machine, [`instance_type`](/reference/terraform/controlplane/#instance_type), which also runs the database |
+| Proxy | One machine, [`proxy_instance_type`](/reference/terraform/controlplane/#proxy_instance_type), and an elastic IP |
 | Route 53 | Two hosted zones, $0.50 a month each |
 | S3 | What the volumes, the database's archive, logs and metric backups hold |
 | CloudWatch | The flow log and the machines' boot logs, 30 days |
@@ -21,12 +21,12 @@ There is no NAT gateway, no load balancer and no interface endpoint.
 
 ## While workspaces run
 
-Runners are spot machines of 32 or 48 vCPUs with local NVMe. They are the largest cost, and they
+Runners are large spot machines with local NVMe ([`instance_types`](/reference/terraform/runners/#instance_types)). They are the largest cost, and they
 cost only while they are up:
 
 - The control plane starts the first runner when a workspace needs one.
 - It adds another only when a workspace has waited longer than a runner takes to start.
-- It removes them all when nothing has run for `runner_idle_minutes` (60 by default), and at
+- It removes them all when nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), and at
   once during `quiet_hours` when nothing is running.
 
 A runner holds many workspaces, so one runner is often enough for a team. `max_runners` caps
@@ -50,6 +50,6 @@ a forgotten workspace does not keep a runner up all night. See
 
 ## Storage
 
-The volumes bucket keeps every object under Object Lock for `object_lock_days` (30 by default),
+The volumes bucket keeps every object under Object Lock for [`object_lock_days`](/reference/terraform/controlplane/#object_lock_days),
 so a deleted workspace's bytes are paid for until the retention runs out. Clones share their
 image's layers, so a hundred workspaces from one image store the image once.

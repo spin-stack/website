@@ -90,6 +90,6 @@ it left off.
 
 Every machine boots Spin OS, an image with a read-only root that the kernel verifies block by
 block, and with a release of spin already inside. A machine never downloads or installs
-software. To update, you publish the new release's image and change `spin_version`. Each
+software. To update, you change `spin_version` and the module boots that release's images. Each
 machine is then replaced by a new one, which starts before the old one stops. See
 [Update](/aws/update/).

@@ -9,8 +9,8 @@ one.
 
 ## Steps
 
-1. Build and publish the new release's Spin OS image into the account (see
-   [Before you start](/aws/prerequisites/#a-spin-os-image-for-the-release)).
+1. Move the module's `ref` to a tag that names the new release's images
+   ([Spin OS images](/reference/terraform/images/)).
 2. Change `spin_version` in `terraform.tfvars`.
 3. Plan and apply:
 

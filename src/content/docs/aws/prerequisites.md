@@ -1,6 +1,6 @@
 ---
 title: Before you start
-description: The tools, AWS account, domain, spot quota and Spin OS image you need before installing Spin on AWS.
+description: The tools, AWS account, region, domain and spot quota you need before installing Spin on AWS.
 ---
 
 ## Tools
@@ -10,7 +10,6 @@ description: The tools, AWS account, domain, spot quota and Spin OS image you ne
   signed in to the account: `aws sts get-caller-identity` answers.
 - The [Session Manager plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html),
   for a shell on a machine.
-- To build the Spin OS image: Go, Docker and [Task](https://taskfile.dev).
 
 ## An AWS account
 
@@ -34,9 +33,9 @@ dashboard: nothing a workspace serves can set a cookie the dashboard reads.
 
 ## Room for runners
 
-Each runner is a spot machine of 32 or 48 vCPUs, chosen from five types of one generation:
-`m8id.8xlarge`, `c8id.8xlarge`, `r8id.8xlarge`, `m8id.12xlarge` and `c8id.12xlarge`. These have
-local NVMe and support nested virtualization.
+Each runner is a large spot machine, of one of the types
+[`instance_types`](/reference/terraform/runners/#instance_types) lists: one CPU generation, with
+local NVMe, and nested virtualization.
 
 **Quota.** A new account's spot vCPU quota can be lower than one runner (Service Quotas → EC2 →
 *All Standard Spot Instance Requests*). The module reads the quota when it plans and warns when
@@ -48,11 +47,12 @@ request is going:
 aws service-quotas list-requested-service-quota-change-history --service-code ec2
 ```
 
-**Spot capacity.** How likely spot is to give you one of these in your region, from 1 to 10:
+**Spot capacity.** How likely spot is to give you one of those types in your region, from 1 to
+10:
 
 ```bash
 aws ec2 get-spot-placement-scores --target-capacity 1 --region-names <region> \
-  --instance-types m8id.8xlarge c8id.8xlarge r8id.8xlarge m8id.12xlarge c8id.12xlarge
+  --instance-types <the types>
 ```
 
 Below 7, name more types in `runner_instance_types`, or use on-demand with `runner_spot = false`.
@@ -60,23 +60,12 @@ Below 7, name more types in `runner_instance_types`, or use on-demand with `runn
 In a region where none of these types has local NVMe, give runners an EBS data volume with
 `runner_data_volume_gb`.
 
-## A Spin OS image for the release
+## A region with the release's images
 
-Every machine boots Spin OS of the release it runs. The image is built from
-[spin-stack/ami](https://github.com/spin-stack/ami) and registered as an AMI in **your** account
-and region, tagged `spin:version`:
-
-```bash
-git clone https://github.com/spin-stack/ami && cd ami
-SPIN_VERSION=v20261019.02 task build publish
-```
-
-The build fetches the release, checks every file against its signature, and lays it into a
-read-only root filesystem. `publish` refuses a disk built from a tree with uncommitted changes,
-or one its manifest does not describe byte for byte.
-
-Publish the image **before** the apply that names the release: the module looks it up by its
-tag.
+Every machine boots Spin OS, an image built for one release with that release already inside.
+The module boots the images published for the release you name, which exist in the regions
+[Spin OS images](/reference/terraform/images/) lists. Install in one of them. To boot images of
+your own instead, name them with [`image_ids`](/reference/terraform/root/#image_ids).
 
 ## Pick a release
 
