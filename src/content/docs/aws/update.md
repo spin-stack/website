@@ -61,5 +61,5 @@ aws autoscaling start-instance-refresh --auto-scaling-group-name <group>
 
 Setting `spin_version` back rolls out the older release the same way, **unless the newer one
 changed the database schema**. A release older than the one that last started the database
-refuses to start on it. Going back past a schema change is a restore of the database to a point
-before the update, with RDS point-in-time recovery, not an update.
+refuses to start on it. Going back past a schema change is not something an update or a command
+does today.

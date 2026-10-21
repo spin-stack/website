@@ -29,8 +29,11 @@ that joins you to a workspace for SSH, a terminal or a port.
 opens every connection it has: to the control plane for its instructions, and to the relay
 for sessions into its workspaces. No connection is ever opened *to* a runner.
 
-**Database.** PostgreSQL 18 on RDS. It holds users, teams, workspaces, snapshots, settings and
-the installation's secrets, sealed under a key the database does not hold.
+**Database.** PostgreSQL 18, on the control plane's own machine. It holds users, teams,
+workspaces, snapshots, settings and the installation's secrets, sealed under a key the database
+does not hold. Every write reaches a bucket of its own within a minute: a base backup every hour
+and each WAL segment as it is written, sealed under the installation's key before it leaves the
+machine. A machine that replaces the control plane restores from there before it serves.
 
 **Bucket.** S3, with versioning and Object Lock. It is the only place a workspace's disk is
 durable. A runner keeps a local copy on its NVMe disks, and that copy can always be rebuilt

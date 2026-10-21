@@ -5,7 +5,7 @@
 <figure class="diagram">
 	<svg viewBox="0 0 760 400" role="img" aria-labelledby="arch-t arch-d">
 		<title id="arch-t">An installation on AWS</title>
-		<desc id="arch-d">Users reach the proxy on 443. The proxy forwards to the control plane on 8080. Runners dial out to the control plane and to the proxy's relay; nothing dials into a runner. The control plane keeps its state in RDS PostgreSQL, and volumes live in an S3 bucket reached through the VPC's gateway endpoint.</desc>
+		<desc id="arch-d">Users reach the proxy on 443. The proxy forwards to the control plane on 8080. Runners dial out to the control plane and to the proxy's relay; nothing dials into a runner. The control plane runs PostgreSQL on its own machine and archives it to an S3 bucket of its own; volumes live in another S3 bucket. Both are reached through the VPC's gateway endpoint.</desc>
 		<defs>
 			<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
 				<path d="M0 0L10 5L0 10z" fill="var(--sl-color-gray-3)" />
@@ -24,11 +24,11 @@
 
 		<rect class="accent" x="420" y="46" width="160" height="56" rx="8" />
 		<text class="t" x="500" y="70" text-anchor="middle">Control plane</text>
-		<text class="s" x="500" y="88" text-anchor="middle">API, dashboard, scheduler</text>
+		<text class="s" x="500" y="88" text-anchor="middle">API, scheduler, PostgreSQL</text>
 
 		<rect class="box" x="620" y="46" width="100" height="56" rx="8" />
-		<text class="t" x="670" y="70" text-anchor="middle">RDS</text>
-		<text class="s" x="670" y="88" text-anchor="middle">PostgreSQL 18</text>
+		<text class="t" x="670" y="70" text-anchor="middle">S3</text>
+		<text class="s" x="670" y="88" text-anchor="middle">database archive</text>
 
 		<rect class="zone" x="200" y="170" width="380" height="190" rx="10" />
 		<text class="z" x="214" y="190">Runners · autoscaling group, 0..n</text>

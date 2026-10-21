@@ -7,16 +7,16 @@ An installation's durable state is in three places:
 
 | State | Where | How it is protected |
 |---|---|---|
-| Users, teams, workspaces, snapshots, settings, secrets | RDS PostgreSQL | Seven days of point-in-time recovery, a final snapshot on delete, deletion protection |
-| Every workspace's disk and snapshots | The volumes bucket | Versioning, and Object Lock for `object_lock_days` (30 by default) |
+| Users, teams, workspaces, snapshots, settings, secrets | PostgreSQL on the control plane's machine, archived to the database's bucket | A base backup every hour and each WAL segment within a minute, sealed under the installation's key; the bucket under Object Lock for [`database_lock_days`](/reference/terraform/controlplane/#database_lock_days) |
+| Every workspace's disk and snapshots | The volumes bucket | Versioning, and Object Lock for [`object_lock_days`](/reference/terraform/controlplane/#object_lock_days) |
 | The key that opens the installation's secrets | SSM Parameter Store | Written once by the install, never in the Terraform state |
 
 The control plane's and the proxy's machines hold nothing that cannot be rebuilt. The proxy's
 certificates are kept in a bucket of their own, and the metric store is backed up to the logs
 bucket.
 
-**The encryption key is the installation.** Without it, nothing in the database's secrets can be
-opened, and neither can any volume's key. Nothing in the module makes a new one, and the parameter
+**The encryption key is the installation.** Without it, nothing in the database's archive or
+its secrets can be opened, and neither can any volume's key. Nothing in the module makes a new one, and the parameter
 refuses to be destroyed by a plan.
 
 ## Losing a runner
@@ -30,19 +30,25 @@ owner (`spin workspace recover`), or automatically if the installation allows it
 Its autoscaling group starts another. The new one starts from the same release and the same
 document, and takes over. Workspaces keep running.
 
-## Losing the database
+The control plane's machine carries the database, so the new machine restores it before it
+serves: the newest base backup in the archive, then every WAL segment after it. What the old
+machine wrote in its last minute and had not archived is lost with it. An archive that does not
+open under the installation's key is refused, and the control plane does not start on it.
 
-RDS point-in-time recovery restores it to a new instance, as of any moment in the last seven
-days. Putting that instance in place of the installation's is done by hand today; the module does
-not automate it. Anything the control plane recorded after that point is lost. Disks and snapshots published after
-it are still in the bucket, but the database no longer knows them.
+A release replaces the machine the same way, without the loss: the old machine stops writing,
+archives its last segment and lets go, and the new one restores to that point.
+
+## Losing the archive
+
+A delete or an overwrite in the database's bucket is a version that Object Lock holds for
+`database_lock_days`. Older base backups are pruned as new ones are taken, so a restore starts
+from a recent one.
 
 ## Going back to an older release
 
 A release older than the one that last started the database refuses to start on it. Going back
-past a schema change is a point-in-time restore to before the update.
+past a schema change is not something an update or a command does today.
 
 ## What is not backed up
 
 - The runners' local disks: they are a cache, and whatever was not uploaded yet.
-- The database is not copied into the bucket or anywhere else by Spin. Its backups are RDS's.

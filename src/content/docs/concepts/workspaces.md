@@ -67,10 +67,14 @@ until you start it again. `spin workspace status` says why a workspace is not be
   does not take a snapshot.
 - **Suspend** keeps the running processes: the workspace's memory and disk are saved, and the
   next start resumes from that instant, on any runner that carries the same machine.
-- **Delete** removes the workspace. Its snapshots are kept: delete them on their own with
-  `spin snapshot delete`.
+- **Delete** puts the workspace in the trash, with its disk. `spin workspace deleted` lists the
+  trash, and `spin workspace undelete` takes one out, stopped. Its snapshots are kept: delete them
+  on their own with `spin snapshot delete`.
 
-A workspace runs until someone stops it: there is no idle timeout.
+A workspace nobody uses is suspended with its processes, and so is one that has run longer than
+the installation allows, used or not. An administrator sets both times in the installation's
+settings. Ten minutes before a suspension its owner is asked, on the workspace's page and in its
+terminals; `spin workspace keep <workspace> 2h` answers. A start resumes a suspended workspace.
 
 ## What is inside
 
