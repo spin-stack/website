@@ -9,6 +9,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -28,6 +29,7 @@ func run() error {
 	tf := flag.String("terraform", "../spin-terraform-aws", "a checkout of spin-stack/spin-terraform-aws")
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
+	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	flag.Parse()
 
@@ -66,6 +68,23 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	ref, err := referenceData(*spin, *tf, rows)
+	if err != nil {
+		return err
+	}
+	if differs, err := syncFile(*data, ref, *check); err != nil {
+		return err
+	} else if differs {
+		stale = append(stale, *data)
+	}
+	var r reference
+	if err := json.Unmarshal(ref, &r); err != nil {
+		return err
+	}
+	releases, err := pinReleases(*docs, r.Spin.Release, *check)
+	if err != nil {
+		return err
+	}
 	bad, err := checkCommands(*docs, *spin, bin, home)
 	if err != nil {
 		return err
@@ -75,6 +94,7 @@ func run() error {
 		return err
 	}
 	bad = append(bad, limits...)
+	bad = append(bad, releases...)
 	for _, b := range bad {
 		fmt.Fprintln(os.Stderr, "refgen:", b)
 	}
@@ -135,6 +155,22 @@ func sync(out string, pages map[string][]byte, check bool) ([]string, error) {
 		}
 	}
 	return stale, nil
+}
+
+// syncFile is sync for one file outside the reference pages: it says whether the file differs
+// from want, and writes it unless checking.
+func syncFile(path string, want []byte, check bool) (bool, error) {
+	have, err := os.ReadFile(path)
+	if err == nil && bytes.Equal(have, want) {
+		return false, nil
+	}
+	if check {
+		return true, nil
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return true, err
+	}
+	return true, os.WriteFile(path, want, 0o644)
 }
 
 // frontmatter is a page's head. Every page on the site carries a description: it is the

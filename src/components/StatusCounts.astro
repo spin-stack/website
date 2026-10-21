@@ -1,0 +1,13 @@
+---
+// The feature board's counts and the release the site documents, from src/data/reference.json.
+// The same sentence is the component's text in the page's Markdown twin (src/lib/pages.ts).
+import { statusLine } from '../lib/reference';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const html = statusLine
+	.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+	.replace(/`([^`]+)`/g, '<code>$1</code>')
+	.replace(/\[([^\]]+)\]\((\/[^)]*)\)/g, (_, text, href) => `<a href="${base}${href}">${text}</a>`);
+---
+
+<p class="status-counts" set:html={html} />

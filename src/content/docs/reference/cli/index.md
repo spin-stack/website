@@ -27,6 +27,7 @@ Available Commands:
   help        Help about any command
   login       Authenticate with the platform
   logout      End the profile's session and forget its login
+  open        Open a repository, branch, commit or pull request from its URL
   port        Manage exposed ports for workspaces
   project     Manage a team's projects: a repository and the workspace that opens it
   settings    Manage user settings
@@ -59,6 +60,7 @@ Use "spin [command] --help" for more information about a command.
 - [`spin exec`](/reference/cli/exec/): Run a command in a workspace
 - [`spin login`](/reference/cli/login/): Authenticate with the platform
 - [`spin logout`](/reference/cli/logout/): End the profile's session and forget its login
+- [`spin open`](/reference/cli/open/): Open a repository, branch, commit or pull request from its URL
 - [`spin port`](/reference/cli/port/): Manage exposed ports for workspaces
 - [`spin project`](/reference/cli/project/): Manage a team's projects: a repository and the workspace that opens it
 - [`spin settings`](/reference/cli/settings/): Manage user settings

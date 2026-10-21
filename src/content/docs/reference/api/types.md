@@ -86,6 +86,22 @@ BaseImage is the base image of one machine release, as published.
 | `day` | `Timestamp` | The day's first instant, UTC. |
 | `services` | list of [ServiceCost](/reference/api/types/#servicecost) | Costliest first. |
 
+## BrokeredRequest
+
+BrokeredRequest is one request the egress proxy read from the workspace's machine to a brokered name. No header and no body: what the proxy set is the team's secret, and what the machine sent is its own.
+
+| Field | Type | What it is |
+|---|---|---|
+| `name` | string |  |
+| `method` | string |  |
+| `path` | string | As the machine sent it, without the query. |
+| `status` | integer (int32) | What the real host answered; what the proxy answered for a refusal. |
+| `bytesSent` | string (int64) |  |
+| `bytesReceived` | string (int64) |  |
+| `at` | `Timestamp` |  |
+| `refused` | string | Empty for a request passed on. Otherwise why the proxy refused it: credentials (a secret or token the team does not hold), host (a request for another name), upgrade, method (TRACE or TRACK), scope (a method or path the injecting rule does not allow), authority (the cloud principal refused to sign it). |
+| `principal` | string | Who asked: "user" or "agent", by the listener the proxy read it on. |
+
 ## BurstMode
 
 BurstMode is how a workspace of a preset may grow past what it starts with.
@@ -371,6 +387,18 @@ Image is one name a workspace can be created from: a publication in this install
 | `name` | string | What a person choosing a disk is shown: its name ("base image") and what it is ready for. An empty name is a publication made before one was asked for; show the ref. |
 | `description` | string |  |
 
+## InjectionStatus
+
+InjectionStatus is one header the egress proxy sets on the workspace's requests to a brokered name, and whether the workspace's team holds what it is set from.
+
+| Field | Type | What it is |
+|---|---|---|
+| `policy` | string | The policy, by name, and the names its rule brokers. |
+| `names` | list of string |  |
+| `header` | string |  |
+| `from` | string | What the header is set from: a team secret by name, "&lt;forge> app", or "identity for &lt;audience>". |
+| `held` | boolean | Whether the team holds it: the secret is set, the forge app is set, an identity is always held. False is a request refused with credentials. |
+
 ## InstallationSettings
 
 InstallationSettings contains global settings for the Spin installation
@@ -394,7 +422,8 @@ InstallationSettings contains global settings for the Spin installation
 | `workspaceIdleSuspendMinutes` | integer (int32) | How many minutes a running workspace may go unused - nobody working over its ssh, editor or forwarded ports, and its cores all but still - before it is suspended with its processes, which its next start resumes. 0 suspends none; 60 is what an installation that says nothing keeps, and a week is the most. |
 | `workspaceMaxRunningMinutes` | integer (int32) | How many minutes a workspace may run at a stretch, used or not, before it is suspended the same way: a process that keeps its cores busy is use to the rule above, and this is what ends it. Counted from its machine's start, which a resume is too. 0 caps none; 720 is what an installation that says nothing keeps, and a week is the most. |
 | `workspaceLeaseMaxMinutes` | integer (int32) | How many minutes a process may keep its workspace awake at a stretch (a lease: `spin-supervisor keep -- &lt;cmd>`, a .spin.yaml task with keep_awake). While a lease is held and within this of its start, nobody is asked, nothing idle is suspended, and the running cap waits for the lease's end. 0 honours no lease; 480 is what an installation that says nothing keeps, and a week is the most. |
-| `teamSecretsRole` | string | The IAM role a team's secret kept in Secrets Manager is read under, in a session tagged spin-team-id with the team: its policy lets that session read only what carries the same tag. Empty, no secret is kept as a reference. |
+| `teamSecretsRole` | string | The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a session tagged spin-team-id with the team: its policy lets that session read only what carries the same tag. Empty, no secret is kept as a reference. |
+| `agentsFetch` | boolean | Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their publishers on its own: the newest release of each, looked for daily. False, it fetches none, and a workspace is given the pair the control plane's image carries or one an administrator published. |
 
 ## Job
 
@@ -515,6 +544,7 @@ NetworkRule is one thing a network policy allows: these destinations on these po
 | `inject` | list of [HeaderInjection](/reference/api/types/#headerinjection) | Headers the proxy sets on a brokered rule's requests, each from a secret of the workspace's team (or the nearest team above it with one by that name). Brokered rules only. |
 | `cloud` | [CloudAccess](/reference/api/types/#cloudaccess) | The principal the proxy authorizes a brokered rule's requests as, on its cloud: the host takes its credentials as the workspace, with a token of its identity. Brokered rules naming that cloud's endpoints only, and not with inject. |
 | `verifySni` | boolean | The host's egress proxy reads the TLS server name of each connection to these names and passes on, untouched, only one this rule names: an address shared with other names opens only these to a client that says which it wants. A connection with no name, or one hiding it (ECH), goes nowhere. Names only, on TCP, never with broker; it does not stop a client that lies. |
+| `principal` | string | Whose connections a brokered rule stands in for: "agent" (the workspace's agent, whose packets its guest marks), "user" (everything else the workspace sends), or "any" (empty: both). Two rules for one name, one per principal, each with its own injections and methods, say what the person may do and what the agent may. Brokered rules only: an agent reaches nothing outside the proxy, so a rule that is not brokered is the person's already. |
 
 ## ObservedDestination
 
@@ -736,6 +766,7 @@ The repository a workspace opened, as its guest clones it: the project's URL, th
 | `fromCommit` | string | from_commit is the commit the disk's checkout already is, for a disk cloned from a prebuild: the guest holds the tree to it (git fsck, no tracked file changed) before it fetches. |
 | `prebuildId` | string | The prebuild the disk is a clone of, and the SHA-256 of the claim its host signed of it (PrebuildClaim): what the owner approves when the open was from one. |
 | `prebuildClaimDigest` | string |  |
+| `pullRef` | string | pull_ref is a pull request's ref as its forge serves it (refs/pull/&lt;n>/head, GitLab's refs/merge-requests/&lt;n>/head), fetched once ref is cloned and checked out as pr-&lt;n> or mr-&lt;n>; empty for a workspace that opens at ref itself. |
 
 ## ResolverLookup
 

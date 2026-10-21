@@ -422,7 +422,7 @@ A team's secrets: what a brokered network rule has the host's egress proxy add t
 | `name` | string | Lower-case letters, digits and dashes, starting with a letter; what a rule names it by. |
 | `value` | string | At most 8 KiB of visible ASCII. Replaces what the name held. |
 | `hosts` | list of string | The exact names the secret may be sent to, 1 to 16: a brokered rule that injects it and names any other host is refused it. |
-| `ref` | string | In place of value: the ARN of a Secrets Manager secret the team keeps it in, read as the team (InstallationSettings.team_secrets_role) now and whenever a host asks for it. |
+| `ref` | string | In place of value: the ARN of a Secrets Manager secret or a Parameter Store parameter the team keeps it in, read as the team (InstallationSettings.team_secrets_role) now and whenever a host asks for it. |
 
 **Response**
 
