@@ -46,7 +46,7 @@ This decides what deleting can destroy:
 
 Because every workspace descends from a base image, and an image is never the last member of its
 lineage, **deleting a workspace does not destroy its data key**. Its bytes are gone when Object
-Lock's retention (`object_lock_days`) runs out. If you need a workspace's contents to become
+Lock's retention ([`object_lock_days`](/reference/terraform/controlplane/#object_lock_days)) runs out. If you need a workspace's contents to become
 unreadable at once, today only memory snapshots offer that.
 
 ## The installation's secrets

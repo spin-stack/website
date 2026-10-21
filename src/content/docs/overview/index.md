@@ -68,7 +68,7 @@ An installation is made of four repositories under
 | **spin-terraform-aws** | The OpenTofu module that creates an installation in an AWS account. |
 
 A release of spin names the release of spin-machine it runs. A Spin OS image is built for one
-release of spin. The OpenTofu module installs the image of the release you choose.
+release of spin. The OpenTofu module boots the published images of the release you choose.
 
 ## Next
 

@@ -14,7 +14,8 @@ aws autoscaling describe-scaling-activities --auto-scaling-group-name <group> --
 ```
 
 A machine refuses to start on a document that names another release than its image's. That
-means the Spin OS image and `spin_version` disagree: publish the image of the release you named.
+means the image and `spin_version` disagree: the images the module names are those of
+`spin_version` unless `image_ids` names others.
 
 ## A shell on a machine
 

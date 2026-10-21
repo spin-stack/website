@@ -22,10 +22,10 @@ module "spin" {
 
 - **A VPC** of its own, with public subnets and no NAT gateway. The bucket is reached through the
   free S3 gateway endpoint.
-- **The control plane**, on one `t8i.medium` machine, in an autoscaling group of one. It also
+- **The control plane**, on one machine ([`instance_type`](/reference/terraform/controlplane/#instance_type)), in an autoscaling group of one. It also
   runs the installation's PostgreSQL 18 and its log and metric stores.
-- **The proxy**, on one `t8i.micro` machine with an elastic IP, in an autoscaling group of one.
-- **The runners**, an autoscaling group of spot machines with 32 or 48 vCPUs and local NVMe, which
+- **The proxy**, on one machine ([`proxy_instance_type`](/reference/terraform/controlplane/#proxy_instance_type)) with an elastic IP, in an autoscaling group of one.
+- **The runners**, an autoscaling group of large spot machines with local NVMe ([`instance_types`](/reference/terraform/runners/#instance_types)), which
   the control plane sizes from zero.
 - **S3 buckets, each with one owner**: the volumes, with versioning and Object Lock; the
   database's archive, under Object Lock too; logs, traces and metric backups; the proxy's
@@ -37,7 +37,7 @@ module "spin" {
 - **IAM roles** for each machine, all under one permissions boundary.
 - **A VPC flow log**, kept in CloudWatch for 30 days.
 
-Every machine boots **Spin OS**, an image you build for the release and publish in your account.
+Every machine boots **Spin OS**, the image published for the release, in the regions [Spin OS images](/reference/terraform/images/) lists.
 
 ## The choices it makes
 
@@ -57,7 +57,7 @@ These are made for you, and each one has a reason:
 ## Before you begin
 
 Read [Before you start](/aws/prerequisites/): you need a domain of the installation's own, room
-in your account's spot quota, and a Spin OS image for the release.
+in your account's spot quota, and a region the release has images in.
 
 ## Pages in this section
 
