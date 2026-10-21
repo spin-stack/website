@@ -132,3 +132,28 @@ func checkStates(docs string, pages map[string][]byte) ([]string, error) {
 	}
 	return bad, nil
 }
+
+// publicRepos are the spin-stack repositories a page may link to: each public, or made public
+// when the site is. spin-stack/ami is not among them: an installation boots the images it
+// publishes, and a reader has no use for its source.
+var publicRepos = map[string]bool{
+	"spin": true, "spin-terraform-aws": true, "spin-machine": true, "qboot": true, "website": true,
+}
+
+var repoLink = regexp.MustCompile(`github\.com/spin-stack/([A-Za-z0-9_.-]+)`)
+
+// checkRepos fails a link to a spin-stack repository a reader cannot open.
+func checkRepos(docs string) ([]string, error) {
+	var bad []string
+	err := handPages(docs, func(path string, raw []byte) error {
+		for i, line := range bytes.Split(raw, []byte("\n")) {
+			for _, m := range repoLink.FindAllSubmatch(line, -1) {
+				if !publicRepos[string(m[1])] {
+					bad = append(bad, fmt.Sprintf("%s:%d: links spin-stack/%s, which a reader cannot open", path, i+1, m[1]))
+				}
+			}
+		}
+		return nil
+	})
+	return bad, err
+}

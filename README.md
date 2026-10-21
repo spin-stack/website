@@ -1,13 +1,22 @@
 # Spin documentation
 
-The public documentation of [Spin](https://github.com/spin-stack/spin), built with
-[Astro Starlight](https://starlight.astro.build) and published to GitHub Pages.
+The documentation of [Spin](https://github.com/spin-stack/spin), at
+<https://spin-stack.github.io/website/>, built with [Astro Starlight](https://starlight.astro.build)
+and published to GitHub Pages.
+
+The rule this site keeps: a page is generated from the code it describes, or held to it by a
+check that fails the build, or it does not exist. Everything below is one of those checks.
 
 ```
 task install      # dependencies
 task dev          # http://localhost:4321, live reload
 task check        # the reference against the sources, the build, and every link
+task --list       # everything else
 ```
+
+`task check` is what CI runs and more: CI cannot read spin while it is private, so the reference
+is checked against checkouts of spin and spin-terraform-aws beside this one (`SPIN=`,
+`TERRAFORM=` to point elsewhere).
 
 - **Pages** are Markdown under `src/content/docs/`. Every page needs a `description`: it is its
   line in `llms.txt`. A page must be in `src/lib/nav.mjs`, or the build fails.
@@ -37,4 +46,20 @@ task check        # the reference against the sources, the build, and every link
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spin-stack.github.io` and
   `/website` (a GitHub project page). Content links from the root (`/concepts/network/`) and the
   build puts the base in front; `task links` fails on one it cannot resolve.
+- **Links out of the site** are opened by `task links:external`, with no credential, as a reader
+  would: every link to another site and every `ghcr.io` reference a page quotes. A page links
+  only to spin-stack repositories a reader can open (`publicRepos` in `tools/refgen`).
 - Pushing to `main` builds and publishes to GitHub Pages (`.github/workflows/pages.yml`).
+
+## Contributing
+
+Pull requests are welcome. One from a fork runs the Gate once a maintainer approves it, and never
+deploys: only `main` publishes. Dependencies are locked; `pnpm-workspace.yaml` names the few that
+may run an install script, and a release must be a week old before it is taken.
+
+A security problem in Spin goes to a private advisory, never an issue: see
+[Reporting a vulnerability](https://spin-stack.github.io/website/security/reporting/).
+
+## License
+
+Apache License 2.0, the code and the pages alike. See [LICENSE](LICENSE).
