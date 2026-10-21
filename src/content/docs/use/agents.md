@@ -7,6 +7,19 @@ Spin is built for code you do not fully trust, and an agent is the most common a
 code. This page shows how to give an agent a workspace, how to limit what it can reach, and how
 to review and undo what it did.
 
+## In four calls
+
+```bash
+spin workspace create --name task-1 --wait -o json
+spin exec task-1 -- make test
+spin snapshot diff task-1 <after-id> --from <before-id> -o json
+spin workspace delete task-1
+```
+
+Every command prints JSON with `-o json`. A model reading this site starts at
+[`/llms.txt`](/llms.txt), and every page has a Markdown twin. The control plane's API is in
+[the API reference](/reference/api/).
+
 ## A key for the agent
 
 Create an API key with only the scopes the agent needs:
