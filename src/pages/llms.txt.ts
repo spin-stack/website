@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { experimental } from '../lib/experimental';
 import { home, mdPath, sections, siteBase } from '../lib/pages';
 
 // https://llmstxt.org: a title, a summary, and every page as a link to its Markdown with a line
@@ -9,7 +10,7 @@ export const GET: APIRoute = async ({ site }) => {
 	const lines = [
 		'# Spin',
 		'',
-		`> ${idx.data.description}`,
+		`> ${experimental} ${idx.data.description}`,
 		'',
 		'Every page is also served as Markdown at the linked `.md` path, and all of them together at ' +
 			`${base}/llms-full.txt.`,

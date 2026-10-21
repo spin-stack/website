@@ -22,6 +22,7 @@ export default defineConfig({
 			logo: { src: './src/assets/logo.svg' },
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/custom.css'],
+			components: { Banner: './src/components/Banner.astro' },
 			head: [
 				{
 					tag: 'link',
