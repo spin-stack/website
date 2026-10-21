@@ -16,6 +16,12 @@ export const GET: APIRoute = async ({ site }) => {
 			`${base}/llms-full.txt.`,
 		'',
 	];
+	lines.push(
+		'## API',
+		'',
+		`- [OpenAPI document](${base}/openapi.json): the control plane's API, spin.v1, of the commit this site documents; every procedure is a Connect unary call.`,
+		'',
+	);
 	for (const s of await sections()) {
 		lines.push(`## ${s.label}`, '');
 		for (const p of s.pages) lines.push(`- [${p.data.title}](${base}${mdPath(p)}): ${p.data.description}`);

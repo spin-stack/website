@@ -1,0 +1,12 @@
+---
+// Starlight's head, and the page's Markdown twin announced in it: a model that lands on a page
+// finds the same content as Markdown without guessing the address. linkcheck fails one that
+// does not resolve.
+import Default from '@astrojs/starlight/components/Head.astro';
+import { twinPath } from '../lib/twin';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Default />
+<link rel="alternate" type="text/markdown" href={`${base}${twinPath(Astro.locals.starlightRoute.id)}`} />

@@ -9,25 +9,25 @@ sidebar:
 
 The control plane's API, spin.v1, generated from its protobuf schema. Every procedure is a Connect unary call: POST a JSON body to /&lt;service>/&lt;method> with `Content-Type: application/json` and `Authorization: Bearer &lt;API key>`.
 
-Every installation serves the document this reference is made from at `https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. An error is Connect's: a non-200 status with a JSON body naming a `code` and a `message`.
+Every installation serves the document this reference is made from at `https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. This site serves the same document, of the commit it documents, at [`/openapi.json`](/openapi.json); its sha256 is `openapiSha256` in the site's [`reference.json`](https://github.com/spin-stack/website/blob/main/src/data/reference.json). An error is Connect's: a non-200 status with a JSON body naming a `code` and a `message`.
 
 ```sh
 curl -s https://app.example.com/spin.v1.WorkspaceService/ListWorkspaces \
-  -H 'Content-Type: application/json' -H "Authorization: Bearer $SPIN_API_KEY" -d '{}'
+  -H 'Content-Type: application/json' -H "Authorization: Bearer $SPIN_TOKEN" -d '{}'
 ```
 
 ## Services
 
 - [AuthService](/reference/api/authservice/): 15 procedures
-- [AdminService](/reference/api/adminservice/): AdminService manages installation-wide settings, user management, and resource presets Only accessible to instance administrators --- Installation Settings ---
+- [AdminService](/reference/api/adminservice/): AdminService manages installation-wide settings, user management, and resource presets. Only accessible to instance administrators.
 - [HostService](/reference/api/hostservice/): 8 procedures
-- [LogService](/reference/api/logservice/): LogService is what the installation logged, as its store of logs and traces keeps it (internal/logstore). Every search is confined by the control plane to what the caller may see; what the caller types is searched inside that and cannot widen it.
+- [LogService](/reference/api/logservice/): LogService is what the installation logged, as its store of logs and traces keeps it. (internal/logstore). Every search is confined by the control plane to what the caller may see; what the caller types is searched inside that and cannot widen it.
 - [RunnerTokenService](/reference/api/runnertokenservice/): 4 procedures
 - [SettingsService](/reference/api/settingsservice/): 3 procedures
 - [SetupService](/reference/api/setupservice/): SetupService handles initial platform setup and admin bootstrap. Most endpoints require admin authentication, except GetSetupStatus and PasswordLogin.
 - [WorkspaceService](/reference/api/workspaceservice/): 49 procedures
-- [ShareService](/reference/api/shareservice/): ShareService manages snapshot sharing Snapshots can be shared with specific users or made public Users can create new workspaces from shared snapshots
-- [SignatureService](/reference/api/signatureservice/): SignatureService is what only people sign of themselves: who a user's keys are and who a team's members are. A host holds every workspace's access to these (internal/roster), so a control plane that is taken can say neither which keys are somebody's nor who is in a team. A workspace's access is signed through WorkspaceService.SetOwnerWord. The control plane proposes each document from what it holds - a key registered, a member added - and keeps what was signed; it signs nothing. A client shows a person what they are signing and signs it with a key of theirs: `spin sign`, with the keys ssh-agent holds, or the terminal's page, with a passkey.
-- [SSHKeyService](/reference/api/sshkeyservice/): SSHKeyService is the user's own keys, as a registry: the ones a client offers when the owner signs a workspace's word (OwnerWord), and the anchor a create may name. A key here logs in to nothing on its own - only a key the owner's word for a workspace lists does, there.
+- [ShareService](/reference/api/shareservice/): ShareService manages snapshot sharing. Snapshots can be shared with specific users or made public. Users can create new workspaces from shared snapshots.
+- [SignatureService](/reference/api/signatureservice/): SignatureService is what only people sign of themselves: who a user's keys are and who a team's. members are. A host holds every workspace's access to these (internal/roster), so a control. plane that is taken can say neither which keys are somebody's nor who is in a team. A. workspace's access is signed through WorkspaceService.SetOwnerWord. The control plane proposes each document from what it holds - a key registered, a member added -. and keeps what was signed; it signs nothing. A client shows a person what they are signing and. signs it with a key of theirs: `spin sign`, with the keys ssh-agent holds, or the terminal's. page, with a passkey.
+- [SSHKeyService](/reference/api/sshkeyservice/): SSHKeyService is the user's own keys, as a registry: the ones a client offers when the owner. signs a workspace's word (OwnerWord), and the anchor a create may name. A key here logs in to. nothing on its own - only a key the owner's word for a workspace lists does, there.
 - [TeamService](/reference/api/teamservice/): 27 procedures
 - [Types](/reference/api/types/): every message and enum the procedures name

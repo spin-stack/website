@@ -11,6 +11,14 @@ Source: `github.com/spin-stack/spin-terraform-aws//bootstrap?ref=<tag>`. Generat
 
 ## Variables
 
+| Variable | Type | Default |
+|---|---|---|
+| [`cost_allocation_tags`](#cost_allocation_tags) | `bool` | `false` |
+| [`github_repositories`](#github_repositories) | `map(string)` | `{}` |
+| [`region`](#region) | `string` | `"us-west-2"` |
+| [`image_publishers`](#image_publishers) | `map(string)` | `{}` |
+| [`publish_regions`](#publish_regions) | `list(string)` | `[]` |
+
 ### cost_allocation_tags
 
 Activate spin's tags as cost allocation tags in this account: true once an installation has run a day here, in one bootstrap per account.

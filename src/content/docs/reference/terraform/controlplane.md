@@ -11,6 +11,39 @@ Source: `github.com/spin-stack/spin-terraform-aws//modules/controlplane?ref=<tag
 
 ## Variables
 
+| Variable | Type | Default |
+|---|---|---|
+| [`spin_version`](#spin_version) | `string` | **required** |
+| [`domain`](#domain) | `string` | **required** |
+| [`identity_record_days`](#identity_record_days) | `number` | `400` |
+| [`collector`](#collector) | `object({ metric_interval = optional(string, "60s") })` | `{}` |
+| [`name`](#name) | `string` | `"spin"` |
+| [`internal_zone`](#internal_zone) | `string` | `"spin.internal"` |
+| [`acme_email`](#acme_email) | `string` | `""` |
+| [`vpc_cidr`](#vpc_cidr) | `string` | `"10.42.0.0/16"` |
+| [`availability_zones`](#availability_zones) | `number` | `3` |
+| [`instance_type`](#instance_type) | `string` | `"t8i.medium"` |
+| [`root_volume_gb`](#root_volume_gb) | `number` | `40` |
+| [`admin_email`](#admin_email) | `string` | `""` |
+| [`flow_logs`](#flow_logs) | `bool` | `true` |
+| [`dns_query_logs`](#dns_query_logs) | `bool` | `false` |
+| [`log_retention_days`](#log_retention_days) | `number` | `30` |
+| [`proxy_allowed_cidrs`](#proxy_allowed_cidrs) | `list(string)` | `["0.0.0.0/0"]` |
+| [`proxy_instance_type`](#proxy_instance_type) | `string` | `"t8i.micro"` |
+| [`decommission`](#decommission) | `bool` | `false` |
+| [`object_lock_days`](#object_lock_days) | `number` | `30` |
+| [`database_lock_days`](#database_lock_days) | `number` | `14` |
+| [`runner_policy`](#runner_policy) | `object({ shutdown_grace = optional(string, "100s") preemption_source = optional(string, "aws") })` | `{}` |
+| [`installation_config`](#installation_config) | `string` | `""` |
+| [`runner_idle_minutes`](#runner_idle_minutes) | `number` | `60` |
+| [`quiet_hours`](#quiet_hours) | `string` | `""` |
+| [`time_zone`](#time_zone) | `string` | `"UTC"` |
+| [`tags`](#tags) | `map(string)` | `{}` |
+| [`image_ids`](#image_ids) | `map(string)` | `{}` |
+| [`monthly_budget_usd`](#monthly_budget_usd) | `number` | the module's own |
+| [`budget_emails`](#budget_emails) | `list(string)` | `[]` |
+| [`image_measurements`](#image_measurements) | `map(list(object({ pcr4 = string pcr7 = string pcr12 = string statement = optional(string) bundle = optional(string) # Why the build is not to be run, as measurements.json says of a revoked one: no machine of it # is trusted, and a release whose newest build is revoked is not installed (attested_key.tf). revoked = optional(string) })))` | the module's own |
+
 ### spin_version
 
 The release the installation runs, as v&lt;YYYYMMDD>.&lt;N>: every machine boots the Spin OS image of it (spin-stack/ami), published into this account and tagged spin:version.

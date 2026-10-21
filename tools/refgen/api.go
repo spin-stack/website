@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -96,9 +97,11 @@ func apiPages(spin string) (map[string][]byte, error) {
 	fmt.Fprintf(&index, "%s\n\n", prose(oneLine(doc.Info.Description)))
 	index.WriteString("Every installation serves the document this reference is made from at " +
 		"`https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. " +
+		"This site serves the same document, of the commit it documents, at [`/openapi.json`](/openapi.json); " +
+		"its sha256 is `openapiSha256` in the site's [`reference.json`](https://github.com/spin-stack/website/blob/main/src/data/reference.json). " +
 		"An error is Connect's: a non-200 status with a JSON body naming a `code` and a `message`.\n\n" +
 		"```sh\ncurl -s https://app.example.com/spin.v1.WorkspaceService/ListWorkspaces \\\n" +
-		"  -H 'Content-Type: application/json' -H \"Authorization: Bearer $SPIN_API_KEY\" -d '{}'\n```\n\n" +
+		"  -H 'Content-Type: application/json' -H \"Authorization: Bearer $SPIN_TOKEN\" -d '{}'\n```\n\n" +
 		"## Services\n\n")
 	for i, tag := range doc.Tags {
 		procs := byTag[tag.Name]
@@ -107,7 +110,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 		}
 		sort.Slice(procs, func(a, b int) bool { return procs[a].name < procs[b].name })
 		slug := strings.ToLower(tag.Name)
-		what := oneLine(tag.Description)
+		what := sentences(tag.Description)
 		if what == "" {
 			what = fmt.Sprintf("%d procedures", len(procs))
 		}
@@ -116,7 +119,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 		var b strings.Builder
 		b.WriteString(frontmatter(tag.Name, fmt.Sprintf("spin.v1.%s: each procedure, its request and its response.", tag.Name), i+1))
 		if tag.Description != "" {
-			fmt.Fprintf(&b, "%s\n\n", prose(oneLine(tag.Description)))
+			fmt.Fprintf(&b, "%s\n\n", prose(sentences(tag.Description)))
 		}
 		for _, p := range procs {
 			fmt.Fprintf(&b, "## %s\n\n`POST %s`\n\n", p.name, p.path)
@@ -273,4 +276,25 @@ func short(name string) string {
 // anchor is the id Starlight gives a heading of this text.
 func anchor(heading string) string {
 	return strings.ToLower(strings.ReplaceAll(heading, ".", ""))
+}
+
+// divider is a section heading a proto comment carries - "--- Installation Settings ---" -
+// which belongs to the file's layout, not to what the service is.
+var divider = regexp.MustCompile(`\s*-{3,}[^-]*-{3,}\s*`)
+
+// sentences is a service's comment as prose: each line of a proto comment is a sentence, which
+// the OpenAPI generator joins with nothing between them, and its dividers go.
+func sentences(s string) string {
+	var out []string
+	for _, line := range strings.Split(s, "\n") {
+		line = strings.TrimSpace(divider.ReplaceAllString(line, " "))
+		if line == "" {
+			continue
+		}
+		if !strings.ContainsAny(line[len(line)-1:], ".:;!?)") {
+			line += "."
+		}
+		out = append(out, line)
+	}
+	return strings.Join(out, " ")
 }

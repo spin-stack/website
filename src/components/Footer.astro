@@ -1,0 +1,21 @@
+---
+// Starlight's footer, with a link to the page's Markdown twin.
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { twinPath } from '../lib/twin';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<p class="twin" data-pagefind-ignore>
+	<a href={`${base}${twinPath(Astro.locals.starlightRoute.id)}`}>This page as Markdown</a>, for a model or a terminal.
+</p>
+<Default />
+
+<style>
+	.twin {
+		margin-top: 3rem;
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+</style>

@@ -23,7 +23,12 @@ export default defineConfig({
 			logo: { src: './src/assets/logo.svg' },
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/custom.css'],
-			components: { Banner: './src/components/Banner.astro', Hero: './src/components/Hero.astro' },
+			components: {
+				Banner: './src/components/Banner.astro',
+				Hero: './src/components/Hero.astro',
+				Head: './src/components/Head.astro',
+				Footer: './src/components/Footer.astro',
+			},
 			head: [
 				// The link preview a chat shows: public/og.png, by its absolute address.
 				{ tag: 'meta', attrs: { property: 'og:image', content: `${site}${base.replace(/\/$/, '')}/og.png` } },

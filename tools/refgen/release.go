@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"io/fs"
@@ -19,6 +20,9 @@ type reference struct {
 	Spin      sourceRef `json:"spin"`
 	Terraform sourceRef `json:"terraform"`
 	Counts    counts    `json:"counts"`
+	// OpenAPI is the sha256 of the control plane's OpenAPI document the site serves at
+	// /openapi.json, so a reader can check a copy against it.
+	OpenAPI string `json:"openapiSha256"`
 }
 
 type sourceRef struct {
@@ -46,6 +50,11 @@ func referenceData(spin, tf string, rows []feature) ([]byte, error) {
 	if r.Terraform.Commit, err = git(tf, "rev-parse", "HEAD"); err != nil {
 		return nil, err
 	}
+	doc, err := os.ReadFile(filepath.Join(spin, openAPIPath))
+	if err != nil {
+		return nil, err
+	}
+	r.OpenAPI = fmt.Sprintf("%x", sha256.Sum256(doc))
 	for _, f := range rows {
 		switch f.State {
 		case "built":

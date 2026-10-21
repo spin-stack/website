@@ -4,6 +4,7 @@ import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
 import figures from '../data/figures.json';
 import { statusLine } from './reference';
+import { twinPath } from './twin';
 
 type Doc = CollectionEntry<'docs'>;
 
@@ -59,7 +60,7 @@ export function pagePath(d: Doc): string {
 	return d.id === 'index' ? '/' : `/${d.id}/`;
 }
 export function mdPath(d: Doc): string {
-	return d.id === 'index' ? '/index.md' : `/${d.id}.md`;
+	return twinPath(d.id);
 }
 
 /**
