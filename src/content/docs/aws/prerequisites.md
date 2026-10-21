@@ -68,7 +68,7 @@ and region, tagged `spin:version`:
 
 ```bash
 git clone https://github.com/spin-stack/ami && cd ami
-SPIN_VERSION=v20260927.03 task build publish
+SPIN_VERSION=v20261019.02 task build publish
 ```
 
 The build fetches the release, checks every file against its signature, and lays it into a
@@ -80,5 +80,5 @@ tag.
 
 ## Pick a release
 
-Releases are named by date: `v<YYYYMMDD>.<N>`, such as `v20260927.03`, the third release of 27
-September 2026. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).
+Releases are named by date: `v<YYYYMMDD>.<N>`, the Nth release of that day. This site documents
+`v20261019.02`. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).

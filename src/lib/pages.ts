@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { experimentalMarkdown } from './experimental';
 import { nav } from './nav.mjs';
+import { statusLine } from './reference';
 
 type Doc = CollectionEntry<'docs'>;
 
@@ -92,6 +93,7 @@ export function toMarkdown(d: Doc, base: string): string {
 		`> **${title ?? (type ? type[0].toUpperCase() + type.slice(1) : 'Note')}:**`,
 	);
 	body = body.replace(/<\/Aside>/g, '');
+	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
 	body = body.replace(/<([A-Z]\w*)\s*\/>/g, (_, name: string) => {
 		const text = figures[name];
 		if (!text) throw new Error(`${d.id}: <${name} /> has no text in src/lib/pages.ts figures`);

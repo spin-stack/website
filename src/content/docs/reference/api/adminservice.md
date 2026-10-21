@@ -260,6 +260,7 @@ No fields: `{}`.
 | `images` | list of [PlatformImage](/reference/api/types/#platformimage) | Empty until the object store is configured: there is nowhere to publish to. |
 | `baseImages` | list of [BaseImage](/reference/api/types/#baseimage) | Every base image published, one per machine release, newest first. |
 | `supervisorReleases` | list of [ExtensionRelease](/reference/api/types/#extensionrelease) | Every release of the supervisor, newest first. |
+| `agentReleases` | list of [ExtensionRelease](/reference/api/types/#extensionrelease) | Every release of the agent CLIs (Claude Code and Codex, one extension), newest first. |
 
 ## GetRegistrationMode
 

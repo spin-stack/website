@@ -22,6 +22,10 @@ Every row of this page is a line of `internal/features` in spin, and a test ther
 | Workspaces | Suspend with the processes where they are; a start resumes them | `TestAWorkspaceNobodyUsesIsSuspendedAndAStartResumesIt`, an end-to-end test |
 | Workspaces | Cores and memory lent while the host has them, and taken back | `TestABusyWorkspaceIsLentCoresAndGivesThemBack`, an end-to-end test |
 | Workspaces | A grant of cores and memory of its own, for a while | `TestAGrantWhoseTimeIsUpIsGivenBackToTheMachine`, an end-to-end test |
+| Workspaces | Move a running workspace to another host, its processes as they are | `TestHostsAMoveTakesARunningWorkspaceToAnotherHost`, an end-to-end test |
+| Workspaces | Clone a workspace: its disk, team, project, size, policies and environment, in one | `TestACloneHoldsWhatItsSourceWroteAndItsShape`, an end-to-end test |
+| Teams and projects | Open a repository, branch, commit or pull request from its URL, in the dashboard (/launch) and from the terminal | [`spin open --no-connect`](/reference/cli/open/) |
+| Teams and projects | A workspace opened at a commit or a pull request, checked out as pr-&lt;n> | `TestAProjectsWorkspaceOpensAtTheCommitItWasAskedFor`, an end-to-end test |
 | Workspaces | Recover a workspace whose host is gone, at a cost its owner accepts | `TestHostsAWorkspaceWhoseHostIsGoneIsRecoveredOnAnother`, an end-to-end test |
 | Workspaces | A workspace outlives its runner | `TestAWorkspaceOutlivesItsRunner`, an end-to-end test |
 | Workspaces | Quarantine, by an administrator | [`WorkspaceService/QuarantineWorkspace`](/reference/api/workspaceservice/) |
@@ -40,6 +44,11 @@ Every row of this page is a line of `internal/features` in spin, and a test ther
 | Network | Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role | [`spin team secret set`](/reference/cli/team/) |
 | Network | A workspace trusts the egress root only by its owner's word | `TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord`, an end-to-end test |
 | Network | What a workspace reached, what it looked up and what it was refused | [`spin workspace egress`](/reference/cli/workspace/) |
+| Network | Each request to a brokered name as the proxy read it, served or refused and why; and whether each injection's secret is the team's to give | `TestABrokeredRequestIsSeenAsTheProxyReadIt`, an end-to-end test |
+| Network | The egress proxy is a process of its own, holding no key of the host's, started again by the runner when it ends | `TestTheEgressProxyIsAProcessOfItsOwnThatTheRunnerStartsAgain`, an end-to-end test |
+| Network | A brokered rule names whose it is, the agent's or the person's: one policy says what each may reach and with what | `TestABrokeredNameForTheAgentIsTheAgentsAlone`, an end-to-end test |
+| Network | A WebSocket to a brokered name: its handshake under the rule's headers and scope, then bytes each way | `TestAWebSocketToABrokeredNameIsCarriedAfterItsHandshake`, an end-to-end test |
+| Network | HTTP/2 to a brokered name, the proxy's ALPN the real host's: a rule's headers set stream by stream, gRPC's trailers both ways | `TestHTTP2ToABrokeredNameIsTheRealHosts`, an end-to-end test |
 | Network | Watch where a workspace connects, into its logs | [`spin workspace watch`](/reference/cli/workspace/) |
 | Network | An agent the supervisor starts is marked, and reaches only brokered names | `TestARealWorkspaceMarksTheAgentItsSupervisorStarts`, an end-to-end test |
 | Network | Published ports at https://{port}-{workspace}.{domain}: private, whitelisted or public | [`spin port expose`](/reference/cli/port/) |
@@ -51,6 +60,7 @@ Every row of this page is a line of `internal/features` in spin, and a test ther
 | Access | Guests of a workspace, invited by its owner | [`spin workspace guests`](/reference/cli/workspace/) |
 | Access | A workspace's identity, signed by its host, for the audiences its owner allows | `TestAWorkspacesIdentityIsTheHostsSignatureOfWhatItsOwnerSigned`, an end-to-end test |
 | Access | VS Code over SSH, with the server the installation publishes and nothing downloaded | `TestAVSCodeServerOfAnotherCommitIsHandedToTheRunningMachine`, an end-to-end test |
+| Workspaces | Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults | `TestTheAgentCLIsAreOnPathWithThePinnedVersions`, an end-to-end test |
 | Access | Run a command in a workspace, copy files to and from it | [`spin exec`](/reference/cli/exec/) |
 | Teams and projects | Teams, with owner, admin and member | [`spin team member role`](/reference/cli/team/) |
 | Teams and projects | A team's own identity providers | [`TeamService/CreateIdentityProvider`](/reference/api/teamservice/) |
@@ -83,8 +93,6 @@ Every row of this page is a line of `internal/features` in spin, and a test ther
 
 | Area | Feature | What exists | What is missing |
 |---|---|---|---|
-| Workspaces | Move a running workspace to a host with room | [`spin workspace grant --move`](/reference/cli/workspace/) | Only when a grant does not fit on its host; a verb of its own is spin#562. |
-| Workspaces | Clone a workspace | [`spin workspace create --from-snapshot`](/reference/cli/workspace/) | A snapshot and a create, with the shape copied by hand; one RPC is spin#562. |
 
 ## Not built
 

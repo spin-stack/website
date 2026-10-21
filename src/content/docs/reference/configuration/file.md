@@ -59,9 +59,13 @@ settings:
   # released. Off, it fetches none, and workspaces get the server the image carries or one an
   # administrator published.
   vscode_fetch: false
-  # The IAM role a team's secret kept in Secrets Manager is read under, in a session tagged
-  # spin-team-id with the team; it reads only a secret tagged the same. Unset, a team's secrets
-  # are sealed in the database and none is a reference.
+  # Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their
+  # publishers on its own: the newest release of each, looked for daily. Off, it fetches none,
+  # and workspaces get the pair the image carries or one an administrator published.
+  agents_fetch: false
+  # The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a
+  # session tagged spin-team-id with the team; it reads only a secret or a parameter tagged the
+  # same. Unset, a team's secrets are sealed in the database and none is a reference.
   # team_secrets_role: arn:aws:iam::123456789012:role/spin-team-secrets
   # What a workspace created without a tag of its own runs under, by policy name - the
   # network_policies block below, or a host's own. Unset, it is "offline", the policy every

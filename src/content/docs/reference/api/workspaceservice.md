@@ -90,6 +90,26 @@ Whether a published port's name is one this installation serves, whoever may rea
 |---|---|---|
 | `published` | boolean | The port is published on a workspace that is not deleted, at any level and in any state. |
 
+## CloneWorkspace
+
+`POST /spin.v1.WorkspaceService/CloneWorkspace`
+
+Clone a running workspace: a snapshot of its disk, published, and a workspace created from it with the source's team, project and ref, size, network policies and environment, owned by the caller. Disk only: a clone has an identity of its own, so no memory goes with it. The snapshot stays, as the clone's floor. Answers once the clone exists, which takes as long as publishing the source's disk.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaceId` | string |  |
+| `name` | string | The clone's name; generated when empty. |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspace` | [Workspace](/reference/api/types/#workspace) |  |
+| `snapshot` | [Snapshot](/reference/api/types/#snapshot) | The source's snapshot the clone was made from, which stays as the clone's floor. |
+
 ## CreateSnapshot
 
 `POST /spin.v1.WorkspaceService/CreateSnapshot`
@@ -311,6 +331,7 @@ What a running workspace has actually reached beyond the node.
 | `destinations` | list of [ObservedDestination](/reference/api/types/#observeddestination) | Most traffic first, so what an allowlist has to carry is at the top. |
 | `lookups` | list of [ResolverLookup](/reference/api/types/#resolverlookup) | The workspace's recent lookups its host's resolver did not answer as asked, newest first: "it cannot resolve github.com" is an upstream failing, a name pointing into the node being removed, or a query type refused, and this says which. Answered lookups are not kept. |
 | `refused` | list of [RefusedDestination](/reference/api/types/#refuseddestination) | What the host's drops refused the workspace in the last hour, most packets first: the node's own networks, or what none of its policies allows. The other half of destinations, and what a policy that is too narrow looks like from outside the machine. |
+| `brokered` | list of [BrokeredRequest](/reference/api/types/#brokeredrequest) | The workspace's recent requests to names its policies broker with an injection, newest first: what the host's egress proxy set a header on, and what it refused and why. A brokered name no rule injects on is relayed byte for byte and leaves no request here. |
 
 ## GetWorkspaceHistory
 
@@ -378,6 +399,7 @@ What every party believes about one workspace, and where they disagree.
 | `disagreements` | list of [StatusDisagreement](/reference/api/types/#statusdisagreement) | Where the four disagree, in the order they should be read. Empty means they agree - which is the answer when a workspace is simply healthy, and is worth saying. |
 | `runtime` | [WorkspaceRuntime](/reference/api/types/#workspaceruntime) | What the machine has and uses now, asked of its host. Absent - not zero - when there is no machine to ask about: not running, on no connected host, or a host that did not answer in time. Zero cores would read as a machine that has none. |
 | `failure` | [WorkspaceFailure](/reference/api/types/#workspacefailure) | Which part failed, when state = FAILED; failure_reason is the detail. Workspace.failure. |
+| `injections` | list of [InjectionStatus](/reference/api/types/#injectionstatus) | Each header a brokered rule of the workspace's policies sets, and whether what it is set from is there to set: a request to a brokered name is refused when it is not, and this is where that is seen from outside the machine. |
 
 ## GrantPortAccess
 
@@ -566,6 +588,24 @@ List workspaces for the authenticated user
 |---|---|---|
 | `workspaces` | list of [Workspace](/reference/api/types/#workspace) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
+
+## MoveWorkspace
+
+`POST /spin.v1.WorkspaceService/MoveWorkspace`
+
+Move a running workspace to another host: suspended where it runs, its processes as they are, and resumed there from the checkpoint, holding what it holds. Placement chooses the host, as it does at a start. A workspace that is not running is refused: placement decides where it runs at its next start.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaceId` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspace` | [Workspace](/reference/api/types/#workspace) |  |
 
 ## OpenWorkspaceProxySession
 
