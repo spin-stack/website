@@ -11,5 +11,6 @@
 		"partial": 0,
 		"notBuilt": 5,
 		"limits": 17
-	}
+	},
+	"openapiSha256": "1c5ccfae56c2c79e3ed4f605d01f20a836931cb8a496c93b06483df0cbc89f7c"
 }

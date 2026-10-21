@@ -31,6 +31,7 @@ func run() error {
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
 	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
 	featuresData := flag.String("features", "src/data/features.json", "the feature board, for the pages' feature: links")
+	openapi := flag.String("openapi", "public/openapi.json", "where the site serves the control plane's OpenAPI document")
 	assets := flag.String("diagrams", "src/assets/diagrams", "where the diagrams the source repositories draw are copied")
 	figuresData := flag.String("figures", "src/data/figures.json", "each diagram's source and words, for its Markdown twin")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
@@ -112,7 +113,11 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	for path, want := range map[string][]byte{*data: ref, *featuresData: append(board, '\n')} {
+	doc, err := os.ReadFile(filepath.Join(*spin, openAPIPath))
+	if err != nil {
+		return err
+	}
+	for path, want := range map[string][]byte{*data: ref, *featuresData: append(board, '\n'), *openapi: doc} {
 		if differs, err := syncFile(path, want, *check); err != nil {
 			return err
 		} else if differs {

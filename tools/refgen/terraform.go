@@ -45,7 +45,20 @@ func terraformPages(tf string) (map[string][]byte, error) {
 			return before(vars[a].Pos, vars[b].Pos)
 		})
 		if len(vars) > 0 {
-			b.WriteString("## Variables\n\n")
+			// Every variable at a glance first, each linked to its description below.
+			b.WriteString("## Variables\n\n| Variable | Type | Default |\n|---|---|---|\n")
+			for _, v := range vars {
+				def := "**required**"
+				switch {
+				case v.Required:
+				case v.Default == nil:
+					def = "the module's own"
+				default:
+					def = "`" + strings.ReplaceAll(oneLine(fmt.Sprint(jsonish(v.Default))), "|", `\|`) + "`"
+				}
+				fmt.Fprintf(&b, "| [`%s`](#%s) | `%s` | %s |\n", v.Name, anchor(v.Name), strings.ReplaceAll(oneLine(v.Type), "|", `\|`), def)
+			}
+			b.WriteString("\n")
 		}
 		for _, v := range vars {
 			fmt.Fprintf(&b, "### %s\n\n", v.Name)

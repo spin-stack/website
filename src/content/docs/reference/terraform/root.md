@@ -11,6 +11,37 @@ Source: `github.com/spin-stack/spin-terraform-aws?ref=<tag>`. Generated from its
 
 ## Variables
 
+| Variable | Type | Default |
+|---|---|---|
+| [`spin_version`](#spin_version) | `string` | **required** |
+| [`domain`](#domain) | `string` | **required** |
+| [`name`](#name) | `string` | the module's own |
+| [`acme_email`](#acme_email) | `string` | the module's own |
+| [`admin_email`](#admin_email) | `string` | the module's own |
+| [`runner_policy`](#runner_policy) | `object({ shutdown_grace = optional(string) preemption_source = optional(string) })` | the module's own |
+| [`proxy_allowed_cidrs`](#proxy_allowed_cidrs) | `list(string)` | the module's own |
+| [`instance_type`](#instance_type) | `string` | the module's own |
+| [`proxy_instance_type`](#proxy_instance_type) | `string` | the module's own |
+| [`collector`](#collector) | `object({ metric_interval = optional(string) })` | the module's own |
+| [`controlplane_volume_gb`](#controlplane_volume_gb) | `number` | the module's own |
+| [`image_ids`](#image_ids) | `map(string)` | the module's own |
+| [`image_measurements`](#image_measurements) | `map(list(object({ pcr4 = string pcr7 = string pcr12 = string statement = optional(string) bundle = optional(string) revoked = optional(string) })))` | the module's own |
+| [`installation_config`](#installation_config) | `string` | the module's own |
+| [`runner_idle_minutes`](#runner_idle_minutes) | `number` | the module's own |
+| [`quiet_hours`](#quiet_hours) | `string` | the module's own |
+| [`time_zone`](#time_zone) | `string` | the module's own |
+| [`runner_instance_types`](#runner_instance_types) | `list(string)` | the module's own |
+| [`runner_spot`](#runner_spot) | `bool` | the module's own |
+| [`runner_data_volume_gb`](#runner_data_volume_gb) | `number` | the module's own |
+| [`runner_root_volume_gb`](#runner_root_volume_gb) | `number` | the module's own |
+| [`request_quota`](#request_quota) | `bool` | the module's own |
+| [`max_runners`](#max_runners) | `number` | the module's own |
+| [`runner_rollout`](#runner_rollout) | `string` | the module's own |
+| [`decommission`](#decommission) | `bool` | the module's own |
+| [`monthly_budget_usd`](#monthly_budget_usd) | `number` | the module's own |
+| [`budget_emails`](#budget_emails) | `list(string)` | the module's own |
+| [`tags`](#tags) | `map(string)` | the module's own |
+
 ### spin_version
 
 The release the installation runs, as v&lt;YYYYMMDD>.&lt;N>: every machine boots the Spin OS image of it (spin-stack/ami), published into this account and tagged spin:version.

@@ -11,6 +11,20 @@ Source: `github.com/spin-stack/spin-terraform-aws//modules/runners?ref=<tag>`. G
 
 ## Variables
 
+| Variable | Type | Default |
+|---|---|---|
+| [`controlplane`](#controlplane) | `object({ name = string iam_name = string vpc_id = string subnet_ids = list(string) security_group_id = string runner_document_arn = string runner_user_data = string images = map(object({ id = string, root_device = string })) boot_log_policy_arn = string standard_vcpus = number boundary_arn = string })` | **required** |
+| [`instance_types`](#instance_types) | `list(string)` | `["m8id.8xlarge","c8id.8xlarge","r8id.8xlarge","m8id.12xlarge","c8id.12xlarge"]` |
+| [`nested_virtualization`](#nested_virtualization) | `bool` | `true` |
+| [`spot`](#spot) | `bool` | `true` |
+| [`request_quota`](#request_quota) | `bool` | `true` |
+| [`max_hosts`](#max_hosts) | `number` | `1` |
+| [`rollout`](#rollout) | `string` | `"idle"` |
+| [`drain_seconds`](#drain_seconds) | `number` | `150` |
+| [`data_volume_gb`](#data_volume_gb) | `number` | `0` |
+| [`root_volume_gb`](#root_volume_gb) | `number` | `30` |
+| [`tags`](#tags) | `map(string)` | `{}` |
+
 ### controlplane
 
 The control plane module's outputs, as they are: its name, where the runners go, their document, and what a runner's machine runs at its first boot.
