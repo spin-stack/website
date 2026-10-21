@@ -65,6 +65,7 @@ export const nav = [
 			['Identity and access', 'security/identity'],
 			['Supply chain', 'security/supply-chain'],
 			['Known gaps', 'security/known-gaps'],
+			['Reporting a vulnerability', 'security/reporting'],
 		],
 	},
 	{

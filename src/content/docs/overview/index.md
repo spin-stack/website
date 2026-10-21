@@ -62,6 +62,10 @@ No. An installation is a handful of EC2 machines, buckets and roles that the mod
 [Status](/reference/status/) lists every feature with the test that proves it, and what is not
 built. [Limitations](/overview/limitations/) lists what Spin does not do by design.
 
+### How do I report a security problem?
+
+Privately, through a security advisory: see [Reporting a vulnerability](/security/reporting/).
+
 ## Why it is built this way
 
 - **A virtual machine, not a container.** A container shares the host's kernel with every other
