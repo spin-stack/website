@@ -12,10 +12,14 @@ import (
 var brandFiles = []struct{ from, to string }{
 	{"dist/tokens.css", "src/styles/brand-tokens.css"},
 	{"dist/starlight.css", "src/styles/brand-starlight.css"},
-	{"logos/mark-256.png", "src/assets/logo.png"},
-	{"logos/mark-clear-256.png", "src/assets/logo-light.png"},
-	{"logos/mark-512.png", "public/mark.png"},
+	// The mark as brand draws it, a vector: sharp in the header and the tab at any size and on a 2x
+	// screen. The PNGs are for what takes no SVG: an older browser's tab, iOS's home screen.
+	{"logos/mark.svg", "src/assets/logo.svg"},
+	{"logos/mark-clear.svg", "src/assets/logo-light.svg"},
+	{"logos/mark.svg", "public/favicon.svg"},
 	{"logos/favicon-64.png", "public/favicon.png"},
+	{"logos/apple-touch-icon.png", "public/apple-touch-icon.png"},
+	{"logos/mark-512.png", "public/mark.png"},
 	{"shots/shots.json", "src/data/shots.json"},
 }
 

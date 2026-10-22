@@ -24,8 +24,8 @@ export default defineConfig({
 				'Self-hosted sandboxes in your own AWS account: a virtual machine per workspace, snapshots with memory, rollback, and a diff of what changed.',
 			// The organization's own mark (spin-stack/brand): the tile on its navy in dark, and clear in light,
 			// where the tile would read as a sticker. No alt: the name is written beside it.
-			logo: { dark: './src/assets/logo.png', light: './src/assets/logo-light.png', alt: '' },
-			favicon: '/favicon.png',
+			logo: { dark: './src/assets/logo.svg', light: './src/assets/logo-light.svg', alt: '' },
+			favicon: '/favicon.svg',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/brand-tokens.css', './src/styles/brand-starlight.css', './src/styles/custom.css'],
 			// A hand-written page is edited here; a generated one names its source instead (Footer.astro).
@@ -42,6 +42,9 @@ export default defineConfig({
 				// The link preview a chat shows: public/og.png, by its absolute address.
 				{ tag: 'meta', attrs: { property: 'og:image', content: `${site}${base.replace(/\/$/, '')}/og.png` } },
 				{ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+				// The tab's mark where a browser takes no SVG, and the one iOS puts on a home screen.
+				{ tag: 'link', attrs: { rel: 'icon', type: 'image/png', sizes: '64x64', href: `${base.replace(/\/$/, '')}/favicon.png` } },
+				{ tag: 'link', attrs: { rel: 'apple-touch-icon', href: `${base.replace(/\/$/, '')}/apple-touch-icon.png` } },
 				{
 					tag: 'link',
 					attrs: { rel: 'alternate', type: 'text/plain', title: 'llms.txt', href: `${base.replace(/\/$/, '')}/llms.txt` },

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 299 299" width="299" height="299">
+  <!-- The spin-stack mark: the organization's avatar (assets/avatar.png) traced in its own
+       coordinates - the translate puts the avatar's square at 74,16 at the origin - so it draws
+       sharp at any size. cmd/mark renders logos/ from it, and its -check holds the trace to the
+       avatar. The ground group is the tile - the navy and the shadow under the stack; a clear
+       mark is the rest. -->
+  <defs>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/><stop offset="1" stop-color="#E3EAF3"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2A86EC"/><stop offset="1" stop-color="#3CC6F2"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2A6FE0"/><stop offset="0.35" stop-color="#29C6EC"/>
+      <stop offset="0.7" stop-color="#3AE4E2"/><stop offset="1" stop-color="#6FE8D8"/>
+    </linearGradient>
+    <linearGradient id="midShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="low" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2459C8"/><stop offset="0.45" stop-color="#2F6BE3"/>
+      <stop offset="0.55" stop-color="#3D7CF0"/><stop offset="1" stop-color="#12286A"/>
+    </linearGradient>
+    <linearGradient id="lowShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.4" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2A8EF0"/><stop offset="1" stop-color="#27BFE8"/>
+    </linearGradient>
+    <linearGradient id="ringFront" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2A8EF0"/><stop offset="0.7" stop-color="#27BFE8"/><stop offset="1" stop-color="#27BFE8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5FE3D6" stop-opacity="0.2"/><stop offset="1" stop-color="#5FE3D6"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(-74 -16)">
+  <g id="ground">
+    <rect x="74" y="16" width="299" height="299" fill="#111827"/>
+    <ellipse cx="230" cy="226" rx="112" ry="12.5" fill="#1A2338"/>
+    <ellipse cx="230" cy="226" rx="93" ry="9" fill="#0A0E1A"/>
+  </g>
+  <!-- The bottom disk, tilted 7 degrees, right side up. -->
+  <g transform="rotate(-7 236 195)">
+    <path d="M146 178 Q144 198 158 210 A78 16 0 0 0 314 210 Q328 198 326 178 Z" fill="url(#low)"/>
+    <path d="M146 178 Q144 198 158 210 A78 16 0 0 0 314 210 Q328 198 326 178 Z" fill="url(#lowShade)"/>
+    <ellipse cx="236" cy="178" rx="90" ry="17" fill="url(#low)"/>
+    <ellipse cx="237" cy="180" rx="87" ry="15" fill="#090C1C"/>
+    <path d="M168 214 Q240 205 318 180 L320 186 Q246 212 176 220 Z" fill="#FFFFFF" fill-opacity="0.12"/>
+  </g>
+  <!-- The middle disk, tilted 5 degrees, with its highlight. -->
+  <g transform="rotate(-5 228 150)">
+    <path d="M127 127 Q121 153 142 169 A90 18 0 0 0 322 169 Q332 153 329 127 Z" fill="url(#mid)"/>
+    <path d="M127 127 Q121 153 142 169 A90 18 0 0 0 322 169 Q332 153 329 127 Z" fill="url(#midShade)"/>
+    <ellipse cx="228" cy="127" rx="101" ry="17" fill="url(#mid)"/>
+    <path d="M276 169 Q305 157 322 133 L324 137 Q308 162 280 171 Z" fill="#FFFFFF" fill-opacity="0.45"/>
+  </g>
+  <!-- The ring: its back over the top left, its front across the middle disk, and the mint trail. -->
+  <path d="M106 142 C98 116 128 99 170 97 L170 102 C136 105 115 119 112 142 Z" fill="url(#ring)"/>
+  <path d="M110 155 C122 168 138 175 158 178 L158 175 C140 171 124 165 110 155 Z" fill="url(#mint)"/>
+  <path d="M106 142 C112 162 142 171 196 172 L196 166 C148 164 120 156 112 142 Z" fill="url(#ringFront)"/>
+  <!-- The top disk and its shadow on the middle one. -->
+  <ellipse cx="236" cy="121" rx="84" ry="20" fill="#0D1B3A"/>
+  <ellipse cx="233" cy="114" rx="70" ry="19.5" fill="url(#rim)"/>
+  <ellipse cx="233" cy="108" rx="70" ry="18" fill="url(#face)"/>
+  </g>
+</svg>
