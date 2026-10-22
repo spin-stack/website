@@ -23,7 +23,6 @@ const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}
 ---
 
 <a class:list={['card', size]} href={to}>
-	<span class="glow" aria-hidden="true"></span>
 	<span class="icon"><Icon name={icon} /></span>
 	<span class="title">{title}</span>
 	<span class="body"><slot /></span>
@@ -53,33 +52,22 @@ const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}
 		flex-direction: column;
 		gap: 0.6rem;
 		padding: 1.4rem 1.4rem 1.2rem;
-		border-radius: var(--spin-radius-lg);
+		border-radius: var(--spin-radius);
 		text-decoration: none;
 		color: var(--sl-color-gray-3);
 		background: color-mix(in srgb, var(--sl-color-gray-6) 70%, transparent);
 		border: 1px solid var(--sl-color-hairline-light);
 		overflow: hidden;
-		transition:
-			transform var(--spin-duration) var(--spin-ease),
-			border-color var(--spin-duration) var(--spin-ease),
-			box-shadow var(--spin-duration) var(--spin-ease);
+		transition: border-color var(--spin-duration) var(--spin-ease);
 	}
+	/* A card answers the pointer with its edge, and stays where it is. */
 	.card:hover,
 	.card:focus-visible {
-		transform: translateY(-4px);
-		border-color: color-mix(in srgb, var(--sl-color-accent) 50%, transparent);
-		box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--spin-brand-blue) 80%, transparent);
+		border-color: var(--spin-border-strong);
 	}
 	.card:focus-visible {
 		outline: 2px solid var(--sl-color-accent);
 		outline-offset: 3px;
-	}
-	/* A light that follows the pointer across the grid (Bento.astro sets where it is). */
-	.glow {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		background: radial-gradient(22rem circle at var(--mx, -100rem) var(--my, -100rem), color-mix(in srgb, var(--spin-brand-cyan) 16%, transparent), transparent 60%);
 	}
 	.icon {
 		display: inline-grid;
@@ -88,14 +76,13 @@ const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}
 		height: 2.6rem;
 		border-radius: var(--spin-radius);
 		color: var(--spin-label);
-		background: linear-gradient(135deg, color-mix(in srgb, var(--spin-brand-cyan) 18%, transparent), color-mix(in srgb, var(--spin-brand-blue) 18%, transparent));
-		border: 1px solid color-mix(in srgb, var(--spin-brand-cyan) 28%, transparent);
+		background: var(--spin-raised);
 	}
 	.title {
 		font-size: 1.2rem;
 		font-weight: 600;
 		color: var(--sl-color-white);
-		letter-spacing: -0.01em;
+		letter-spacing: var(--spin-heading-tracking);
 	}
 	.body {
 		font-size: var(--sl-text-sm);
@@ -130,19 +117,6 @@ const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}
 		font-size: 12px;
 		fill: var(--sl-color-white);
 	}
-	.card:hover .r3 {
-		filter: drop-shadow(0 0 10px var(--spin-brand-cyan));
-	}
-	@media (prefers-reduced-motion: no-preference) {
-		.r3 {
-			animation: ring-breathe 1.6s ease-in-out 2 alternate;
-		}
-		@keyframes ring-breathe {
-			to {
-				fill: color-mix(in srgb, var(--spin-brand-cyan) 32%, transparent);
-			}
-		}
-	}
 	.art + .proof {
 		margin-top: 0;
 	}
@@ -151,7 +125,7 @@ const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}
 		padding-top: 0.8rem;
 		font-family: var(--sl-font-mono);
 		font-size: 0.72rem;
-		color: var(--sl-color-gray-4);
+		color: var(--spin-muted);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;

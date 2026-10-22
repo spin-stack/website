@@ -1,5 +1,5 @@
 ---
-// The landing page's last word: where to go next, on the brand's gradient. Its Markdown twin is
+// The landing page's last word: where to go next, on the navy. Its Markdown twin is
 // the title and the links.
 import { LinkButton } from '@astrojs/starlight/components';
 
@@ -11,7 +11,6 @@ const { title, links } = Astro.props;
 ---
 
 <section class="cta not-content spin-dark">
-	<div class="mesh" aria-hidden="true"></div>
 	<h2>{title}</h2>
 	<p><slot /></p>
 	<div class="links">
@@ -32,19 +31,11 @@ const { title, links } = Astro.props;
 		overflow: hidden;
 		margin-block: 4rem 1rem;
 		padding: clamp(2.5rem, 2rem + 3vw, 4.5rem) clamp(1.5rem, 1rem + 3vw, 4rem);
-		border-radius: var(--spin-radius-lg);
+		border-radius: var(--spin-radius);
 		background: var(--spin-page);
 		color: var(--spin-text);
 		text-align: center;
 		border: 1px solid var(--spin-border);
-	}
-	.mesh {
-		position: absolute;
-		inset: -40%;
-		z-index: -1;
-		background: conic-gradient(from 180deg at 50% 50%, var(--spin-brand-deep), var(--spin-brand-blue), var(--spin-brand-cyan), var(--spin-brand-mint), var(--spin-brand-deep));
-		filter: blur(70px);
-		opacity: 0.55;
 	}
 	h2 {
 		margin: 0 auto;
@@ -52,7 +43,7 @@ const { title, links } = Astro.props;
 		font-family: var(--sl-font-mono);
 		font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
 		line-height: 1.1;
-		letter-spacing: -0.035em;
+		letter-spacing: var(--spin-heading-tracking);
 		color: var(--spin-brand-frost);
 	}
 	p {
