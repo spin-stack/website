@@ -3,6 +3,7 @@ import { experimentalMarkdown } from './experimental';
 import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
 import figures from '../data/figures.json';
+import { output } from './output';
 import { statusLine } from './reference';
 import { twinPath } from './twin';
 
@@ -85,6 +86,11 @@ export function toMarkdown(d: Doc, base: string): string {
 	);
 	body = body.replace(/<\/Aside>/g, '');
 	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
+	// What a command prints is the same block of output.
+	body = body.replace(
+		/<Output\s+name="([\w.-]+)"\s+caption="([^"]*)"(?:\s+lang="(\w+)")?\s*\/>/g,
+		(_, name: string, caption: string, lang = 'text') => `${caption}:\n\n\`\`\`${lang}\n${output(name)}\n\`\`\``,
+	);
 	// A diagram is its caption, its words in the order the picture has them, and where it is drawn.
 	body = body.replace(/<Figure\s+name="([\w-]+)"\s+caption="([^"]*)"\s*\/>/g, (_, name: string, caption: string) => {
 		const f = (figures as Record<string, { source: string; words: string[] }>)[name];

@@ -1,0 +1,64 @@
+{
+  "changes": [
+    {
+      "path": "/etc/greeting",
+      "pathBytes": "",
+      "kind": "FILE_CHANGE_KIND_ADDED",
+      "to": {
+        "type": "FILE_TYPE_REGULAR",
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "size": "6",
+        "symlinkTarget": "",
+        "symlinkTargetBytes": "",
+        "sha256": "5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03",
+        "modifiedAt": "2026-10-21T18:04:00Z"
+      }
+    },
+    {
+      "path": "/etc/hosts",
+      "pathBytes": "",
+      "kind": "FILE_CHANGE_KIND_MODIFIED",
+      "from": {
+        "type": "FILE_TYPE_REGULAR",
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "size": "20",
+        "symlinkTarget": "",
+        "symlinkTargetBytes": "",
+        "sha256": "081ef9d5367595d16e30b4b4549d9f43537320508b4ce0788963e10e4f808857",
+        "modifiedAt": "2026-10-21T17:58:00Z"
+      },
+      "to": {
+        "type": "FILE_TYPE_REGULAR",
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "size": "29",
+        "symlinkTarget": "",
+        "symlinkTargetBytes": "",
+        "sha256": "2c155a6a94b4ccf8996a7c0a185525d3a290ce344d76083b1d768e6409582f6e",
+        "modifiedAt": "2026-10-21T18:04:00Z"
+      }
+    },
+    {
+      "path": "/etc/issue",
+      "pathBytes": "",
+      "kind": "FILE_CHANGE_KIND_REMOVED",
+      "from": {
+        "type": "FILE_TYPE_REGULAR",
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "size": "26",
+        "symlinkTarget": "",
+        "symlinkTargetBytes": "",
+        "sha256": "",
+        "modifiedAt": "2026-10-21T17:58:00Z"
+      }
+    }
+  ],
+  "truncated": false
+}
