@@ -7,6 +7,7 @@ version: '3'
 vars:
   SPIN: '{{.SPIN | default "../spin"}}'
   TERRAFORM: '{{.TERRAFORM | default "../spin-terraform-aws"}}'
+  BRAND: '{{.BRAND | default "../brand"}}'
   BASE_PATH: '{{.BASE_PATH | default "/website"}}'
 
 tasks:
@@ -23,12 +24,12 @@ tasks:
   reference:
     desc: Write the reference pages (CLI, Terraform, config file, API) from the spin and spin-terraform-aws checkouts.
     cmds:
-      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}}
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}}
 
   reference:check:
     desc: Fail if a reference page is not what the sources say.
     cmds:
-      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -check
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -check
 
   build:
     desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page.
