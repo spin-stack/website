@@ -16,6 +16,7 @@ var brandFiles = []struct{ from, to string }{
 	{"logos/mark-clear-256.png", "src/assets/logo-light.png"},
 	{"logos/mark-512.png", "public/mark.png"},
 	{"logos/favicon-64.png", "public/favicon.png"},
+	{"logos/apple-touch-icon.png", "public/apple-touch-icon.png"},
 	{"shots/shots.json", "src/data/shots.json"},
 }
 
