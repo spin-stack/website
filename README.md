@@ -63,8 +63,8 @@ is checked against checkouts of spin, spin-terraform-aws and brand beside this o
   `src/styles/brand-*.css`, `src/assets/` and `public/`, with the app's screenshots, and
   `task reference:check` fails on a copy that is not brand's, on screenshots of another release
   than the site documents, and on one whose test spin no longer has; `src/styles/custom.css` says only how the site's parts use them.
-  IBM Plex is served from the site, and a hero draws a workspace's disk as its layers
-  (`src/components/Hero.astro`, `LayerStack.astro`). `task links` fails a page that loads a
+  IBM Plex is served from the site, and a hero draws a workspace's disk as its layers, worked
+  step by step (`src/components/Hero.astro`, `Disk.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spin-stack.github.io` and
   `/website` (a GitHub project page). Content links from the root (`/concepts/network/`) and the

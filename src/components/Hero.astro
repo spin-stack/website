@@ -1,9 +1,9 @@
 ---
-// The landing page's hero: Starlight's, with the drawing of a workspace's disk beside it and the
+// The landing page's hero: Starlight's, with a workspace's disk to work under it and the
 // project's name above the title. The title's second sentence - what Spinbox does, after what it
 // is - is in the accent: one color, flat, as the console sets what matters.
 import { LinkButton } from '@astrojs/starlight/components';
-import LayerStack from './LayerStack.astro';
+import Disk from './Disk.astro';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, actions = [] } = data.hero || {};
@@ -28,7 +28,7 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 			}
 		</div>
 	</div>
-	<div class="art"><LayerStack /></div>
+	<div class="art"><Disk /></div>
 </div>
 
 <style>
@@ -94,14 +94,17 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 		gap: 1rem 1.5rem;
 		align-items: center;
 	}
+	/* The disk is the hero's second half, the width of the page under the words: a thing to work,
+	   not a picture beside them. */
 	.art {
-		display: flex;
-		justify-content: center;
+		margin-top: 1rem;
 	}
 	@media (min-width: 56rem) {
 		.hero {
-			grid-template-columns: 3fr 2fr;
 			padding-block: 3.5rem 2rem;
+		}
+		.copy {
+			max-width: 52rem;
 		}
 	}
 	@media (prefers-reduced-motion: no-preference) {

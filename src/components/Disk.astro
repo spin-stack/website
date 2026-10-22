@@ -1,0 +1,480 @@
+---
+// A workspace's disk, worked by hand: the landing page's hero. The same layers the drawing always
+// had - the image, a snapshot called clean, one called after, the layer the running machine
+// writes - but each step of the story is a button: seal a layer, write into the top one, diff
+// two, restore. Each step shows the command that does it (src/lib/story.ts) and the diff shows
+// what spin prints (the golden in src/data/output). It plays once when the page opens; without
+// scripts, or with reduced motion asked for, it stands at the diff, as the old drawing did.
+import { output } from '../lib/output';
+import { steps } from '../lib/story';
+
+const states = [
+	{ verb: 'create', cmd: steps[0].commands[0], say: 'A workspace: its disk is the image, and on top the layer the running machine writes.' },
+	{ verb: 'snapshot', cmd: steps[0].commands[1], say: 'A snapshot seals that layer, with the memory of every running process. The machine writes on a new one.' },
+	{ verb: 'break it', cmd: steps[1].commands[0], say: 'Whatever runs in it, a person or an agent as root, lands in the top layer.' },
+	{ verb: 'snapshot', cmd: steps[1].commands[1], say: 'A second snapshot seals what it did.' },
+	{ verb: 'diff', cmd: steps[2].commands[0], say: 'A separate machine reads the two and lists every file added, modified or removed.' },
+	{ verb: 'restore', cmd: steps[3].commands[0], say: 'The disk and the processes as they were at clean. What it had is kept among its snapshots.' },
+];
+// The state the page is drawn in without scripts: the diff, the whole story but the undo.
+const still = 4;
+const diff = output('diff.txt')
+	.split('\n')
+	.filter(Boolean)
+	.map((l) => {
+		const [kind, path] = l.trim().split(/\s+/);
+		return { kind, path };
+	});
+const kinds: Record<string, string> = { A: 'added', M: 'modified', D: 'deleted' };
+const layer = 'M40 0v32a100 26 0 0 0 200 0V0z';
+---
+
+<figure class="disk" data-disk data-state={still}>
+	<svg viewBox="-24 0 664 372" role="img" aria-labelledby="disk-t disk-d">
+		<title id="disk-t">A workspace's disk, as layers</title>
+		<desc id="disk-d">The image at the bottom, a snapshot called clean, a snapshot called after holding the three files that changed, and on top the layer the running workspace writes. A bracket marks the diff between clean and after.</desc>
+		<defs>
+			<marker id="disk-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+				<path d="M0 0L10 5L0 10z" class="ink-fill" />
+			</marker>
+		</defs>
+		<g class="l image">
+			<path d={layer} class="side-deep" />
+			<ellipse cx="140" rx="100" ry="26" class="top-blue" />
+			<line x1="248" x2="276" class="leader" />
+			<text x="284" y="4" class="label">image · ubuntu</text>
+		</g>
+		<g class="l clean">
+			<path d={layer} class="side-deep" />
+			<ellipse cx="140" rx="100" ry="26" class="top-blue" />
+			<line x1="248" x2="276" class="leader" />
+			<text x="284" y="4" class="label">snapshot · clean</text>
+		</g>
+		<g class="l after">
+			<path d={layer} class="side-blue" />
+			<ellipse cx="140" rx="100" ry="26" class="top-cyan" />
+			<line x1="248" x2="276" class="leader" />
+			<text x="284" y="4" class="label"><tspan class="was">snapshot · </tspan>after<tspan class="kept"> · kept</tspan></text>
+		</g>
+		<g class="l writes" aria-hidden="true">
+			{
+				diff.map((d, i) => (
+					<g transform={`translate(${96 + i * 44} -9)`} class={`chip k-${d.kind}`}>
+						<rect width="30" height="18" rx="4" />
+						<text x="15" y="13" text-anchor="middle">
+							{d.kind}
+						</text>
+					</g>
+				))
+			}
+		</g>
+		<g class="l running">
+			<path d="M40 0v32a100 26 0 0 0 200 0V0" class="live" />
+			<ellipse cx="140" rx="100" ry="26" class="live live-top" />
+			<line x1="248" x2="276" class="leader" />
+			<text x="284" y="4" class="label">running · writes here</text>
+		</g>
+		<g class="verb diff-mark">
+			<path class="bracket" d="M452 198h8v60h-8" pathLength="1" />
+			<text class="cmd" x="474" y="228" transform="rotate(90 474 228)" text-anchor="middle">diff</text>
+		</g>
+		<g class="verb restore-mark">
+			<path class="bracket" d="M30 150C2 186 2 236 34 258" marker-end="url(#disk-arr)" pathLength="1" />
+			<text class="cmd" x="12" y="206" transform="rotate(-90 12 206)" text-anchor="middle">restore</text>
+		</g>
+	</svg>
+
+	<figcaption>
+		<p class="cmdline"><span class="prompt">$ </span><code data-cmd>{states[still].cmd}</code></p>
+		<ul class="diff" aria-label="What the diff printed">
+			{
+				diff.map((d) => (
+					<li class={`k-${d.kind}`}>
+						<span class="kind" title={kinds[d.kind]}>
+							{d.kind}
+						</span>
+						{d.path}
+					</li>
+				))
+			}
+		</ul>
+		<p class="say" data-say aria-live="polite">{states[still].say}</p>
+	</figcaption>
+
+	<div class="controls" data-controls hidden>
+		<button type="button" class="play" data-play aria-label="Pause">❚❚</button>
+		<ol>
+			{
+				states.map((s, i) => (
+					<li>
+						<button type="button" data-to={i} aria-pressed={i === still ? 'true' : 'false'}>
+							<span class="n">{i + 1}</span> {s.verb}
+						</button>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+	<script type="application/json" data-states set:html={JSON.stringify(states.map(({ cmd, say }) => ({ cmd, say })))} />
+</figure>
+
+<script>
+	const STEP_MS = 2200;
+	for (const root of document.querySelectorAll<HTMLElement>('[data-disk]')) {
+		const states: { cmd: string; say: string }[] = JSON.parse(root.querySelector('[data-states]')!.textContent!);
+		const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-to]')];
+		const play = root.querySelector<HTMLButtonElement>('[data-play]')!;
+		const cmd = root.querySelector<HTMLElement>('[data-cmd]')!;
+		const say = root.querySelector<HTMLElement>('[data-say]')!;
+		let timer = 0;
+
+		const set = (n: number) => {
+			root.dataset.state = String(n);
+			buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === n)));
+			cmd.textContent = states[n].cmd;
+			say.textContent = states[n].say;
+		};
+		const stop = () => {
+			clearTimeout(timer);
+			timer = 0;
+			play.textContent = '▶';
+			play.setAttribute('aria-label', 'Play');
+		};
+		// Once through to the restore and still: nothing here moves on its own for longer than
+		// that (WCAG 2.2.2), and Pause, or any step, stops it.
+		const run = () => {
+			const n = Number(root.dataset.state);
+			if (n >= states.length - 1) return stop();
+			set(n + 1);
+			timer = window.setTimeout(run, STEP_MS);
+		};
+		const start = () => {
+			if (Number(root.dataset.state) >= states.length - 1) set(0);
+			play.textContent = '❚❚';
+			play.setAttribute('aria-label', 'Pause');
+			timer = window.setTimeout(run, STEP_MS);
+		};
+
+		buttons.forEach((b, i) =>
+			b.addEventListener('click', () => {
+				stop();
+				set(i);
+			}),
+		);
+		play.addEventListener('click', () => (timer ? stop() : start()));
+		root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+		if (still) {
+			stop();
+			continue;
+		}
+		set(0);
+		start();
+	}
+</script>
+
+<style>
+	.disk {
+		width: 100%;
+		margin: 0;
+		display: grid;
+		gap: 1rem 2.5rem;
+		padding: clamp(1rem, 0.5rem + 2vw, 2rem);
+		border: 1px solid var(--spin-border);
+		border-radius: var(--spin-radius-lg);
+		background: color-mix(in srgb, var(--spin-surface) 70%, transparent);
+		font-family: var(--sl-font-mono);
+		--ink: var(--spin-label);
+		--move: var(--spin-duration-draw) var(--spin-ease);
+		--fade: var(--spin-duration-slow) var(--spin-ease);
+	}
+	svg {
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+	/* Wide: the drawing on the left, what the step does and the steps on the right. */
+	@media (min-width: 56rem) {
+		.disk {
+			grid-template-columns: 7fr 5fr;
+			grid-template-rows: 1fr auto;
+			align-items: center;
+		}
+		svg {
+			grid-row: span 2;
+		}
+		.controls {
+			align-self: end;
+		}
+	}
+	.label {
+		fill: var(--sl-color-gray-2);
+		font-size: 13px;
+	}
+	.leader {
+		stroke: var(--sl-color-gray-4);
+		stroke-width: 1;
+	}
+	.side-deep {
+		fill: var(--spin-brand-deep);
+	}
+	.side-blue {
+		fill: var(--spin-brand-blue);
+	}
+	.top-blue {
+		fill: var(--spin-brand-blue);
+	}
+	.top-cyan {
+		fill: var(--spin-brand-cyan);
+	}
+	.live {
+		fill: none;
+		stroke: var(--ink);
+		stroke-width: 1.5;
+		stroke-dasharray: 6 5;
+	}
+	.live-top {
+		fill: color-mix(in srgb, var(--ink) 14%, transparent);
+	}
+	.cmd {
+		fill: var(--ink);
+		font-size: 12px;
+		letter-spacing: 0.06em;
+	}
+	.ink-fill {
+		fill: var(--ink);
+	}
+	.bracket {
+		fill: none;
+		stroke: var(--ink);
+		stroke-width: 1.5;
+		stroke-dasharray: 1;
+	}
+	/* A change's kind in the colour of what it did to the file, and its letter. */
+	.chip rect {
+		fill: var(--spin-page);
+		stroke-width: 1.5;
+	}
+	.chip text {
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.k-A {
+		--k: var(--spin-success);
+	}
+	.k-M {
+		--k: var(--spin-warning);
+	}
+	.k-D {
+		--k: var(--spin-error);
+	}
+	.chip rect {
+		stroke: var(--k);
+	}
+	.chip text {
+		fill: var(--k);
+	}
+
+	/* Where each layer is in each state. A layer is drawn at the origin, its top's centre at y 0;
+	   the slots, bottom up, are 318, 258, 198 and 138. */
+	.l {
+		transition:
+			transform var(--move),
+			opacity var(--fade);
+	}
+	.image {
+		transform: translate(0, 318px);
+	}
+	.clean {
+		transform: translate(0, 258px);
+	}
+	.after,
+	.writes {
+		transform: translate(0, 198px);
+	}
+	.running {
+		transform: translate(0, 138px);
+	}
+	[data-state='0'] .running {
+		transform: translate(0, 258px);
+	}
+	[data-state='1'] .running,
+	[data-state='2'] .running,
+	[data-state='5'] .running {
+		transform: translate(0, 198px);
+	}
+	[data-state='0'] .clean,
+	:is([data-state='0'], [data-state='1'], [data-state='2']) .after,
+	:is([data-state='0'], [data-state='1']) .writes {
+		opacity: 0;
+	}
+	/* The restore: the workspace is on clean again, and after - with what it had - steps aside,
+	   kept. */
+	[data-state='5'] :is(.after, .writes) {
+		transform: translate(300px, 24px) scale(0.8);
+		opacity: 0.8;
+	}
+	.kept {
+		opacity: 0;
+		transition: opacity var(--fade);
+	}
+	[data-state='5'] .kept {
+		opacity: 1;
+	}
+	.was {
+		transition: opacity var(--fade);
+	}
+	[data-state='5'] .was {
+		opacity: 0;
+	}
+	.verb {
+		opacity: 0;
+		transition: opacity var(--fade);
+	}
+	.verb .bracket {
+		stroke-dashoffset: 1;
+		transition: stroke-dashoffset var(--move);
+	}
+	[data-state='4'] .diff-mark,
+	[data-state='5'] .restore-mark {
+		opacity: 1;
+	}
+	[data-state='4'] .diff-mark .bracket,
+	[data-state='5'] .restore-mark .bracket {
+		stroke-dashoffset: 0;
+	}
+
+	/* Under the drawing: the command that does the step, the diff once there is one, and the step
+	   in words. Each keeps its height, so nothing under it moves as the steps change. */
+	figcaption {
+		display: grid;
+		gap: 0.5rem;
+	}
+	.cmdline {
+		margin: 0;
+		padding: 0.6rem 0.8rem;
+		min-height: 3.6rem;
+		border-radius: var(--spin-radius);
+		background: var(--spin-surface);
+		border: 1px solid var(--spin-border);
+		font-size: 0.8125rem;
+		line-height: 1.5;
+		color: var(--spin-text);
+	}
+	.cmdline code {
+		background: none;
+		padding: 0;
+		font-size: inherit;
+		overflow-wrap: anywhere;
+	}
+	.prompt {
+		color: var(--spin-muted);
+		user-select: none;
+	}
+	.diff {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 1rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: 0.8125rem;
+		color: var(--spin-text);
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity var(--fade);
+	}
+	[data-state='4'] .diff,
+	[data-state='5'] .diff {
+		visibility: visible;
+		opacity: 1;
+	}
+	.diff li {
+		margin: 0;
+	}
+	.diff .kind {
+		color: var(--k);
+		font-weight: 600;
+		margin-right: 0.4rem;
+	}
+	.say {
+		margin: 0;
+		min-height: 3em;
+		font-family: var(--sl-font);
+		font-size: var(--sl-text-sm);
+		color: var(--spin-muted);
+	}
+
+	.controls {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.controls[hidden] {
+		display: none;
+	}
+	.controls ol {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.controls li {
+		margin: 0;
+	}
+	.controls button {
+		all: unset;
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		min-height: var(--spin-target);
+		padding: 0.2rem 0.55rem;
+		border-radius: var(--spin-radius-sm);
+		border: 1px solid var(--spin-border);
+		font-size: 0.75rem;
+		color: var(--spin-text);
+		cursor: pointer;
+		transition:
+			border-color var(--spin-duration-fast) var(--spin-ease),
+			background var(--spin-duration-fast) var(--spin-ease);
+	}
+	.controls button:hover {
+		border-color: var(--spin-accent);
+	}
+	.controls button:focus-visible {
+		outline: 2px solid var(--spin-accent);
+		outline-offset: 1px;
+	}
+	.controls button[aria-pressed='true'] {
+		background: var(--spin-accent-selected);
+		border-color: var(--spin-accent);
+	}
+	.controls .n {
+		color: var(--spin-muted);
+	}
+	/* As specific as `.controls button`, whose `all: unset` otherwise takes these back. */
+	.controls .play {
+		min-width: var(--spin-target);
+		justify-content: center;
+	}
+	@media (pointer: coarse) {
+		.controls button {
+			min-height: var(--spin-target-touch);
+		}
+		.controls .play {
+			min-width: var(--spin-target-touch);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.l,
+		.kept,
+		.verb,
+		.verb .bracket,
+		.diff {
+			transition: none;
+		}
+	}
+</style>
