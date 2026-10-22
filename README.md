@@ -60,8 +60,9 @@ is checked against checkouts of spin, spin-terraform-aws and brand beside this o
 - **The look** is spin-stack/brand's: its palette, checked there for contrast and perceptual
   distance on real panels and through colour-vision deficiencies, and the organization's mark.
   `task reference` copies them from a checkout beside this one (`BRAND=` to point elsewhere) into
-  `src/styles/brand-*.css`, `src/assets/logo.png` and `public/`, and `task reference:check` fails
-  on a copy that is not brand's; `src/styles/custom.css` says only how the site's parts use them.
+  `src/styles/brand-*.css`, `src/assets/` and `public/`, with the app's screenshots, and
+  `task reference:check` fails on a copy that is not brand's, on screenshots of another release
+  than the site documents, and on one whose test spin no longer has; `src/styles/custom.css` says only how the site's parts use them.
   IBM Plex is served from the site, and a hero draws a workspace's disk as its layers
   (`src/components/Hero.astro`, `LayerStack.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.

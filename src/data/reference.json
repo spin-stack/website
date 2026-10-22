@@ -1,7 +1,7 @@
 {
 	"spin": {
 		"release": "v20261019.02",
-		"commit": "025b2946407ab921c3c0faa7831142b1db2d8ea2"
+		"commit": "617175ffdf2bb568cfcacf97874e2287d0ad8a5b"
 	},
 	"terraform": {
 		"commit": "3c0100d66e01da34f55266cc09b912fef5fe12bb"

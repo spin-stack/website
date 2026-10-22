@@ -136,6 +136,11 @@ func run() error {
 			stale = append(stale, path)
 		}
 	}
+	shotBad, shotStale, err := checkShots(*spin, r.Spin.Release, *check)
+	if err != nil {
+		return err
+	}
+	stale = append(stale, shotStale...)
 	releases, err := pinReleases(*docs, r.Spin.Release, *check)
 	if err != nil {
 		return err
@@ -150,6 +155,7 @@ func run() error {
 	}
 	bad = append(bad, limits...)
 	bad = append(bad, releases...)
+	bad = append(bad, shotBad...)
 	for _, c := range []func() ([]string, error){
 		func() ([]string, error) { return checkDescriptions(*docs) },
 		func() ([]string, error) { return checkEnv(*docs, *spin) },
