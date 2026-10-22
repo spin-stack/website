@@ -93,7 +93,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 
 	pages := map[string][]byte{}
 	var index strings.Builder
-	index.WriteString(frontmatter("API", "The control plane's API, spin.v1: every service and procedure, generated from its OpenAPI document.", 0))
+	index.WriteString(frontmatter("spin:"+openAPIPath, "API", "The control plane's API, spin.v1: every service and procedure, generated from its OpenAPI document.", 0))
 	fmt.Fprintf(&index, "%s\n\n", prose(oneLine(doc.Info.Description)))
 	index.WriteString("Every installation serves the document this reference is made from at " +
 		"`https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. " +
@@ -117,7 +117,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 		fmt.Fprintf(&index, "- [%s](/reference/api/%s/): %s\n", tag.Name, slug, prose(what))
 
 		var b strings.Builder
-		b.WriteString(frontmatter(tag.Name, fmt.Sprintf("spin.v1.%s: each procedure, its request and its response.", tag.Name), i+1))
+		b.WriteString(frontmatter("spin:"+openAPIPath, tag.Name, fmt.Sprintf("spin.v1.%s: each procedure, its request and its response.", tag.Name), i+1))
 		if tag.Description != "" {
 			fmt.Fprintf(&b, "%s\n\n", prose(sentences(tag.Description)))
 		}
@@ -149,7 +149,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 	pages[filepath.Join("api", "index.md")] = []byte(index.String())
 
 	var t strings.Builder
-	t.WriteString(frontmatter("Types", "Every message and enum the spin.v1 procedures name, with their fields and values.", len(doc.Tags)+1))
+	t.WriteString(frontmatter("spin:"+openAPIPath, "Types", "Every message and enum the spin.v1 procedures name, with their fields and values.", len(doc.Tags)+1))
 	for _, name := range names {
 		s := doc.Components.Schemas[name]
 		fmt.Fprintf(&t, "## %s\n\n", short(name))

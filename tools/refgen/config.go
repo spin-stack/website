@@ -16,7 +16,7 @@ func configPages(spin string) (map[string][]byte, error) {
 		return nil, err
 	}
 	var b strings.Builder
-	b.WriteString(frontmatter("Installation config file",
+	b.WriteString(frontmatter("spin:configs/spin-example.yaml", "Installation config file",
 		"The installation's config file: settings, registration, workspace presets and network policies, with the comment on each.", 1))
 	b.WriteString("The file an installation starts from - `installation_config` in Terraform. It seeds the " +
 		"control plane's database once; after that the dashboard edits the installation, and a later change " +

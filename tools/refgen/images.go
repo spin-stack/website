@@ -49,7 +49,7 @@ func imagesPage(tf, release string) (map[string][]byte, error) {
 	sort.Strings(complete)
 
 	var b strings.Builder
-	b.WriteString(frontmatter("Spin OS images", "The Spin OS images the module boots for the release this site documents, by region, from images.json.", len(tfModules)+1))
+	b.WriteString(frontmatter("spin-terraform-aws:images.json", "Spin OS images", "The Spin OS images the module boots for the release this site documents, by region, from images.json.", len(tfModules)+1))
 	fmt.Fprintf(&b, "Every machine of an installation boots Spin OS, built for one release of spin. The module "+
 		"reads the image of each machine from its `images.json`, by `spin_version` and region, so "+
 		"an installation of `%s` can be made in a region listed here and nowhere else. "+
