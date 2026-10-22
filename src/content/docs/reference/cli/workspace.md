@@ -227,7 +227,7 @@ Flags:
       --preset string          The preset it is sized by, by name (default: the installation's)
       --project string         A project of --team to open, by slug: its image, preset and policies, and its repository cloned
       --ref string             The branch or tag to open the project at (default: the project's)
-      --team string            Team ID (personal workspace if empty)
+      --team string            The team, by id, path or me (your personal team if empty)
       --timeout duration       How long --wait waits; by default, until the control plane gives up on it
       --wait                   Return once the workspace is running
 

@@ -478,7 +478,7 @@ Flags:
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
       --reusable                                a pool's token: it registers every host that presents it until it expires
       --shutdown-grace duration                 how long each host it registers stays up after a stop signal so its workspaces can be moved off it
-      --team string                             Team ID to scope the runner to
+      --team string                             The team to scope the runner to, by id, path or me
       --writeback-background-bytes int          dirty page cache at which each host it registers starts writing back (vm.dirty_background_bytes), below the limit
       --writeback-limit-bytes int               dirty page cache each host it registers holds before a writer waits (vm.dirty_bytes); unset is what it booted with
 

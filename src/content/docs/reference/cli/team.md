@@ -72,7 +72,7 @@ Delete a team. Only team owners can delete teams.
 Teams with children cannot be deleted unless --recursive is used.
 
 Usage:
-  spin team delete <team-id> [flags]
+  spin team delete <team> [flags]
 
 Flags:
   -h, --help        help for delete
@@ -121,7 +121,7 @@ Use "spin team forge [command] --help" for more information about a command.
 Delete a team's forge app
 
 Usage:
-  spin team forge delete <team-id> <forge> [flags]
+  spin team forge delete <team> <forge> [flags]
 
 Flags:
   -h, --help   help for delete
@@ -139,7 +139,7 @@ Global Flags:
 List a team's forge apps
 
 Usage:
-  spin team forge list <team-id> [flags]
+  spin team forge list <team> [flags]
 
 Flags:
   -h, --help   help for list
@@ -166,7 +166,7 @@ Example:
     --private-key-file ~/Downloads/engineering.2026-10-15.private-key.pem
 
 Usage:
-  spin team forge set <team-id> <forge> [flags]
+  spin team forge set <team> <forge> [flags]
 
 Flags:
       --api-url string            The forge's API, for GitHub Enterprise Server: https://<host>/api/v3
@@ -188,7 +188,7 @@ Global Flags:
 Get team details
 
 Usage:
-  spin team get <team-id-or-path> [flags]
+  spin team get <team> [flags]
 
 Flags:
   -h, --help   help for get
@@ -250,7 +250,7 @@ Use "spin team member [command] --help" for more information about a command.
 Add a member to a team
 
 Usage:
-  spin team member add <team-id> <email> [flags]
+  spin team member add <team> <email> [flags]
 
 Flags:
   -h, --help          help for add
@@ -268,7 +268,7 @@ Global Flags:
 List team members
 
 Usage:
-  spin team member list <team-id> [flags]
+  spin team member list <team> [flags]
 
 Flags:
   -h, --help   help for list
@@ -285,7 +285,7 @@ Global Flags:
 Remove a member from a team
 
 Usage:
-  spin team member remove <team-id> <user-id> [flags]
+  spin team member remove <team> <user-id> [flags]
 
 Flags:
   -h, --help   help for remove
@@ -302,7 +302,7 @@ Global Flags:
 Update a member's role
 
 Usage:
-  spin team member role <team-id> <user-id> <role> [flags]
+  spin team member role <team> <user-id> <role> [flags]
 
 Flags:
   -h, --help   help for role
@@ -347,7 +347,7 @@ Use "spin team policy [command] --help" for more information about a command.
 Delete a team's network policy no workspace runs under
 
 Usage:
-  spin team policy delete <team-id> <name> [flags]
+  spin team policy delete <team> <name> [flags]
 
 Flags:
   -h, --help   help for delete
@@ -365,7 +365,7 @@ Global Flags:
 List a team's network policies and what each allows
 
 Usage:
-  spin team policy list <team-id> [flags]
+  spin team policy list <team> [flags]
 
 Flags:
   -h, --help   help for list
@@ -385,10 +385,10 @@ leading "*." - separated by commas. No ports is every port; no destinations is a
 on those ports. No --rule at all allows nothing.
 
 Example:
-  spin team policy set <team-id> builds --rule github.com,*.githubusercontent.com:443 --rule 10.20.0.0/16:5432
+  spin team policy set <team> builds --rule github.com,*.githubusercontent.com:443 --rule 10.20.0.0/16:5432
 
 Usage:
-  spin team policy set <team-id> <name> [flags]
+  spin team policy set <team> <name> [flags]
 
 Flags:
   -h, --help               help for set
@@ -435,7 +435,7 @@ Use "spin team secret [command] --help" for more information about a command.
 Delete a team's secret
 
 Usage:
-  spin team secret delete <team-id> <name> [flags]
+  spin team secret delete <team> <name> [flags]
 
 Flags:
   -h, --help   help for delete
@@ -453,7 +453,7 @@ Global Flags:
 List a team's secrets, by name
 
 Usage:
-  spin team secret list <team-id> [flags]
+  spin team secret list <team> [flags]
 
 Flags:
   -h, --help   help for list
@@ -482,7 +482,7 @@ Example:
     --ref arn:aws:secretsmanager:us-east-2:123456789012:secret:github-AbCdEf
 
 Usage:
-  spin team secret set <team-id> <name> [flags]
+  spin team secret set <team> <name> [flags]
 
 Flags:
   -h, --help               help for set

@@ -14219,7 +14219,7 @@
           "id": {
             "type": "string",
             "title": "id",
-            "description": "ID or path (e.g., \"/engineering/backend\")"
+            "description": "ID, path (e.g., \"/engineering/backend\") or \"me\": the caller's personal team"
           }
         },
         "title": "GetTeamRequest",
