@@ -7,7 +7,7 @@ import (
 
 // brandFiles are what the site takes from spin-stack/brand, which checks every color it writes
 // (contrast, and perceptual distance on real panels and through colour-vision deficiencies): the
-// palette as Starlight's variables and as Spin's own, and the organization's mark. A copy here is
+// palette as Starlight's variables and as Spinbox's own, and the organization's mark. A copy here is
 // held to brand's, so a palette changed there reaches the site with `task reference`.
 var brandFiles = []struct{ from, to string }{
 	{"dist/tokens.css", "src/styles/brand-tokens.css"},

@@ -6,13 +6,13 @@ import (
 	"regexp"
 )
 
-// featureLink is a page's claim that Spin does something, written as a link to the row of the
+// featureLink is a page's claim that Spinbox does something, written as a link to the row of the
 // feature board that says so: [idle suspend](<feature:Idle suspend, with a question before it that a keep answers>).
 // The build turns it into a link to the row's area on the status page (src/lib/feature-links.mjs).
 var featureLink = regexp.MustCompile(`\]\(<?feature:([^>)]+)>?\)`)
 
 // checkFeatureLinks fails a claim whose row the board does not have, and one whose row is not
-// built: a page may say Spin does what the board says it does, and nothing else.
+// built: a page may say Spinbox does what the board says it does, and nothing else.
 func checkFeatureLinks(docs string, rows []feature) ([]string, error) {
 	state := map[string]string{}
 	for _, r := range rows {

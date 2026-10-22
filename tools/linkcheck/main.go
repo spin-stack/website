@@ -1,6 +1,6 @@
 // Command linkcheck fails when a page of the built site links to a path on the site that the
 // build did not produce, or to an anchor the target page does not have. A broken link is found
-// here rather than by a reader. It also fails a page that does not say Spin is experimental:
+// here rather than by a reader. It also fails a page that does not say Spinbox is experimental:
 // every HTML page carries the banner once, and every Markdown twin and llms file the sentence.
 package main
 
@@ -30,7 +30,7 @@ var (
 // (src/components/Banner.astro), the sentence in a twin (src/lib/experimental.ts).
 const (
 	banner   = "data-experimental"
-	sentence = "Spin is experimental: APIs change and data may be lost."
+	sentence = "Spinbox is experimental: APIs change and data may be lost."
 )
 
 func main() {

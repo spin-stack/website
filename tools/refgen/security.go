@@ -24,7 +24,7 @@ func securityPages(spin, commit string) (map[string][]byte, error) {
 	source := fmt.Sprintf("[`%s`](https://github.com/spin-stack/spin/blob/%s/%s)", readme, commit, readme)
 
 	var rules strings.Builder
-	rules.WriteString(frontmatter("spin:"+readme, "Rules and their gates", "The rules every entry point of Spin must keep, and the test or lint that fails the build when one is broken.", 1))
+	rules.WriteString(frontmatter("spin:"+readme, "Rules and their gates", "The rules every entry point of Spinbox must keep, and the test or lint that fails the build when one is broken.", 1))
 	fmt.Fprintf(&rules, "The rules every entry point must keep, from spin's %s at `%s`. Code cites a rule's "+
 		"number at the line that keeps it. **Gate** is what fails a build when the rule is broken; "+
 		"*none* marks a rule kept only by each place remembering it. What is still open is on "+
@@ -48,8 +48,8 @@ func securityPages(spin, commit string) (map[string][]byte, error) {
 		return nil, fmt.Errorf("%s: no \"## Open\" section", readme)
 	}
 	var gaps strings.Builder
-	gaps.WriteString(frontmatter("spin:"+readme, "Known gaps", "The parts of Spin's security model that are not enforced yet, each a design change rather than a patch.", 2))
-	fmt.Fprintf(&gaps, "The open items of Spin's security model, from spin's %s at `%s`. The numbers are "+
+	gaps.WriteString(frontmatter("spin:"+readme, "Known gaps", "The parts of Spinbox's security model that are not enforced yet, each a design change rather than a patch.", 2))
+	fmt.Fprintf(&gaps, "The open items of Spinbox's security model, from spin's %s at `%s`. The numbers are "+
 		"[its rules](/reference/security/rules/).\n", source, commit[:9])
 	gaps.Write(bytes.TrimRight(open, "\n"))
 	gaps.WriteString("\n")

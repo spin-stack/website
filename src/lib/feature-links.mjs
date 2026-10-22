@@ -1,4 +1,4 @@
-// A claim a page makes about what Spin does is a link to the feature board's row that says so:
+// A claim a page makes about what Spinbox does is a link to the feature board's row that says so:
 // [idle suspend](<feature:Idle suspend, with a question before it that a keep answers>). This
 // points it at the row's area on the status page, with the row's proof as its title, and fails
 // the build on a row the board does not have. refgen checks the same, and that the row is built.

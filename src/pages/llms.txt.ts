@@ -8,7 +8,7 @@ export const GET: APIRoute = async ({ site }) => {
 	const base = siteBase(site);
 	const idx = await home();
 	const lines = [
-		'# Spin',
+		'# Spinbox',
 		'',
 		`> ${experimental} ${idx.data.description}`,
 		'',

@@ -1,6 +1,6 @@
 ---
 title: Reporting a vulnerability
-description: How to report a security problem in Spin privately, and what to include.
+description: How to report a security problem in Spinbox privately, and what to include.
 ---
 
 Report a vulnerability through a private security advisory on spin's repository, never in a
@@ -27,6 +27,6 @@ A problem in one of these that you found through another goes in spin's advisory
   installation's network, or nothing.
 - What they get, and the steps that show it.
 
-The model these are measured against is on [Security model](/security/), and the problems Spin
+The model these are measured against is on [Security model](/security/), and the problems Spinbox
 already knows of are on [Known gaps](/reference/security/known-gaps/): one of those is not a new report,
 though a way to make it worse is.

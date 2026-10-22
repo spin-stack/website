@@ -4,10 +4,10 @@ description: The development stack on a single Linux host with KVM - from git cl
 ---
 
 This is the **development stack**: the control plane, the proxy and the stores in containers,
-and a real runner on the same host, booting real virtual machines. It is what Spin's own e2e
+and a real runner on the same host, booting real virtual machines. It is what Spinbox's own e2e
 lane brings up, and every command below is one that lane runs. It is not an installation:
 nothing in it is backed up, its credentials are public test fixtures, and it answers only on
-`localhost`. To install Spin, see [Install on AWS](/aws/overview/).
+`localhost`. To install Spinbox, see [Install on AWS](/aws/overview/).
 
 ## What the machine needs
 

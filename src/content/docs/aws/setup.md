@@ -1,6 +1,6 @@
 ---
 title: Install
-description: Install Spin in an AWS account step by step, from the state bucket to the first sign-in and the first workspace.
+description: Install Spinbox in an AWS account step by step, from the state bucket to the first sign-in and the first workspace.
 ---
 
 Read [Before you start](/aws/prerequisites/) first: the region must be one the release has

@@ -1,6 +1,6 @@
 ---
 title: Before you start
-description: The tools, AWS account, region, domain and spot quota you need before installing Spin on AWS.
+description: The tools, AWS account, region, domain and spot quota you need before installing Spinbox on AWS.
 ---
 
 ## Tools

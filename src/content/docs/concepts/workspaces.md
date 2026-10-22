@@ -78,10 +78,10 @@ terminals; `spin workspace keep <workspace> 2h` answers. A start resumes a suspe
 
 ## What is inside
 
-The machine boots the kernel Spin provides and a small init, `vminitd`, which hands over to the
-image's own systemd. Nothing else of Spin's lives on the disk:
+The machine boots the kernel Spinbox provides and a small init, `vminitd`, which hands over to the
+image's own systemd. Nothing else of Spinbox's lives on the disk:
 
-- **The supervisor**, a service that Spin mounts read-only at each start. It clones your
+- **The supervisor**, a service that Spinbox mounts read-only at each start. It clones your
   dotfiles and talks to the runner over vsock, never over the network. It is the release's own
   and is updated at every start.
 - **The VS Code server**, when the installation publishes one, mounted the same way. See

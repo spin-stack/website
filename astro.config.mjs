@@ -19,12 +19,12 @@ export default defineConfig({
 	markdown: { rehypePlugins: [rehypeFeatureLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [
 		starlight({
-			title: 'Spin',
+			title: 'Spinbox',
 			description:
 				'Self-hosted sandboxes in your own AWS account: a virtual machine per workspace, snapshots with memory, rollback, and a diff of what changed.',
 			// The organization's own mark (spin-stack/brand): the tile on its navy in dark, and clear in light,
 			// where the tile would read as a sticker.
-			logo: { dark: './src/assets/logo.png', light: './src/assets/logo-light.png', alt: 'Spin' },
+			logo: { dark: './src/assets/logo.png', light: './src/assets/logo-light.png', alt: 'Spinbox' },
 			favicon: '/favicon.png',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/brand-tokens.css', './src/styles/brand-starlight.css', './src/styles/custom.css'],

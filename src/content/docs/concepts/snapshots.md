@@ -84,7 +84,7 @@ spin share browse            # snapshots shared with you
 ```
 
 Sharing hands over the **whole disk**, including anything left on it, such as
-`/root/.ssh/authorized_keys` or a token in a dotfile. Before a snapshot is shared, Spin scans it
+`/root/.ssh/authorized_keys` or a token in a dotfile. Before a snapshot is shared, Spinbox scans it
 for credentials, and refuses the share until you acknowledge what it found
 (`--acknowledge-findings`). **Memory is never shared**: a shared snapshot gives the disk alone.
 

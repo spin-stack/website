@@ -1,9 +1,9 @@
 ---
 title: Security model
-description: "What Spin protects, from whom, and how: isolation, network, data, identity and supply chain, and where to read about each."
+description: "What Spinbox protects, from whom, and how: isolation, network, data, identity and supply chain, and where to read about each."
 ---
 
-Spin runs code its operators do not fully trust, on machines in their own account. Its security
+Spinbox runs code its operators do not fully trust, on machines in their own account. Its security
 model starts from that: **a workspace's tenant is root inside it, and may be hostile.** Everything
 else is built so that being root in a workspace gives nothing outside it.
 
@@ -36,7 +36,7 @@ else is built so that being root in a workspace gives nothing outside it.
 
 ## Rules with gates
 
-Spin keeps its security rules in a table in its repository, `docs/security/README.md`. Each rule
+Spinbox keeps its security rules in a table in its repository, `docs/security/README.md`. Each rule
 names the code that keeps it and the test that fails the build when it is broken, and a rule no
 test keeps says so. The site prints that table, [Rules and their gates](/reference/security/rules/),
 and the README's open items, [Known gaps](/reference/security/known-gaps/), from spin itself.

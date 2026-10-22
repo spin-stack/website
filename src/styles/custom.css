@@ -1,4 +1,4 @@
-/* Spin's look on Starlight. Every color is spin-stack/brand's (brand-tokens.css and
+/* Spinbox's look on Starlight. Every color is spin-stack/brand's (brand-tokens.css and
    brand-starlight.css, which `task reference` copies and holds to brand's); this file says only
    how the site's parts use them. IBM Plex is served from the site itself. */
 @import '@fontsource/ibm-plex-sans/400.css';
