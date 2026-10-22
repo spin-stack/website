@@ -5,7 +5,7 @@ description: How a release is built, signed and verified, how Spin OS makes ever
 
 ## Releases are signed
 
-A release of Spin is built from a tag, in one workflow, from a cold cache:
+A release of Spinbox is built from a tag, in one workflow, from a cold cache:
 
 - **Every file is signed** with Sigstore, by a short-lived certificate that names the release
   workflow at that tag. There is no signing key to hold or leak.
@@ -47,7 +47,7 @@ manifest does not describe byte for byte.
 ## The machine a workspace runs
 
 [spin-machine](https://github.com/spin-stack/spin-machine) builds QEMU, the guest kernel and the
-base image. A release of Spin pins the machine's release by version and digest. Each machine
+base image. A release of Spinbox pins the machine's release by version and digest. Each machine
 release lists every upstream source with its version, URL and SHA-256, and every package in the
 base image with its exact version.
 

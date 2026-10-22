@@ -4,9 +4,9 @@ description: "Run a coding agent that needs a provider key inside a workspace, w
 ---
 
 A coding agent needs a key to talk to its provider, and a key on a workspace's disk is in every
-snapshot of it and in every clone. Spin has what it takes for the key to never be there: the
+snapshot of it and in every clone. Spinbox has what it takes for the key to never be there: the
 host's egress proxy can stand in for a host name and set a header from a secret the team holds.
-Nothing here knows what Anthropic or OpenAI is; it is four things Spin already does, in order.
+Nothing here knows what Anthropic or OpenAI is; it is four things Spinbox already does, in order.
 
 ## 1. The installation brokers the name
 

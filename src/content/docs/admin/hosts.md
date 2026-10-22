@@ -84,5 +84,5 @@ A token is one-time unless `--reusable`, lasts 24 hours unless `--expires` says 
 most 30 days), and is shown once. `--team` makes a runner that only takes the team's workspaces.
 The same flags set what the runner advertises and whether it is preemptible.
 
-Such a machine needs KVM, and must run a release of Spin no newer than the control plane's and no
+Such a machine needs KVM, and must run a release of Spinbox no newer than the control plane's and no
 more than 90 days older.

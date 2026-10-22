@@ -97,6 +97,6 @@ Nothing on the network can open a connection into a workspace. SSH, the terminal
 and published ports are all **sessions**: the runner opens the machine's vsock and dials out to
 the relay; you dial in to the relay too. See [Ports and sharing](/concepts/ports/).
 
-The programs Spin runs inside the workspace reach the control plane the same way, over vsock
+The programs Spinbox runs inside the workspace reach the control plane the same way, over vsock
 through the runner. A workspace is never told the control plane's address, and `offline` does
 not cut its terminal off.

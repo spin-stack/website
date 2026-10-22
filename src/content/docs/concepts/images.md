@@ -1,9 +1,9 @@
 ---
 title: Images
-description: What an image is in Spin, the default image, how an administrator publishes and retires images, and how to build your own starting point from a snapshot.
+description: What an image is in Spinbox, the default image, how an administrator publishes and retires images, and how to build your own starting point from a snapshot.
 ---
 
-An image is a disk a workspace can start from. In Spin an image **is** a published snapshot
+An image is a disk a workspace can start from. In Spinbox an image **is** a published snapshot
 with a name, its **ref**, such as `python:3.12`. There is no registry and no image cache: creating a
 workspace from an image clones the snapshot, which copies nothing.
 
@@ -13,7 +13,7 @@ spin workspace create --name web --image <ref> --wait
 
 ## The default image
 
-Each release of Spin runs one machine, and that machine comes with a base image: Ubuntu, with
+Each release of Spinbox runs one machine, and that machine comes with a base image: Ubuntu, with
 systemd, SSH, `git`, `curl`, `make`, `jq` and the usual tools to find out what is wrong. The
 control plane publishes it by itself the first time it starts, as
 `ghcr.io/spin-stack/spinbox/sandbox:<machine version>`. A workspace created without `--image`

@@ -1,9 +1,9 @@
 ---
-title: What is Spin
-description: What Spin is, who it is for, what it lets you do, and the projects an installation is made of.
+title: What is Spinbox
+description: What Spinbox is, who it is for, what it lets you do, and the projects an installation is made of.
 ---
 
-Spin runs **workspaces**: virtual machines that a person or a program uses to run code. You
+Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code. You
 install it in your own AWS account. It is built for work where the code that runs is not fully
 trusted, or where you need to see what it changed and undo it.
 
@@ -23,7 +23,7 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 
 ## What you can do
 
-| You want to | Spin gives you |
+| You want to | Spinbox gives you |
 |---|---|
 | Start from a known state | A workspace cloned from an image or from any snapshot, without copying a disk |
 | Keep a point to come back to | [A snapshot of the disk](<feature:Snapshots of a running workspace's disk>), or [of the disk and memory together](<feature:Snapshots with memory, resumed with their processes>) |
@@ -42,7 +42,7 @@ Each is a built feature with the test that proves it on the status page:
 
 ### Is there a hosted version?
 
-No. Spin runs in your AWS account, installed by one OpenTofu module. See
+No. Spinbox runs in your AWS account, installed by one OpenTofu module. See
 [Install on AWS](/aws/overview/).
 
 ### What does it cost?
@@ -60,7 +60,7 @@ No. An installation is a handful of EC2 machines, buckets and roles that the mod
 ### What does it not do yet?
 
 [Status](/reference/status/) lists every feature with the test that proves it, and what is not
-built. [Limitations](/overview/limitations/) lists what Spin does not do by design.
+built. [Limitations](/overview/limitations/) lists what Spinbox does not do by design.
 
 ### How do I report a security problem?
 

@@ -1,6 +1,6 @@
 ---
 title: "Status"
-description: "What Spin does today with what proves each, what is partly there, what is not built, and its limits, each row held to the code."
+description: "What Spinbox does today with what proves each, what is partly there, what is not built, and its limits, each row held to the code."
 source: "spin:internal/features/features.go"
 editUrl: false
 sidebar:

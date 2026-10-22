@@ -9,7 +9,7 @@ Every workspace is a QEMU/KVM virtual machine with a kernel of its own. Workspac
 with each other or with the runner. Code that takes root in a workspace, or its kernel, is still
 inside a virtual machine.
 
-The QEMU Spin ships is built for KVM only: it refuses to emulate.
+The QEMU Spinbox ships is built for KVM only: it refuses to emulate.
 
 ## QEMU itself is confined
 
@@ -51,7 +51,7 @@ the virtual machine. It drops every packet to private, loopback, link-local (inc
 instance metadata service) and reserved addresses, and to the runner's own addresses, before any
 policy is read. The workspace's resolver removes those addresses from its answers.
 
-A workspace is never told the control plane's address or its CA. The programs Spin runs inside it
+A workspace is never told the control plane's address or its CA. The programs Spinbox runs inside it
 reach the control plane over vsock, through the runner.
 
 ## Where it depends on the kernel

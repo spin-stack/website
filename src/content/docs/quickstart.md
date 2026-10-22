@@ -4,7 +4,7 @@ description: Sign in to an installation, create a workspace, take a snapshot, ch
 ---
 
 This page uses an installation that already exists. To make one, see
-[Install on AWS](/aws/overview/); to try Spin on one Linux machine without one, see
+[Install on AWS](/aws/overview/); to try Spinbox on one Linux machine without one, see
 [Try it on one machine](/overview/one-machine/).
 
 You need the address of the installation's dashboard, `https://app.<domain>`, and an account

@@ -12,7 +12,7 @@ A user signs in to the dashboard with:
   others that speak OpenID Connect.
 
 Providers are configured in **Admin → Security**. A provider can be the installation's, or a
-team's own. Spin has no multi-factor authentication of its own: require it in your provider.
+team's own. Spinbox has no multi-factor authentication of its own: require it in your provider.
 
 The first administrator signs in with a password, from the one-time password the install wrote.
 Once a provider works, password sign-in can be turned off.

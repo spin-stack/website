@@ -14,7 +14,7 @@ export const nav = [
 		label: 'Start here',
 		topic: 'docs',
 		items: [
-			['What is Spin', 'overview'],
+			['What is Spinbox', 'overview'],
 			['Status', 'reference/status'],
 			['How it works', 'overview/how-it-works'],
 			['Quickstart', 'quickstart'],
@@ -36,7 +36,7 @@ export const nav = [
 		],
 	},
 	{
-		label: 'Use Spin',
+		label: 'Use Spinbox',
 		topic: 'docs',
 		items: [
 			['The CLI', 'use/cli'],

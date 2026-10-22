@@ -1,6 +1,6 @@
-# Spin documentation
+# Spinbox documentation
 
-The documentation of [Spin](https://github.com/spin-stack/spin), at
+The documentation of [Spinbox](https://github.com/spin-stack/spin), at
 <https://spin-stack.github.io/website/>, built with [Astro Starlight](https://starlight.astro.build)
 and published to GitHub Pages.
 
@@ -40,7 +40,7 @@ is checked against checkouts of spin, spin-terraform-aws and brand beside this o
   test in spin holds to the tree. The bullets of `overview/limitations.md` are its limit rows,
   and `task reference:check` fails on a bullet that is not one, or a row no bullet leads with.
   The landing page's straight answers are limit rows too, and the check fails on one that is not.
-- **What a page says Spin does** is a link to the feature board's row that says so:
+- **What a page says Spinbox does** is a link to the feature board's row that says so:
   `[idle suspend](<feature:Idle suspend, with a question before it that a keep answers>)`. The
   build points it at the row's area on the status page (`src/lib/feature-links.mjs`) and fails on
   a row the board does not have; `task reference:check` also fails on a row that is not built.
@@ -80,7 +80,7 @@ Pull requests are welcome. One from a fork runs the Gate once a maintainer appro
 deploys: only `main` publishes. Dependencies are locked; `pnpm-workspace.yaml` names the few that
 may run an install script, and a release must be a week old before it is taken.
 
-A security problem in Spin goes to a private advisory, never an issue: see
+A security problem in Spinbox goes to a private advisory, never an issue: see
 [Reporting a vulnerability](https://spin-stack.github.io/website/security/reporting/).
 
 ## License

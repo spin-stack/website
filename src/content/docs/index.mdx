@@ -1,5 +1,5 @@
 ---
-title: Spin
+title: Spinbox
 description: Self-hosted sandboxes in your own AWS account, a virtual machine per workspace, with snapshots, rollback and a diff of what changed.
 template: splash
 hero:
@@ -38,9 +38,9 @@ A restore from [a memory snapshot](<feature:Snapshots with memory, resumed with 
 
 ## Straight answers
 
-- **AWS only.** One OpenTofu module installs Spin in your account. There is no hosted version.
+- **AWS only.** One OpenTofu module installs Spinbox in your account. There is no hosted version.
 - **x86-64 only.** Runners are x86-64 machines with nested virtualization.
-- **Linux guests only.** A workspace boots the kernel Spin provides.
+- **Linux guests only.** A workspace boots the kernel Spinbox provides.
 - **No GPUs.** There is no way to ask for a runner of a particular kind.
 - **One region, one control plane.** An installation lives in one AWS region.
 
@@ -52,7 +52,7 @@ The rest are on [Limitations](/overview/limitations/).
 ## Where to go
 
 <CardGrid>
-	<LinkCard title="Evaluate" href="overview/" description="Who Spin is for, what it gives you, and why it is built this way." />
+	<LinkCard title="Evaluate" href="overview/" description="Who Spinbox is for, what it gives you, and why it is built this way." />
 	<LinkCard title="Install" href="aws/overview/" description="What the module creates in your AWS account, what it costs, and how to install it." />
 	<LinkCard title="Use" href="quickstart/" description="Sign in, create a workspace, take a snapshot, change something, see the diff, and go back." />
 	<LinkCard title="Agents" href="use/agents/" description="API keys, JSON output, the OpenAPI document and llms.txt, and a workspace an agent can break and you can undo." />

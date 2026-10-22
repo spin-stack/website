@@ -50,7 +50,7 @@ from the bucket.
    layer against a digest only the control plane can write, decrypts it, and builds the disk
    as a chain of qcow2 files.
 4. The runner starts a virtual machine on that disk. Inside, `vminitd` starts and hands over to
-   the image's own systemd. A small supervisor that Spin provides runs as a systemd service,
+   the image's own systemd. A small supervisor that Spinbox provides runs as a systemd service,
    and speaks to the runner over vsock, not the network.
 5. The runner reports what it is running. The control plane shows the workspace as RUNNING.
 

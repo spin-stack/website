@@ -1,17 +1,17 @@
 ---
 title: Limitations
-description: Where Spin runs and the limits to know before you rely on it. What is built and what is not is on the status page.
+description: Where Spinbox runs and the limits to know before you rely on it. What is built and what is not is on the status page.
 ---
 
-Spin is **experimental**. APIs will change, and data may be lost. What is built, what is partly
+Spinbox is **experimental**. APIs will change, and data may be lost. What is built, what is partly
 there and what is not built yet is the [status page](/reference/status/), written from the tree
-by a test. This page is the limits: what Spin does not do by design, or by where it runs today.
+by a test. This page is the limits: what Spinbox does not do by design, or by where it runs today.
 Each bullet here is a limit row of that same list, and the build fails when the two disagree.
 
 ## Where it runs
 
 - **AWS only.** The module in [spin-terraform-aws](/aws/overview/) is the supported way to
-  install Spin. The platform itself is not tied to AWS, but nothing else is packaged or tested.
+  install Spinbox. The platform itself is not tied to AWS, but nothing else is packaged or tested.
 - **x86-64 only.** Runners are x86-64 machines with nested virtualization. There are no Arm
   runners.
 - **The CLI runs on Linux x86-64 and macOS Apple silicon.**
@@ -22,7 +22,7 @@ Each bullet here is a limit row of that same list, and the build fails when the 
 ## Workspaces
 
 - **No GPUs.** There is no way to ask for a runner of a particular kind.
-- **Linux guests only.** Booted with the kernel Spin provides.
+- **Linux guests only.** Booted with the kernel Spinbox provides.
 - **No IPv6 inside a workspace.** The resolver a workspace uses drops AAAA answers.
 - **TCP only for published ports.**
 - **A diff does not see everything.** It hashes a file only when its size, inode or times
