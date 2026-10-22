@@ -8,12 +8,13 @@
 @import '@fontsource/ibm-plex-mono/500.css';
 @import '@fontsource/ibm-plex-mono/600.css';
 
-/* Headings in the mono face: a site about machines, set like their consoles. */
+/* Headings in the mono face: a site about machines, set like their consoles. One tracking for all
+   of them, the palette's: five values had grown here and in the landing's parts. */
 .sl-markdown-content :is(h1, h2, h3, h4),
 h1#_top,
 .site-title {
 	font-family: var(--sl-font-mono);
-	letter-spacing: -0.015em;
+	letter-spacing: var(--spin-heading-tracking);
 }
 .sl-markdown-content :is(h2, h3) {
 	font-weight: 600;
@@ -39,6 +40,10 @@ a[data-feature='built'] {
 [data-has-hero] .sl-markdown-content .sl-heading-wrapper > a {
 	display: none;
 }
+/* Buttons at the brand's corner, not Starlight's pill: a control, sized to its label. */
+.sl-link-button {
+	border-radius: var(--spin-radius);
+}
 .status-counts {
 	font-family: var(--sl-font-mono);
 	font-size: var(--sl-text-sm);
@@ -59,7 +64,6 @@ a[data-feature='built'] {
 }
 .sl-markdown-content :is(h1, h2, h3),
 h1#_top {
-	letter-spacing: -0.035em;
 	word-spacing: -0.12em;
 }
 
@@ -101,14 +105,6 @@ h1#_top {
 	height: 0.55em;
 }
 
-/* The header as glass over the page, on every page. */
-header.header {
-	background-color: color-mix(in srgb, var(--sl-color-bg-nav) 88%, transparent);
-	/* Unprefixed only: with the -webkit- copy after it, the build's minifier kept that one and
-	   dropped this, and Chrome draws no glass for -webkit-. */
-	backdrop-filter: saturate(160%) blur(14px);
-}
-
 /* The landing page: its sections a little wider and further apart, their headings large, and
    nothing past the window's edge from the hero's glow. */
 [data-has-hero] .main-frame {
@@ -122,10 +118,10 @@ header.header {
 	padding-top: 0;
 	margin-top: 6rem;
 }
-[data-has-hero] .sl-markdown-content h2 {
+/* The section headings, not a part's own (a .not-content block sets its heading itself). */
+[data-has-hero] .sl-markdown-content h2:not(.not-content *) {
 	font-size: clamp(1.8rem, 1.1rem + 2.6vw, 3rem);
 	text-transform: none;
-	letter-spacing: -0.035em;
 	line-height: 1.08;
 	color: var(--sl-color-white);
 	max-width: 20ch;

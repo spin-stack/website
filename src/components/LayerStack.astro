@@ -51,7 +51,6 @@ const layers = [
 	.layer-stack {
 		width: 100%;
 		max-width: 34rem;
-		filter: drop-shadow(0 40px 60px color-mix(in srgb, var(--spin-brand-blue) 35%, transparent));
 		height: auto;
 		font-family: var(--sl-font-mono);
 		--ls-ink: var(--spin-label);
@@ -108,9 +107,7 @@ const layers = [
 				ls-fade var(--spin-duration-slow) ease-out both;
 		}
 		.live-top {
-			animation:
-				ls-write 1.6s linear 3,
-				ls-glow 2.4s ease-in-out 2 alternate;
+			animation: ls-write 1.6s linear 3;
 		}
 		@keyframes ls-drop {
 			from {
@@ -134,11 +131,6 @@ const layers = [
 		@keyframes ls-write {
 			to {
 				stroke-dashoffset: -22;
-			}
-		}
-		@keyframes ls-glow {
-			to {
-				fill: color-mix(in srgb, var(--ls-ink) 26%, transparent);
 			}
 		}
 	}

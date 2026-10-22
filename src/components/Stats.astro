@@ -1,5 +1,5 @@
 ---
-// The feature board in four numbers, counted up as they come into view, and the sentence that
+// The feature board in four numbers, as they are, and the sentence that
 // says where they come from (src/lib/reference.ts). Its Markdown twin is that sentence.
 import board from '../data/features.json';
 import reference from '../data/reference.json';
@@ -15,11 +15,11 @@ const stats = [
 ];
 ---
 
-<div class="stats not-content" data-stats>
+<div class="stats not-content">
 	{
 		stats.map((s) => (
 			<div class="stat">
-				<span class="n" data-n={s.n}>
+				<span class="n">
 					{s.n}
 				</span>
 				<span class="label">{s.label}</span>
@@ -30,30 +30,6 @@ const stats = [
 </div>
 <StatusCounts />
 
-<script>
-	const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-	for (const root of document.querySelectorAll<HTMLElement>('[data-stats]')) {
-		if (still) continue;
-		const nums = [...root.querySelectorAll<HTMLElement>('[data-n]')];
-		nums.forEach((el) => (el.textContent = '0'));
-		const count = new IntersectionObserver(
-			(entries) => {
-				if (!entries.some((e) => e.isIntersecting)) return;
-				count.disconnect();
-				const t0 = performance.now();
-				const tick = (t: number) => {
-					const p = Math.min((t - t0) / 1400, 1);
-					const ease = 1 - Math.pow(1 - p, 3);
-					nums.forEach((el) => (el.textContent = String(Math.round(Number(el.dataset.n) * ease))));
-					if (p < 1) requestAnimationFrame(tick);
-				};
-				requestAnimationFrame(tick);
-			},
-			{ threshold: 0.5 },
-		);
-		count.observe(root);
-	}
-</script>
 
 <style>
 	.stats {
@@ -61,7 +37,7 @@ const stats = [
 		grid-template-columns: repeat(2, 1fr);
 		gap: 1px;
 		margin-block: 1.5rem 1rem;
-		border-radius: var(--spin-radius-lg);
+		border-radius: var(--spin-radius);
 		overflow: hidden;
 		background: var(--sl-color-hairline-light);
 		border: 1px solid var(--sl-color-hairline-light);
@@ -83,17 +59,9 @@ const stats = [
 		font-size: clamp(2.4rem, 1.5rem + 2.5vw, 3.6rem);
 		font-weight: 600;
 		line-height: 1;
-		letter-spacing: -0.04em;
+		letter-spacing: var(--spin-heading-tracking);
 		font-variant-numeric: tabular-nums;
-		/* Cyan to mint on the navy; on white the accent to the mark's base, which hold AA where the
-		   mark's cyan is 2:1. */
-		background: linear-gradient(120deg, var(--spin-brand-cyan), var(--spin-brand-mint));
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-	}
-	:global([data-theme='light']) .n {
-		background-image: linear-gradient(120deg, var(--spin-accent), var(--spin-brand-deep));
+		color: var(--spin-accent-text);
 	}
 	.label {
 		color: var(--sl-color-white);
