@@ -201,7 +201,7 @@ Get team by ID or path
 
 | Field | Type | What it is |
 |---|---|---|
-| `id` | string | ID or path (e.g., "/engineering/backend") |
+| `id` | string | ID, path (e.g., "/engineering/backend") or "me": the caller's personal team |
 
 **Response**
 

@@ -32,7 +32,7 @@ Flags:
   -h, --help               help for open
       --name string        Workspace name (auto-generated if empty)
       --no-connect         Create the workspace and print it, without connecting
-      --team string        The team whose project to open, by id or path, when more than one has the repository
+      --team string        The team whose project to open, by id, path or me, when more than one has the repository
       --timeout duration   How long --wait waits; by default, until the control plane gives up on it
       --wait               Return once the workspace is running, with --no-connect
 

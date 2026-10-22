@@ -66,7 +66,7 @@ Flags:
       --ref string                    The branch or tag a workspace opens at unless the open names one
       --repository string             The repository's https URL, with no credential in it
       --slug string                   What it is named by in the team (made from the name if empty)
-      --team string                   The team, by id or path
+      --team string                   The team, by id, path or me
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
@@ -84,7 +84,7 @@ Usage:
 
 Flags:
   -h, --help          help for delete
-      --team string   The team, by id or path
+      --team string   The team, by id, path or me
   -y, --yes           Skip confirmation
 
 Global Flags:
@@ -103,7 +103,7 @@ Usage:
 
 Flags:
   -h, --help          help for list
-      --team string   The team, by id or path
+      --team string   The team, by id, path or me
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
@@ -123,7 +123,7 @@ Usage:
 
 Flags:
   -h, --help          help for prebuild
-      --team string   The team, by id or path
+      --team string   The team, by id, path or me
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
@@ -144,7 +144,7 @@ Usage:
 
 Flags:
   -h, --help          help for prebuilds
-      --team string   The team, by id or path
+      --team string   The team, by id, path or me
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
@@ -174,7 +174,7 @@ Flags:
       --ref string                    The branch or tag a workspace opens at unless the open names one
       --repository string             The repository's https URL, with no credential in it
       --slug string                   What it is named by in the team (made from the name if empty)
-      --team string                   The team, by id or path
+      --team string                   The team, by id, path or me
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)
