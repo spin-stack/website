@@ -3,6 +3,8 @@ title: Agents and automation
 description: Give an agent or a CI job its own API key, let it create workspaces it cannot escape, and use snapshots, diffs and clones to review and undo its work.
 ---
 
+import Output from '../../../components/Output.astro';
+
 Spin is built for code you do not fully trust, and an agent is the most common author of such
 code. This page shows how to give an agent a workspace, how to limit what it can reach, and how
 to review and undo what it did.
@@ -16,7 +18,10 @@ spin snapshot diff task-1 <after-id> --from <before-id> -o json
 spin workspace delete task-1
 ```
 
-Every command prints JSON with `-o json`. A model reading this site starts at
+<Output name="diff.json" caption="spin snapshot diff task-1 <after-id> --from <before-id> -o json" lang="json" />
+
+Every command prints JSON with `-o json`: the whole answer, each file's type, mode, size and hash
+on both sides. A model reading this site starts at
 [`/llms.txt`](/llms.txt), and every page has a Markdown twin. The control plane's API is in
 [the API reference](/reference/api/).
 

@@ -1,0 +1,16 @@
+---
+// What a spin command prints, as a golden in spin holds it (tools/refgen copies them into
+// src/data/output): shown as a block of output, never retyped. Its Markdown twin is the same
+// block (src/lib/pages.ts).
+import { Code } from '@astrojs/starlight/components';
+import { output } from '../lib/output';
+
+interface Props {
+	name: string;
+	caption: string;
+	lang?: string;
+}
+const { name, caption, lang = 'text' } = Astro.props;
+---
+
+<Code code={output(name)} lang={lang} title={caption} />
