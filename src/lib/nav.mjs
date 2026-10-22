@@ -43,6 +43,7 @@ export const nav = [
 			['Editors and SSH', 'use/editors'],
 			['Agents and automation', 'use/agents'],
 			['An agent without keys', 'use/agent-keys'],
+			['The dashboard', 'use/dashboard'],
 		],
 	},
 	{

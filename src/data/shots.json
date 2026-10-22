@@ -1,0 +1,14 @@
+{
+	"release": "v20261019.02",
+	"commit": "617175ffdf2bb568cfcacf97874e2287d0ad8a5b",
+	"shots": [
+		{
+			"name": "workspaces",
+			"test": "a person's workspaces"
+		},
+		{
+			"name": "workspace",
+			"test": "a running workspace"
+		}
+	]
+}

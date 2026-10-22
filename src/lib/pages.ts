@@ -86,6 +86,8 @@ export function toMarkdown(d: Doc, base: string): string {
 	);
 	body = body.replace(/<\/Aside>/g, '');
 	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
+	// A screenshot is its alt text: a twin has no picture to show.
+	body = body.replace(/!\[([^\]]*)\]\([^)]*\.png\)/g, '*Screenshot: $1.*');
 	// What a command prints is the same block of output.
 	body = body.replace(
 		/<Output\s+name="([\w.-]+)"\s+caption="([^"]*)"(?:\s+lang="(\w+)")?\s*\/>/g,
