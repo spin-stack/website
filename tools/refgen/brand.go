@@ -13,6 +13,7 @@ var brandFiles = []struct{ from, to string }{
 	{"dist/tokens.css", "src/styles/brand-tokens.css"},
 	{"dist/starlight.css", "src/styles/brand-starlight.css"},
 	{"logos/mark-256.png", "src/assets/logo.png"},
+	{"logos/mark-clear-256.png", "src/assets/logo-light.png"},
 	{"logos/mark-512.png", "public/mark.png"},
 	{"logos/favicon-64.png", "public/favicon.png"},
 }
