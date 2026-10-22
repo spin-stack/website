@@ -128,7 +128,7 @@ h1#_top {
 	height: 0.55em;
 }
 
-/* The mark is a tile of its own ground: rounded, so it sits on either theme's header. */
+/* In dark the mark is a tile of its own ground, rounded; in light it is clear. */
 .site-title img {
 	border-radius: 22%;
 }

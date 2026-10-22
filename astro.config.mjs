@@ -22,8 +22,9 @@ export default defineConfig({
 			title: 'Spin',
 			description:
 				'Self-hosted sandboxes in your own AWS account: a virtual machine per workspace, snapshots with memory, rollback, and a diff of what changed.',
-			// The organization's own mark, the stack of disks from its avatar, cut from the wordmark under it.
-			logo: { src: './src/assets/logo.png', alt: 'Spin' },
+			// The organization's own mark (spin-stack/brand): the tile on its navy in dark, and clear in light,
+			// where the tile would read as a sticker.
+			logo: { dark: './src/assets/logo.png', light: './src/assets/logo-light.png', alt: 'Spin' },
 			favicon: '/favicon.png',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/brand-tokens.css', './src/styles/brand-starlight.css', './src/styles/custom.css'],
