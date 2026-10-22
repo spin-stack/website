@@ -14,27 +14,51 @@ hero:
       variant: minimal
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
-import Output from '../../components/Output.astro';
-import StatusCounts from '../../components/StatusCounts.astro';
+import Bento from '../../components/Bento.astro';
+import BentoCard from '../../components/BentoCard.astro';
+import Cta from '../../components/Cta.astro';
+import Stats from '../../components/Stats.astro';
+import Story from '../../components/Story.astro';
 
-## What it looks like
+## Break it. See it. Undo it.
 
-```bash
-spin workspace create --name demo --wait
-spin snapshot create demo --description clean --with-memory --wait
-spin exec demo -- sh -c 'echo hello > /etc/greeting; rm /etc/issue'
-spin snapshot create demo --description after --wait
-spin snapshot diff demo <after-id> --from <clean-id> --under /etc
-spin workspace restore demo <clean-id> --with-memory
-spin workspace delete demo
-```
+<Story />
 
-<Output name="diff.txt" caption="spin snapshot diff demo <after-id> --from <clean-id> --under /etc" />
+## What you get
 
-A workspace is [a KVM virtual machine](<feature:A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH>) with its own kernel, a persistent disk and root. The diff
-runs in a separate machine and [lists every file added, removed or modified](<feature:A diff of the files that changed between two snapshots>) between two snapshots.
-A restore from [a memory snapshot](<feature:Snapshots with memory, resumed with their processes>) puts the processes back as they were.
+<Bento>
+<BentoCard size="big" art="isolation" icon="machine" title="A whole machine, not a container" feature="A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH">
+Every workspace is a KVM virtual machine with its own kernel, root and a persistent disk. Install anything, break anything: nothing reaches the workspace next door.
+</BentoCard>
+<BentoCard icon="memory" title="Snapshots with memory" feature="Snapshots with memory, resumed with their processes">
+Restore and the processes are running where they were.
+</BentoCard>
+<BentoCard icon="diff" title="A diff of everything" feature="A diff of the files that changed between two snapshots">
+Every file added, modified or removed between two snapshots.
+</BentoCard>
+<BentoCard size="wide" icon="shield" title="Closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">
+Egress is closed by default. Policies name what a workspace may reach, and you can watch what it reached, looked up and was refused.
+</BentoCard>
+<BentoCard size="wide" icon="key" title="Secrets the workspace never holds" feature="Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role">
+The host's proxy stands in for a brokered name and adds the token, the forge credential or the cloud role on the way out.
+</BentoCard>
+<BentoCard icon="agent" title="Built for agents" feature="Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults">
+Claude Code and Codex on the PATH, API keys, JSON output, and a machine an agent can break and you can undo.
+</BentoCard>
+<BentoCard icon="move" title="Moves while it runs" feature="Move a running workspace to another host, its processes as they are">
+A running workspace goes to another host with its processes as they are.
+</BentoCard>
+<BentoCard size="wide" icon="cloud" title="In your AWS account" href="/aws/overview/">
+One OpenTofu module installs it in your account. There is no hosted version, so your code and your data stay in your account.
+</BentoCard>
+<BentoCard size="wide" icon="moon" title="Asleep when idle, awake as it was" feature="Suspend with the processes where they are; a start resumes them">
+A workspace nobody uses is suspended with its processes where they are, after asking first, and a start resumes them.
+</BentoCard>
+</Bento>
+
+## Proof, not promises
+
+<Stats />
 
 ## Straight answers
 
@@ -47,13 +71,6 @@ A restore from [a memory snapshot](<feature:Snapshots with memory, resumed with 
 Each answer is a limit row of the [status page](/reference/status/), held to the code by a test.
 The rest are on [Limitations](/overview/limitations/).
 
-<StatusCounts />
-
-## Where to go
-
-<CardGrid>
-	<LinkCard title="Evaluate" href="overview/" description="Who Spinbox is for, what it gives you, and why it is built this way." />
-	<LinkCard title="Install" href="aws/overview/" description="What the module creates in your AWS account, what it costs, and how to install it." />
-	<LinkCard title="Use" href="quickstart/" description="Sign in, create a workspace, take a snapshot, change something, see the diff, and go back." />
-	<LinkCard title="Agents" href="use/agents/" description="API keys, JSON output, the OpenAPI document and llms.txt, and a workspace an agent can break and you can undo." />
-</CardGrid>
+<Cta title="Sandboxes you own, from the first snapshot." links={[{ text: 'Evaluate', href: 'overview/', variant: 'primary' }, { text: 'Install on AWS', href: 'aws/overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
+Read what it is for, what it costs to run, and how to install it.
+</Cta>

@@ -1,0 +1,463 @@
+---
+// The landing page's centrepiece: four steps on the left, a terminal on the right that types each
+// step's commands and prints what the diff printed (src/lib/story.ts). It plays by itself once it
+// is in view and a step can be picked; without scripts it is the whole session at once, and with
+// reduced motion asked for a step is shown whole rather than typed.
+import { steps, stepHref, stepOutput } from '../lib/story';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const all = steps.flatMap((s) => s.commands).join('\n');
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// A command, coloured as a shell would: the program, its flags, a quoted argument, a placeholder.
+function command(cmd: string): string {
+	return cmd
+		.split(/('[^']*'|<[^>]+>|\s+)/)
+		.filter(Boolean)
+		.map((t, i) => {
+			const k = i === 0 ? 'prog' : t.startsWith("'") ? 'str' : t.startsWith('<') ? 'ph' : t.startsWith('--') ? 'flag' : '';
+			return k ? `<span class="${k}">${esc(t)}</span>` : esc(t);
+		})
+		.join('');
+}
+// The screen as one string: inside a <pre>, the whitespace a template puts between elements
+// would be on the screen.
+const screen = steps
+	.map(
+		(s, i) =>
+			`<span class="chunk" data-chunk="${i}">` +
+			s.commands.map((c) => `<span class="line cmd"><span class="prompt">$ </span><span class="typed">${command(c)}</span>\n</span>`).join('') +
+			stepOutput(s)
+				.map((o) => {
+					// A line of the diff starts with its kind: Added, Modified, Deleted.
+					const m = o.match(/^(\s*)([AMD])(\s.*)$/);
+					const text = m ? `${esc(m[1])}<span class="kind">${m[2]}</span>${esc(m[3])}` : esc(o);
+					return `<span class="line out" data-change="${m ? m[2] : ''}">${text}\n</span>`;
+				})
+				.join('') +
+			'</span>',
+	)
+	.join('');
+---
+
+<section class="story not-content" data-story>
+	<ol class="steps">
+		{
+			steps.map((s, i) => (
+				<li>
+					<button type="button" class="step" data-step={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+						<span class="num">0{i + 1}</span>
+						<span class="text">
+							<span class="label">{s.label}</span>
+							<span class="title">{s.title}</span>
+							<span class="claim">{s.claim}</span>
+						</span>
+						<span class="bar" aria-hidden="true" />
+					</button>
+					<a class="proof" href={`${base}${stepHref(s)}`}>
+						How we know →
+					</a>
+				</li>
+			))
+		}
+	</ol>
+	<div class="term">
+		<div class="chrome">
+			<span class="lights" aria-hidden="true"><i /><i /><i /></span>
+			<span class="name">demo — spin</span>
+			<button type="button" class="copy" data-copy={all}>Copy commands</button>
+		</div>
+		<pre class="screen" aria-label="The commands and what the diff printed" set:html={screen + '<span class="caret" aria-hidden="true"></span>'} />
+	</div>
+</section>
+
+<script>
+	const CHAR_MS = 22;
+	const OUT_MS = 110;
+	const HOLD_MS = 2600;
+	const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-story]')) {
+		const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const buttons = [...root.querySelectorAll<HTMLButtonElement>('.step')];
+		const chunks = [...root.querySelectorAll<HTMLElement>('.chunk')];
+		const screen = root.querySelector<HTMLElement>('.screen')!;
+		// Each typed command's characters, wrapped so a count of them can be shown.
+		for (const typed of root.querySelectorAll<HTMLElement>('.typed')) {
+			const walker = document.createTreeWalker(typed, NodeFilter.SHOW_TEXT);
+			const texts: Text[] = [];
+			while (walker.nextNode()) texts.push(walker.currentNode as Text);
+			for (const t of texts) {
+				const frag = document.createDocumentFragment();
+				for (const ch of t.data) {
+					const c = document.createElement('span');
+					c.className = 'ch';
+					c.textContent = ch;
+					frag.append(c);
+				}
+				t.replaceWith(frag);
+			}
+		}
+		root.classList.add('armed');
+		let run = 0;
+
+		const select = (i: number) =>
+			buttons.forEach((b, j) => {
+				b.setAttribute('aria-pressed', String(i === j));
+				b.classList.toggle('done', j < i);
+			});
+		const show = (el: Element) => el.classList.add('on');
+		const reset = (el: Element) => el.classList.remove('on');
+
+		async function play(i: number, id: number) {
+			select(i);
+			chunks.forEach((c, j) => {
+				const lines = c.querySelectorAll('.line, .ch');
+				if (j < i) lines.forEach(show);
+				else lines.forEach(reset);
+			});
+			const chunk = chunks[i];
+			const bar = buttons[i].querySelector<HTMLElement>('.bar')!;
+			for (const line of chunk.querySelectorAll<HTMLElement>('.line')) {
+				if (id !== run) return;
+				show(line);
+				screen.scrollTop = screen.scrollHeight;
+				if (line.classList.contains('cmd')) {
+					for (const ch of line.querySelectorAll('.ch')) {
+						if (id !== run) return;
+						show(ch);
+						if (!still) await sleep(CHAR_MS);
+					}
+					if (!still) await sleep(280);
+				} else if (!still) await sleep(OUT_MS);
+			}
+			screen.scrollTop = screen.scrollHeight;
+			if (still) return;
+			bar.style.transitionDuration = `${HOLD_MS}ms`;
+			bar.classList.add('fill');
+			await sleep(HOLD_MS);
+			bar.style.transitionDuration = '0ms';
+			bar.classList.remove('fill');
+			if (id !== run) return;
+			if (i === chunks.length - 1) await sleep(1200);
+			if (id === run) play((i + 1) % chunks.length, id);
+		}
+
+		buttons.forEach((b, i) =>
+			b.addEventListener('click', () => {
+				run++;
+				buttons.forEach((x) => x.querySelector('.bar')?.classList.remove('fill'));
+				play(i, run);
+			}),
+		);
+		root.querySelector<HTMLButtonElement>('.copy')?.addEventListener('click', async (e) => {
+			const b = e.currentTarget as HTMLButtonElement;
+			await navigator.clipboard.writeText(b.dataset.copy ?? '');
+			b.textContent = 'Copied';
+			setTimeout(() => (b.textContent = 'Copy commands'), 1600);
+		});
+		const start = new IntersectionObserver(
+			(entries) => {
+				if (!entries.some((e) => e.isIntersecting)) return;
+				start.disconnect();
+				play(0, run);
+			},
+			{ threshold: 0.3 },
+		);
+		start.observe(root);
+	}
+</script>
+
+<style>
+	.story {
+		display: grid;
+		gap: 2rem;
+		align-items: start;
+		margin-block: 1rem;
+	}
+	/* On a narrow screen the terminal comes first, so what is typed is on screen with the steps. */
+	.term {
+		order: -1;
+	}
+	@media (min-width: 60rem) {
+		.story {
+			grid-template-columns: 5fr 7fr;
+			gap: 3rem;
+		}
+		.term {
+			order: 0;
+		}
+	}
+	.steps {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 0.5rem;
+	}
+	.steps li {
+		position: relative;
+		margin: 0;
+	}
+	.step {
+		all: unset;
+		box-sizing: border-box;
+		position: relative;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1rem;
+		width: 100%;
+		padding: 1rem 1.1rem 1.1rem;
+		border-radius: 14px;
+		border: 1px solid transparent;
+		cursor: pointer;
+		overflow: hidden;
+		transition:
+			background 250ms,
+			border-color 250ms;
+	}
+	.step:hover {
+		background: color-mix(in srgb, var(--sl-color-gray-6) 60%, transparent);
+	}
+	.step:focus-visible {
+		outline: 2px solid var(--sl-color-accent);
+		outline-offset: 2px;
+	}
+	.step[aria-pressed='true'] {
+		background: color-mix(in srgb, var(--sl-color-gray-6) 85%, transparent);
+		border-color: color-mix(in srgb, var(--sl-color-accent) 40%, transparent);
+		box-shadow: 0 10px 40px -18px color-mix(in srgb, var(--spin-brand-blue) 80%, transparent);
+	}
+	.num {
+		font-family: var(--sl-font-mono);
+		font-size: 0.85rem;
+		color: var(--sl-color-gray-4);
+		padding-top: 0.15rem;
+		transition: color 250ms;
+	}
+	.step[aria-pressed='true'] .num,
+	.step.done .num {
+		color: var(--spin-label);
+	}
+	.text {
+		display: grid;
+		gap: 0.2rem;
+	}
+	.label {
+		font-family: var(--sl-font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--sl-color-gray-3);
+	}
+	.title {
+		font-size: 1.15rem;
+		font-weight: 600;
+		color: var(--sl-color-white);
+	}
+	.claim {
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+		display: none;
+	}
+	.step[aria-pressed='true'] .claim,
+	.story:not(.armed) .claim {
+		display: block;
+	}
+	.bar {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		height: 2px;
+		width: 0;
+		background: linear-gradient(90deg, var(--spin-brand-cyan), var(--spin-brand-mint));
+		transition-property: width;
+		transition-timing-function: linear;
+	}
+	.bar.fill {
+		width: 100%;
+	}
+	.proof {
+		position: absolute;
+		right: 1.1rem;
+		top: 1rem;
+		font-size: 0.75rem;
+		font-family: var(--sl-font-mono);
+		color: var(--sl-color-gray-4);
+		text-decoration: none;
+		opacity: 0;
+		transition: opacity 200ms;
+	}
+	li:has(.step[aria-pressed='true']) .proof,
+	.story:not(.armed) .proof {
+		opacity: 1;
+	}
+	.proof:hover {
+		color: var(--sl-color-accent-high);
+	}
+
+	/* The terminal: a window of the brand's navy in either theme, lit from behind. */
+	.term {
+		position: relative;
+		border-radius: 16px;
+		background: #0b1120;
+		border: 1px solid #2a3a58;
+		box-shadow:
+			0 30px 80px -30px color-mix(in srgb, var(--spin-brand-blue) 75%, transparent),
+			0 0 0 1px rgb(255 255 255 / 0.03) inset;
+		overflow: hidden;
+		color-scheme: dark;
+	}
+	.term::before {
+		content: '';
+		position: absolute;
+		inset: -1px;
+		border-radius: inherit;
+		padding: 1px;
+		background: linear-gradient(140deg, var(--spin-brand-cyan), transparent 35%, transparent 65%, var(--spin-brand-blue));
+		-webkit-mask:
+			linear-gradient(#000 0 0) content-box,
+			linear-gradient(#000 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+		opacity: 0.8;
+	}
+	.chrome {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.7rem 1rem;
+		border-bottom: 1px solid #1d2a44;
+		background: #0e1628;
+		font-family: var(--sl-font-mono);
+		font-size: 0.8rem;
+		color: #9aa9c2;
+	}
+	.lights {
+		display: inline-flex;
+		gap: 0.4rem;
+	}
+	.lights i {
+		width: 0.7rem;
+		height: 0.7rem;
+		border-radius: 50%;
+		background: #33435f;
+	}
+	.lights i:first-child {
+		background: #f57ab4;
+	}
+	.lights i:nth-child(2) {
+		background: #ffc857;
+	}
+	.lights i:nth-child(3) {
+		background: #3ddc97;
+	}
+	.name {
+		flex: 1;
+		text-align: center;
+	}
+	.copy {
+		all: unset;
+		cursor: pointer;
+		padding: 0.2rem 0.6rem;
+		border-radius: 6px;
+		border: 1px solid #33435f;
+		color: #c8d3e4;
+		font-size: 0.75rem;
+	}
+	.copy:hover {
+		border-color: #27bfe8;
+		color: #fff;
+	}
+	.copy:focus-visible {
+		outline: 2px solid #27bfe8;
+	}
+	.screen {
+		margin: 0;
+		padding: 1.1rem 1.25rem 1.4rem;
+		min-height: 19rem;
+		max-height: 24rem;
+		overflow: auto;
+		font-family: var(--sl-font-mono);
+		font-size: 0.86rem;
+		line-height: 1.75;
+		color: #e6edf6;
+		background:
+			radial-gradient(60% 50% at 100% 0%, rgb(39 191 232 / 0.08), transparent 70%),
+			radial-gradient(50% 60% at 0% 100%, rgb(95 227 214 / 0.06), transparent 70%);
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+	.screen :global(.prompt) {
+		color: #5fe3d6;
+		user-select: none;
+	}
+	.screen :global(.prog) {
+		color: #27bfe8;
+		font-weight: 500;
+	}
+	.screen :global(.flag) {
+		color: #87d6ef;
+	}
+	.screen :global(.str) {
+		color: #ffc857;
+	}
+	.screen :global(.ph) {
+		color: #b3a5ff;
+	}
+	.screen :global(.out) {
+		color: #c8d3e4;
+	}
+	.screen :global(.out[data-change='A'] .kind) {
+		color: #3ddc97;
+		font-weight: 600;
+	}
+	.screen :global(.out[data-change='M'] .kind) {
+		color: #ffc857;
+		font-weight: 600;
+	}
+	.screen :global(.out[data-change='D'] .kind) {
+		color: #f57ab4;
+		font-weight: 600;
+	}
+	.screen :global(.chunk + .chunk)::before {
+		content: '\A';
+	}
+	.screen :global(.caret) {
+		display: none;
+	}
+
+	/* Armed by the script: nothing is on the screen until it is typed. */
+	.armed :global(.line),
+	.armed :global(.ch) {
+		display: none;
+	}
+	.armed :global(.line.on) {
+		display: inline;
+	}
+	.armed :global(.ch.on) {
+		display: inline;
+	}
+	.armed :global(.chunk + .chunk)::before {
+		content: none;
+	}
+	.armed :global(.caret) {
+		display: inline-block;
+		width: 0.55em;
+		height: 1.1em;
+		vertical-align: text-bottom;
+		background: #5fe3d6;
+		animation: caret 1s step-end infinite;
+	}
+	@keyframes caret {
+		50% {
+			opacity: 0;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.armed :global(.caret) {
+			animation: none;
+		}
+	}
+</style>

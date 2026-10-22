@@ -5,6 +5,7 @@ import { nav } from './nav.mjs';
 import figures from '../data/figures.json';
 import { output } from './output';
 import { statusLine } from './reference';
+import { storyMarkdown } from './story';
 import { twinPath } from './twin';
 
 type Doc = CollectionEntry<'docs'>;
@@ -86,6 +87,21 @@ export function toMarkdown(d: Doc, base: string): string {
 	);
 	body = body.replace(/<\/Aside>/g, '');
 	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
+	// The landing page's parts: the story's steps with their commands, a card as its claim linked
+	// to the row that proves it, the numbers as the sentence they come from, the last word's links.
+	body = body.replace(/<Story\s*\/>/g, () => storyMarkdown());
+	body = body.replace(/<Stats\s*\/>/g, statusLine);
+	body = body.replace(/<\/?Bento>/g, '');
+	body = body.replace(/<BentoCard\s+([^>]*?)>\n?/g, (_, attrs: string) => {
+		const a = (k: string) => attrs.match(new RegExp(`${k}="([^"]*)"`))?.[1];
+		const feature = a('feature');
+		return `- **[${a('title')}](${feature ? featureHref(feature).href : a('href')}).** `;
+	});
+	body = body.replace(/\n?<\/BentoCard>/g, '');
+	body = body.replace(/<Cta\s+title="([^"]*)"\s+links=\{([\s\S]*?)\}>\n?([\s\S]*?)\n?<\/Cta>/g, (_, title: string, list: string, text: string) => {
+		const items = [...list.matchAll(/text:\s*'([^']+)',\s*href:\s*'([^']+)'/g)].map(([, t, h]) => `- [${t}](/${h.replace(/^\//, '')})`);
+		return `**${title}** ${text.trim()}\n\n${items.join('\n')}`;
+	});
 	// A screenshot is its alt text: a twin has no picture to show.
 	body = body.replace(/!\[([^\]]*)\]\([^)]*\.png\)/g, '*Screenshot: $1.*');
 	// What a command prints is the same block of output.
