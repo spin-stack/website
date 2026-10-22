@@ -1,17 +1,22 @@
 ---
 // The landing page's hero: Starlight's, with the drawing of a workspace's disk beside it and the
-// project's name above the title.
+// project's name above the title. The title's second sentence - what Spinbox does, after what it
+// is - carries the brand's gradient.
 import { LinkButton } from '@astrojs/starlight/components';
 import LayerStack from './LayerStack.astro';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, actions = [] } = data.hero || {};
+const cut = title.indexOf('. ');
+const lead = cut < 0 ? title : title.slice(0, cut + 1);
+const rest = cut < 0 ? '' : title.slice(cut + 2);
 ---
 
 <div class="hero">
+	<div class="backdrop" aria-hidden="true"></div>
 	<div class="copy">
-		<p class="eyebrow">spin-stack · self-hosted sandboxes</p>
-		<h1 id="_top" data-page-title set:html={title} />
+		<p class="eyebrow"><span class="dot"></span>spin-stack · self-hosted sandboxes</p>
+		<h1 id="_top" data-page-title>{lead} {rest && <span class="hl">{rest}</span>}</h1>
 		{tagline && <p class="tagline" set:html={tagline} />}
 		<div class="actions">
 			{
@@ -28,10 +33,36 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
 
 <style>
 	.hero {
+		position: relative;
+		isolation: isolate;
 		display: grid;
 		gap: 2rem;
 		align-items: center;
 		padding-block: 2rem 1rem;
+	}
+	/* The brand's three lights behind the hero, over a grid of dots that fades out towards the
+	   edges: the colours of the mark, as a glow rather than as blocks. */
+	.backdrop {
+		position: absolute;
+		inset: -10rem calc(50% - 50vw) -6rem;
+		z-index: -1;
+		pointer-events: none;
+		background:
+			radial-gradient(38% 46% at 78% 42%, color-mix(in srgb, var(--spin-brand-blue) 34%, transparent), transparent 70%),
+			radial-gradient(30% 38% at 92% 18%, color-mix(in srgb, var(--spin-brand-cyan) 26%, transparent), transparent 70%),
+			radial-gradient(34% 40% at 12% 78%, color-mix(in srgb, var(--spin-brand-mint) 14%, transparent), transparent 70%);
+		filter: blur(8px);
+	}
+	.backdrop::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: radial-gradient(color-mix(in srgb, var(--sl-color-gray-3) 38%, transparent) 1px, transparent 1.5px);
+		background-size: 22px 22px;
+		mask-image: radial-gradient(60% 60% at 60% 45%, #000 20%, transparent 75%);
+	}
+	:global([data-theme='light']) .backdrop {
+		opacity: 0.55;
 	}
 	.copy {
 		display: flex;
@@ -39,19 +70,39 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
 		gap: 1.25rem;
 	}
 	.eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
 		font-family: var(--sl-font-mono);
 		font-size: var(--sl-text-sm);
 		color: var(--spin-label);
 		letter-spacing: 0.04em;
 	}
+	.dot {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--spin-label);
+		box-shadow: 0 0 0 0 color-mix(in srgb, var(--spin-label) 60%, transparent);
+	}
 	h1 {
 		font-family: var(--sl-font-mono);
-		font-size: clamp(2rem, 1rem + 3.4vw, 3.4rem);
+		font-size: clamp(2.3rem, 1rem + 3.6vw, 3.9rem);
 		line-height: 1.08;
 		letter-spacing: -0.03em;
 		font-weight: 600;
 		color: var(--sl-color-white);
 		margin: 0;
+	}
+	.hl {
+		background: linear-gradient(100deg, var(--spin-brand-cyan), var(--spin-brand-blue) 55%, var(--spin-brand-mint));
+		background-size: 200% 100%;
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+	:global([data-theme='light']) .hl {
+		background-image: linear-gradient(100deg, #0a6fa3, var(--spin-brand-blue) 55%, var(--spin-brand-deep));
 	}
 	.tagline {
 		font-size: var(--sl-text-lg);
@@ -65,14 +116,69 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
 		gap: 1rem 1.5rem;
 		align-items: center;
 	}
+	.actions :global(.sl-link-button.primary) {
+		box-shadow: 0 0 0 0 transparent;
+		transition:
+			box-shadow 200ms,
+			transform 200ms;
+	}
+	.actions :global(.sl-link-button.primary:hover) {
+		transform: translateY(-1px);
+		box-shadow: 0 8px 28px -6px color-mix(in srgb, var(--sl-color-accent) 70%, transparent);
+	}
 	.art {
 		display: flex;
 		justify-content: center;
 	}
 	@media (min-width: 56rem) {
 		.hero {
-			grid-template-columns: 7fr 5fr;
-			padding-block: 4rem 2rem;
+			grid-template-columns: 3fr 2fr;
+			padding-block: 3.5rem 2rem;
+		}
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.copy > * {
+			animation: hero-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+		}
+		.copy > :nth-child(2) {
+			animation-delay: 80ms;
+		}
+		.copy > :nth-child(3) {
+			animation-delay: 160ms;
+		}
+		.copy > :nth-child(4) {
+			animation-delay: 240ms;
+		}
+		.hl {
+			animation: hero-sheen 8s ease-in-out infinite alternate;
+		}
+		.dot {
+			animation: hero-pulse 2.4s ease-out infinite;
+		}
+		.backdrop {
+			animation: hero-drift 18s ease-in-out infinite alternate;
+		}
+		@keyframes hero-rise {
+			from {
+				opacity: 0;
+				transform: translateY(14px);
+			}
+		}
+		@keyframes hero-sheen {
+			to {
+				background-position: 100% 0;
+			}
+		}
+		@keyframes hero-pulse {
+			70%,
+			100% {
+				box-shadow: 0 0 0 0.6rem transparent;
+			}
+		}
+		@keyframes hero-drift {
+			to {
+				transform: translate3d(-2%, 3%, 0) scale(1.04);
+			}
 		}
 	}
 </style>

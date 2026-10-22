@@ -36,24 +36,9 @@ a[data-feature='built'] {
 	text-underline-offset: 0.2em;
 }
 
-/* The landing page's sections below the hero, on the splash template: each opens with a small
-   label in the mono face across a hairline, and the straight answers sit in a grid. */
-[data-has-hero] .sl-markdown-content {
-	max-width: 64rem;
-}
-[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) {
-	border-top: 1px solid var(--sl-color-hairline-light);
-	padding-top: 2rem;
-	margin-top: 3.5rem;
-}
+/* The straight answers sit in a grid. */
 [data-has-hero] .sl-markdown-content .sl-heading-wrapper > a {
 	display: none;
-}
-[data-has-hero] .sl-markdown-content h2 {
-	font-size: var(--sl-text-sm);
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	color: var(--spin-label);
 }
 [data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) + ul {
 	display: grid;
@@ -126,6 +111,63 @@ h1#_top {
 .sl-markdown-content .sl-anchor-link svg {
 	width: 0.55em;
 	height: 0.55em;
+}
+
+/* The header as glass over the page, on every page. */
+header.header {
+	background-color: color-mix(in srgb, var(--sl-color-bg-nav) 72%, transparent);
+	backdrop-filter: saturate(160%) blur(14px);
+	-webkit-backdrop-filter: saturate(160%) blur(14px);
+}
+
+/* The landing page: its sections a little wider and further apart, their headings large, and
+   nothing past the window's edge from the hero's glow. */
+[data-has-hero] .main-frame {
+	overflow-x: clip;
+}
+[data-has-hero] .sl-markdown-content {
+	max-width: 72rem;
+}
+[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) {
+	border-top: 0;
+	padding-top: 0;
+	margin-top: 6rem;
+}
+[data-has-hero] .sl-markdown-content h2 {
+	font-size: clamp(1.8rem, 1.1rem + 2.6vw, 3rem);
+	text-transform: none;
+	letter-spacing: -0.035em;
+	line-height: 1.08;
+	color: var(--sl-color-white);
+	max-width: 20ch;
+}
+
+/* Each section rises into place as it scrolls into view, where the browser can tie an animation
+   to scrolling; elsewhere it is simply there. */
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		[data-has-hero] .sl-markdown-content > :is(.sl-heading-wrapper, .not-content, ul, p) {
+			animation: rise-in linear both;
+			animation-timeline: view();
+			animation-range: entry 0% entry 40%;
+		}
+	}
+}
+@keyframes rise-in {
+	from {
+		opacity: 0;
+		transform: translateY(32px) scale(0.985);
+	}
+}
+
+/* A move between pages cross-fades, in a browser that can (a document's view transition). */
+@view-transition {
+	navigation: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+	@view-transition {
+		navigation: none;
+	}
 }
 
 /* In dark the mark is a tile of its own ground, rounded; in light it is clear. */

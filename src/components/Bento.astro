@@ -1,0 +1,33 @@
+---
+// The landing page's capabilities, as a grid of cards (BentoCard.astro) under one light that
+// follows the pointer.
+---
+
+<div class="bento not-content" data-bento><slot /></div>
+
+<script>
+	for (const grid of document.querySelectorAll<HTMLElement>('[data-bento]')) {
+		grid.addEventListener('pointermove', (e) => {
+			for (const card of grid.querySelectorAll<HTMLElement>('.card')) {
+				const r = card.getBoundingClientRect();
+				card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+				card.style.setProperty('--my', `${e.clientY - r.top}px`);
+			}
+		});
+	}
+</script>
+
+<style>
+	.bento {
+		display: grid;
+		gap: 1rem;
+		grid-template-columns: 1fr;
+		margin-block: 1.5rem;
+	}
+	@media (min-width: 50rem) {
+		.bento {
+			grid-template-columns: repeat(4, 1fr);
+			grid-auto-rows: minmax(11rem, auto);
+		}
+	}
+</style>

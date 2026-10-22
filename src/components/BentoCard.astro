@@ -1,0 +1,181 @@
+---
+// One of the landing page's capabilities: its claim, and the test or command on spin's feature
+// board that proves it, which the card links to. A card with no row (where Spinbox runs, say)
+// names the page that says it instead. The page's Markdown twin is its title and text.
+import { featureHref } from '../lib/feature-links.mjs';
+import Icon from './Icon.astro';
+
+interface Props {
+	title: string;
+	icon: Parameters<typeof Icon>[0]['name'];
+	feature?: string;
+	href?: string;
+	size?: 'wide' | 'tall' | 'big';
+	art?: 'isolation';
+}
+const { title, icon, feature, href, size, art } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const row = feature ? featureHref(feature) : undefined;
+const to = `${base}${row ? row.href : href}`;
+// e2e:TestAWorkspaceBootsARealGuest -> an end-to-end test's name; cli:exec -> a command.
+const [kind, what] = row ? row.row.proof.split(/:(.*)/s) : [];
+const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}` : kind === 'rpc' ? what.split('/').pop() : undefined;
+---
+
+<a class:list={['card', size]} href={to}>
+	<span class="glow" aria-hidden="true"></span>
+	<span class="icon"><Icon name={icon} /></span>
+	<span class="title">{title}</span>
+	<span class="body"><slot /></span>
+	{
+		art === 'isolation' && (
+			<svg class="art" viewBox="0 0 420 150" aria-hidden="true">
+				{['host', 'kvm', 'its own kernel', 'your workspace'].map((label, i) => (
+					<g>
+						<rect x={8 + i * 34} y={8 + i * 18} width={404 - i * 68} height={134 - i * 36} rx={14 - i * 2} class={`ring r${i}`} />
+						{/* In the strip of each ring below the next one in: the bottom right corner. */}
+						<text x={404 + 8 - i * 34 - 12} y={8 + i * 18 + 134 - i * 36 - (i === 3 ? 9 : 5)} text-anchor="end" class:list={['ring-label', { inner: i === 3 }]}>
+							{label}
+						</text>
+					</g>
+				))}
+			</svg>
+		)
+	}
+	{proof && <span class="proof" title={row?.row.name}>{proof}</span>}
+</a>
+
+<style>
+	.card {
+		position: relative;
+		isolation: isolate;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		padding: 1.4rem 1.4rem 1.2rem;
+		border-radius: 18px;
+		text-decoration: none;
+		color: var(--sl-color-gray-3);
+		background: color-mix(in srgb, var(--sl-color-gray-6) 70%, transparent);
+		border: 1px solid var(--sl-color-hairline-light);
+		overflow: hidden;
+		transition:
+			transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1),
+			border-color 300ms,
+			box-shadow 300ms;
+	}
+	.card:hover,
+	.card:focus-visible {
+		transform: translateY(-4px);
+		border-color: color-mix(in srgb, var(--sl-color-accent) 50%, transparent);
+		box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--spin-brand-blue) 80%, transparent);
+	}
+	.card:focus-visible {
+		outline: 2px solid var(--sl-color-accent);
+		outline-offset: 3px;
+	}
+	/* A light that follows the pointer across the grid (Bento.astro sets where it is). */
+	.glow {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: radial-gradient(22rem circle at var(--mx, -100rem) var(--my, -100rem), color-mix(in srgb, var(--spin-brand-cyan) 16%, transparent), transparent 60%);
+	}
+	.icon {
+		display: inline-grid;
+		place-items: center;
+		width: 2.6rem;
+		height: 2.6rem;
+		border-radius: 12px;
+		color: var(--spin-label);
+		background: linear-gradient(135deg, color-mix(in srgb, var(--spin-brand-cyan) 18%, transparent), color-mix(in srgb, var(--spin-brand-blue) 18%, transparent));
+		border: 1px solid color-mix(in srgb, var(--spin-brand-cyan) 28%, transparent);
+	}
+	.title {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: var(--sl-color-white);
+		letter-spacing: -0.01em;
+	}
+	.body {
+		font-size: var(--sl-text-sm);
+		line-height: 1.6;
+	}
+	.body :global(p) {
+		margin: 0;
+	}
+	/* What a workspace sits inside, drawn as rings: the host, KVM, its own kernel, then it. */
+	.art {
+		margin-top: auto;
+		width: 100%;
+		height: auto;
+		font-family: var(--sl-font-mono);
+	}
+	.ring {
+		fill: color-mix(in srgb, var(--spin-brand-blue) 6%, transparent);
+		stroke: color-mix(in srgb, var(--sl-color-gray-4) 60%, transparent);
+		stroke-width: 1;
+	}
+	.r3 {
+		fill: color-mix(in srgb, var(--spin-brand-cyan) 20%, transparent);
+		stroke: var(--spin-brand-cyan);
+		stroke-width: 1.5;
+	}
+	.ring-label {
+		font-size: 10px;
+		fill: var(--sl-color-gray-3);
+		letter-spacing: 0.05em;
+	}
+	.ring-label.inner {
+		font-size: 12px;
+		fill: var(--sl-color-white);
+	}
+	.card:hover .r3 {
+		filter: drop-shadow(0 0 10px var(--spin-brand-cyan));
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.r3 {
+			animation: ring-breathe 3.2s ease-in-out infinite alternate;
+		}
+		@keyframes ring-breathe {
+			to {
+				fill: color-mix(in srgb, var(--spin-brand-cyan) 32%, transparent);
+			}
+		}
+	}
+	.art + .proof {
+		margin-top: 0;
+	}
+	.proof {
+		margin-top: auto;
+		padding-top: 0.8rem;
+		font-family: var(--sl-font-mono);
+		font-size: 0.72rem;
+		color: var(--sl-color-gray-4);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.proof::before {
+		content: '✓ ';
+		color: var(--spin-success);
+	}
+	@media (min-width: 50rem) {
+		.wide {
+			grid-column: span 2;
+		}
+		.tall {
+			grid-row: span 2;
+		}
+		.big {
+			grid-column: span 2;
+			grid-row: span 2;
+		}
+		.big .title {
+			font-size: 1.6rem;
+		}
+		.big .body {
+			font-size: var(--sl-text-base);
+		}
+	}
+</style>

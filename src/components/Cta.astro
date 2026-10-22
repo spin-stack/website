@@ -1,0 +1,89 @@
+---
+// The landing page's last word: where to go next, on the brand's gradient. Its Markdown twin is
+// the title and the links.
+import { LinkButton } from '@astrojs/starlight/components';
+
+interface Props {
+	title: string;
+	links: { text: string; href: string; variant?: 'primary' | 'secondary' | 'minimal' }[];
+}
+const { title, links } = Astro.props;
+---
+
+<section class="cta not-content">
+	<div class="mesh" aria-hidden="true"></div>
+	<h2>{title}</h2>
+	<p><slot /></p>
+	<div class="links">
+		{
+			links.map(({ text, href, variant = 'secondary' }) => (
+				<LinkButton href={href} variant={variant} icon={variant === 'primary' ? 'right-arrow' : undefined}>
+					{text}
+				</LinkButton>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.cta {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		margin-block: 4rem 1rem;
+		padding: clamp(2.5rem, 2rem + 3vw, 4.5rem) clamp(1.5rem, 1rem + 3vw, 4rem);
+		border-radius: 24px;
+		background: #0b1120;
+		color: #e6edf6;
+		text-align: center;
+		border: 1px solid #2a3a58;
+	}
+	.mesh {
+		position: absolute;
+		inset: -40%;
+		z-index: -1;
+		background: conic-gradient(from 180deg at 50% 50%, #0c3c84, #2f6be3, #27bfe8, #5fe3d6, #0c3c84);
+		filter: blur(70px);
+		opacity: 0.55;
+	}
+	h2 {
+		margin: 0 auto;
+		max-width: 22ch;
+		font-family: var(--sl-font-mono);
+		font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
+		line-height: 1.1;
+		letter-spacing: -0.035em;
+		color: #fff;
+	}
+	p {
+		margin: 1rem auto 2rem;
+		max-width: 40rem;
+		color: #c8d3e4;
+		font-size: var(--sl-text-lg);
+	}
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+	}
+	.links :global(.sl-link-button.secondary) {
+		color: #fff;
+		border-color: rgb(255 255 255 / 0.4);
+	}
+	.links :global(.sl-link-button.primary) {
+		background: #fff;
+		border-color: #fff;
+		color: #0b1120;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.mesh {
+			animation: cta-spin 22s linear infinite;
+		}
+		@keyframes cta-spin {
+			to {
+				transform: rotate(1turn);
+			}
+		}
+	}
+</style>
