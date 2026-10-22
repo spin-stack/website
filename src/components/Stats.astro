@@ -61,7 +61,7 @@ const stats = [
 		grid-template-columns: repeat(2, 1fr);
 		gap: 1px;
 		margin-block: 1.5rem 1rem;
-		border-radius: 18px;
+		border-radius: var(--spin-radius-lg);
 		overflow: hidden;
 		background: var(--sl-color-hairline-light);
 		border: 1px solid var(--sl-color-hairline-light);
@@ -85,10 +85,15 @@ const stats = [
 		line-height: 1;
 		letter-spacing: -0.04em;
 		font-variant-numeric: tabular-nums;
-		background: linear-gradient(120deg, var(--spin-brand-cyan), var(--spin-brand-blue));
+		/* Cyan to mint on the navy; on white the accent to the mark's base, which hold AA where the
+		   mark's cyan is 2:1. */
+		background: linear-gradient(120deg, var(--spin-brand-cyan), var(--spin-brand-mint));
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+	}
+	:global([data-theme='light']) .n {
+		background-image: linear-gradient(120deg, var(--spin-accent), var(--spin-brand-deep));
 	}
 	.label {
 		color: var(--sl-color-white);

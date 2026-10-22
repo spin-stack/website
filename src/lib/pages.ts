@@ -92,6 +92,7 @@ export function toMarkdown(d: Doc, base: string): string {
 	body = body.replace(/<Story\s*\/>/g, () => storyMarkdown());
 	body = body.replace(/<Stats\s*\/>/g, statusLine);
 	body = body.replace(/<\/?Bento>/g, '');
+	body = body.replace(/<Answers\s[^>]*>|<\/Answers>/g, '');
 	body = body.replace(/<BentoCard\s+([^>]*?)>\n?/g, (_, attrs: string) => {
 		const a = (k: string) => attrs.match(new RegExp(`${k}="([^"]*)"`))?.[1];
 		const feature = a('feature');

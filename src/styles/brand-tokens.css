@@ -1,5 +1,5 @@
 /* Written by `task palette` from palette.toml (spin-stack/brand). Edit palette.toml, not this file. */
-:root {
+:root, .spin-dark {
 	--spin-accent: #27BFE8;
 	--spin-accent-text: #27BFE8;
 	--spin-border: #33435F;
@@ -60,4 +60,9 @@
 	--spin-radius-lg: 12px;
 	--spin-target: 24px;
 	--spin-target-touch: 44px;
+	--spin-duration-fast: 120ms;
+	--spin-duration: 200ms;
+	--spin-duration-slow: 400ms;
+	--spin-duration-draw: 700ms;
+	--spin-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
