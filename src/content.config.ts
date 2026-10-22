@@ -8,6 +8,9 @@ import { z } from 'astro/zod';
 export const collections = {
 	docs: defineCollection({
 		loader: docsLoader(),
-		schema: docsSchema({ extend: z.object({ description: z.string().min(20) }) }),
+		// A generated page names its source as repository:path (tools/refgen), which the footer links.
+		schema: docsSchema({
+			extend: z.object({ description: z.string().min(20), source: z.string().regex(/^[\w-]+:\S+$/).optional() }),
+		}),
 	}),
 };

@@ -34,12 +34,12 @@ func cliPages(bin, home string) (map[string][]byte, error) {
 	}
 	pages := map[string][]byte{}
 	var index strings.Builder
-	index.WriteString(frontmatter("CLI", "Every command of the spin CLI, as its own --help says it: workspaces, snapshots, ports, keys, teams and administration.", 0))
+	index.WriteString(frontmatter("spin:cmd/cli", "CLI", "Every command of the spin CLI, as its own --help says it: workspaces, snapshots, ports, keys, teams and administration.", 0))
 	index.WriteString("The `spin` command line, one page per command. Each page is the command's own `--help`, " +
 		"and the help of every command under it.\n\n```\n" + top.text + "```\n\n")
 	for i, c := range top.subs {
 		var b strings.Builder
-		b.WriteString(frontmatter("spin "+c.name, "spin "+c.name+": "+c.short+".", i+1))
+		b.WriteString(frontmatter("spin:cmd/cli", "spin "+c.name, "spin "+c.name+": "+c.short+".", i+1))
 		if err := walk(bin, home, []string{c.name}, &b, 2); err != nil {
 			return nil, err
 		}

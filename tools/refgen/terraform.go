@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -27,7 +28,7 @@ func terraformPages(tf string) (map[string][]byte, error) {
 			return nil, fmt.Errorf("reading %s: %w", m.dir, diags.Err())
 		}
 		var b strings.Builder
-		b.WriteString(frontmatter(m.title, "spin-terraform-aws, "+m.what+".", i+1))
+		b.WriteString(frontmatter("spin-terraform-aws:"+path.Join(m.dir, "variables.tf"), m.title, "spin-terraform-aws, "+m.what+".", i+1))
 		src := "github.com/spin-stack/spin-terraform-aws"
 		if m.dir != "." {
 			src += "//" + m.dir

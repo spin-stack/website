@@ -23,6 +23,9 @@ export default defineConfig({
 			logo: { src: './src/assets/logo.svg' },
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/custom.css'],
+			// A hand-written page is edited here; a generated one names its source instead (Footer.astro).
+			editLink: { baseUrl: 'https://github.com/spin-stack/website/edit/main/' },
+			lastUpdated: true,
 			components: {
 				Banner: './src/components/Banner.astro',
 				Hero: './src/components/Hero.astro',
