@@ -10,7 +10,7 @@ interface Props {
 const { title, links } = Astro.props;
 ---
 
-<section class="cta not-content">
+<section class="cta not-content spin-dark">
 	<div class="mesh" aria-hidden="true"></div>
 	<h2>{title}</h2>
 	<p><slot /></p>
@@ -32,17 +32,17 @@ const { title, links } = Astro.props;
 		overflow: hidden;
 		margin-block: 4rem 1rem;
 		padding: clamp(2.5rem, 2rem + 3vw, 4.5rem) clamp(1.5rem, 1rem + 3vw, 4rem);
-		border-radius: 24px;
-		background: #0b1120;
-		color: #e6edf6;
+		border-radius: var(--spin-radius-lg);
+		background: var(--spin-page);
+		color: var(--spin-text);
 		text-align: center;
-		border: 1px solid #2a3a58;
+		border: 1px solid var(--spin-border);
 	}
 	.mesh {
 		position: absolute;
 		inset: -40%;
 		z-index: -1;
-		background: conic-gradient(from 180deg at 50% 50%, #0c3c84, #2f6be3, #27bfe8, #5fe3d6, #0c3c84);
+		background: conic-gradient(from 180deg at 50% 50%, var(--spin-brand-deep), var(--spin-brand-blue), var(--spin-brand-cyan), var(--spin-brand-mint), var(--spin-brand-deep));
 		filter: blur(70px);
 		opacity: 0.55;
 	}
@@ -53,12 +53,12 @@ const { title, links } = Astro.props;
 		font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
 		line-height: 1.1;
 		letter-spacing: -0.035em;
-		color: #fff;
+		color: var(--spin-brand-frost);
 	}
 	p {
 		margin: 1rem auto 2rem;
 		max-width: 40rem;
-		color: #c8d3e4;
+		color: var(--spin-text);
 		font-size: var(--sl-text-lg);
 	}
 	.links {
@@ -68,22 +68,12 @@ const { title, links } = Astro.props;
 		gap: 1rem;
 	}
 	.links :global(.sl-link-button.secondary) {
-		color: #fff;
-		border-color: rgb(255 255 255 / 0.4);
+		color: var(--spin-brand-frost);
+		border-color: var(--spin-border-strong);
 	}
 	.links :global(.sl-link-button.primary) {
-		background: #fff;
-		border-color: #fff;
-		color: #0b1120;
-	}
-	@media (prefers-reduced-motion: no-preference) {
-		.mesh {
-			animation: cta-spin 22s linear infinite;
-		}
-		@keyframes cta-spin {
-			to {
-				transform: rotate(1turn);
-			}
-		}
+		background: var(--spin-brand-frost);
+		border-color: var(--spin-brand-frost);
+		color: var(--spin-page);
 	}
 </style>

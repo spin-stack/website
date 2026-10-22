@@ -36,29 +36,17 @@ a[data-feature='built'] {
 	text-underline-offset: 0.2em;
 }
 
-/* The straight answers sit in a grid. */
 [data-has-hero] .sl-markdown-content .sl-heading-wrapper > a {
 	display: none;
-}
-[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) + ul {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-	gap: 0.75rem;
-	padding: 0;
-	list-style: none;
-}
-[data-has-hero] .sl-markdown-content .sl-heading-wrapper:has(> h2) + ul > li {
-	margin: 0;
-	padding: 1rem 1.1rem;
-	border: 1px solid var(--sl-color-hairline-light);
-	border-radius: 0.5rem;
-	background: var(--sl-color-gray-6);
-	color: var(--sl-color-gray-2);
 }
 .status-counts {
 	font-family: var(--sl-font-mono);
 	font-size: var(--sl-text-sm);
 	color: var(--sl-color-gray-3);
+}
+/* The release and the commit on code's ground, where gray-3 is under AA. */
+.status-counts code {
+	color: var(--sl-color-gray-2);
 }
 
 /* The sidebar's current page: the accent as a tint, not a block of it. */
@@ -115,9 +103,10 @@ h1#_top {
 
 /* The header as glass over the page, on every page. */
 header.header {
-	background-color: color-mix(in srgb, var(--sl-color-bg-nav) 72%, transparent);
+	background-color: color-mix(in srgb, var(--sl-color-bg-nav) 88%, transparent);
+	/* Unprefixed only: with the -webkit- copy after it, the build's minifier kept that one and
+	   dropped this, and Chrome draws no glass for -webkit-. */
 	backdrop-filter: saturate(160%) blur(14px);
-	-webkit-backdrop-filter: saturate(160%) blur(14px);
 }
 
 /* The landing page: its sections a little wider and further apart, their headings large, and
@@ -156,7 +145,7 @@ header.header {
 @keyframes rise-in {
 	from {
 		opacity: 0;
-		transform: translateY(32px) scale(0.985);
+		transform: translateY(32px);
 	}
 }
 

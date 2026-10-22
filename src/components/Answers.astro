@@ -1,0 +1,61 @@
+---
+// The straight answers - each a limit row of the status page - as a row of cards, an icon on
+// each. The list stays the page's Markdown, so the twin is the same list (src/lib/pages.ts drops
+// the tag); an icon per answer, in order, and a build that fails when the two counts differ.
+import { iconSVG, type IconName } from '../lib/icons';
+
+interface Props {
+	icons: IconName[];
+}
+const { icons } = Astro.props;
+const html = await Astro.slots.render('default');
+const items = html.match(/<li>/g)?.length ?? 0;
+if (items !== icons.length) throw new Error(`<Answers>: ${items} answers and ${icons.length} icons`);
+let n = 0;
+const drawn = html.replace(/<li>/g, () => `<li><span class="icon">${iconSVG(icons[n++])}</span>`);
+---
+
+<div class="answers" set:html={drawn} />
+
+<style>
+	.answers :global(ul) {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 0.75rem;
+		padding: 0;
+		margin: 1.5rem 0 1rem;
+		list-style: none;
+	}
+	.answers :global(li) {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		margin: 0;
+		padding: 1.1rem 1.1rem 1.2rem;
+		border: 1px solid var(--spin-border);
+		border-radius: var(--spin-radius);
+		background: var(--spin-surface);
+		color: var(--spin-muted);
+		font-size: var(--sl-text-sm);
+		transition: border-color var(--spin-duration) var(--spin-ease);
+	}
+	.answers :global(li:hover) {
+		border-color: var(--spin-border-strong);
+	}
+	.answers :global(li strong) {
+		display: block;
+		color: var(--sl-color-white);
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-base);
+		margin-bottom: 0.2rem;
+	}
+	.answers :global(.icon) {
+		display: inline-grid;
+		place-items: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: var(--spin-radius);
+		color: var(--spin-label);
+		background: var(--spin-raised);
+	}
+</style>

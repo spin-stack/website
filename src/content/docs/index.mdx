@@ -6,14 +6,15 @@ hero:
   title: A virtual machine per workspace. A snapshot before, a diff after.
   tagline: Sandboxes for people and agents that run in your own AWS account. Take a snapshot with the memory of the running processes, see exactly which files changed, and roll back. A workspace's network stays closed until you open it.
   actions:
-    - text: Evaluate
-      link: overview/
-      icon: right-arrow
     - text: Install on AWS
       link: aws/overview/
+      icon: right-arrow
+    - text: Evaluate
+      link: overview/
       variant: minimal
 ---
 
+import Answers from '../../components/Answers.astro';
 import Bento from '../../components/Bento.astro';
 import BentoCard from '../../components/BentoCard.astro';
 import Cta from '../../components/Cta.astro';
@@ -62,15 +63,19 @@ A workspace nobody uses is suspended with its processes where they are, after as
 
 ## Straight answers
 
+<Answers icons={['cloud', 'chip', 'kernel', 'nogpu', 'region']}>
+
 - **AWS only.** One OpenTofu module installs Spinbox in your account. There is no hosted version.
 - **x86-64 only.** Runners are x86-64 machines with nested virtualization.
 - **Linux guests only.** A workspace boots the kernel Spinbox provides.
 - **No GPUs.** There is no way to ask for a runner of a particular kind.
 - **One region, one control plane.** An installation lives in one AWS region.
 
+</Answers>
+
 Each answer is a limit row of the [status page](/reference/status/), held to the code by a test.
 The rest are on [Limitations](/overview/limitations/).
 
-<Cta title="Sandboxes you own, from the first snapshot." links={[{ text: 'Evaluate', href: 'overview/', variant: 'primary' }, { text: 'Install on AWS', href: 'aws/overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
+<Cta title="Sandboxes you own, from the first snapshot." links={[{ text: 'Install on AWS', href: 'aws/overview/', variant: 'primary' }, { text: 'Evaluate', href: 'overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
 Read what it is for, what it costs to run, and how to install it.
 </Cta>

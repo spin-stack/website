@@ -90,7 +90,7 @@ const layers = [
 	   machine writes; then what a diff and a restore do with them. */
 	@media (prefers-reduced-motion: no-preference) {
 		.layer {
-			animation: ls-drop 650ms cubic-bezier(0.2, 0.8, 0.25, 1.15) both;
+			animation: ls-drop var(--spin-duration-draw) var(--spin-ease) both;
 			animation-delay: calc(150ms + var(--i) * 180ms);
 		}
 		.verb .bracket {
@@ -104,13 +104,13 @@ const layers = [
 		}
 		.live {
 			animation:
-				ls-write 1.6s linear infinite,
-				ls-fade 400ms ease-out both;
+				ls-write 1.6s linear 3,
+				ls-fade var(--spin-duration-slow) ease-out both;
 		}
 		.live-top {
 			animation:
-				ls-write 1.6s linear infinite,
-				ls-glow 2.4s ease-in-out infinite alternate;
+				ls-write 1.6s linear 3,
+				ls-glow 2.4s ease-in-out 2 alternate;
 		}
 		@keyframes ls-drop {
 			from {
