@@ -43,7 +43,7 @@ Each bullet here is a limit row of that same list, and the build fails when the 
 
 ## Identity and access
 
-- **No multi-factor authentication of Spin's own.** Sign in through GitHub or an OIDC provider
+- **No multi-factor authentication of Spinbox's own.** Sign in through GitHub or an OIDC provider
   that enforces it.
 - **No invitations.** A person must sign in once before they can be added to a team.
 - **Team roles are fixed.** Owner, admin and member.

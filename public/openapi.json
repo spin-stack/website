@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Spin API",
+    "title": "Spinbox API",
     "description": "The control plane's API, spin.v1, generated from its protobuf schema. Every procedure is a Connect unary call: POST a JSON body to /\u003cservice\u003e/\u003cmethod\u003e with `Content-Type: application/json` and `Authorization: Bearer \u003cAPI key\u003e`.",
     "version": "v1"
   },

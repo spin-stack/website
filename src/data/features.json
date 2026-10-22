@@ -645,7 +645,7 @@
 	},
 	{
 		"area": "Access",
-		"name": "No multi-factor authentication of Spin's own",
+		"name": "No multi-factor authentication of Spinbox's own",
 		"state": "limit",
 		"proof": "",
 		"note": "Sign in through a provider that enforces it."

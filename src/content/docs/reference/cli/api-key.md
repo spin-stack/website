@@ -12,7 +12,7 @@ sidebar:
 ```
 Manage API keys for programmatic access.
 
-API keys can be used to authenticate with the Spin API without
+API keys can be used to authenticate with the Spinbox API without
 needing an interactive login. Keys can be scoped to limit their
 permissions.
 

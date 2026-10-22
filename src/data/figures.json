@@ -1,6 +1,6 @@
 {
 	"datapath": {
-		"source": "https://github.com/spin-stack/spin/blob/617175ffdf2bb568cfcacf97874e2287d0ad8a5b/docs/network/datapath",
+		"source": "https://github.com/spin-stack/spin/blob/8eee32b9ddc8d535b3300d0da3927a30b33f22c4/docs/network/datapath",
 		"width": 552,
 		"words": [
 			"How a packet leaves a workspace",
@@ -56,7 +56,7 @@
 		]
 	},
 	"egress-policy": {
-		"source": "https://github.com/spin-stack/spin/blob/617175ffdf2bb568cfcacf97874e2287d0ad8a5b/docs/network/egress-policy",
+		"source": "https://github.com/spin-stack/spin/blob/8eee32b9ddc8d535b3300d0da3927a30b33f22c4/docs/network/egress-policy",
 		"width": 854,
 		"words": [
 			"What the forward chain decides, in order",
@@ -110,7 +110,7 @@
 		]
 	},
 	"installation": {
-		"source": "https://github.com/spin-stack/spin-terraform-aws/blob/3c0100d66e01da34f55266cc09b912fef5fe12bb/docs/diagrams/installation",
+		"source": "https://github.com/spin-stack/spin-terraform-aws/blob/1557e9668c71ef9960433fb1f28d357699f4cd05/docs/diagrams/installation",
 		"width": 0,
 		"words": [
 			"AWS",
@@ -157,7 +157,7 @@
 		]
 	},
 	"isolation": {
-		"source": "https://github.com/spin-stack/spin/blob/617175ffdf2bb568cfcacf97874e2287d0ad8a5b/docs/network/isolation",
+		"source": "https://github.com/spin-stack/spin/blob/8eee32b9ddc8d535b3300d0da3927a30b33f22c4/docs/network/isolation",
 		"width": 499,
 		"words": [
 			"Same address, different segment",
@@ -204,7 +204,7 @@
 		]
 	},
 	"traffic": {
-		"source": "https://github.com/spin-stack/spin/blob/617175ffdf2bb568cfcacf97874e2287d0ad8a5b/docs/security/traffic",
+		"source": "https://github.com/spin-stack/spin/blob/8eee32b9ddc8d535b3300d0da3927a30b33f22c4/docs/security/traffic",
 		"width": 1889,
 		"words": [
 			"Traffic: every arrow is a connection opened in its direction, and nothing else is let in",
