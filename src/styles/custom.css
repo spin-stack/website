@@ -135,3 +135,46 @@ h1#_top {
 	letter-spacing: -0.035em;
 	word-spacing: -0.12em;
 }
+
+/* The columns. Starlight centers the text and gives the table of contents half of whatever width
+   is left, so on a wide screen the right column grew to a third of the window with a dozen short
+   links in it. It keeps a fixed width instead, and the text, a little wider, is centered in what
+   is between the two sidebars. */
+:root {
+	--sl-content-width: 48rem;
+	--spin-toc-width: 17rem;
+}
+@media (min-width: 72rem) {
+	.right-sidebar-container {
+		width: var(--spin-toc-width);
+	}
+	[data-has-sidebar][data-has-toc] .main-pane {
+		--sl-content-margin-inline: auto;
+		width: calc(100% - var(--spin-toc-width));
+	}
+	.right-sidebar-panel {
+		width: auto;
+	}
+	.right-sidebar-panel .sl-container {
+		max-width: none;
+	}
+}
+
+/* A heading's link to itself shows where a reader reaches for it, not beside every heading. */
+.sl-markdown-content .sl-heading-wrapper .sl-anchor-link {
+	opacity: 0;
+	transition: opacity 120ms;
+}
+.sl-markdown-content .sl-heading-wrapper:hover .sl-anchor-link,
+.sl-markdown-content .sl-anchor-link:focus-visible {
+	opacity: 1;
+}
+.sl-markdown-content .sl-anchor-link svg {
+	width: 0.55em;
+	height: 0.55em;
+}
+
+/* The mark is a tile of its own ground: rounded, so it sits on either theme's header. */
+.site-title img {
+	border-radius: 22%;
+}

@@ -3,7 +3,9 @@ import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import { rehypeBaseLinks } from './src/lib/base-links.mjs';
 import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
-import { sidebar } from './src/lib/nav.mjs';
+import starlightImageZoom from 'starlight-image-zoom';
+import starlightSidebarTopics from 'starlight-sidebar-topics';
+import { sidebarTopics } from './src/lib/nav.mjs';
 
 // Where the site is served: a GitHub project page is https://<org>.github.io/<repo>/. The
 // content links from the root, and rehypeBaseLinks puts the base in front.
@@ -20,7 +22,9 @@ export default defineConfig({
 			title: 'Spin',
 			description:
 				'Self-hosted sandboxes in your own AWS account: a virtual machine per workspace, snapshots with memory, rollback, and a diff of what changed.',
-			logo: { src: './src/assets/logo.svg' },
+			// The organization's own mark, the stack of disks from its avatar, cut from the wordmark under it.
+			logo: { src: './src/assets/logo.png', alt: 'Spin' },
+			favicon: '/favicon.png',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/custom.css'],
 			// A hand-written page is edited here; a generated one names its source instead (Footer.astro).
@@ -31,6 +35,7 @@ export default defineConfig({
 				Hero: './src/components/Hero.astro',
 				Head: './src/components/Head.astro',
 				Footer: './src/components/Footer.astro',
+				PageTitle: './src/components/PageTitle.astro',
 			},
 			head: [
 				// The link preview a chat shows: public/og.png, by its absolute address.
@@ -41,7 +46,12 @@ export default defineConfig({
 					attrs: { rel: 'alternate', type: 'text/plain', title: 'llms.txt', href: `${base.replace(/\/$/, '')}/llms.txt` },
 				},
 			],
-			sidebar: sidebar(),
+			plugins: [
+				// The docs, installing, security and the reference each have a sidebar of their own.
+				starlightSidebarTopics(sidebarTopics(), { exclude: ['/'] }),
+				// A diagram or a screenshot opens full size in place (Figure.astro emits its markup).
+				starlightImageZoom(),
+			],
 		}),
 	],
 });
