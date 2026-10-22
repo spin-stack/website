@@ -15,8 +15,8 @@ task --list       # everything else
 ```
 
 `task check` is what CI runs and more: CI cannot read spin while it is private, so the reference
-is checked against checkouts of spin and spin-terraform-aws beside this one (`SPIN=`,
-`TERRAFORM=` to point elsewhere).
+is checked against checkouts of spin, spin-terraform-aws and brand beside this one (`SPIN=`,
+`TERRAFORM=`, `BRAND=` to point elsewhere).
 
 - **Pages** are Markdown under `src/content/docs/`. Every page needs a `description`: it is its
   line in `llms.txt`. A page must be in `src/lib/nav.mjs`, or the build fails. Each group there
@@ -57,10 +57,14 @@ is checked against checkouts of spin and spin-terraform-aws beside this one (`SP
   `llms-full.txt` (every page's Markdown) and a `.md` twin of each page, all from the same
   content (`src/pages/`). The build fails on a twin that still carries MDX: a component, an
   expression or a directive `src/lib/pages.ts` does not translate.
-- **The look** is Spin's own: the spin-stack mark's colors and IBM Plex, served from the site
-  (`src/styles/custom.css`), and a hero that draws a workspace's disk as its layers
-  (`src/components/Hero.astro`, `LayerStack.astro`). `task links` fails a page that loads a script,
-  a stylesheet, a font or an image from another site.
+- **The look** is spin-stack/brand's: its palette, checked there for contrast and perceptual
+  distance on real panels and through colour-vision deficiencies, and the organization's mark.
+  `task reference` copies them from a checkout beside this one (`BRAND=` to point elsewhere) into
+  `src/styles/brand-*.css`, `src/assets/logo.png` and `public/`, and `task reference:check` fails
+  on a copy that is not brand's; `src/styles/custom.css` says only how the site's parts use them.
+  IBM Plex is served from the site, and a hero draws a workspace's disk as its layers
+  (`src/components/Hero.astro`, `LayerStack.astro`). `task links` fails a page that loads a
+  script, a stylesheet, a font or an image from another site.
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spin-stack.github.io` and
   `/website` (a GitHub project page). Content links from the root (`/concepts/network/`) and the
   build puts the base in front; `task links` fails on one it cannot resolve.

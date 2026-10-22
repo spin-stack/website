@@ -27,6 +27,7 @@ func main() {
 func run() error {
 	spin := flag.String("spin", "../spin", "a checkout of spin-stack/spin")
 	tf := flag.String("terraform", "../spin-terraform-aws", "a checkout of spin-stack/spin-terraform-aws")
+	brand := flag.String("brand", "../brand", "a checkout of spin-stack/brand")
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
 	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
@@ -109,6 +110,11 @@ func run() error {
 		return err
 	}
 	stale = append(stale, drawn...)
+	branded, err := brandCopies(*brand, *check)
+	if err != nil {
+		return err
+	}
+	stale = append(stale, branded...)
 	board, err := json.MarshalIndent(rows, "", "\t")
 	if err != nil {
 		return err

@@ -3,9 +3,9 @@
 // machine writes. A snapshot seals the top; a diff compares two; a restore goes back to one. The
 // landing page's hero; its text is the title and description below.
 const layers = [
-	{ y: 270, side: '#0c3c84', top: '#1d4fa8', label: 'image · ubuntu' },
-	{ y: 200, side: '#1d4fa8', top: '#2f6be3', label: 'snapshot · clean' },
-	{ y: 130, side: '#1597c7', top: '#27bfe8', label: 'snapshot · after' },
+	{ y: 270, side: 'var(--spin-brand-deep)', top: 'var(--spin-brand-blue)', label: 'image · ubuntu' },
+	{ y: 200, side: 'var(--spin-brand-deep)', top: 'var(--spin-brand-blue)', label: 'snapshot · clean' },
+	{ y: 130, side: 'var(--spin-brand-blue)', top: 'var(--spin-brand-cyan)', label: 'snapshot · after' },
 ];
 ---
 
@@ -20,8 +20,8 @@ const layers = [
 	{
 		layers.map((l) => (
 			<g transform={`translate(0 ${l.y})`}>
-				<path d="M60 0v34a100 28 0 0 0 200 0V0z" fill={l.side} />
-				<ellipse cx="160" cy="0" rx="100" ry="28" fill={l.top} />
+				<path d="M60 0v34a100 28 0 0 0 200 0V0z" style={`fill: ${l.side}`} />
+				<ellipse cx="160" cy="0" rx="100" ry="28" style={`fill: ${l.top}`} />
 				<line x1="268" x2="300" y1="0" y2="0" class="leader" />
 				<text x="308" y="4" class="label">{l.label}</text>
 			</g>
@@ -45,10 +45,7 @@ const layers = [
 		max-width: 32rem;
 		height: auto;
 		font-family: var(--sl-font-mono);
-		--ls-ink: var(--spin-mint);
-	}
-	:root[data-theme='light'] .layer-stack {
-		--ls-ink: #0b6fa0;
+		--ls-ink: var(--spin-label);
 	}
 	.label {
 		fill: var(--sl-color-gray-2);
