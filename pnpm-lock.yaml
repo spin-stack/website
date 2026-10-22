@@ -26,6 +26,12 @@ importers:
       sharp:
         specifier: ^0.35.5
         version: 0.35.5(@types/node@24.19.0)
+      starlight-image-zoom:
+        specifier: 0.16.2
+        version: 0.16.2(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1))
+      starlight-sidebar-topics:
+        specifier: 0.9.0
+        version: 0.9.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1))
       unist-util-visit:
         specifier: ^5.1.0
         version: 5.1.0
@@ -1754,6 +1760,19 @@ packages:
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
+
+  starlight-image-zoom@0.16.2:
+    resolution: {integrity: sha512-TF3TGjkb3d8hsYE5Hr09vTVAG0SsozNGQRy0Xy29zHqxNZVorrnE7CsddO98M6NA1KbKg4p2sNrCq59COLL80A==}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.42.0'
+      astro: '>=7.2.10'
+
+  starlight-sidebar-topics@0.9.0:
+    resolution: {integrity: sha512-xFwMAAtTVyqsO5DZ8Ldk0vN+2QoPdtjtDi8fbrzvQATIJvIvfaBLL9JzfXAjNHI9vMkj35VMWMd8tTICeO6RIA==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.42.0'
+      astro: ^7.2.10
 
   stringify-entities@4.0.4:
     resolution: {integrity: sha512-IwfBptatlO+QCJUo19AqvrPNqlVMpW9YEL2LIVY+Rpv2qsjCGxaDLNRgeGsQWJhfItebuJhsGSLjaBbNSQ+ieg==}
@@ -4212,6 +4231,24 @@ snapshots:
   source-map@0.7.6: {}
 
   space-separated-tokens@2.0.2: {}
+
+  starlight-image-zoom@0.16.2(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)):
+    dependencies:
+      '@astrojs/starlight': 0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1))
+      astro: 7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)
+      mdast-util-mdx-jsx: 3.2.0
+      rehype-raw: 7.0.0
+      satteri: 0.10.5
+      unist-util-visit: 5.1.0
+      unist-util-visit-parents: 6.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  starlight-sidebar-topics@0.9.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)):
+    dependencies:
+      '@astrojs/starlight': 0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1))
+      astro: 7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@24.19.0)(esbuild@0.28.2)(yaml@2.9.1)
+      picomatch: 4.0.7
 
   stringify-entities@4.0.4:
     dependencies:

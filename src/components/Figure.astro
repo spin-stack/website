@@ -1,6 +1,7 @@
 ---
 // A diagram the source repositories draw (tools/refgen copies them into src/assets/diagrams):
-// shown on a light panel in both themes, as drawn, and opened full size on a click. Its words are
+// shown on a light panel in both themes, as drawn, and zoomed in place by starlight-image-zoom,
+// whose markup this writes: the plugin finds images in Markdown, and this one is a component's. Its words are
 // in src/data/figures.json, which the page's Markdown twin carries instead of the picture.
 import figures from '../data/figures.json';
 
@@ -19,15 +20,22 @@ const style = width ? `width: max(100%, ${width}px)` : 'width: 100%';
 ---
 
 <figure class="spin-figure">
-	<a href={url} title="Open full size"><img src={url} alt={caption} loading="lazy" {style} /></a>
-	<figcaption>{caption} A click opens it full size; <a href={source}>its source</a>.</figcaption>
+	<div class="frame">
+		<starlight-image-zoom-zoomable>
+			<img src={url} alt={caption} loading="lazy" {style} />
+			<button aria-label={`Zoom image: ${caption}`} class="starlight-image-zoom-control">
+				<svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><use href="#starlight-image-zoom-icon-zoom"></use></svg>
+			</button>
+		</starlight-image-zoom-zoomable>
+	</div>
+	<figcaption>{caption} <a href={source}>Its source</a>.</figcaption>
 </figure>
 
 <style>
 	.spin-figure {
 		margin: 1.5rem 0;
 	}
-	.spin-figure > a {
+	.spin-figure > .frame {
 		display: block;
 		background: #fff;
 		border: 1px solid var(--sl-color-hairline-light);
