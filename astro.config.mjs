@@ -42,6 +42,8 @@ export default defineConfig({
 				// The link preview a chat shows: public/og.png, by its absolute address.
 				{ tag: 'meta', attrs: { property: 'og:image', content: `${site}${base.replace(/\/$/, '')}/og.png` } },
 				{ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+				// The mark iOS puts on a home screen.
+				{ tag: 'link', attrs: { rel: 'apple-touch-icon', href: `${base.replace(/\/$/, '')}/apple-touch-icon.png` } },
 				{
 					tag: 'link',
 					attrs: { rel: 'alternate', type: 'text/plain', title: 'llms.txt', href: `${base.replace(/\/$/, '')}/llms.txt` },
