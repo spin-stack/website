@@ -1,0 +1,8 @@
+---
+// The table of contents as Starlight shows it on a phone, at every width: a bar under the header,
+// closed until it is opened, naming the section in view. The right column it replaces held a dozen
+// short links and the width the text now has (custom.css).
+import MobileTableOfContents from '@astrojs/starlight/components/MobileTableOfContents.astro';
+---
+
+{Astro.locals.starlightRoute.toc && <MobileTableOfContents />}

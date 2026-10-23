@@ -37,6 +37,7 @@ export default defineConfig({
 				Head: './src/components/Head.astro',
 				Footer: './src/components/Footer.astro',
 				PageTitle: './src/components/PageTitle.astro',
+				PageSidebar: './src/components/PageSidebar.astro',
 			},
 			head: [
 				// The link preview a chat shows: public/og.png, by its absolute address.
