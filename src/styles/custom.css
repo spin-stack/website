@@ -67,27 +67,29 @@ h1#_top {
 	word-spacing: -0.12em;
 }
 
-/* The columns. Starlight centers the text and gives the table of contents half of whatever width
-   is left, so on a wide screen the right column grew to a third of the window with a dozen short
-   links in it. It keeps a fixed width instead, and the text, a little wider, is centered in what
-   is between the two sidebars. */
+/* The columns. The table of contents is the bar under the header at every width (PageSidebar.astro),
+   so the right column Starlight keeps for it goes, and the text is centered in all that is right
+   of the sidebar. The bar's height is what Starlight pads the page by on a phone. */
 :root {
-	--sl-content-width: 48rem;
-	--spin-toc-width: 17rem;
+	--sl-content-width: 60rem;
 }
 @media (min-width: 72rem) {
+	:root[data-has-toc] {
+		--sl-mobile-toc-height: 3rem;
+	}
+	/* The bar is rendered in the column, and fixed, so the column stays and takes no width. */
 	.right-sidebar-container {
-		width: var(--spin-toc-width);
+		width: 0;
+	}
+	.right-sidebar {
+		position: static;
+		border: 0;
+		padding: 0;
+		height: auto;
 	}
 	[data-has-sidebar][data-has-toc] .main-pane {
 		--sl-content-margin-inline: auto;
-		width: calc(100% - var(--spin-toc-width));
-	}
-	.right-sidebar-panel {
-		width: auto;
-	}
-	.right-sidebar-panel .sl-container {
-		max-width: none;
+		width: 100%;
 	}
 }
 
