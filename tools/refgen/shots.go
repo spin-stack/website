@@ -51,9 +51,10 @@ func specShots(spin string) ([]shot, error) {
 	return out, nil
 }
 
-// checkShots holds the screenshots to the documented release and to the spec, and writes the
-// dashboard's page from them.
-func checkShots(spin, release string, check bool) (bad, stale []string, err error) {
+// checkShots holds the screenshots to the release an installation runs and to the spec, and
+// writes the dashboard's page from them. With no spin checkout (spin is ""), the spec is not
+// read: the release and the pictures are brand's, and checked all the same.
+func checkShots(spin, installs string, check bool) (bad, stale []string, err error) {
 	raw, err := os.ReadFile(shotsData)
 	if err != nil {
 		return nil, nil, err
@@ -62,19 +63,22 @@ func checkShots(spin, release string, check bool) (bad, stale []string, err erro
 	if err := json.Unmarshal(raw, &s); err != nil {
 		return nil, nil, fmt.Errorf("%s: %w", shotsData, err)
 	}
-	if s.Release != release {
-		bad = append(bad, fmt.Sprintf("%s: the dashboard's screenshots are of %s and the site documents %s: run `task screenshots`", shotsData, s.Release, release))
+	if s.Release != installs {
+		bad = append(bad, fmt.Sprintf("%s: the dashboard's screenshots are of %s and installations run %s: run `task screenshots`", shotsData, s.Release, installs))
 	}
-	inSpec, err := specShots(spin)
-	if err != nil {
-		return nil, nil, err
-	}
-	tests := map[string]string{}
-	for _, t := range inSpec {
-		tests[t.Name] = t.Test
+	var tests map[string]string
+	if spin != "" {
+		inSpec, err := specShots(spin)
+		if err != nil {
+			return nil, nil, err
+		}
+		tests = map[string]string{}
+		for _, t := range inSpec {
+			tests[t.Name] = t.Test
+		}
 	}
 	for _, t := range s.Shots {
-		if tests[t.Name] != t.Test {
+		if tests != nil && tests[t.Name] != t.Test {
 			bad = append(bad, fmt.Sprintf("%s: %q is no test of spin's %s that shoots %s: run `task screenshots`", shotsData, t.Test, shotsSpec, t.Name))
 		}
 		if _, err := os.Stat(filepath.Join(shotsDir, t.Name+".png")); err != nil {

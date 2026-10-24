@@ -17,8 +17,15 @@ type feature struct {
 	Area  string `json:"area"`
 	Name  string `json:"name"`
 	State string `json:"state"`
+	// Proof says the feature exists: a procedure, a command or a test by name. It does not say
+	// the feature works; EndToEnd does.
 	Proof string `json:"proof"`
 	Note  string `json:"note"`
+	// EndToEnd is the tests that drive the real stack and check a built row, each as
+	// go:<dir>.<Test> or pw:<spec>:<title>.
+	EndToEnd []string `json:"endToEnd,omitempty"`
+	// EndToEndGap is what no test checks yet, of a built row with no EndToEnd.
+	EndToEndGap string `json:"endToEndGap,omitempty"`
 }
 
 // board is spin's feature board, read from the built CLI so the page cannot say a feature
@@ -30,42 +37,139 @@ func board(bin, home string) ([]feature, error) {
 	if err != nil {
 		return nil, fmt.Errorf("spin features: %w", err)
 	}
+	return decodeBoard(out)
+}
+
+// decodeBoard refuses a field the site does not know: spin adds to the board's format, and a
+// field dropped here is one the pages go on misreading without a word, as the end-to-end tests
+// once were.
+func decodeBoard(raw []byte) ([]feature, error) {
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.DisallowUnknownFields()
 	var rows []feature
-	if err := json.Unmarshal(out, &rows); err != nil {
+	if err := dec.Decode(&rows); err != nil {
 		return nil, fmt.Errorf("spin features: %w", err)
+	}
+	if dec.More() {
+		return nil, fmt.Errorf("spin features: more than one board")
 	}
 	return rows, nil
 }
 
-// statusPage writes the status page from the board: what is built with what proves it, by area,
-// what is partly there and what is missing, what is not built, and the platform's limits. An
-// end-to-end proof links to its test in spin at the documented commit, and refgen fails on a
-// test the tree does not have.
-func statusPage(rows []feature, spin, commit string) (map[string][]byte, error) {
-	tests, err := testFiles(spin)
+// tests is where spin declares each test a row names: a Go test by <dir>.<Test>, a dashboard
+// test by <spec>:<title>, each as path#Lline.
+type tests struct {
+	goTests map[string]string
+	pw      map[string]string
+}
+
+// e2eDir is where an e2e: proof's test lives, as spin's features test resolves it.
+const e2eDir = "internal/e2e"
+
+// specDir is where a pw: test's spec lives.
+const specDir = "dashboard/e2e"
+
+var pwTitle = regexp.MustCompile(`\btest\("([^"]+)"`)
+
+// testFiles is every Go test function in spin and every dashboard test, as tests holds them.
+func testFiles(spin string) (tests, error) {
+	t := tests{goTests: map[string]string{}, pw: map[string]string{}}
+	out, err := git(spin, "grep", "-n", "-E", "^func Test[A-Za-z0-9_]+\\(", "--", "*_test.go")
 	if err != nil {
-		return nil, err
+		return t, err
 	}
+	for _, line := range strings.Split(out, "\n") {
+		path, rest, ok := strings.Cut(line, ":")
+		if !ok {
+			continue
+		}
+		n, decl, _ := strings.Cut(rest, ":")
+		name := strings.TrimPrefix(decl, "func ")
+		name = name[:strings.IndexByte(name, '(')]
+		t.goTests[filepath.Dir(path)+"."+name] = fmt.Sprintf("%s#L%s", path, n)
+	}
+	out, err = git(spin, "grep", "-n", "-F", `test("`, "--", specDir+"/*.spec.ts")
+	if err != nil {
+		return t, err
+	}
+	for _, line := range strings.Split(out, "\n") {
+		path, rest, ok := strings.Cut(line, ":")
+		if !ok {
+			continue
+		}
+		n, text, _ := strings.Cut(rest, ":")
+		for _, m := range pwTitle.FindAllStringSubmatch(text, -1) {
+			t.pw[filepath.Base(path)+":"+m[1]] = fmt.Sprintf("%s#L%s", path, n)
+		}
+	}
+	return t, nil
+}
+
+// statusPage writes the status page from the board: what is built with what shows it exists and
+// what checks it end to end, by area, what is partly there and what is missing, what is not
+// built, and the platform's limits. Every test a row names links to where spin declares it at
+// the documented commit, and refgen fails on a test the tree does not have.
+func statusPage(rows []feature, t tests, commit string) (map[string][]byte, error) {
 	var missing []string
+	blob := func(at string) string {
+		return fmt.Sprintf("https://github.com/spin-stack/spin/blob/%s/%s", commit, at)
+	}
 	link := func(p string) string {
 		kind, what, _ := strings.Cut(p, ":")
 		if kind != "e2e" {
 			return proof(p)
 		}
-		at, ok := tests[what]
+		at, ok := t.goTests[e2eDir+"."+what]
 		if !ok {
-			missing = append(missing, what)
+			missing = append(missing, p)
 			return proof(p)
 		}
-		return fmt.Sprintf("[`%s`](https://github.com/spin-stack/spin/blob/%s/%s), an end-to-end test", what, commit, at)
+		return fmt.Sprintf("[`%s`](%s), a test of `%s`", what, blob(at), e2eDir)
+	}
+	endToEnd := func(r feature) string {
+		if len(r.EndToEnd) == 0 {
+			return "not yet: " + cell(r.EndToEndGap)
+		}
+		var out []string
+		for _, e := range r.EndToEnd {
+			kind, what, _ := strings.Cut(e, ":")
+			switch kind {
+			case "go":
+				i := strings.LastIndex(what, ".")
+				at, ok := t.goTests[what]
+				if i < 0 || !ok {
+					missing = append(missing, e)
+					out = append(out, "`"+e+"`")
+					continue
+				}
+				out = append(out, fmt.Sprintf("[`%s`](%s)", what[i+1:], blob(at)))
+			case "pw":
+				spec, title, _ := strings.Cut(what, ":")
+				at, ok := t.pw[what]
+				if !ok {
+					missing = append(missing, e)
+					out = append(out, "`"+e+"`")
+					continue
+				}
+				out = append(out, fmt.Sprintf("[`%s`](%s): %s", spec, blob(at), cell(title)))
+			default:
+				missing = append(missing, e)
+				out = append(out, "`"+e+"`")
+			}
+		}
+		// One a line: a dashboard test's title has commas of its own.
+		return strings.Join(out, "<br/>")
 	}
 
 	var b strings.Builder
 	b.WriteString(frontmatter("spin:internal/features/features.go", "Status", "What Spinbox does today with what proves each, what is partly there, what is not built, and its limits, each row held to the code.", 0))
 	b.WriteString("Every row of this page is a line of `internal/features` in spin, and a test there resolves " +
-		"its proof against the tree: a procedure the control plane serves, a command the CLI has, or a " +
-		"test the end-to-end lane runs on real machines. A row that says **built** names one; a row that " +
-		"says **not built** is an item of [`docs/ROADMAP.md`](https://github.com/spin-stack/spin/blob/" + commit + "/docs/ROADMAP.md). " +
+		"it against the tree. A row that says **built** names what shows the feature exists - a procedure " +
+		"the control plane serves, a command the CLI has, or a test - and, under **End to end**, the tests " +
+		"that drive a real runner and its guest and check what the feature did, or what no test checks " +
+		"yet. spin's build checks that each of those tests is there and not quarantined; whether it " +
+		"checks the whole feature is its review's. A row that says **not built** is an item of " +
+		"[`docs/ROADMAP.md`](https://github.com/spin-stack/spin/blob/" + commit + "/docs/ROADMAP.md). " +
 		"The page is written by `task reference` from `spin features` at spin `" + commit[:9] + "`, and " +
 		"cannot say a feature the binary does not.\n\n")
 
@@ -82,9 +186,14 @@ func statusPage(rows []feature, spin, commit string) (map[string][]byte, error) 
 		byArea[r.Area] = append(byArea[r.Area], r)
 	}
 	for _, a := range areas {
-		fmt.Fprintf(&b, "### %s\n\n| Feature | Proof |\n|---|---|\n", a)
+		fmt.Fprintf(&b, "### %s\n\n| Feature | Exists | End to end |\n|---|---|---|\n", a)
 		for _, r := range byArea[a] {
-			fmt.Fprintf(&b, "| %s | %s |\n", cell(r.Name), link(r.Proof))
+			name := cell(r.Name)
+			// A built row's note is a caveat on it, which a reader must see beside the claim.
+			if r.Note != "" {
+				name += "<br/>*" + strings.TrimSuffix(cell(r.Note), ".") + ".*"
+			}
+			fmt.Fprintf(&b, "| %s | %s | %s |\n", name, link(r.Proof), endToEnd(r))
 		}
 		b.WriteString("\n")
 	}
@@ -120,29 +229,9 @@ func statusPage(rows []feature, spin, commit string) (map[string][]byte, error) 
 		}
 	}
 	if len(missing) > 0 {
-		return nil, fmt.Errorf("the board names end-to-end tests spin does not have: %v", missing)
+		return nil, fmt.Errorf("the board names tests spin does not have: %v", missing)
 	}
 	return map[string][]byte{filepath.Join("status", "index.md"): []byte(b.String())}, nil
-}
-
-// testFiles is every test function in spin, by name, as the path and line it is declared at.
-func testFiles(spin string) (map[string]string, error) {
-	out, err := git(spin, "grep", "-n", "-E", "^func Test[A-Za-z0-9_]+\\(", "--", "*_test.go")
-	if err != nil {
-		return nil, err
-	}
-	tests := map[string]string{}
-	for _, line := range strings.Split(out, "\n") {
-		path, rest, ok := strings.Cut(line, ":")
-		if !ok {
-			continue
-		}
-		n, decl, _ := strings.Cut(rest, ":")
-		name := strings.TrimPrefix(decl, "func ")
-		name = name[:strings.IndexByte(name, '(')]
-		tests[name] = fmt.Sprintf("%s#L%s", path, n)
-	}
-	return tests, nil
 }
 
 // proof is a proof as the page shows it: the procedure linked to its service's page, the
@@ -158,7 +247,7 @@ func proof(p string) string {
 		top := strings.Fields(what)[0]
 		return fmt.Sprintf("[`spin %s`](/reference/cli/%s/)", what, top)
 	case "e2e":
-		return fmt.Sprintf("`%s`, an end-to-end test", what)
+		return fmt.Sprintf("`%s`, a test of `%s`", what, e2eDir)
 	}
 	return "`" + p + "`"
 }

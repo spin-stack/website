@@ -43,17 +43,38 @@ var viewBox = regexp.MustCompile(`viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)
 var svgText = regexp.MustCompile(`(?s)<text\b[^>]*>(.*?)</text>`)
 var svgTag = regexp.MustCompile(`<[^>]+>`)
 
-// diagramFiles copies each diagram into src/assets/diagrams and writes src/data/figures.json, and
-// says which of them differ from what is on disk. A diagram with no words fails: its twin would
-// say nothing.
-func diagramFiles(spin, tf, spinCommit, tfCommit, assets, data string, check bool) ([]string, error) {
+// checkout is a source repository as refgen reads it: where it is, and the commit it is at.
+type checkout struct{ root, commit string }
+
+// diagramFiles copies each diagram drawn in a repository of from into src/assets/diagrams and
+// writes src/data/figures.json, and says which of them differ from what is on disk. A diagram of
+// a repository from does not name keeps its entry in figures.json as it is, so -only
+// terraform,brand holds spin-terraform-aws's with no spin checkout. A diagram with no words
+// fails: its twin would say nothing.
+func diagramFiles(from map[string]checkout, assets, data string, check bool) ([]string, error) {
+	var kept map[string]figure
 	figures := map[string]figure{}
 	var stale []string
 	for _, d := range diagrams {
-		root, commit := spin, spinCommit
-		if d.repo == "spin-terraform-aws" {
-			root, commit = tf, tfCommit
+		c, ok := from[d.repo]
+		if !ok {
+			if kept == nil {
+				raw, err := os.ReadFile(data)
+				if err != nil {
+					return nil, err
+				}
+				if err := json.Unmarshal(raw, &kept); err != nil {
+					return nil, fmt.Errorf("%s: %w", data, err)
+				}
+			}
+			f, ok := kept[d.name]
+			if !ok {
+				return nil, fmt.Errorf("%s has no %s, and there is no %s checkout to draw it from", data, d.name, d.repo)
+			}
+			figures[d.name] = f
+			continue
 		}
+		root, commit := c.root, c.commit
 		raw, err := os.ReadFile(filepath.Join(root, d.path))
 		if err != nil {
 			return nil, err

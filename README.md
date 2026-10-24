@@ -10,7 +10,7 @@ check that fails the build, or it does not exist. Everything below is one of tho
 ```
 go tool task install      # dependencies, through Socket Firewall (go tool sfw)
 go tool task dev          # http://localhost:4321, live reload
-go tool task gate         # what CI runs: the gates, the install, the build, and every link
+go tool task gate         # what CI runs: the gates, the install, the tests, the public reference, the build, every link
 go tool task check        # the gate, and the reference against the sources
 go tool task exposure     # what this public repository shows: every ref, its PRs and issues
 go tool task --list       # everything else
@@ -21,7 +21,10 @@ without it. `task gate` is what CI runs, its one step: it fails first on an inst
 the firewall (`go tool sfw check`) or a workflow step that is not one task (`go tool taskgate`),
 and `task check` is that and more: CI cannot read spin while it is private, so the reference is
 checked against checkouts of spin, spin-terraform-aws and brand beside this one (`SPIN=`,
-`TERRAFORM=`, `BRAND=` to point elsewhere).
+`TERRAFORM=`, `BRAND=` to point elsewhere). The half that needs no spin is in the gate:
+`task reference:public` fetches spin-terraform-aws and brand into `.sources/`, at the commits
+`src/data/reference.json` records, and runs `refgen -only terraform,brand -check`, which builds
+no CLI and keeps what the site says of spin as `reference.json` has it.
 
 - **The repository is public**, and so is every pull request the moment it is opened.
   `task exposure` (`go tool exposure`) reads every ref's commits, pull request heads included,
@@ -37,17 +40,25 @@ checked against checkouts of spin, spin-terraform-aws and brand beside this one 
   checkouts of spin and spin-terraform-aws beside this one (`SPIN=`, `TERRAFORM=` to point
   elsewhere). Each names its source in its frontmatter (`source: repository:path`), and its footer
   links that source at the documented commit instead of an edit link. Edit the source, not the
-  page. Every page's footer says which spin release the site documents.
+  page. Every page's footer says which spin release an installation runs, and the tree the
+  reference is generated from.
 - **Prose held to spin's own lists**: a page's description is one line of at most 160
   characters (it is its line in `llms.txt`), every `SPIN_` variable a page names is one spin's
   `hack/env-catalog.txt` lists, and the table of states in `concepts/workspaces.md` is the API's
   `WorkspaceState`, both ways. `task reference:check` fails on each.
-- **What the site documents** is `src/data/reference.json`, written by `task reference`: the spin
-  release an installation runs, the commits the reference was generated from, and the feature
-  board's counts, which the landing page shows. Every release a hand-written page names is pinned
-  to that release: `task reference` rewrites it, and `task reference:check` fails on another.
+- **What the site documents** is `src/data/reference.json`, written by `task reference`. Two
+  things it keeps apart: the spin release an installation runs (`spin.installs`, the newest
+  release `images.json` has images of), and the spin commit the reference is generated from
+  (`spin.commit`, with `spin.tag` empty when no release is cut from it, so the site says
+  "generated from spin main at <commit>, not released"). With them, the commits of
+  spin-terraform-aws and brand, and the feature board's counts, which the landing page shows.
+  Every release a hand-written page names is pinned to the one an installation runs:
+  `task reference` rewrites it, and `task reference:check` fails on another.
 - **The status page** `reference/status/` is written from `spin features`, the feature board a
-  test in spin holds to the tree. The bullets of `overview/limitations.md` are its limit rows,
+  test in spin holds to the tree. A built row shows what says it exists, and the tests that check
+  it end to end or what none checks yet (`endToEnd`, `endToEndGap`); the landing page counts the
+  first. refgen fails on a field of the board it does not know, on a built row with both or
+  neither, and on a test spin does not have. The bullets of `overview/limitations.md` are its limit rows,
   and `task reference:check` fails on a bullet that is not one, or a row no bullet leads with.
   The landing page's straight answers are limit rows too, and the check fails on one that is not.
 - **What a page says Spinbox does** is a link to the feature board's row that says so:
@@ -72,7 +83,7 @@ checked against checkouts of spin, spin-terraform-aws and brand beside this one 
   `task reference` copies them from a checkout beside this one (`BRAND=` to point elsewhere) into
   `src/styles/brand-*.css`, `src/assets/` and `public/`, with the app's screenshots, and
   `task reference:check` fails on a copy that is not brand's, on screenshots of another release
-  than the site documents, and on one whose test spin no longer has; `src/styles/custom.css` says only how the site's parts use them.
+  than installations run, and on one whose test spin no longer has; `src/styles/custom.css` says only how the site's parts use them.
   IBM Plex is served from the site, and a hero draws a workspace's disk as its layers, worked
   step by step (`src/components/Hero.astro`, `Disk.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.

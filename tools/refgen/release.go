@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -17,18 +18,29 @@ import (
 // to read: the spin release an installation runs, the commits the reference pages were generated
 // from, and how many rows of the feature board are in each state.
 type reference struct {
-	Spin      sourceRef `json:"spin"`
+	Spin      spinRef   `json:"spin"`
 	Terraform sourceRef `json:"terraform"`
+	Brand     sourceRef `json:"brand"`
 	Counts    counts    `json:"counts"`
 	// OpenAPI is the sha256 of the control plane's OpenAPI document the site serves at
 	// /openapi.json, so a reader can check a copy against it.
 	OpenAPI string `json:"openapiSha256"`
 }
 
+// spinRef keeps apart two things one label once said: the release an installation runs, which
+// the install pages name and images.json must have images of, and the tree the reference is
+// generated from, which can be main ahead of every release.
+type spinRef struct {
+	// Installs is the newest release images.json has images of: what `spin_version` names.
+	Installs string `json:"installs"`
+	// Commit is the commit the reference is generated from.
+	Commit string `json:"commit"`
+	// Tag is Commit's release tag, empty when no release is cut from it.
+	Tag string `json:"tag"`
+}
+
 type sourceRef struct {
-	// Release is the newest release tag the commit reaches: what `spin_version` names.
-	Release string `json:"release,omitempty"`
-	Commit  string `json:"commit"`
+	Commit string `json:"commit"`
 }
 
 type counts struct {
@@ -36,45 +48,144 @@ type counts struct {
 	Partial  int `json:"partial"`
 	NotBuilt int `json:"notBuilt"`
 	Limits   int `json:"limits"`
+	// EndToEnd is the built rows that name a test driving the real stack; Gap, those that say
+	// what no test checks yet. Every built row is one or the other.
+	EndToEnd int `json:"endToEnd"`
+	Gap      int `json:"gap"`
 }
 
-func referenceData(spin, tf string, rows []feature) ([]byte, error) {
-	var r reference
-	var err error
-	if r.Spin.Commit, err = git(spin, "rev-parse", "HEAD"); err != nil {
-		return nil, err
-	}
-	if r.Spin.Release, err = git(spin, "describe", "--tags", "--abbrev=0", "--match", "v[0-9]*"); err != nil {
-		return nil, err
-	}
-	if r.Terraform.Commit, err = git(tf, "rev-parse", "HEAD"); err != nil {
-		return nil, err
-	}
-	doc, err := os.ReadFile(filepath.Join(spin, openAPIPath))
-	if err != nil {
-		return nil, err
-	}
-	r.OpenAPI = fmt.Sprintf("%x", sha256.Sum256(doc))
+// countRows counts the board by state, and refuses a built row that both names end-to-end tests
+// and says none checks it, or does neither: the landing page's number is the first kind, and a
+// row that is neither would fall out of it without a word.
+func countRows(rows []feature) (counts, error) {
+	var c counts
 	for _, f := range rows {
 		switch f.State {
 		case "built":
-			r.Counts.Built++
+			c.Built++
+			switch e2e, gap := len(f.EndToEnd) > 0, f.EndToEndGap != ""; {
+			case e2e && gap:
+				return c, fmt.Errorf("spin features: built row %q names end-to-end tests and says none checks it", f.Name)
+			case e2e:
+				c.EndToEnd++
+			case gap:
+				c.Gap++
+			default:
+				return c, fmt.Errorf("spin features: built row %q names no end-to-end test and no gap", f.Name)
+			}
+			continue
 		case "partial":
-			r.Counts.Partial++
+			c.Partial++
 		case "not":
-			r.Counts.NotBuilt++
+			c.NotBuilt++
 		case "limit":
-			r.Counts.Limits++
+			c.Limits++
 		default:
-			return nil, fmt.Errorf("spin features: row %q has state %q, which the site does not know", f.Name, f.State)
+			return c, fmt.Errorf("spin features: row %q has state %q, which the site does not know", f.Name, f.State)
+		}
+		if len(f.EndToEnd) > 0 || f.EndToEndGap != "" {
+			return c, fmt.Errorf("spin features: %s row %q says what checks it end to end, which only a built row does", f.State, f.Name)
 		}
 	}
+	return c, nil
+}
+
+// spinData is the spin half of reference.json: the commit, its release tag if it has one, the
+// board's counts and the OpenAPI document's digest.
+func spinData(r *reference, spin string, rows []feature) error {
+	var err error
+	if r.Spin.Commit, err = git(spin, "rev-parse", "HEAD"); err != nil {
+		return err
+	}
+	tags, err := git(spin, "tag", "--points-at", "HEAD", "--list", "v[0-9]*")
+	if err != nil {
+		return err
+	}
+	if r.Spin.Tag, err = newest(strings.Fields(tags)); err != nil {
+		return err
+	}
+	doc, err := os.ReadFile(filepath.Join(spin, openAPIPath))
+	if err != nil {
+		return err
+	}
+	r.OpenAPI = fmt.Sprintf("%x", sha256.Sum256(doc))
+	r.Counts, err = countRows(rows)
+	return err
+}
+
+// publicData is the half of reference.json read from the public repositories, which -only
+// terraform,brand writes with no spin checkout: the release an installation runs, and the
+// commits of spin-terraform-aws and brand.
+func publicData(r *reference, tf, brand string) error {
+	raw, err := os.ReadFile(filepath.Join(tf, "images.json"))
+	if err != nil {
+		return err
+	}
+	var all map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &all); err != nil {
+		return fmt.Errorf("images.json: %w", err)
+	}
+	releases := make([]string, 0, len(all))
+	for k := range all {
+		releases = append(releases, k)
+	}
+	if r.Spin.Installs, err = newest(releases); err != nil {
+		return fmt.Errorf("images.json: %w", err)
+	}
+	if r.Spin.Installs == "" {
+		return fmt.Errorf("images.json has no release")
+	}
+	if r.Terraform.Commit, err = git(tf, "rev-parse", "HEAD"); err != nil {
+		return err
+	}
+	r.Brand.Commit, err = git(brand, "rev-parse", "HEAD")
+	return err
+}
+
+// readReference is reference.json as the site has it, for -only terraform,brand to keep its
+// spin half: a field this does not know is one that mode would drop.
+func readReference(path string) (reference, error) {
+	var r reference
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return r, err
+	}
+	dec := json.NewDecoder(bytes.NewReader(raw))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&r); err != nil {
+		return r, fmt.Errorf("%s: %w", path, err)
+	}
+	return r, nil
+}
+
+func (r reference) encode() ([]byte, error) {
 	b, err := json.MarshalIndent(r, "", "\t")
 	if err != nil {
 		return nil, err
 	}
 	return append(b, '\n'), nil
 }
+
+// newest is the latest of releases, by date and then by number: v20261019.10 is after
+// v20261019.9, which comparing the strings would not say. None is "".
+func newest(releases []string) (string, error) {
+	var best string
+	var bestDate, bestN int
+	for _, r := range releases {
+		m := releaseParts.FindStringSubmatch(r)
+		if m == nil {
+			return "", fmt.Errorf("%q is not a release, v<YYYYMMDD>.<N>", r)
+		}
+		date, _ := strconv.Atoi(m[1])
+		n, _ := strconv.Atoi(m[2])
+		if best == "" || date > bestDate || date == bestDate && n > bestN {
+			best, bestDate, bestN = r, date, n
+		}
+	}
+	return best, nil
+}
+
+var releaseParts = regexp.MustCompile(`^v(20\d{6})\.(\d+)$`)
 
 func git(dir string, args ...string) (string, error) {
 	out, err := exec.Command("git", append([]string{"-C", dir}, args...)...).Output()
@@ -87,8 +198,9 @@ func git(dir string, args ...string) (string, error) {
 // releaseName is a spin release as a page writes it: v<YYYYMMDD>.<N>.
 var releaseName = regexp.MustCompile(`\bv20\d{6}\.\d+\b`)
 
-// pinReleases holds every release a hand-written page names to the one the site documents: a
-// page that tells people to install an older one is wrong the day a release ships. Written, it
+// pinReleases holds every release a hand-written page names to the one an installation runs: a
+// page that tells people to install an older one is wrong the day a release ships, and one that
+// names a release images.json has no images of tells them to install what cannot boot. Written, it
 // rewrites them; checked, each is a line to fix with `task reference`.
 func pinReleases(docs, release string, check bool) ([]string, error) {
 	var bad []string
@@ -109,7 +221,7 @@ func pinReleases(docs, release string, check bool) ([]string, error) {
 		for i, line := range bytes.Split(raw, []byte("\n")) {
 			for _, m := range releaseName.FindAll(line, -1) {
 				if string(m) != release {
-					bad = append(bad, fmt.Sprintf("%s:%d: names release %s; the site documents %s", path, i+1, m, release))
+					bad = append(bad, fmt.Sprintf("%s:%d: names release %s; installations run %s", path, i+1, m, release))
 				}
 			}
 		}

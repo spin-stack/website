@@ -17,9 +17,11 @@ const { title, icon, feature, href, size, art } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const row = feature ? featureHref(feature) : undefined;
 const to = `${base}${row ? row.href : href}`;
-// e2e:TestAWorkspaceBootsARealGuest -> an end-to-end test's name; cli:exec -> a command.
-const [kind, what] = row ? row.row.proof.split(/:(.*)/s) : [];
-const proof = kind === 'e2e' ? `e2e · ${what}` : kind === 'cli' ? `spin ${what}` : kind === 'rpc' ? what.split('/').pop() : undefined;
+// The row's first end-to-end test, as go:<dir>.<Test> or pw:<spec>:<title>. A row's proof says
+// only that the feature exists, so a card with no such test shows none.
+const first = (row?.row as { endToEnd?: string[] } | undefined)?.endToEnd?.[0];
+const [kind, what] = first ? first.split(/:(.*)/s) : [];
+const proof = kind === 'go' ? `e2e · ${what.split('.').pop()}` : kind === 'pw' ? `e2e · ${what.split(/:(.*)/s)[1]}` : undefined;
 ---
 
 <a class:list={['card', size]} href={to}>

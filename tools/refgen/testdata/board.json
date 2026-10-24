@@ -1,0 +1,13 @@
+[
+	{"area": "Workspaces", "name": "A machine per workspace", "state": "built", "proof": "e2e:TestAWorkspaceBootsARealGuest",
+		"endToEnd": ["go:internal/e2e.TestAWorkspaceBootsARealGuest"]},
+	{"area": "Workspaces", "name": "Create, start, stop and delete", "state": "built", "proof": "rpc:spin.v1.WorkspaceService/CreateWorkspace",
+		"endToEnd": ["go:cmd/cli.TestE2E_WorkspaceCRUD", "pw:auth.spec.ts:the CLI's device page stands alone, and keeps its code"]},
+	{"area": "Workspaces", "name": "Cores lent while the host has them", "state": "built", "proof": "e2e:TestABusyWorkspaceIsLentCores",
+		"endToEndGap": "memory lent and taken back"},
+	{"area": "Access", "name": "VS Code over SSH", "state": "built", "proof": "cli:code",
+		"note": "spin code itself is run by its unit tests only.", "endToEnd": ["go:internal/e2e.TestTheVSCodeServerAnswers"]},
+	{"area": "Access", "name": "Teams of teams", "state": "partial", "proof": "cli:team", "note": "nesting"},
+	{"area": "Platform", "name": "Windows guests", "state": "not"},
+	{"area": "Platform", "name": "One region per installation", "state": "limit", "note": "AWS only"}
+]

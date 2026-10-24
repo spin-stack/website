@@ -2,7 +2,8 @@ version: '3'
 
 # The site: Astro Starlight under src/, and two Go tools under tools/ - refgen writes the
 # reference pages from the sources they describe, linkcheck fails on a link the build did not
-# produce. SPIN and TERRAFORM are checkouts of spin-stack/spin and spin-stack/spin-terraform-aws.
+# produce. SPIN, TERRAFORM and BRAND are checkouts of spin-stack/spin, spin-stack/spin-terraform-aws
+# and spin-stack/brand.
 
 vars:
   SPIN: '{{.SPIN | default "../spin"}}'
@@ -22,7 +23,7 @@ tasks:
       - pnpm dev
 
   reference:
-    desc: Write the reference pages (CLI, Terraform, config file, API) from the spin and spin-terraform-aws checkouts.
+    desc: Write the reference pages (CLI, Terraform, config file, API) and what the site copies from the spin, spin-terraform-aws and brand checkouts.
     cmds:
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}}
 
@@ -30,6 +31,30 @@ tasks:
     desc: Fail if a reference page is not what the sources say.
     cmds:
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -check
+
+  reference:public:
+    desc: Fail if what the site has of spin-terraform-aws and brand is not what they say at the commits src/data/reference.json records. Needs no spin checkout, nor any credential.
+    # CI cannot check spin out, and this half needs nothing of it: what the site says of spin
+    # stays as reference.json has it, and is held by reference:check.
+    cmds:
+      - task: source
+        vars: { REPO: spin-terraform-aws, COMMIT: '{{(fromJson .REFERENCE).terraform.commit}}' }
+      - task: source
+        vars: { REPO: brand, COMMIT: '{{(fromJson .REFERENCE).brand.commit}}' }
+      - go run ./tools/refgen -only terraform,brand -terraform .sources/spin-terraform-aws -brand .sources/brand -check
+    vars:
+      REFERENCE:
+        sh: cat src/data/reference.json
+
+  source:
+    internal: true
+    desc: Fetch one public spin-stack repository into .sources/ at one commit.
+    status:
+      - test "$(git -C .sources/{{.REPO}} rev-parse HEAD 2>/dev/null)" = "{{.COMMIT}}"
+    cmds:
+      - git init -q .sources/{{.REPO}}
+      - git -C .sources/{{.REPO}} fetch -q --depth 1 https://github.com/spin-stack/{{.REPO}} {{.COMMIT}}
+      - git -C .sources/{{.REPO}} checkout -q --detach FETCH_HEAD
 
   build:
     desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page.
@@ -47,12 +72,14 @@ tasks:
       - go run ./tools/linkcheck -external dist
 
   gate:
-    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet, the build, and every link.
+    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, the reference against the public sources, the build, and every link.
     cmds:
       - go tool sfw check
       - go tool taskgate
       - task: install
       - go vet ./...
+      - go test ./...
+      - task: reference:public
       - task: build
       - task: links
 
