@@ -14,11 +14,19 @@ was cloned from, and are shared with every other workspace cloned from the same 
 layer is the only one written to.
 
 From time to time the runner **seals** the top layer, uploads it to the bucket, and starts a new
-one above it. It does this:
+one above it. This is a **commit**. It happens:
 
-- once about 32 MiB has been written to the top layer,
+- when the oldest write not yet in the bucket reaches the volume's **RPO** (recovery point
+  objective): 5 minutes unless the installation's `volume_rpo_seconds` or the workspace's preset
+  says otherwise (see the [configuration file](/reference/configuration/file/)),
+- once about 1 GiB has been written to the top layer,
 - when a snapshot is taken,
-- when the workspace stops.
+- when the workspace stops. The stop stays `STOPPING` until the layer is in the bucket.
+  `spin workspace stop --force` skips this, and what was written since the last commit stays
+  on the runner alone.
+
+The RPO is how much recent work a runner lost without warning can take with it. An RPO of 0
+turns the age trigger off, and the volume then commits only on size, snapshots and stops.
 
 A snapshot is a sealed layer with a name. A clone is a new volume whose chain points at the
 snapshot's layers. A diff compares two chains. None of these copies a disk.
@@ -59,6 +67,8 @@ A daily job in the control plane removes what nothing refers to any more.
 
 ## Capacity on a runner
 
-A runner keeps volumes on its local NVMe disks. The control plane counts the full size of each
-volume placed on a runner, and does not place a workspace on a runner without room for it. A
-runner whose disk fills past 70% stops taking new workspaces until it is back under 65%.
+A runner keeps volumes on its local NVMe disks. A disk holds what its workspace wrote, not its
+full size, so the control plane charges a runner part of each new volume's size (50% unless
+`disk_reserve_percent` says otherwise) until the volume writes more, and does not place a
+workspace on a runner without room for it. A runner whose disk fills past 70% stops taking new
+workspaces until it is back under 65%.

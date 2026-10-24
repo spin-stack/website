@@ -52,7 +52,7 @@ space.
 | `WAITING` | No runner has room for it yet. On AWS, one is being started. |
 | `STARTING` | A runner is preparing its disk and starting the machine. |
 | `RUNNING` | The machine is up. |
-| `STOPPING` | The machine is shutting down. |
+| `STOPPING` | The machine is shutting down, and then its disk's last writes are uploaded to the bucket. A stop stays here until they are, and says why. |
 | `STOPPED` | Not running. Its disk is kept. |
 | `FAILED` | A start or a stop failed. The state says which part failed. |
 | `QUARANTINED` | An administrator holds it with `spin workspace quarantine`. It does not run until released. |
@@ -64,8 +64,10 @@ until you start it again. `spin workspace status` says why a workspace is not be
 
 ## Stop, suspend, delete
 
-- **Stop** shuts the machine down and keeps the disk. The next start boots from it. Stopping
-  does not take a snapshot.
+- **Stop** shuts the machine down, uploads what the disk wrote since its last commit, and keeps
+  the disk. The next start boots from it. Stopping does not take a snapshot.
+  `spin workspace stop --force` stops the machine without waiting for the guest or the upload,
+  and is also what ends a stop that did not finish.
 - **Suspend** [keeps the running processes](<feature:Suspend with the processes where they are; a start resumes them>): the workspace's memory and disk are saved, and the
   next start resumes from that instant, on any runner that carries the same machine.
 - **Delete** puts the workspace in [the trash](<feature:A trash: a deleted workspace stays whole, for its owner to undelete, until its days are up>), with its disk. `spin workspace deleted` lists the
