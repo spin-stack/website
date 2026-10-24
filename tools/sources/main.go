@@ -6,7 +6,9 @@
 //
 // A private repository is fetched with SOURCES_TOKEN, which reaches git only as GIT_CONFIG_* in
 // the environment of the git commands this runs: nothing is written to a checkout's config, so
-// the steps after this one, which build and run what was fetched, never see it.
+// the steps after this one, which build and run what was fetched, never see it. What a release
+// carries that the site takes as it is - spin's screenshots - is fetched beside its checkout,
+// with the same token, through GitHub's API.
 package main
 
 import (
@@ -76,6 +78,11 @@ func run(ctx context.Context) error {
 		}
 		if err := fetch(ctx, filepath.Join(*dir, n), e, github.GitAuth(token)); err != nil {
 			return fmt.Errorf("%s: %w", n, err)
+		}
+		if a, ok := assets[n]; ok {
+			if err := fetchAsset(ctx, github.New(token), filepath.Join(*dir, a.dir), e, a); err != nil {
+				return fmt.Errorf("%s: %w", n, err)
+			}
 		}
 	}
 	return nil

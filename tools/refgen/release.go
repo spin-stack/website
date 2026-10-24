@@ -220,6 +220,11 @@ var pinned = regexp.MustCompile("\\?ref=([A-Za-z0-9._/-]*)(<[^>\\s`\"]*>?)?|\\bv
 func pinReleases(docs, release, module string, check bool) ([]string, error) {
 	var bad []string
 	err := handPages(docs, func(path string, raw []byte) error {
+		// The dashboard's page names the release its screenshots are of: the one the reference
+		// documents, which installations may not run yet.
+		if rel, _ := filepath.Rel(docs, path); rel == shotsPageDoc {
+			return nil
+		}
 		lines := bytes.Split(raw, []byte("\n"))
 		for i, line := range lines {
 			lines[i] = pinned.ReplaceAllFunc(line, func(m []byte) []byte {

@@ -17,7 +17,6 @@ var brandFiles = []struct{ from, to string }{
 	{"logos/mark-512.png", "public/mark.png"},
 	{"logos/favicon-64.png", "public/favicon.png"},
 	{"logos/apple-touch-icon.png", "public/apple-touch-icon.png"},
-	{"shots/shots.json", "src/data/shots.json"},
 }
 
 func brandCopies(brand string, check bool) ([]string, error) {
@@ -33,39 +32,6 @@ func brandCopies(brand string, check bool) ([]string, error) {
 		}
 		if differs {
 			stale = append(stale, f.to)
-		}
-	}
-	// The app's screenshots, every one brand keeps, and none it does not.
-	pngs, err := filepath.Glob(filepath.Join(brand, "shots", "*.png"))
-	if err != nil {
-		return nil, err
-	}
-	keep := map[string]bool{}
-	for _, p := range pngs {
-		raw, err := os.ReadFile(p)
-		if err != nil {
-			return nil, err
-		}
-		to := filepath.Join(shotsDir, filepath.Base(p))
-		keep[to] = true
-		differs, err := syncFile(to, raw, check)
-		if err != nil {
-			return nil, err
-		}
-		if differs {
-			stale = append(stale, to)
-		}
-	}
-	have, _ := filepath.Glob(filepath.Join(shotsDir, "*.png"))
-	for _, h := range have {
-		if keep[h] {
-			continue
-		}
-		stale = append(stale, h)
-		if !check {
-			if err := os.Remove(h); err != nil {
-				return nil, err
-			}
 		}
 	}
 	return stale, nil

@@ -184,7 +184,9 @@ func TestPagesPinTheModuleAndTheRelease(t *testing.T) {
 		"spin_version = \"v20261019.02\"\n" +
 		"pin one (`?ref=v<YYYYMMDD>.<NN>`)\n" +
 		"`//modules/terminal?ref=v20261001.01` and v20261001.01\n"
-	docs := writePage(t, map[string]string{"aws/overview.mdx": page})
+	// The dashboard's page names its screenshots' release, the documented one.
+	shotsLine := "These screenshots are of spin v20261024.01.\n"
+	docs := writePage(t, map[string]string{"aws/overview.mdx": page, shotsPageDoc: shotsLine})
 	bad, err := pinReleases(docs, "v20261019.02", "v20261024.01", true)
 	if err != nil {
 		t.Fatal(err)
@@ -203,5 +205,8 @@ func TestPagesPinTheModuleAndTheRelease(t *testing.T) {
 		"`//modules/terminal?ref=v20261024.01` and v20261019.02\n"
 	if string(raw) != want {
 		t.Errorf("rewritten:\n%s\nwant:\n%s", raw, want)
+	}
+	if raw, _ := os.ReadFile(filepath.Join(docs, shotsPageDoc)); string(raw) != shotsLine {
+		t.Errorf("the dashboard's page was rewritten to %q", raw)
 	}
 }
