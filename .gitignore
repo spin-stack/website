@@ -21,3 +21,6 @@ pnpm-debug.log*
 .DS_Store
 .vscode/
 
+
+# the public sources task reference:public fetches
+.sources/

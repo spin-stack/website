@@ -1,15 +1,15 @@
 ---
 // The feature board in four numbers, as they are, and the sentence that
 // says where they come from (src/lib/reference.ts). Its Markdown twin is that sentence.
-import board from '../data/features.json';
 import reference from '../data/reference.json';
 import StatusCounts from './StatusCounts.astro';
 
 const { counts } = reference;
-const e2e = board.filter((r) => r.state === 'built' && r.proof.startsWith('e2e:')).length;
 const stats = [
 	{ n: counts.built, label: 'features built', note: 'each with a test or a command that proves it' },
-	{ n: e2e, label: 'proved end to end', note: 'by tests against a real runner' },
+	// Each names a test that is there and not quarantined; until spin checks that a lane runs it
+	// and it does not skip, the tile says "with", not "proved".
+	{ n: counts.endToEnd, label: 'with an end-to-end test', note: 'by tests against a real runner' },
 	{ n: counts.limits, label: 'limits written down', note: 'what it does not do, held to the code' },
 	{ n: counts.notBuilt, label: 'not built yet', note: 'said, not hidden' },
 ];

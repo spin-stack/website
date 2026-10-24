@@ -15,6 +15,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 )
 
 func main() {
@@ -28,6 +29,7 @@ func run() error {
 	spin := flag.String("spin", "../spin", "a checkout of spin-stack/spin")
 	tf := flag.String("terraform", "../spin-terraform-aws", "a checkout of spin-stack/spin-terraform-aws")
 	brand := flag.String("brand", "../brand", "a checkout of spin-stack/brand")
+	only := flag.String("only", "spin,terraform,brand", "the sources to generate from: all three, or terraform,brand, which needs no spin checkout and keeps what the site has of spin")
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
 	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
@@ -39,66 +41,7 @@ func run() error {
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	flag.Parse()
 
-	// The CLI is built once, here, and runs with this empty directory as its HOME.
-	home, err := os.MkdirTemp("", "refgen")
-	if err != nil {
-		return err
-	}
-	defer os.RemoveAll(home)
-	bin, err := buildCLI(*spin, home)
-	if err != nil {
-		return err
-	}
-
-	rows, err := board(bin, home)
-	if err != nil {
-		return err
-	}
-	commit, err := git(*spin, "rev-parse", "HEAD")
-	if err != nil {
-		return err
-	}
-	pages, err := statusPage(rows, *spin, commit)
-	if err != nil {
-		return err
-	}
-	for _, gen := range []func() (map[string][]byte, error){
-		func() (map[string][]byte, error) { return cliPages(bin, home) },
-		func() (map[string][]byte, error) { return terraformPages(*tf) },
-		func() (map[string][]byte, error) { return configPages(*spin) },
-		func() (map[string][]byte, error) { return apiPages(*spin) },
-	} {
-		p, err := gen()
-		if err != nil {
-			return err
-		}
-		for k, v := range p {
-			pages[k] = v
-		}
-	}
-
-	ref, err := referenceData(*spin, *tf, rows)
-	if err != nil {
-		return err
-	}
-	var r reference
-	if err := json.Unmarshal(ref, &r); err != nil {
-		return err
-	}
-	images, err := imagesPage(*tf, r.Spin.Release)
-	if err != nil {
-		return err
-	}
-	security, err := securityPages(*spin, commit)
-	if err != nil {
-		return err
-	}
-	for _, more := range []map[string][]byte{images, security} {
-		for k, v := range more {
-			pages[k] = v
-		}
-	}
-	stale, err := sync(*out, pages, *check)
+	withSpin, err := parseOnly(*only)
 	if err != nil {
 		return err
 	}
@@ -106,7 +49,50 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	drawn, err := diagramFiles(*spin, *tf, commit, tfCommit, *assets, *figuresData, *check)
+	from := map[string]checkout{"spin-terraform-aws": {*tf, tfCommit}}
+	pages, err := terraformPages(*tf)
+	if err != nil {
+		return err
+	}
+	dirs := []string{"terraform"}
+	var r reference
+	var stale, bad []string
+	if withSpin {
+		s, err := spinHalf(*spin, *docs, pages, *outputsDir, *featuresData, *openapi, *check)
+		if err != nil {
+			return err
+		}
+		r, stale, bad = s.ref, s.stale, s.bad
+		from["spin"] = checkout{*spin, r.Spin.Commit}
+		dirs = append(dirs, "status", "cli", "configuration", "api", "security")
+	} else {
+		// The spin half stays as the site has it: what the reference is generated from, and the
+		// board's counts, are spin's to say, and only a run with spin's checkout says them.
+		if r, err = readReference(*data); err != nil {
+			return err
+		}
+		*spin = ""
+	}
+	if err := publicData(&r, *tf, *brand); err != nil {
+		return err
+	}
+	ref, err := r.encode()
+	if err != nil {
+		return err
+	}
+	images, err := imagesPage(*tf, r.Spin.Installs)
+	if err != nil {
+		return err
+	}
+	for k, v := range images {
+		pages[k] = v
+	}
+	written, err := sync(*out, dirs, pages, *check)
+	if err != nil {
+		return err
+	}
+	stale = append(stale, written...)
+	drawn, err := diagramFiles(from, *assets, *figuresData, *check)
 	if err != nil {
 		return err
 	}
@@ -116,52 +102,25 @@ func run() error {
 		return err
 	}
 	stale = append(stale, branded...)
-	printed, err := outputFiles(*spin, *outputsDir, *check)
-	if err != nil {
+	if differs, err := syncFile(*data, ref, *check); err != nil {
 		return err
+	} else if differs {
+		stale = append(stale, *data)
 	}
-	stale = append(stale, printed...)
-	board, err := json.MarshalIndent(rows, "", "\t")
-	if err != nil {
-		return err
-	}
-	doc, err := os.ReadFile(filepath.Join(*spin, openAPIPath))
-	if err != nil {
-		return err
-	}
-	for path, want := range map[string][]byte{*data: ref, *featuresData: append(board, '\n'), *openapi: doc} {
-		if differs, err := syncFile(path, want, *check); err != nil {
-			return err
-		} else if differs {
-			stale = append(stale, path)
-		}
-	}
-	shotBad, shotStale, err := checkShots(*spin, r.Spin.Release, *check)
+	shotBad, shotStale, err := checkShots(*spin, r.Spin.Installs, *check)
 	if err != nil {
 		return err
 	}
 	stale = append(stale, shotStale...)
-	releases, err := pinReleases(*docs, r.Spin.Release, *check)
+	releases, err := pinReleases(*docs, r.Spin.Installs, *check)
 	if err != nil {
 		return err
 	}
-	bad, err := checkCommands(*docs, *spin, bin, home)
-	if err != nil {
-		return err
-	}
-	limits, err := checkLimits(*docs, rows)
-	if err != nil {
-		return err
-	}
-	bad = append(bad, limits...)
 	bad = append(bad, releases...)
 	bad = append(bad, shotBad...)
 	for _, c := range []func() ([]string, error){
 		func() ([]string, error) { return checkDescriptions(*docs) },
-		func() ([]string, error) { return checkEnv(*docs, *spin) },
-		func() ([]string, error) { return checkStates(*docs, pages) },
 		func() ([]string, error) { return checkRepos(*docs) },
-		func() ([]string, error) { return checkFeatureLinks(*docs, rows) },
 	} {
 		b, err := c()
 		if err != nil {
@@ -176,16 +135,123 @@ func run() error {
 	case *check && len(stale) > 0:
 		return fmt.Errorf("out of date, run `task reference`: %v", stale)
 	case len(bad) > 0:
-		return fmt.Errorf("%d lines on the pages that spin does not have", len(bad))
+		return fmt.Errorf("%d lines on the pages that the sources do not have", len(bad))
 	}
 	return nil
 }
 
-// sync makes the generated directories under out hold exactly pages: a page the sources no
+// parseOnly is whether -only takes spin: the half that needs spin's checkout, and builds its
+// CLI, is all or nothing, and the public half - spin-terraform-aws and brand - always runs.
+func parseOnly(only string) (bool, error) {
+	set := map[string]bool{}
+	for _, s := range strings.Split(only, ",") {
+		switch s = strings.TrimSpace(s); s {
+		case "spin", "terraform", "brand":
+			set[s] = true
+		default:
+			return false, fmt.Errorf("-only %s: %q is not spin, terraform or brand", only, s)
+		}
+	}
+	if !set["terraform"] || !set["brand"] {
+		return false, fmt.Errorf("-only %s: terraform and brand are always read; spin is the one to leave out", only)
+	}
+	return set["spin"], nil
+}
+
+// spinWritten is what the spin half wrote and found: its half of reference.json, the files
+// that differ, and the lines of hand-written pages spin does not have.
+type spinWritten struct {
+	ref        reference
+	stale, bad []string
+}
+
+// spinHalf builds spin's CLI and writes, into pages, everything read from spin - the status,
+// CLI, configuration, API and security pages - and the files beside them, then checks the
+// hand-written pages against spin.
+func spinHalf(spin, docs string, pages map[string][]byte, outputsDir, featuresData, openapi string, check bool) (spinWritten, error) {
+	var w spinWritten
+	// The CLI is built once, here, and runs with this empty directory as its HOME.
+	home, err := os.MkdirTemp("", "refgen")
+	if err != nil {
+		return w, err
+	}
+	defer os.RemoveAll(home)
+	bin, err := buildCLI(spin, home)
+	if err != nil {
+		return w, err
+	}
+	rows, err := board(bin, home)
+	if err != nil {
+		return w, err
+	}
+	if err := spinData(&w.ref, spin, rows); err != nil {
+		return w, err
+	}
+	commit := w.ref.Spin.Commit
+	tests, err := testFiles(spin)
+	if err != nil {
+		return w, err
+	}
+	for _, gen := range []func() (map[string][]byte, error){
+		func() (map[string][]byte, error) { return statusPage(rows, tests, commit) },
+		func() (map[string][]byte, error) { return cliPages(bin, home) },
+		func() (map[string][]byte, error) { return configPages(spin) },
+		func() (map[string][]byte, error) { return apiPages(spin) },
+		func() (map[string][]byte, error) { return securityPages(spin, commit) },
+	} {
+		p, err := gen()
+		if err != nil {
+			return w, err
+		}
+		for k, v := range p {
+			pages[k] = v
+		}
+	}
+	printed, err := outputFiles(spin, outputsDir, check)
+	if err != nil {
+		return w, err
+	}
+	w.stale = append(w.stale, printed...)
+	board, err := json.MarshalIndent(rows, "", "\t")
+	if err != nil {
+		return w, err
+	}
+	doc, err := os.ReadFile(filepath.Join(spin, openAPIPath))
+	if err != nil {
+		return w, err
+	}
+	for path, want := range map[string][]byte{featuresData: append(board, '\n'), openapi: doc} {
+		if differs, err := syncFile(path, want, check); err != nil {
+			return w, err
+		} else if differs {
+			w.stale = append(w.stale, path)
+		}
+	}
+	bad, err := checkCommands(docs, spin, bin, home)
+	if err != nil {
+		return w, err
+	}
+	w.bad = bad
+	for _, c := range []func() ([]string, error){
+		func() ([]string, error) { return checkLimits(docs, rows) },
+		func() ([]string, error) { return checkEnv(docs, spin) },
+		func() ([]string, error) { return checkStates(docs, pages) },
+		func() ([]string, error) { return checkFeatureLinks(docs, rows) },
+	} {
+		b, err := c()
+		if err != nil {
+			return w, err
+		}
+		w.bad = append(w.bad, b...)
+	}
+	return w, nil
+}
+
+// sync makes the generated directories dirs under out hold exactly pages: a page the sources no
 // longer produce is removed, since a command that is gone must not keep a page.
-func sync(out string, pages map[string][]byte, check bool) ([]string, error) {
+func sync(out string, dirs []string, pages map[string][]byte, check bool) ([]string, error) {
 	var stale []string
-	for _, dir := range []string{"status", "cli", "terraform", "configuration", "api", "security"} {
+	for _, dir := range dirs {
 		matches, err := filepath.Glob(filepath.Join(out, dir, "*.md"))
 		if err != nil {
 			return nil, err

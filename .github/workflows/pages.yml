@@ -1,9 +1,10 @@
 name: Pages
 
 # Builds the site on every push and pull request with task gate, as a developer does: fails on a
-# broken link or a page without the experimental notice, and publishes main to GitHub Pages. The reference pages are committed, and
-# `task reference:check` holds them to checkouts of spin and spin-terraform-aws; this job runs it
-# once it can check spin out.
+# broken link or a page without the experimental notice, and publishes main to GitHub Pages. The
+# reference pages are committed. The gate holds what they take from spin-terraform-aws and brand,
+# both public, to those repositories at the commits src/data/reference.json records; what they
+# take from spin is held by `task reference:check`, which this job runs once it can check spin out.
 
 on:
   push:
