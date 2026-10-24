@@ -45,10 +45,24 @@ spin code api /srv/app --start
 This opens VS Code with Remote-SSH at the path you name (`/root` by default). It needs the
 `code` command and the Remote-SSH extension.
 
-An installation can publish the VS Code server for recent stable releases of VS Code, so that
-it is already in the workspace and nothing is downloaded when you connect. If your VS Code is
-a version the installation has not published, it downloads its own server into the workspace,
-about 220 MB, and the workspace needs a network policy that lets it.
+VS Code runs a server in the workspace, built for its own commit. An installation's servers
+reach a workspace on a read-only disk its host attaches, and `~/.vscode-server` on the
+workspace's disk holds only links into it, so nothing is downloaded when you connect. Every
+image carries one release's server, and an administrator can publish others from
+**Admin → Storage**.
+
+Before VS Code connects, `spin code` asks the workspace whether it has the server for your
+VS Code. If it has not, and the installation has published that version, the running workspace
+is given it. If the installation has not, it is published first only when the installation
+fetches servers from Microsoft on its own (`vscode_fetch` in the
+[configuration file](/reference/configuration/file/), off by default), which takes minutes the
+first time. Otherwise VS Code downloads its own server into the workspace, about 220 MB, and
+`spin code` says so before connecting.
+
+The server is Microsoft's, and its [licence](https://code.visualstudio.com/license/server)
+allows it for an organization's own internal use only. An installation that offers workspaces
+to others must not carry it: it leaves VS Code to download its own, under a licence each user
+accepts.
 
 Any editor with a remote-over-SSH mode works the same way through `spin ssh-config`.
 
