@@ -306,14 +306,15 @@ func flagsOf(help string) map[string]flagSpec {
 	return flags
 }
 
-// taskNames lists every task spin's Taskfile has. --no-status: listing with status writes the
-// checksums of the tasks it looks at.
+// taskNames lists every task spin's Taskfile has, as the Task spin's go.mod pins reads it: the
+// one its Taskfile is written for, and one CI has without installing a Task of its own.
+// --no-status: listing with status writes the checksums of the tasks it looks at.
 func taskNames(spin string) (map[string]bool, error) {
-	cmd := exec.Command("task", "--list-all", "--json", "--no-status")
+	cmd := exec.Command("go", "tool", "task", "--list-all", "--json", "--no-status")
 	cmd.Dir = spin
 	out, err := cmd.Output()
 	if err != nil {
-		return nil, fmt.Errorf("task --list-all in %s: %w", spin, err)
+		return nil, fmt.Errorf("go tool task --list-all in %s: %w", spin, err)
 	}
 	var list struct {
 		Tasks []struct {
