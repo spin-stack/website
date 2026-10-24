@@ -1,0 +1,30 @@
+name: Exposure
+
+# What this repository shows the world, read every day as go tool exposure reads it: every ref's
+# commits, pull request heads included, for secrets and private values, and the issues, pull
+# requests and comments around them. The repository is public, so a value that lands in a pull
+# request is published the moment it is opened; this is what says so, the next morning.
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  exposure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: What the repository shows
+        env:
+          # The API answers sixty requests an hour without it; the repository's own is enough.
+          GITHUB_TOKEN: ${{ github.token }}
+        run: go tool task exposure

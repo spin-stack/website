@@ -109,7 +109,7 @@ require (
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.8.1 // indirect
-	github.com/spin-stack/go-tools v0.0.0-20261024185510-dfcf2c10f30b // indirect
+	github.com/spin-stack/go-tools v0.0.0-20261024214713-73b6a5169b11 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/stretchr/testify v1.12.1 // indirect
 	github.com/u-root/u-root v0.16.0 // indirect
@@ -150,6 +150,7 @@ require (
 
 tool (
 	github.com/go-task/task/v3/cmd/task
+	github.com/spin-stack/go-tools/cmd/exposure
 	github.com/spin-stack/go-tools/cmd/sfw
 	github.com/spin-stack/go-tools/cmd/taskgate
 )

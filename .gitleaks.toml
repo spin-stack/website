@@ -1,0 +1,11 @@
+# What gitleaks' default rules find in this repository that is no secret, each with why: go tool
+# exposure reads every ref with it (task exposure), as the repository's own config. History
+# cannot be rewritten, so a value it holds is answered here and not at its line.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "reference.json's openapiSha256: the digest of the API document the site serves, written by task reference"
+regexTarget = "line"
+regexes = ['''"openapiSha256": "[0-9a-f]{64}"''']

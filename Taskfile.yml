@@ -56,6 +56,14 @@ tasks:
       - task: build
       - task: links
 
+  exposure:
+    desc: What this repository shows the world - every ref's commits, pull request heads included, and its issues, pull requests and comments - against .github/exposure-allow.txt.
+    # The repository is public: a value that lands in a pull request is published the moment the
+    # pull request is opened. The private repositories are named, so this finds what the daily
+    # workflow does, whose token sees none of the organization's.
+    cmds:
+      - go tool exposure -allow .github/exposure-allow.txt -gitleaks-config .gitleaks.toml -private ami,ci,shipset,skills,spin,spinbox.dev-deploy spin-stack/website
+
   check:
     desc: Everything CI runs, and the reference against the sources.
     cmds:

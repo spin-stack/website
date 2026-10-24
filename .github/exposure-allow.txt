@@ -1,0 +1,25 @@
+# What go tool exposure finds in this repository that is public on purpose, each with why (task
+# exposure, run every day by .github/workflows/exposure.yml). A value and not a line: history
+# cannot be rewritten, so a value it holds is answered once, wherever it recurs. A secret gitleaks
+# reports by mistake is answered in .gitleaks.toml instead.
+
+author-email aledbf@gmail.com  # the maintainer's commit address, in every commit already
+
+# Kept on purpose while spin and ami stay private: the reference and status pages link to the
+# code they are generated from, and those links resolve the day the repositories go public.
+private-repo-link github.com/spin-stack/spin  # spin's code, which the reference and status pages are generated from
+private-repo-link github.com/spin-stack/ami  # the repository that signs the images the install pages name
+
+# The product's own addresses and names, which the pages document.
+private-ip 10.20.0.0  # an egress rule's example in spin's CLI help (reference/cli/team)
+private-ip 10.42.0.0  # the install module's default VPC CIDR (reference/terraform)
+private-ip 10.255.255.1  # the egress link's host end in spin's datapath diagram
+private-ip 10.255.255.2  # the egress link's workspace end in spin's datapath diagram
+private-ip 10.255.0.0  # a workspace's network in spin's datapath diagram
+private-ip 10.255.0.1  # a workspace's gateway in spin's isolation diagram
+private-ip 10.255.0.2  # a workspace's address in spin's isolation diagram
+private-ip 10.255.1.1  # a second workspace's gateway in spin's isolation diagram
+private-ip 10.255.1.2  # a second workspace's address in spin's isolation diagram
+internal-host spin.internal  # an installation's private DNS zone (aws/network)
+internal-host cp.spin.internal  # the control plane's name in that zone (aws/network)
+internal-host proxy.spin.internal  # the proxy's name in that zone (aws/network)
