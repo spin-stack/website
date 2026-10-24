@@ -1,11 +1,13 @@
 {
 	"spin": {
 		"installs": "v20261019.02",
-		"commit": "0677b0410423d07e9a4623a22fc8e0ececc6f5e0",
-		"tag": ""
+		"commit": "77380b13da641c24e3f79b9c7586c39888f4e7ba",
+		"tag": "",
+		"machine": "v20261014.01"
 	},
 	"terraform": {
-		"commit": "c62c57c8060a8cb9ef28e69836bac62bf2672c3a"
+		"commit": "3df623f0ca2b7f91650e0ac857ba0bde295e0481",
+		"release": "v20261024.01"
 	},
 	"brand": {
 		"commit": "c882b6f0f3901787525ef16ef29058c9c1418cbe"
