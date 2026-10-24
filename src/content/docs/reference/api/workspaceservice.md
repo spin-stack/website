@@ -373,7 +373,7 @@ Who the workspace is outside spin: the identity its tokens and signatures carry,
 | `spiffeId` | string | The workspace's SPIFFE ID, spiffe://&lt;domain>/t/&lt;team>/w/&lt;workspace>: every subject in it is under it - the user's at /u, each agent's at /a/&lt;name> - so a relying party names the workspace by it as a prefix. |
 | `userSubject` | string | The workspace user's subject, what its tokens and signatures carry. |
 | `issuer` | string | The issuer its tokens name, https://id.&lt;domain>, where the key set and the allowed signers are. |
-| `parentSnapshotId` | string | What the workspace was cloned from: the snapshot, and the workspace whose disk it was when that is still there and of the same team. Empty for a workspace made from an image. |
+| `parentSnapshotId` | string | What the workspace was cloned from: the snapshot, and the workspace whose disk it was when that is still there and of the same team. A workspace made from an image is cloned from the image's snapshot, and no workspace's: the snapshot is named and the workspace is empty. |
 | `parentWorkspaceId` | string |  |
 | `audiences` | list of string | Who the installation gives identities for; empty is anybody. |
 
@@ -549,6 +549,7 @@ List snapshots for a workspace
 |---|---|---|
 | `snapshots` | list of [Snapshot](/reference/api/types/#snapshot) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
+| `baseSnapshotId` | string | What the workspace's disk is cloned from now: the snapshot last restored to, or the one it was cloned from - for a workspace made from an image, that image's. Empty for a disk that was not cloned. |
 
 ## ListWorkspaceQuarantineDenials
 

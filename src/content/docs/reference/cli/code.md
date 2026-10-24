@@ -18,7 +18,9 @@ VS Code. When it has not, it is given it while it runs - published first if this
 has not got that version, which takes minutes once and is said as it goes. Where that cannot
 be done, VS Code downloads its own server into the workspace (about 220 MB), which this says.
 
-Needs VS Code's 'code' command and the Remote-SSH extension.
+Needs VS Code's 'code' command and the Remote-SSH extension. The server an installation
+carries is Microsoft's, licensed for internal use only: one that sells workspaces to others
+leaves VS Code to download its own.
 
 Examples:
   spin code my-workspace
