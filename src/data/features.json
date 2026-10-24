@@ -4,133 +4,191 @@
 		"name": "A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH",
 		"state": "built",
 		"proof": "e2e:TestAWorkspaceBootsARealGuest",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceBootsARealGuest"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Create, start, stop and delete",
 		"state": "built",
 		"proof": "rpc:spin.v1.WorkspaceService/CreateWorkspace",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_WorkspaceCRUD"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "A trash: a deleted workspace stays whole, for its owner to undelete, until its days are up",
 		"state": "built",
 		"proof": "e2e:TestAWorkspaceWhoseDaysInTheTrashAreUpIsErasedFromItsHost",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestATrashedWorkspaceIsWholeWhenItsOwnerUndeletesIt",
+			"go:internal/e2e.TestAWorkspaceWhoseDaysInTheTrashAreUpIsErasedFromItsHost"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Idle suspend, with a question before it that a keep answers",
 		"state": "built",
 		"proof": "e2e:TestAWorkspaceIsAskedBeforeItsSuspensionAndAKeepAnswersIt",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceIsAskedBeforeItsSuspensionAndAKeepAnswersIt"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "A workspace that ran as long as the installation allows is suspended",
 		"state": "built",
 		"proof": "e2e:TestAWorkspaceThatRanForAsLongAsAllowedIsSuspended",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceThatRanForAsLongAsAllowedIsSuspended"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "A process inside holds its workspace awake while it lives",
 		"state": "built",
 		"proof": "e2e:TestAProcessHoldsItsWorkspaceAwakeWhileItLives",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAProcessHoldsItsWorkspaceAwakeWhileItLives"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Suspend with the processes where they are; a start resumes them",
 		"state": "built",
 		"proof": "e2e:TestAWorkspaceNobodyUsesIsSuspendedAndAStartResumesIt",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_ASuspendedWorkspaceResumesWhereItWas",
+			"go:internal/e2e.TestAWorkspaceNobodyUsesIsSuspendedAndAStartResumesIt"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Cores and memory lent while the host has them, and taken back",
 		"state": "built",
 		"proof": "e2e:TestABusyWorkspaceIsLentCoresAndGivesThemBack",
-		"note": ""
+		"note": "",
+		"endToEndGap": "memory lent and taken back, and a loan refused while the host is full"
 	},
 	{
 		"area": "Workspaces",
 		"name": "A grant of cores and memory of its own, for a while",
 		"state": "built",
 		"proof": "e2e:TestAGrantWhoseTimeIsUpIsGivenBackToTheMachine",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAGrantWhoseTimeIsUpIsGivenBackToTheMachine"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Move a running workspace to another host, its processes as they are",
 		"state": "built",
 		"proof": "e2e:TestHostsAMoveTakesARunningWorkspaceToAnotherHost",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestHostsAMoveTakesARunningWorkspaceToAnotherHost"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Clone a workspace: its disk, team, project, size, policies and environment, in one",
 		"state": "built",
 		"proof": "e2e:TestACloneHoldsWhatItsSourceWroteAndItsShape",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestACloneHoldsWhatItsSourceWroteAndItsShape"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "Open a repository, branch, commit or pull request from its URL, in the dashboard (/launch) and from the terminal",
 		"state": "built",
 		"proof": "cli:open --no-connect",
-		"note": ""
+		"note": "From the terminal; the dashboard's /launch page makes the same create and has no test of its own against the stack.",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AURLOpensTheWorkspaceItNames"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "A workspace opened at a commit or a pull request, checked out as pr-\u003cn\u003e",
 		"state": "built",
 		"proof": "e2e:TestAProjectsWorkspaceOpensAtTheCommitItWasAskedFor",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAProjectsWorkspaceOpensAtTheCommitItWasAskedFor",
+			"go:cmd/cli.TestE2E_AURLOpensTheWorkspaceItNames"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Recover a workspace whose host is gone, at a cost its owner accepts",
 		"state": "built",
 		"proof": "e2e:TestHostsAWorkspaceWhoseHostIsGoneIsRecoveredOnAnother",
-		"note": ""
+		"note": "",
+		"endToEndGap": "the cost asked of the owner before a recovery, and what was written after the snapshot gone"
 	},
 	{
 		"area": "Workspaces",
 		"name": "A workspace outlives its runner",
 		"state": "built",
 		"proof": "e2e:TestAWorkspaceOutlivesItsRunner",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceOutlivesItsRunner"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Quarantine, by an administrator",
 		"state": "built",
 		"proof": "rpc:spin.v1.WorkspaceService/QuarantineWorkspace",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AQuarantinedWorkspaceIsHeldUntilReleased"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Why a workspace is not behaving: status, console, history",
 		"state": "built",
 		"proof": "cli:workspace status",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AQuarantinedWorkspaceIsHeldUntilReleased",
+			"go:cmd/cli.TestE2E_AWorkspacesConsoleIsWhatItsMachinePrinted"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "The owner's shell, environment, editor settings, Taskfile and dotfiles reach the guest",
 		"state": "built",
 		"proof": "e2e:TestAWorkspacesOwnEnvironmentIsInItsOwnersLoginShell",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestTheOwnersSettingsArriveInTheGuest",
+			"go:internal/e2e.TestAWorkspacesOwnEnvironmentIsInItsOwnersLoginShell"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Reset a disk to what it was created from",
 		"state": "built",
 		"proof": "cli:workspace reset",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_ResetPutsAWorkspaceBackToWhatItWasCreatedFrom"
+		]
 	},
 	{
 		"area": "Workspaces",
@@ -151,357 +209,506 @@
 		"name": "Snapshots of a running workspace's disk",
 		"state": "built",
 		"proof": "rpc:spin.v1.WorkspaceService/CreateSnapshot",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestACloneHoldsWhatItsSourceWroteAndItsShape",
+			"go:internal/e2e.TestADiskSnapshottedPastTheThresholdIsCompactedWhileItRuns"
+		]
 	},
 	{
 		"area": "Snapshots",
 		"name": "Snapshots with memory, resumed with their processes",
 		"state": "built",
 		"proof": "e2e:TestARunningWorkspaceResumesFromASnapshotsMemory",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestARunningWorkspaceResumesFromASnapshotsMemory"
+		]
 	},
 	{
 		"area": "Snapshots",
 		"name": "Restore a workspace to a snapshot",
 		"state": "built",
 		"proof": "e2e:TestARestoredWorkspaceBootsOnTheSnapshotItWasRestoredTo",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestARestoredWorkspaceBootsOnTheSnapshotItWasRestoredTo"
+		]
 	},
 	{
 		"area": "Snapshots",
 		"name": "A diff of the files that changed between two snapshots",
 		"state": "built",
 		"proof": "e2e:TestADiffOfTwoSnapshotsIsWhatChangedBetweenThem",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestADiffOfTwoSnapshotsNamesWhatWasAddedChangedAndRemoved"
+		]
 	},
 	{
 		"area": "Snapshots",
 		"name": "Share a snapshot with a person or make it public, and create a workspace from it",
 		"state": "built",
 		"proof": "e2e:TestACloneOfASnapshotRegistersAsItself",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestASharedSnapshotIsCreatedFromByThePersonItIsSharedWith"
+		]
 	},
 	{
 		"area": "Snapshots",
 		"name": "What looks like a credential is found before a share, and the share refused unless acknowledged",
 		"state": "built",
 		"proof": "rpc:spin.v1.ShareService/ShareSnapshot",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_ASharedSnapshotIsScannedForCredentials"
+		]
 	},
 	{
 		"area": "Snapshots",
 		"name": "A long chain is compacted while the workspace runs",
 		"state": "built",
 		"proof": "e2e:TestADiskSnapshottedPastTheThresholdIsCompactedWhileItRuns",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestADiskSnapshottedPastTheThresholdIsCompactedWhileItRuns"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "Egress is closed by default; policies, by tag, name what a workspace may reach",
 		"state": "built",
 		"proof": "e2e:TestAnOwnerMayOnlyChooseAPolicyTheInstallationDeclares",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceNamedNoPolicyReachesNothing",
+			"go:internal/e2e.TestChangingAWorkspacesPoliciesReachesTheHostThatRunsIt"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "A policy changed reaches the host that runs the workspace",
 		"state": "built",
 		"proof": "e2e:TestChangingAWorkspacesPoliciesReachesTheHostThatRunsIt",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAnEditedPolicyChangesWhatARunningGuestReaches",
+			"go:internal/e2e.TestChangingAWorkspacesPoliciesReachesTheHostThatRunsIt"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role",
 		"state": "built",
 		"proof": "cli:team secret set",
-		"note": ""
+		"note": "",
+		"endToEndGap": "the forge, identity and cloud role injections, and the secret's value seen at the origin"
 	},
 	{
 		"area": "Network",
 		"name": "A workspace trusts the egress root only by its owner's word",
 		"state": "built",
 		"proof": "e2e:TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "What a workspace reached, what it looked up and what it was refused",
 		"state": "built",
 		"proof": "cli:workspace egress",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_EgressIsAnsweredByTheHostTheWorkspaceRunsOn"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "Each request to a brokered name as the proxy read it, served or refused and why; and whether each injection's secret is the team's to give",
 		"state": "built",
 		"proof": "e2e:TestABrokeredRequestIsSeenAsTheProxyReadIt",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestABrokeredRequestIsSeenAsTheProxyReadIt"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "The egress proxy is a process of its own, holding no key of the host's, started again by the runner when it ends",
 		"state": "built",
 		"proof": "e2e:TestTheEgressProxyIsAProcessOfItsOwnThatTheRunnerStartsAgain",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestTheEgressProxyIsAProcessOfItsOwnThatTheRunnerStartsAgain"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "A brokered rule names whose it is, the agent's or the person's: one policy says what each may reach and with what",
 		"state": "built",
 		"proof": "e2e:TestABrokeredNameForTheAgentIsTheAgentsAlone",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAPersonsRuleAndAnAgentsOnOneNameEachArriveWithTheirOwnInjection",
+			"go:internal/e2e.TestABrokeredNameForTheAgentIsTheAgentsAlone"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "A WebSocket to a brokered name: its handshake under the rule's headers and scope, then bytes each way",
 		"state": "built",
 		"proof": "e2e:TestAWebSocketToABrokeredNameIsCarriedAfterItsHandshake",
-		"note": ""
+		"note": "The rule's header on the handshake is not read at the origin: the lane's WebSocket echo answers frames, not headers.",
+		"endToEnd": [
+			"go:internal/e2e.TestAWebSocketToABrokeredNameCarriesTheGuestsBytesAndRefusesAPathOutOfScope",
+			"go:internal/e2e.TestAWebSocketToABrokeredNameIsCarriedAfterItsHandshake"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "HTTP/2 to a brokered name, the proxy's ALPN the real host's: a rule's headers set stream by stream, gRPC's trailers both ways",
 		"state": "built",
 		"proof": "e2e:TestHTTP2ToABrokeredNameIsTheRealHosts",
-		"note": ""
+		"note": "",
+		"endToEndGap": "headers on several streams and gRPC's trailers, which need an h2 origin that echoes them"
 	},
 	{
 		"area": "Network",
 		"name": "Watch where a workspace connects, into its logs",
 		"state": "built",
 		"proof": "cli:workspace watch",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AWatchedWorkspacesConnectionsAreInItsLogs"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "An agent the supervisor starts is marked, and reaches only brokered names",
 		"state": "built",
 		"proof": "e2e:TestARealWorkspaceMarksTheAgentItsSupervisorStarts",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAnAgentReachesOnlyBrokeredNames",
+			"go:internal/e2e.TestARealWorkspaceMarksTheAgentItsSupervisorStarts"
+		]
 	},
 	{
 		"area": "Network",
 		"name": "Published ports at https://{port}-{workspace}.{domain}: private, whitelisted or public",
 		"state": "built",
 		"proof": "cli:port expose",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/proxy.TestAPublicPortIsReachedWithNoSessionAtAll",
+			"pw:workspace-sign-in.spec.ts:a visitor signed in to the dashboard reaches their private port"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "Sign in with GitHub or an OIDC provider",
 		"state": "built",
 		"proof": "rpc:spin.v1.AuthService/StartLogin",
-		"note": ""
+		"note": "",
+		"endToEndGap": "a GitHub provider: the sign-in through it and the verified email it gives"
 	},
 	{
 		"area": "Access",
 		"name": "Device login for a terminal",
 		"state": "built",
 		"proof": "rpc:spin.v1.AuthService/StartDeviceLogin",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_Logout",
+			"pw:auth.spec.ts:the CLI's device page stands alone and keeps its code through a sign-in"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "API keys for scripts and agents",
 		"state": "built",
 		"proof": "cli:api-key create",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_APIKeyCRUD"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "SSH keys, and plain ssh to spin.\u003cworkspace\u003e",
 		"state": "built",
 		"proof": "cli:ssh-config",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_SSHConfigCarriesSSHToAWorkspace"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "Who logs in to a workspace is what its owner signed",
 		"state": "built",
 		"proof": "e2e:TestOnlyThePeopleTheAccessNamesLogInToAWorkspace",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestOnlyThePeopleTheAccessNamesLogInToAWorkspace"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "Guests of a workspace, invited by its owner",
 		"state": "built",
 		"proof": "cli:workspace guests",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestOnlyThePeopleTheAccessNamesLogInToAWorkspace"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "A workspace's identity, signed by its host, for the audiences its owner allows",
 		"state": "built",
 		"proof": "e2e:TestAWorkspacesIdentityIsTheHostsSignatureOfWhatItsOwnerSigned",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspacesIdentityIsTheHostsSignatureOfWhatItsOwnerSigned"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "VS Code over SSH, with the server the installation publishes and nothing downloaded",
 		"state": "built",
 		"proof": "e2e:TestAVSCodeServerOfAnotherCommitIsHandedToTheRunningMachine",
-		"note": ""
+		"note": "spin code itself is run by its unit tests only: it opens VS Code desktop, which no lane has.",
+		"endToEnd": [
+			"go:internal/e2e.TestTheCarriedVSCodeServerRunsOfflineAndAnswersOverTheSSHTunnel",
+			"go:internal/e2e.TestAVSCodeServerOfAnotherCommitIsHandedToTheRunningMachine"
+		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults",
 		"state": "built",
 		"proof": "e2e:TestTheAgentCLIsAreOnPathWithThePinnedVersions",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestTheAgentCLIsAreOnPathWithThePinnedVersions"
+		]
 	},
 	{
 		"area": "Access",
 		"name": "Run a command in a workspace, copy files to and from it",
 		"state": "built",
 		"proof": "cli:exec",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_ADetachedRunIsFollowedToItsEndAndFilesGoBothWays"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "Teams, with owner, admin and member",
 		"state": "built",
 		"proof": "cli:team member role",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_ATeamRoleIsWhatItsHolderMayDo"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "A team's own identity providers",
 		"state": "built",
 		"proof": "rpc:spin.v1.TeamService/CreateIdentityProvider",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_ATeamsIdentityProviderIsItsAdminsAndSignsNobodyIn"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "A team's forge app: private repositories cloned and pushed with nothing on the disk",
 		"state": "built",
 		"proof": "cli:team forge set",
-		"note": ""
+		"note": "",
+		"endToEndGap": "a real GitHub App and a private repository for the lane to clone and push"
 	},
 	{
 		"area": "Teams and projects",
 		"name": "A team's own network policies, where the installation allows them",
 		"state": "built",
 		"proof": "cli:team policy set",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestATeamsOwnPolicyIsWhatItsWorkspacesReach"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "Projects: a repository and the shape of the workspace that opens it",
 		"state": "built",
 		"proof": "e2e:TestAProjectsWorkspaceHasItsRepositoryCheckedOutAtTheRef",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAProjectsWorkspaceHasItsRepositoryCheckedOutAtTheRef"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "Prebuilds of a project's refs, as the floor of the workspaces that open them",
 		"state": "built",
 		"proof": "e2e:TestAProjectOpensAsItsPrebuildMadeIt",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAProjectOpensAsItsPrebuildMadeIt"
+		]
 	},
 	{
 		"area": "Teams and projects",
 		"name": "A team's workspaces run on the installation's hosts",
 		"state": "built",
 		"proof": "e2e:TestATeamsWorkspaceRunsOnTheInstallationsHost",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestATeamsWorkspaceRunsOnTheInstallationsHost"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "Installation settings seeded from a file; a change in the file is a proposal to apply or dismiss",
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/DecideConfigChange",
-		"note": ""
+		"note": "",
+		"endToEndGap": "the real file read, an apply and its effect, and a dismiss kept when the file is read again"
 	},
 	{
 		"area": "Administration",
 		"name": "Resource presets",
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/CreateResourcePreset",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"pw:admin.spec.ts:an admin's preset sizes a person's workspace, and is gone once deleted"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "Registration: open, by allowlist, or closed",
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/SetRegistrationMode",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"pw:admin.spec.ts:closed, open and a domain on the allowlist decide who registers",
+			"pw:admin.spec.ts:the allowlist lets in who it names, and nobody else"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "An audit log",
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/ListAuditLog",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AnAdministratorsActionIsAuditedWithItsActorAndTarget",
+			"pw:admin.spec.ts:admin reads the log and can narrow it to one kind of event"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "The control plane's jobs, and running one now",
 		"state": "built",
 		"proof": "cli:admin jobs",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestACarryResumesASuspendedWorkspaceAndStopsIt",
+			"pw:admin.spec.ts:admin runs a job by hand and sees how it ended"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "The month's bill, its forecast, and what each workspace cost",
 		"state": "built",
 		"proof": "cli:admin costs",
-		"note": ""
+		"note": "",
+		"endToEndGap": "the cloud's real bill read: no lane has an AWS account, so the bill a test gives the reader stands in for it"
 	},
 	{
 		"area": "Administration",
 		"name": "The store: every volume, whose it is, and taking out what nothing needs",
 		"state": "built",
 		"proof": "cli:admin storage list",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAVolumeNothingNeedsIsTakenOutOfTheStore"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "Re-key a workspace's disk",
 		"state": "built",
 		"proof": "cli:admin volume rekey",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestARekeyedDiskBootsWithWhatItHeldUnderANewKey"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "Runners: registration tokens, drain, activate, revoke, and a policy per host",
 		"state": "built",
 		"proof": "cli:admin runner drain",
-		"note": ""
+		"note": "",
+		"endToEndGap": "a runner registered with a token the API made, an expired or revoked token refused, and a revoke carried out"
 	},
 	{
 		"area": "Administration",
 		"name": "Runners start when a workspace waits for one and stop when nothing runs",
 		"state": "built",
 		"proof": "rpc:spin.v1.HostService/GetFleet",
-		"note": ""
+		"note": "",
+		"endToEndGap": "an autoscaling group to start and stop: the one group is AWS's, and no lane has an account"
 	},
 	{
 		"area": "Administration",
 		"name": "A host that reboots brings its workspaces back",
 		"state": "built",
 		"proof": "e2e:TestAHostRebootBringsItsWorkspacesBack",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAHostRebootBringsItsWorkspacesBack"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "A cloud's reclaim warning empties the host before the machine goes",
 		"state": "built",
 		"proof": "e2e:TestACloudsReclaimWarningEmptiesTheHostBeforeAnySignal",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestACloudsReclaimWarningEmptiesTheHostBeforeAnySignal"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "A writeback bound per host, measured on that host before it is taken",
 		"state": "built",
 		"proof": "e2e:TestCustomWritebackValuesAreMeasuredOnTheRunner",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestCustomWritebackValuesAreMeasuredOnTheRunner"
+		]
 	},
 	{
 		"area": "Administration",
 		"name": "What is running where: the control plane, each runner and its machine",
 		"state": "built",
 		"proof": "cli:admin versions",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_Admin"
+		]
 	},
 	{
 		"area": "Administration",
@@ -515,35 +722,53 @@
 		"name": "Platform logs, workspace logs and traces, searched in the product",
 		"state": "built",
 		"proof": "rpc:spin.v1.LogService/SearchPlatformLogs",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspacesLinesAndTracesAreFoundBySearchingForIt",
+			"go:cmd/cli.TestE2E_TheInstallationsLogsAreSearchable"
+		]
 	},
 	{
 		"area": "Observability",
 		"name": "Metrics, with Grafana on the control plane",
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/GetMonitoring",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"pw:admin.spec.ts:a series of the lane's host is in the metric store, read through Grafana",
+			"pw:admin.spec.ts:admin reads the installation's dashboards without leaving the page"
+		]
 	},
 	{
 		"area": "Observability",
 		"name": "A workspace's journal and console are collected only with its owner's consent",
 		"state": "built",
 		"proof": "cli:workspace logs-consent",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AWorkspacesConsoleIsKeptAndSearchable"
+		]
 	},
 	{
 		"area": "Platform",
 		"name": "A smoke test of what an installation's API promises, with a workspace of its own",
 		"state": "built",
 		"proof": "cli:smoke",
-		"note": ""
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_SmokePassesAndLeavesNothingBehind"
+		]
 	},
 	{
 		"area": "Platform",
 		"name": "A host serves only the releases it carries",
 		"state": "built",
 		"proof": "e2e:TestAMachineAdoptedWithoutItsReleasesIsSuspendedWithItsDisk",
-		"note": ""
+		"note": "A resume whose recorded release was collected since has no test against the stack.",
+		"endToEnd": [
+			"go:internal/e2e.TestAMachineAdoptedWithoutItsReleasesIsSuspendedWithItsDisk",
+			"go:internal/e2e.TestAVSCodeServerOfAnotherCommitIsHandedToTheRunningMachine"
+		]
 	},
 	{
 		"area": "Platform",

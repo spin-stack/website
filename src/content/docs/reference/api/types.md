@@ -897,6 +897,7 @@ A snapshot is a rotation of a workspace's volume, published as a commit. It has 
 | `accessType` | [SnapshotAccessType](/reference/api/types/#snapshotaccesstype) | How user has access |
 | `state` | [SnapshotState](/reference/api/types/#snapshotstate) |  |
 | `withMemory` | boolean | with_memory: the snapshot also kept the running machine's memory, so restoring it resumes the processes where they were instead of booting the disk. The memory is on the host the workspace ran on. |
+| `parentSnapshotId` | string | The snapshot the disk this one was taken of had been cloned from. A restore gives the workspace a new disk cloned from the snapshot restored, so the snapshots with one parent are one disk's, and one whose parent is not ListSnapshotsResponse.base_snapshot_id was taken on a disk a restore left detached. Empty for a disk that was not cloned. |
 
 ## SnapshotAccessType
 
@@ -1187,6 +1188,7 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `projectId` | string | The project it opened and the ref it was opened at; empty for a workspace that opened none. |
 | `ref` | string |  |
 | `wakeOnAccess` | boolean | Suspended, it is resumed by a signed-in visitor of one of its published ports (OpenWorkspaceProxySession). Never by an anonymous one: that would undo the idle suspension for whoever has a public port's URL. |
+| `suspendedSnapshotId` | string | The snapshot it was suspended into: its next start resumes it rather than booting its disk. Empty when a start boots the disk - never suspended, resumed since, or the snapshot deleted. |
 
 ## WorkspaceAction
 

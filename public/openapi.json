@@ -14531,7 +14531,7 @@
           "parentSnapshotId": {
             "type": "string",
             "title": "parent_snapshot_id",
-            "description": "What the workspace was cloned from: the snapshot, and the workspace whose disk it was when\n that is still there and of the same team. Empty for a workspace made from an image."
+            "description": "What the workspace was cloned from: the snapshot, and the workspace whose disk it was when\n that is still there and of the same team. A workspace made from an image is cloned from the\n image's snapshot, and no workspace's: the snapshot is named and the workspace is empty."
           },
           "parentWorkspaceId": {
             "type": "string",
@@ -16409,6 +16409,11 @@
               }
             ],
             "title": "page"
+          },
+          "baseSnapshotId": {
+            "type": "string",
+            "title": "base_snapshot_id",
+            "description": "What the workspace's disk is cloned from now: the snapshot last restored to, or the one it\n was cloned from - for a workspace made from an image, that image's. Empty for a disk that was\n not cloned."
           }
         },
         "title": "ListSnapshotsResponse",
@@ -19516,6 +19521,11 @@
             "type": "boolean",
             "title": "with_memory",
             "description": "with_memory: the snapshot also kept the running machine's memory, so restoring it resumes\n the processes where they were instead of booting the disk. The memory is on the host the\n workspace ran on."
+          },
+          "parentSnapshotId": {
+            "type": "string",
+            "title": "parent_snapshot_id",
+            "description": "The snapshot the disk this one was taken of had been cloned from. A restore gives the\n workspace a new disk cloned from the snapshot restored, so the snapshots with one parent are\n one disk's, and one whose parent is not ListSnapshotsResponse.base_snapshot_id was taken on a\n disk a restore left detached. Empty for a disk that was not cloned."
           }
         },
         "title": "Snapshot",
@@ -21634,6 +21644,11 @@
             "type": "boolean",
             "title": "wake_on_access",
             "description": "Suspended, it is resumed by a signed-in visitor of one of its published ports\n (OpenWorkspaceProxySession). Never by an anonymous one: that would undo the idle suspension\n for whoever has a public port's URL."
+          },
+          "suspendedSnapshotId": {
+            "type": "string",
+            "title": "suspended_snapshot_id",
+            "description": "The snapshot it was suspended into: its next start resumes it rather than booting its disk.\n Empty when a start boots the disk - never suspended, resumed since, or the snapshot deleted."
           }
         },
         "title": "Workspace",
