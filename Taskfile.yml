@@ -33,6 +33,16 @@ tasks:
     cmds:
       - go run ./tools/sources -bump spin spin-terraform-aws brand
 
+  sync:pr:
+    desc: Commit what sources:bump and reference changed to branch sync/sources as the sync App (SYNC_TOKEN, BOT its login), and open its one pull request or update it. sync.yml runs it.
+    cmds:
+      - go run ./tools/sync pr -bot '{{.BOT}}' -reference '{{.REFERENCE | default "success"}}'
+
+  sync:issue:
+    desc: Write spin's issue "Site vs spin main" as the sources App (SOURCES_TOKEN, BOT its login) - MODE release, the commits a bump takes in, or main, what spin main has past the pin - with the release chain. sync.yml runs it.
+    cmds:
+      - go run ./tools/sync issue -mode '{{.MODE}}' -bot '{{.BOT}}'
+
   reference:
     desc: Write the reference pages (CLI, Terraform, config file, API) and what the site copies from the spin, spin-terraform-aws and brand checkouts.
     cmds:
