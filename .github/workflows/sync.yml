@@ -1,0 +1,116 @@
+name: Sync
+
+# The site against what it is generated from, so a sync no longer waits for somebody to remember
+# it. Every day, and when a source's release dispatches `sources-released`: the pins in
+# versions.yaml move to the newest releases (spin's only to one that holds the commit pinned), the
+# reference is regenerated from them, and the result is force-pushed to sync/sources as the sync
+# App, whose push starts Gate as a person's would, with its one pull request opened or updated.
+# A person reviews and merges it: it publishes spin's help, API and board on a public site, and
+# behaviour that changed under the hand-written pages is theirs to write.
+#
+# spin is private and this repository public, so the pull request says which pins moved and which
+# files changed. What spin's commits say - grouped by the pages each path of spin feeds - and the
+# release chain go in one issue in spin, "Site vs spin main", written with the sources App. Every
+# Monday it also says what spin main has past the pin: advice, which fails nothing.
+
+on:
+  schedule:
+    - cron: '23 5 * * *'
+    - cron: '41 5 * * 1'
+  repository_dispatch:
+    types: [sources-released]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.schedule != '41 5 * * 1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The push is the sync App's, with its own token; the checkout's would start no Gate.
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: |
+            go.sum
+            versions.yaml
+      # Read-only: spin's code and releases, and the release chain's repositories, with issues
+      # on spin for the one issue this writes there.
+      - id: sources-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.SOURCES_APP_ID }}
+          private-key: ${{ secrets.SOURCES_APP_KEY }}
+          owner: spin-stack
+          repositories: spin,spin-terraform-aws,spin-machine,spinbox.dev-deploy
+          permission-contents: read
+          permission-actions: read
+          permission-issues: write
+      - name: Bump the pins
+        env:
+          SOURCES_TOKEN: ${{ steps.sources-token.outputs.token }}
+        run: go tool task sources:bump
+      # With no token: spin's CLI is built and run here. A page the sources no longer agree with
+      # still has its regenerated files pushed, and the pull request says so.
+      - id: reference
+        continue-on-error: true
+        run: go tool task reference
+      - name: Write spin's issue
+        env:
+          SOURCES_TOKEN: ${{ steps.sources-token.outputs.token }}
+          BOT: ${{ steps.sources-token.outputs.app-slug }}[bot]
+          MODE: release
+        run: go tool task sync:issue
+      - id: sync-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.SYNC_APP_ID }}
+          private-key: ${{ secrets.SYNC_APP_KEY }}
+          owner: spin-stack
+          repositories: website
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open the pull request
+        env:
+          SYNC_TOKEN: ${{ steps.sync-token.outputs.token }}
+          BOT: ${{ steps.sync-token.outputs.app-slug }}[bot]
+          REFERENCE: ${{ steps.reference.outcome }}
+        run: go tool task sync:pr
+
+  main:
+    if: github.event.schedule == '41 5 * * 1' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    # Advice: spin main changes an interface nearly every day, and nobody is to be stopped by it.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - id: sources-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.SOURCES_APP_ID }}
+          private-key: ${{ secrets.SOURCES_APP_KEY }}
+          owner: spin-stack
+          repositories: spin,spin-terraform-aws,spin-machine,spinbox.dev-deploy
+          permission-contents: read
+          permission-actions: read
+          permission-issues: write
+      - name: Write spin's issue
+        env:
+          SOURCES_TOKEN: ${{ steps.sources-token.outputs.token }}
+          BOT: ${{ steps.sources-token.outputs.app-slug }}[bot]
+          MODE: main
+        run: go tool task sync:issue
