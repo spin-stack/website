@@ -50,6 +50,7 @@ tasks:
     desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet, the build, and every link.
     cmds:
       - go tool sfw check
+      - go tool taskgate
       - task: install
       - go vet ./...
       - task: build
