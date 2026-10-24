@@ -16,6 +16,9 @@ module "spin" {
 }
 ```
 
+Pin `ref` to one of the module's tags, which are dated like Spinbox's releases
+(`v<YYYYMMDD>.<N>`), so that the module changes only when you move it.
+
 <Figure name="installation" caption="What the module creates in your account, and who connects to whom." />
 
 ## What it creates
@@ -32,8 +35,8 @@ module "spin" {
   certificates; and what each machine starts from.
 - **Two Route 53 zones**: your domain's public zone, and a private zone (`spin.internal`) the
   machines find each other by.
-- **The installation's secrets**, in SSM Parameter Store: its CA, its encryption key and the
-  first administrator's password.
+- **The installation's secrets**: its CA and the first administrator's password in SSM Parameter
+  Store, and its encryption, volume and identity keys in KMS.
 - **IAM roles** for each machine, all under one permissions boundary.
 - **A VPC flow log**, kept in CloudWatch for 30 days.
 

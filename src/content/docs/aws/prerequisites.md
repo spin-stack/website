@@ -31,6 +31,19 @@ zone in Route 53, and you point the domain's nameservers at it. The installation
 Workspaces are under a name of their own so that a workspace is never a subdomain of the
 dashboard: nothing a workspace serves can set a cookie the dashboard reads.
 
+### Optional modules
+
+Two modules of spin-terraform-aws are not part of an installation unless you add them beside
+it. Each serves one more name, on its own CloudFront origin, and takes a provider in `us-east-1`
+for its certificate:
+
+| Name | Module | What |
+|---|---|---|
+| `term.<domain>` | [`modules/terminal`](https://github.com/spin-stack/spin-terraform-aws/tree/main/modules/terminal) | The browser terminal: an SSH client for a workspace, in the browser, that signs in with a passkey |
+| `id.<domain>` | [`modules/identity-issuer`](https://github.com/spin-stack/spin-terraform-aws/tree/main/modules/identity-issuer) | The identity issuer: the documents a system outside Spinbox verifies a workspace's identity token with |
+
+Each module's README says what it needs and how to add it.
+
 ## Room for runners
 
 Each runner is a large spot machine, of one of the types
