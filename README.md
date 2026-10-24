@@ -12,6 +12,7 @@ go tool task install      # dependencies, through Socket Firewall (go tool sfw)
 go tool task dev          # http://localhost:4321, live reload
 go tool task gate         # what CI runs: the gates, the install, the build, and every link
 go tool task check        # the gate, and the reference against the sources
+go tool task exposure     # what this public repository shows: every ref, its PRs and issues
 go tool task --list       # everything else
 ```
 
@@ -22,6 +23,11 @@ and `task check` is that and more: CI cannot read spin while it is private, so t
 checked against checkouts of spin, spin-terraform-aws and brand beside this one (`SPIN=`,
 `TERRAFORM=`, `BRAND=` to point elsewhere).
 
+- **The repository is public**, and so is every pull request the moment it is opened.
+  `task exposure` (`go tool exposure`) reads every ref's commits, pull request heads included,
+  and the issues, pull requests and comments for secrets and for what is private without being one;
+  `.github/workflows/exposure.yml` runs it every morning. A value public on purpose is answered in
+  `.github/exposure-allow.txt` with why, a secret gitleaks takes for one in `.gitleaks.toml`.
 - **Pages** are Markdown under `src/content/docs/`. Every page needs a `description`: it is its
   line in `llms.txt`. A page must be in `src/lib/nav.mjs`, or the build fails. Each group there
   belongs to a topic - Docs, Install and operate, Security, Reference - and the sidebar shows one
