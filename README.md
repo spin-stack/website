@@ -8,15 +8,18 @@ The rule this site keeps: a page is generated from the code it describes, or hel
 check that fails the build, or it does not exist. Everything below is one of those checks.
 
 ```
-task install      # dependencies, through Socket Firewall (go tool sfw)
-task dev          # http://localhost:4321, live reload
-task gate         # what CI runs: the install, the build, and every link
-task check        # the gate, and the reference against the sources
-task --list       # everything else
+go tool task install      # dependencies, through Socket Firewall (go tool sfw)
+go tool task dev          # http://localhost:4321, live reload
+go tool task gate         # what CI runs: the gates, the install, the build, and every link
+go tool task check        # the gate, and the reference against the sources
+go tool task --list       # everything else
 ```
 
-`task gate` is what CI runs, and `task check` is that and more: CI cannot read spin while it is private, so the reference
-is checked against checkouts of spin, spin-terraform-aws and brand beside this one (`SPIN=`,
+Task is a tool in `go.mod`, so `go tool task` is the version CI runs; the tasks below are named
+without it. `task gate` is what CI runs, its one step: it fails first on an install that skips
+the firewall (`go tool sfw check`) or a workflow step that is not one task (`go tool taskgate`),
+and `task check` is that and more: CI cannot read spin while it is private, so the reference is
+checked against checkouts of spin, spin-terraform-aws and brand beside this one (`SPIN=`,
 `TERRAFORM=`, `BRAND=` to point elsewhere).
 
 - **Pages** are Markdown under `src/content/docs/`. Every page needs a `description`: it is its
