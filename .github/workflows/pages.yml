@@ -48,7 +48,10 @@ jobs:
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build
-    runs-on: ubuntu-latest
+    # Nine seconds of API calls, billed as a minute: the smallest runner, at a third of a 2-core's
+    # price. Not folded into the build job: the github-pages environment deploys from main alone,
+    # and the build runs on every pull request.
+    runs-on: ubuntu-slim
     permissions:
       pages: write
       id-token: write
