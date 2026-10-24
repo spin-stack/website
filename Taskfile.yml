@@ -3,12 +3,13 @@ version: '3'
 # The site: Astro Starlight under src/, and two Go tools under tools/ - refgen writes the
 # reference pages from the sources they describe, linkcheck fails on a link the build did not
 # produce. SPIN, TERRAFORM and BRAND are checkouts of spin-stack/spin, spin-stack/spin-terraform-aws
-# and spin-stack/brand.
+# and spin-stack/brand: by default the ones task sources fetches into .sources/, at the commits
+# versions.yaml pins.
 
 vars:
-  SPIN: '{{.SPIN | default "../spin"}}'
-  TERRAFORM: '{{.TERRAFORM | default "../spin-terraform-aws"}}'
-  BRAND: '{{.BRAND | default "../brand"}}'
+  SPIN: '{{.SPIN | default ".sources/spin"}}'
+  TERRAFORM: '{{.TERRAFORM | default ".sources/spin-terraform-aws"}}'
+  BRAND: '{{.BRAND | default ".sources/brand"}}'
   BASE_PATH: '{{.BASE_PATH | default "/website"}}'
 
 tasks:
@@ -22,42 +23,35 @@ tasks:
     cmds:
       - pnpm dev
 
+  sources:
+    desc: Fetch spin, spin-terraform-aws and brand into .sources/, each at the commit versions.yaml pins. spin is private - SOURCES_TOKEN, or git's own credentials, reads it.
+    cmds:
+      - go run ./tools/sources spin spin-terraform-aws brand
+
+  sources:bump:
+    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned, brand to its main - and fetch them. Then task reference.
+    cmds:
+      - go run ./tools/sources -bump spin spin-terraform-aws brand
+
   reference:
     desc: Write the reference pages (CLI, Terraform, config file, API) and what the site copies from the spin, spin-terraform-aws and brand checkouts.
     cmds:
+      - task: sources
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}}
 
   reference:check:
     desc: Fail if a reference page is not what the sources say.
     cmds:
+      - task: sources
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -check
 
   reference:public:
-    desc: Fail if what the site has of spin-terraform-aws and brand is not what they say at the commits src/data/reference.json records. Needs no spin checkout, nor any credential.
-    # CI cannot check spin out, and this half needs nothing of it: what the site says of spin
-    # stays as reference.json has it, and is held by reference:check.
+    desc: Fail if what the site has of spin-terraform-aws and brand is not what they say at the commits versions.yaml pins. Needs no spin checkout, nor any credential.
+    # A fork's pull request has no token to read spin with, and this half needs nothing of it:
+    # what the site says of spin stays as reference.json has it, and is held by reference:check.
     cmds:
-      # With its history and tags: a page pins the module at the newest release the commit holds.
-      - task: source
-        vars: { REPO: spin-terraform-aws, COMMIT: '{{(fromJson .REFERENCE).terraform.commit}}', TAGS: 'true' }
-      - task: source
-        vars: { REPO: brand, COMMIT: '{{(fromJson .REFERENCE).brand.commit}}' }
+      - go run ./tools/sources spin-terraform-aws brand
       - go run ./tools/refgen -only terraform,brand -terraform .sources/spin-terraform-aws -brand .sources/brand -check
-    vars:
-      REFERENCE:
-        sh: cat src/data/reference.json
-
-  source:
-    internal: true
-    desc: Fetch one public spin-stack repository into .sources/ at one commit, and with TAGS, its history and its tags.
-    status:
-      - test "$(git -C .sources/{{.REPO}} rev-parse HEAD 2>/dev/null)" = "{{.COMMIT}}"
-      - test -z "{{.TAGS}}" || test "$(git -C .sources/{{.REPO}} rev-parse --is-shallow-repository)" = false
-    cmds:
-      - rm -rf .sources/{{.REPO}}
-      - git init -q .sources/{{.REPO}}
-      - git -C .sources/{{.REPO}} fetch -q {{if .TAGS}}--tags{{else}}--depth 1{{end}} https://github.com/spin-stack/{{.REPO}} {{.COMMIT}}
-      - git -C .sources/{{.REPO}} checkout -q --detach FETCH_HEAD
 
   build:
     desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page.
@@ -95,7 +89,12 @@ tasks:
       - go tool exposure -allow .github/exposure-allow.txt -gitleaks-config .gitleaks.toml -private ami,ci,shipset,skills,spin,spinbox.dev-deploy spin-stack/website
 
   check:
-    desc: Everything CI runs, and the reference against the sources.
+    desc: What CI runs with the token that reads spin - the reference against the sources at their pins, and the gate.
     cmds:
       - task: reference:check
+      - task: gate
+
+  check:public:
+    desc: What CI runs with no token to read spin, a fork's pull request - the gate, whose reference:public needs none.
+    cmds:
       - task: gate
