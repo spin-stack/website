@@ -36,10 +36,13 @@ spin workspace reset api                        # back to what it was created fr
 ```
 
 - A **disk restore** puts the disk back to the snapshot. The workspace keeps its name, keys,
-  ports and resources. What it wrote after the snapshot is set aside, not destroyed: the disk
-  it had is kept among its snapshots, so you can restore to that too.
+  ports and resources. Everything it wrote after the snapshot is given up. The snapshots taken
+  on the disk it had are kept, so restoring to one of those undoes the restore, but what it
+  wrote after the last of them is lost. Take a snapshot before you restore if you may want
+  that back.
 - A **memory restore** puts the whole machine back to the instant of the snapshot. It works on
-  a stopped workspace, and on a running one, which is put back where it runs.
+  a stopped workspace, and on a running one, which is put back where it runs. It too gives up
+  what the workspace wrote after the snapshot.
 - A **reset** goes back to the image or snapshot the workspace was created from. Nothing is
   uploaded or downloaded, so it is the fastest way back.
 
