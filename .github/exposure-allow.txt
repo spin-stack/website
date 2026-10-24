@@ -4,6 +4,7 @@
 # reports by mistake is answered in .gitleaks.toml instead.
 
 author-email aledbf@gmail.com  # the maintainer's commit address, in every commit already
+email aledbf@gmail.com  # the same address, written in this list to answer the line above
 
 # Kept on purpose while spin and ami stay private: the reference and status pages link to the
 # code they are generated from, and those links resolve the day the repositories go public.
