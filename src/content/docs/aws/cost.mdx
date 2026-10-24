@@ -3,6 +3,8 @@ title: Cost
 description: "What an installation costs on AWS: the small part that runs all the time, the runners that run only while workspaces do, and the settings that change it."
 ---
 
+import Value from '../../../components/Value.astro';
+
 An installation has two kinds of cost: a small one that runs all the time, and runners, which
 run only while workspaces do. Prices depend on your region and change; use the
 [AWS Pricing Calculator](https://calculator.aws/) with the sizes below.
@@ -15,7 +17,7 @@ run only while workspaces do. Prices depend on your region and change; use the
 | Proxy | One machine, [`proxy_instance_type`](/reference/terraform/controlplane/#proxy_instance_type), and an elastic IP |
 | Route 53 | Two hosted zones, $0.50 a month each |
 | S3 | What the volumes, the database's archive, logs and metric backups hold |
-| CloudWatch | The flow log and the machines' boot logs, 30 days |
+| CloudWatch | The flow log and the machines' boot logs, <Value name="logRetentionDays" /> |
 
 There is no NAT gateway, no load balancer and no interface endpoint.
 

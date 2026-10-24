@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -19,7 +18,7 @@ import (
 // from, and how many rows of the feature board are in each state.
 type reference struct {
 	Spin      spinRef   `json:"spin"`
-	Terraform sourceRef `json:"terraform"`
+	Terraform moduleRef `json:"terraform"`
 	Brand     sourceRef `json:"brand"`
 	Counts    counts    `json:"counts"`
 	// OpenAPI is the sha256 of the control plane's OpenAPI document the site serves at
@@ -37,10 +36,19 @@ type spinRef struct {
 	Commit string `json:"commit"`
 	// Tag is Commit's release tag, empty when no release is cut from it.
 	Tag string `json:"tag"`
+	// Machine is the spin-machine release Installs pins: what its workspaces' machines are.
+	Machine string `json:"machine"`
 }
 
 type sourceRef struct {
 	Commit string `json:"commit"`
+}
+
+// moduleRef is spin-terraform-aws as the site documents it: the commit, and the newest release
+// that commit holds, which every page pins the module at.
+type moduleRef struct {
+	Commit  string `json:"commit"`
+	Release string `json:"release"`
 }
 
 type counts struct {
@@ -114,8 +122,8 @@ func spinData(r *reference, spin string, rows []feature) error {
 }
 
 // publicData is the half of reference.json read from the public repositories, which -only
-// terraform,brand writes with no spin checkout: the release an installation runs, and the
-// commits of spin-terraform-aws and brand.
+// terraform,brand writes with no spin checkout: the release an installation runs, the commit of
+// spin-terraform-aws and its newest release, and brand's commit.
 func publicData(r *reference, tf, brand string) error {
 	raw, err := os.ReadFile(filepath.Join(tf, "images.json"))
 	if err != nil {
@@ -136,6 +144,9 @@ func publicData(r *reference, tf, brand string) error {
 		return fmt.Errorf("images.json has no release")
 	}
 	if r.Terraform.Commit, err = git(tf, "rev-parse", "HEAD"); err != nil {
+		return err
+	}
+	if r.Terraform.Release, err = moduleRelease(tf); err != nil {
 		return err
 	}
 	r.Brand.Commit, err = git(brand, "rev-parse", "HEAD")
@@ -195,47 +206,69 @@ func git(dir string, args ...string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-// releaseName is a spin release as a page writes it: v<YYYYMMDD>.<N>.
-var releaseName = regexp.MustCompile(`\bv20\d{6}\.\d+\b`)
+// pinned is a release a page names: a module ref, `?ref=<ref>`, which must be the newest release
+// of spin-terraform-aws, or a spin release, v<YYYYMMDD>.<N>, which must be the one installations
+// run. A ref that goes on as a placeholder is the form of one a page explains,
+// `?ref=v<YYYYMMDD>.<NN>`; a placeholder alone, `?ref=<tag>`, gives a reader nothing to pin.
+var pinned = regexp.MustCompile("\\?ref=([A-Za-z0-9._/-]*)(<[^>\\s`\"]*>?)?|\\bv20\\d{6}\\.\\d+\\b")
 
-// pinReleases holds every release a hand-written page names to the one an installation runs: a
-// page that tells people to install an older one is wrong the day a release ships, and one that
-// names a release images.json has no images of tells them to install what cannot boot. Written, it
-// rewrites them; checked, each is a line to fix with `task reference`.
-func pinReleases(docs, release string, check bool) ([]string, error) {
+// pinReleases holds every release a hand-written page names to the one it must be: a page that
+// tells people to install an older one is wrong the day a release ships, one that names a spin
+// release images.json has no images of tells them to install what cannot boot, and a module ref
+// that is no tag of spin-terraform-aws fails at init. Written, it rewrites them; checked, each is
+// a line to fix with `task reference`.
+func pinReleases(docs, release, module string, check bool) ([]string, error) {
 	var bad []string
-	err := filepath.WalkDir(docs, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if d.IsDir() && d.Name() == "reference" {
-			return fs.SkipDir
-		}
-		if d.IsDir() || !page(path) {
-			return nil
-		}
-		raw, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-		for i, line := range bytes.Split(raw, []byte("\n")) {
-			for _, m := range releaseName.FindAll(line, -1) {
-				if string(m) != release {
+	err := handPages(docs, func(path string, raw []byte) error {
+		lines := bytes.Split(raw, []byte("\n"))
+		for i, line := range lines {
+			lines[i] = pinned.ReplaceAllFunc(line, func(m []byte) []byte {
+				sub := pinned.FindSubmatch(m)
+				switch {
+				case len(sub[1]) > 0 && len(sub[2]) > 0:
+					return m
+				case bytes.HasPrefix(m, []byte("?ref=")):
+					switch {
+					case len(sub[1]) == 0:
+						bad = append(bad, fmt.Sprintf("%s:%d: %s pins the module at no release; its newest is %s", path, i+1, m, module))
+					case string(sub[1]) != module:
+						bad = append(bad, fmt.Sprintf("%s:%d: pins the module at %s; its newest release is %s", path, i+1, sub[1], module))
+					}
+					return []byte("?ref=" + module)
+				case string(m) != release:
 					bad = append(bad, fmt.Sprintf("%s:%d: names release %s; installations run %s", path, i+1, m, release))
 				}
-			}
+				return []byte(release)
+			})
 		}
 		if check {
 			return nil
 		}
-		pinned := releaseName.ReplaceAll(raw, []byte(release))
-		if bytes.Equal(pinned, raw) {
-			return nil
+		if pinned := bytes.Join(lines, []byte("\n")); !bytes.Equal(pinned, raw) {
+			return os.WriteFile(path, pinned, 0o644)
 		}
-		return os.WriteFile(path, pinned, 0o644)
+		return nil
 	})
 	if !check {
 		return nil, err
 	}
 	return bad, err
+}
+
+// moduleRelease is the newest release of spin-terraform-aws that the checkout tf's HEAD holds:
+// what a page pins the module at. A checkout fetched at one commit has no tags; reference:public
+// fetches them.
+func moduleRelease(tf string) (string, error) {
+	tags, err := git(tf, "tag", "--list", "--merged", "HEAD", "v[0-9]*")
+	if err != nil {
+		return "", err
+	}
+	r, err := newest(strings.Fields(tags))
+	if err != nil {
+		return "", fmt.Errorf("spin-terraform-aws's tags: %w", err)
+	}
+	if r == "" {
+		return "", fmt.Errorf("%s holds no release of spin-terraform-aws: fetch its tags (git fetch --tags)", tf)
+	}
+	return r, nil
 }

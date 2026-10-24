@@ -4,75 +4,95 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 )
 
 // checkCommands holds the hand-written pages to the tree they describe: every `spin` command in
 // a page's shell block must be one the CLI has, with flags its help lists, and every `task` one
 // spin's Taskfile has. The reference pages are the CLI's own help; the guides only quote it, and
-// a renamed flag would otherwise leave a page telling people to type something that fails.
-func checkCommands(docs, spin, bin, home string) ([]string, error) {
+// a renamed flag would otherwise leave a page telling people to type something that fails. The
+// commands the components under src show - the landing page's story - are held the same way.
+func checkCommands(docs, src, spin, bin, home string) ([]string, error) {
 	tasks, err := taskNames(spin)
 	if err != nil {
 		return nil, err
 	}
 	cli := cliHelp{bin: bin, home: home, seen: map[string]helpText{}}
 	var bad []string
-	err = filepath.WalkDir(docs, func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if d.IsDir() && d.Name() == "reference" {
-			return fs.SkipDir
-		}
-		if d.IsDir() || !page(path) {
-			return nil
-		}
+	err = handPages(docs, func(path string, _ []byte) error {
 		lines, err := shellLines(path)
 		if err != nil {
 			return err
 		}
-		// A block that changes into another checkout - spin-stack/ami's, say - runs that
-		// one's tasks from there on.
-		block, elsewhere := -1, false
-		for _, l := range lines {
-			if l.block != block {
-				block, elsewhere = l.block, false
+		b, err := checkShell(path, lines, cli, tasks)
+		bad = append(bad, b...)
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+	components, err := componentCommands(src)
+	if err != nil {
+		return nil, err
+	}
+	files := make([]string, 0, len(components))
+	for f := range components {
+		files = append(files, f)
+	}
+	sort.Strings(files)
+	for _, f := range files {
+		b, err := checkShell(f, components[f], cli, tasks)
+		if err != nil {
+			return nil, err
+		}
+		bad = append(bad, b...)
+	}
+	return bad, nil
+}
+
+// checkShell says which of one file's commands spin's CLI or Taskfile does not have.
+func checkShell(path string, lines []shellLine, cli cliHelp, tasks map[string]bool) ([]string, error) {
+	var bad []string
+	// A block that changes into another checkout - spin-stack/ami's, say - runs that one's
+	// tasks from there on.
+	block, elsewhere := -1, false
+	for _, l := range lines {
+		if l.block != block {
+			block, elsewhere = l.block, false
+		}
+		for _, words := range shellCommands(l.text) {
+			for len(words) > 0 && envAssign.MatchString(words[0]) {
+				words = words[1:]
 			}
-			for _, words := range shellCommands(l.text) {
-				for len(words) > 0 && envAssign.MatchString(words[0]) {
-					words = words[1:]
+			if len(words) == 0 {
+				continue
+			}
+			var why string
+			var err error
+			switch words[0] {
+			case "cd":
+				elsewhere = len(words) > 1 && filepath.Base(words[1]) != "spin"
+			case "spin":
+				why, err = cli.check(words[1:])
+			case "task":
+				if !elsewhere {
+					why = checkTask(words[1:], tasks)
 				}
-				if len(words) == 0 {
-					continue
-				}
-				var why string
-				switch words[0] {
-				case "cd":
-					elsewhere = len(words) > 1 && filepath.Base(words[1]) != "spin"
-				case "spin":
-					why, err = cli.check(words[1:])
-				case "task":
-					if !elsewhere {
-						why = checkTask(words[1:], tasks)
-					}
-				}
-				if err != nil {
-					return err
-				}
-				if why != "" {
-					bad = append(bad, fmt.Sprintf("%s:%d: %s", path, l.n, why))
-				}
+			}
+			if err != nil {
+				return nil, err
+			}
+			if why != "" {
+				bad = append(bad, fmt.Sprintf("%s:%d: %s", path, l.n, why))
 			}
 		}
-		return nil
-	})
-	return bad, err
+	}
+	return bad, nil
 }
 
 // page says whether a file is one of the site's pages: Markdown, or MDX for the pages that use

@@ -32,6 +32,8 @@ func run() error {
 	only := flag.String("only", "spin,terraform,brand", "the sources to generate from: all three, or terraform,brand, which needs no spin checkout and keeps what the site has of spin")
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
+	src := flag.String("src", "src", "the site's source, whose components' commands and claims are checked")
+	constantsData := flag.String("constants", "src/data/constants.json", "the figures the code decides, for <Value>")
 	data := flag.String("data", "src/data/reference.json", "what the site documents, for the pages to read")
 	featuresData := flag.String("features", "src/data/features.json", "the feature board, for the pages' feature: links")
 	openapi := flag.String("openapi", "public/openapi.json", "where the site serves the control plane's OpenAPI document")
@@ -50,48 +52,89 @@ func run() error {
 		return err
 	}
 	from := map[string]checkout{"spin-terraform-aws": {*tf, tfCommit}}
-	pages, err := terraformPages(*tf)
-	if err != nil {
-		return err
-	}
+	pages := map[string][]byte{}
 	dirs := []string{"terraform"}
 	var r reference
+	var c constants
 	var stale, bad []string
 	if withSpin {
-		s, err := spinHalf(*spin, *docs, pages, *outputsDir, *featuresData, *openapi, *check)
+		s, err := spinHalf(*spin, *docs, *src, pages, *outputsDir, *featuresData, *openapi, *check)
 		if err != nil {
 			return err
 		}
 		r, stale, bad = s.ref, s.stale, s.bad
 		from["spin"] = checkout{*spin, r.Spin.Commit}
 		dirs = append(dirs, "status", "cli", "configuration", "api", "security")
+		if err := spinConstants(&c, *spin); err != nil {
+			return err
+		}
 	} else {
 		// The spin half stays as the site has it: what the reference is generated from, and the
 		// board's counts, are spin's to say, and only a run with spin's checkout says them.
 		if r, err = readReference(*data); err != nil {
 			return err
 		}
+		if c, err = readConstants(*constantsData); err != nil {
+			return err
+		}
 		*spin = ""
 	}
+	installs := r.Spin.Installs
 	if err := publicData(&r, *tf, *brand); err != nil {
+		return err
+	}
+	if withSpin {
+		if r.Spin.Machine, err = machineOf(*spin, r.Spin.Installs); err != nil {
+			return err
+		}
+	} else if r.Spin.Installs != installs {
+		// What the release is made of is read from spin at its tag.
+		bad = append(bad, fmt.Sprintf("images.json's newest release is %s, and %s says %s: run task reference with a spin checkout", r.Spin.Installs, *data, installs))
+	}
+	if err := terraformConstants(&c, *tf); err != nil {
 		return err
 	}
 	ref, err := r.encode()
 	if err != nil {
 		return err
 	}
-	images, err := imagesPage(*tf, r.Spin.Installs)
-	if err != nil {
-		return err
-	}
-	for k, v := range images {
-		pages[k] = v
+	for _, gen := range []func() (map[string][]byte, error){
+		func() (map[string][]byte, error) { return terraformPages(*tf, r.Terraform.Release) },
+		func() (map[string][]byte, error) { return imagesPage(*tf, r.Spin.Installs) },
+		func() (map[string][]byte, error) { return releasePage(r, *tf) },
+	} {
+		p, err := gen()
+		if err != nil {
+			return err
+		}
+		for k, v := range p {
+			pages[k] = v
+		}
 	}
 	written, err := sync(*out, dirs, pages, *check)
 	if err != nil {
 		return err
 	}
 	stale = append(stale, written...)
+	procedures, err := includedPages(*tf, tfCommit)
+	if err != nil {
+		return err
+	}
+	figures, err := c.encode()
+	if err != nil {
+		return err
+	}
+	files := map[string][]byte{*data: ref, *constantsData: figures}
+	for page, raw := range procedures {
+		files[filepath.Join(*docs, page)] = raw
+	}
+	for _, path := range sortedKeys(files) {
+		if differs, err := syncFile(path, files[path], *check); err != nil {
+			return err
+		} else if differs {
+			stale = append(stale, path)
+		}
+	}
 	drawn, err := diagramFiles(from, *assets, *figuresData, *check)
 	if err != nil {
 		return err
@@ -102,17 +145,12 @@ func run() error {
 		return err
 	}
 	stale = append(stale, branded...)
-	if differs, err := syncFile(*data, ref, *check); err != nil {
-		return err
-	} else if differs {
-		stale = append(stale, *data)
-	}
 	shotBad, shotStale, err := checkShots(*spin, r.Spin.Installs, *check)
 	if err != nil {
 		return err
 	}
 	stale = append(stale, shotStale...)
-	releases, err := pinReleases(*docs, r.Spin.Installs, *check)
+	releases, err := pinReleases(*docs, r.Spin.Installs, r.Terraform.Release, *check)
 	if err != nil {
 		return err
 	}
@@ -121,6 +159,8 @@ func run() error {
 	for _, c := range []func() ([]string, error){
 		func() ([]string, error) { return checkDescriptions(*docs) },
 		func() ([]string, error) { return checkRepos(*docs) },
+		func() ([]string, error) { return checkDomains(*docs, *tf) },
+		func() ([]string, error) { return checkTofu(*docs, *tf) },
 	} {
 		b, err := c()
 		if err != nil {
@@ -168,7 +208,7 @@ type spinWritten struct {
 // spinHalf builds spin's CLI and writes, into pages, everything read from spin - the status,
 // CLI, configuration, API and security pages - and the files beside them, then checks the
 // hand-written pages against spin.
-func spinHalf(spin, docs string, pages map[string][]byte, outputsDir, featuresData, openapi string, check bool) (spinWritten, error) {
+func spinHalf(spin, docs, src string, pages map[string][]byte, outputsDir, featuresData, openapi string, check bool) (spinWritten, error) {
 	var w spinWritten
 	// The CLI is built once, here, and runs with this empty directory as its HOME.
 	home, err := os.MkdirTemp("", "refgen")
@@ -227,7 +267,7 @@ func spinHalf(spin, docs string, pages map[string][]byte, outputsDir, featuresDa
 			w.stale = append(w.stale, path)
 		}
 	}
-	bad, err := checkCommands(docs, spin, bin, home)
+	bad, err := checkCommands(docs, src, spin, bin, home)
 	if err != nil {
 		return w, err
 	}
@@ -237,6 +277,7 @@ func spinHalf(spin, docs string, pages map[string][]byte, outputsDir, featuresDa
 		func() ([]string, error) { return checkEnv(docs, spin) },
 		func() ([]string, error) { return checkStates(docs, pages) },
 		func() ([]string, error) { return checkFeatureLinks(docs, rows) },
+		func() ([]string, error) { return checkCardFeatures(docs, src, rows) },
 	} {
 		b, err := c()
 		if err != nil {
@@ -321,4 +362,13 @@ func frontmatter(source, title, description string, order int) string {
 	return fmt.Sprintf("---\ntitle: %q\ndescription: %q\nsource: %q\neditUrl: false\nsidebar:\n  order: %d\n---\n\n"+
 		"<!-- Generated by tools/refgen from %s. Edit the source, not this file. -->\n\n",
 		title, description, source, order, source)
+}
+
+func sortedKeys[V any](m map[string]V) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }

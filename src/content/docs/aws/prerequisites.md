@@ -39,10 +39,10 @@ for its certificate:
 
 | Name | Module | What |
 |---|---|---|
-| `term.<domain>` | [`modules/terminal`](https://github.com/spin-stack/spin-terraform-aws/tree/main/modules/terminal) | The browser terminal: an SSH client for a workspace, in the browser, that signs in with a passkey |
-| `id.<domain>` | [`modules/identity-issuer`](https://github.com/spin-stack/spin-terraform-aws/tree/main/modules/identity-issuer) | The identity issuer: the documents a system outside Spinbox verifies a workspace's identity token with |
+| `term.<domain>` | [`modules/terminal`](/reference/terraform/terminal/) | The browser terminal: an SSH client for a workspace, in the browser, that signs in with a passkey |
+| `id.<domain>` | [`modules/identity-issuer`](/reference/terraform/identity-issuer/) | The identity issuer: the documents a system outside Spinbox verifies a workspace's identity token with |
 
-Each module's README says what it needs and how to add it.
+Each module's page says what it takes, and its README what it needs and how to add it.
 
 ## Room for runners
 

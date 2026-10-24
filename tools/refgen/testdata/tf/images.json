@@ -1,0 +1,1 @@
+{"v20261019.02": {"control-plane": {"us-east-1": "ami-1", "eu-west-1": "ami-9"}, "proxy": {"us-east-1": "ami-2"}, "runner": {"us-east-1": "ami-3"}}}

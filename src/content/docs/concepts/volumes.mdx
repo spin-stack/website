@@ -3,6 +3,8 @@ title: Disks and storage
 description: "How a workspace's disk is stored: layers in the bucket, a cache on the runner, encryption, when work is uploaded, and what deleting removes."
 ---
 
+import Value from '../../../components/Value.astro';
+
 A workspace's disk is a **volume**. You never manage one directly: a volume is created with its
 workspace and goes with it. This page explains where its bytes are, because that decides what
 survives what.
@@ -19,7 +21,7 @@ one above it. This is a **commit**. It happens:
 - when the oldest write not yet in the bucket reaches the volume's **RPO** (recovery point
   objective): 5 minutes unless the installation's `volume_rpo_seconds` or the workspace's preset
   says otherwise (see the [configuration file](/reference/configuration/file/)),
-- once about 1 GiB has been written to the top layer,
+- once about <Value name="rotateAtBytes" /> has been written to the top layer,
 - when a snapshot is taken,
 - when the workspace stops. The stop stays `STOPPING` until the layer is in the bucket.
   `spin workspace stop --force` skips this, and what was written since the last commit stays
