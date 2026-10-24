@@ -1,0 +1,36 @@
+# What the site is generated from, each written once: `task sources` fetches every pin into
+# .sources/, refgen fails when src/data/reference.json records another commit, and
+# `task sources:bump` moves them to the newest releases, which .github/workflows/sync.yml does
+# every day for a person to review. It is go-tools' versions format, held by
+# tools/sources/repo_test.go as any repository's is.
+
+- name: spin
+  kind: git
+  source: https://github.com/spin-stack/spin
+  version: main
+  pin: 77380b13da641c24e3f79b9c7586c39888f4e7ba
+  track: github-release
+  note: >-
+    A commit of main, not a release: v20261019.02, the newest, has no feature board, and the site
+    documents the release cut from main after it. A bump moves to a release only once one holds
+    this commit, never back to an older one. Private: fetched with the sources App's token.
+
+- name: spin-terraform-aws
+  kind: git
+  source: https://github.com/spin-stack/spin-terraform-aws
+  version: v20261024.01
+  pin: 3df623f0ca2b7f91650e0ac857ba0bde295e0481
+  track: github-release
+  note: >-
+    The module the AWS pages describe and pin, and images.json, the releases an installation can
+    run. Fetched with its tags: a page names the newest release the commit holds.
+
+- name: brand
+  kind: git
+  source: https://github.com/spin-stack/brand
+  version: main
+  pin: c882b6f0f3901787525ef16ef29058c9c1418cbe
+  track: branch
+  note: >-
+    The palette, the logos and the screenshots. brand cuts no releases, so its main is what it
+    has to say; the screenshots are compared at the release they were taken of.

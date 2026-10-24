@@ -1,10 +1,13 @@
 name: Pages
 
-# Builds the site on every push and pull request with task gate, as a developer does: fails on a
-# broken link or a page without the experimental notice, and publishes main to GitHub Pages. The
-# reference pages are committed. The gate holds what they take from spin-terraform-aws and brand,
-# both public, to those repositories at the commits src/data/reference.json records; what they
-# take from spin is held by `task reference:check`, which this job runs once it can check spin out.
+# Builds the site on every push and pull request as a developer checks it, and publishes main to
+# GitHub Pages: task check, the reference against spin, spin-terraform-aws and brand at the
+# commits versions.yaml pins, and the gate - the build, every link, a page without the
+# experimental notice. spin is private: the sources App's token reads it, in the one step that
+# fetches, and the steps after it build and run spin's CLI with no token at all. A pull request
+# from a fork has no secret, so it runs task check:public, which holds the site to the public
+# sources and keeps what it says of spin as reference.json has it. Dependabot's pull requests
+# have the App as a Dependabot secret, and run the whole check.
 
 on:
   push:
@@ -24,6 +27,9 @@ jobs:
     # The check main's ruleset requires, named Gate in every spin-stack repository: the build.
     name: Gate
     runs-on: ubuntu-latest
+    env:
+      # Whether this run has the sources App: a secret cannot be asked in an if, its presence can.
+      SOURCES_APP: ${{ secrets.SOURCES_APP_KEY != '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -38,9 +44,33 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
-      # What a developer runs, with the Task go.mod pins: task gate, the install through Socket
-      # Firewall among it.
-      - run: go tool task gate
+          # The modules and the build cache, spin's among them: spin is pinned in versions.yaml,
+          # so a bump of it is a new key and every other run builds its CLI from the cache.
+          cache-dependency-path: |
+            go.sum
+            versions.yaml
+      # Read-only, on spin alone: the public sources need no token.
+      - id: sources-token
+        if: env.SOURCES_APP == 'true'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.SOURCES_APP_ID }}
+          private-key: ${{ secrets.SOURCES_APP_KEY }}
+          owner: spin-stack
+          repositories: spin
+          permission-contents: read
+      - name: Sources
+        if: env.SOURCES_APP == 'true'
+        env:
+          # tools/sources hands it to its own git commands as GIT_CONFIG_*, and writes it nowhere.
+          SOURCES_TOKEN: ${{ steps.sources-token.outputs.token }}
+        run: go tool task sources
+      # What a developer runs, with the Task go.mod pins: task check, the install through Socket
+      # Firewall among it. The sources are fetched, so this asks nothing of spin.
+      - if: env.SOURCES_APP == 'true'
+        run: go tool task check
+      - if: env.SOURCES_APP != 'true'
+        run: go tool task check:public
       - if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

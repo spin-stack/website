@@ -40,6 +40,7 @@ func run() error {
 	outputsDir := flag.String("outputs", "src/data/output", "where what the CLI prints, as spin's goldens hold it, is copied")
 	assets := flag.String("diagrams", "src/assets/diagrams", "where the diagrams the source repositories draw are copied")
 	figuresData := flag.String("figures", "src/data/figures.json", "each diagram's source and words, for its Markdown twin")
+	pinned := flag.String("versions", "versions.yaml", "what the sources are pinned at, which reference.json must record")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	flag.Parse()
 
@@ -159,6 +160,7 @@ func run() error {
 	for _, c := range []func() ([]string, error){
 		func() ([]string, error) { return checkDescriptions(*docs) },
 		func() ([]string, error) { return checkRepos(*docs) },
+		func() ([]string, error) { return checkPins(*pinned, r) },
 		func() ([]string, error) { return checkDomains(*docs, *tf) },
 		func() ([]string, error) { return checkTofu(*docs, *tf) },
 	} {
