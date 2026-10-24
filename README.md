@@ -8,13 +8,14 @@ The rule this site keeps: a page is generated from the code it describes, or hel
 check that fails the build, or it does not exist. Everything below is one of those checks.
 
 ```
-task install      # dependencies
+task install      # dependencies, through Socket Firewall (go tool sfw)
 task dev          # http://localhost:4321, live reload
-task check        # the reference against the sources, the build, and every link
+task gate         # what CI runs: the install, the build, and every link
+task check        # the gate, and the reference against the sources
 task --list       # everything else
 ```
 
-`task check` is what CI runs and more: CI cannot read spin while it is private, so the reference
+`task gate` is what CI runs, and `task check` is that and more: CI cannot read spin while it is private, so the reference
 is checked against checkouts of spin, spin-terraform-aws and brand beside this one (`SPIN=`,
 `TERRAFORM=`, `BRAND=` to point elsewhere).
 
@@ -77,7 +78,8 @@ is checked against checkouts of spin, spin-terraform-aws and brand beside this o
 ## Contributing
 
 Pull requests are welcome. One from a fork runs the Gate once a maintainer approves it, and never
-deploys: only `main` publishes. Dependencies are locked; `pnpm-workspace.yaml` names the few that
+deploys: only `main` publishes. Dependencies are locked and installed through [Socket Firewall](https://spin-stack.github.io/go-tools/sfw/),
+which `go tool sfw check` holds every install and every workflow to; `pnpm-workspace.yaml` names the few that
 may run an install script, and a release must be a week old before it is taken.
 
 A security problem in Spinbox goes to a private advisory, never an issue: see

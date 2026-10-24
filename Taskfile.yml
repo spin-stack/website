@@ -12,9 +12,9 @@ vars:
 
 tasks:
   install:
-    desc: Install the site's dependencies from the lockfile.
+    desc: Install the site's dependencies from the lockfile, through Socket Firewall (go tool sfw).
     cmds:
-      - pnpm install --frozen-lockfile
+      - go tool sfw pnpm install --frozen-lockfile
 
   dev:
     desc: Serve the site with live reload.
@@ -46,10 +46,17 @@ tasks:
     cmds:
       - go run ./tools/linkcheck -external dist
 
+  gate:
+    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet, the build, and every link.
+    cmds:
+      - go tool sfw check
+      - task: install
+      - go vet ./...
+      - task: build
+      - task: links
+
   check:
     desc: Everything CI runs, and the reference against the sources.
     cmds:
       - task: reference:check
-      - go vet ./...
-      - task: build
-      - task: links
+      - task: gate
