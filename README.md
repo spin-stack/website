@@ -118,9 +118,16 @@ that is not one task (`go tool taskgate`).
 - **The look** is spin-stack/brand's: its palette, checked there for contrast and perceptual
   distance on real panels and through colour-vision deficiencies, and the organization's mark.
   `task reference` copies them from brand at its pin (`BRAND=` to point elsewhere) into
-  `src/styles/brand-*.css`, `src/assets/` and `public/`, with the app's screenshots, and
-  `task reference:check` fails on a copy that is not brand's, on screenshots of another release
-  than installations run, and on one whose test spin no longer has; `src/styles/custom.css` says only how the site's parts use them.
+  `src/styles/brand-*.css`, `src/assets/` and `public/`, and `task reference:check` fails on a
+  copy that is not brand's; `src/styles/custom.css` says only how the site's parts use them.
+- **The dashboard's screenshots** are the documented spin release's own: spin's `site-shots.yml`
+  takes them on the KVM fleet (`dashboard/e2e/site.spec.ts`) and puts them on the release as
+  `site-shots.tar.gz`, which `task sources` unpacks into `.sources/spin-site-shots` with the
+  sources token. `task reference` copies the one of each test that shoots into
+  `src/assets/shots` and records the release, the commit and the test in `src/data/shots.json`;
+  `task reference:check` fails on a picture that is not the release's, and on a record of
+  another release than the site documents. A release without the asset fails `task sources`,
+  saying to give it one: `gh workflow run site-shots.yml -R spin-stack/spin -f tag=<tag>`.
   IBM Plex is served from the site, and a hero draws a workspace's disk as its layers, worked
   step by step (`src/components/Hero.astro`, `Disk.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.

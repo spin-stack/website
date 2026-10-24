@@ -29,6 +29,7 @@ func run() error {
 	spin := flag.String("spin", "../spin", "a checkout of spin-stack/spin")
 	tf := flag.String("terraform", "../spin-terraform-aws", "a checkout of spin-stack/spin-terraform-aws")
 	brand := flag.String("brand", "../brand", "a checkout of spin-stack/brand")
+	shotsFrom := flag.String("shots", ".sources/spin-site-shots", "where task sources unpacked spin's release's site-shots.tar.gz")
 	only := flag.String("only", "spin,terraform,brand", "the sources to generate from: all three, or terraform,brand, which needs no spin checkout and keeps what the site has of spin")
 	out := flag.String("out", "src/content/docs/reference", "where the pages go")
 	docs := flag.String("docs", "src/content/docs", "the hand-written pages, whose commands are checked")
@@ -65,6 +66,11 @@ func run() error {
 		}
 		r, stale, bad = s.ref, s.stale, s.bad
 		from["spin"] = checkout{*spin, r.Spin.Commit}
+		shot, err := releaseShots(*spin, *shotsFrom, r.Spin, *check)
+		if err != nil {
+			return err
+		}
+		stale = append(stale, shot...)
 		dirs = append(dirs, "status", "cli", "configuration", "api", "security")
 		if err := spinConstants(&c, *spin); err != nil {
 			return err
@@ -146,7 +152,7 @@ func run() error {
 		return err
 	}
 	stale = append(stale, branded...)
-	shotBad, shotStale, err := checkShots(*spin, r.Spin.Installs, *check)
+	shotBad, shotStale, err := checkShots(r.Spin, *check)
 	if err != nil {
 		return err
 	}

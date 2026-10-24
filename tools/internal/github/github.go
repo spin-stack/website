@@ -7,9 +7,11 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -50,6 +52,30 @@ func (c *Client) Get(ctx context.Context, path string, out any) error {
 // File is a file of repo at ref, as its bytes.
 func (c *Client) File(ctx context.Context, repo, path, ref string) ([]byte, error) {
 	return c.send(ctx, http.MethodGet, "/repos/"+repo+"/contents/"+path+"?ref="+ref, nil, "application/vnd.github.raw")
+}
+
+// ErrNoAsset is a release that has no asset of the name asked for.
+var ErrNoAsset = errors.New("no such asset")
+
+// ReleaseAsset is the asset called name of repo's release tag, as its bytes, read through the
+// API as the token can read a private repository's. The API redirects to storage on another
+// host, and Go's client sends the Authorization header no further than GitHub.
+func (c *Client) ReleaseAsset(ctx context.Context, repo, tag, name string) ([]byte, error) {
+	var rel struct {
+		Assets []struct {
+			ID   int64  `json:"id"`
+			Name string `json:"name"`
+		} `json:"assets"`
+	}
+	if err := c.Get(ctx, "/repos/"+repo+"/releases/tags/"+url.PathEscape(tag), &rel); err != nil {
+		return nil, err
+	}
+	for _, a := range rel.Assets {
+		if a.Name == name {
+			return c.send(ctx, http.MethodGet, fmt.Sprintf("/repos/%s/releases/assets/%d", repo, a.ID), nil, "application/octet-stream")
+		}
+	}
+	return nil, fmt.Errorf("%s %s has no %s: %w", repo, tag, name, ErrNoAsset)
 }
 
 func (c *Client) send(ctx context.Context, method, path string, body any, accept string) ([]byte, error) {

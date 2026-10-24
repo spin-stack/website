@@ -4,12 +4,14 @@ version: '3'
 # reference pages from the sources they describe, linkcheck fails on a link the build did not
 # produce. SPIN, TERRAFORM and BRAND are checkouts of spin-stack/spin, spin-stack/spin-terraform-aws
 # and spin-stack/brand: by default the ones task sources fetches into .sources/, at the commits
-# versions.yaml pins.
+# versions.yaml pins. SHOTS is where it unpacks the dashboard's screenshots, which spin's
+# release carries as site-shots.tar.gz.
 
 vars:
   SPIN: '{{.SPIN | default ".sources/spin"}}'
   TERRAFORM: '{{.TERRAFORM | default ".sources/spin-terraform-aws"}}'
   BRAND: '{{.BRAND | default ".sources/brand"}}'
+  SHOTS: '{{.SHOTS | default ".sources/spin-site-shots"}}'
   BASE_PATH: '{{.BASE_PATH | default "/website"}}'
 
 tasks:
@@ -24,7 +26,7 @@ tasks:
       - pnpm dev
 
   sources:
-    desc: Fetch spin, spin-terraform-aws and brand into .sources/, each at the commit versions.yaml pins. spin is private - SOURCES_TOKEN, or git's own credentials, reads it.
+    desc: Fetch spin, spin-terraform-aws and brand into .sources/, each at the commit versions.yaml pins, and spin's release's screenshots (site-shots.tar.gz) beside them. spin is private - SOURCES_TOKEN, or git's own credentials, reads it.
     cmds:
       - go run ./tools/sources spin spin-terraform-aws brand
 
@@ -47,13 +49,13 @@ tasks:
     desc: Write the reference pages (CLI, Terraform, config file, API) and what the site copies from the spin, spin-terraform-aws and brand checkouts.
     cmds:
       - task: sources
-      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}}
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -shots {{.SHOTS}}
 
   reference:check:
     desc: Fail if a reference page is not what the sources say.
     cmds:
       - task: sources
-      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -check
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -shots {{.SHOTS}} -check
 
   reference:public:
     desc: Fail if what the site has of spin-terraform-aws and brand is not what they say at the commits versions.yaml pins. Needs no spin checkout, nor any credential.

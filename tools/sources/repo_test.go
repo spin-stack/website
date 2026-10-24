@@ -18,7 +18,7 @@ func TestThisRepositoryPassesTheGate(t *testing.T) {
 			"go.sum",
 			// What refgen writes: reference.json names the commits, and the rest link spin's
 			// tree at its commit (the status page's tests, the security pages, the diagrams) or
-			// copy what spin and brand recorded (the CLI's goldens' digests, the screenshots').
+			// copy what spin recorded (the CLI's goldens' digests, its release's screenshots').
 			"src/data/reference.json",
 			"src/data/figures.json",
 			"src/data/shots.json",
