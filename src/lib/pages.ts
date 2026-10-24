@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { value } from './constants';
 import { experimentalMarkdown } from './experimental';
 import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
@@ -103,6 +104,8 @@ export function toMarkdown(d: Doc, base: string): string {
 		const items = [...list.matchAll(/text:\s*'([^']+)',\s*href:\s*'([^']+)'/g)].map(([, t, h]) => `- [${t}](/${h.replace(/^\//, '')})`);
 		return `**${title}** ${text.trim()}\n\n${items.join('\n')}`;
 	});
+	// A figure the code decides is its text.
+	body = body.replace(/<Value\s+name="(\w+)"\s*\/>/g, (_, name: string) => value(name));
 	// A screenshot is its alt text: a twin has no picture to show.
 	body = body.replace(/!\[([^\]]*)\]\([^)]*\.png\)/g, '*Screenshot: $1.*');
 	// What a command prints is the same block of output.

@@ -3,6 +3,8 @@ title: Runners and hosts
 description: What a runner is, how it joins, how workspaces are placed on it, how runners scale from zero, and what happens when one is lost.
 ---
 
+import Value from '../../../components/Value.astro';
+
 A **runner** is a machine that runs workspaces. In the dashboard and the API a runner is also
 called a **host**. On AWS, runners are an autoscaling group of large EC2 machines with local
 NVMe disks and nested virtualization, spot by default.
@@ -28,7 +30,7 @@ the answer names the runners' role. There is no token to create, store or rotate
 
 A machine outside the group can join with a one-time registration token from Admin → Runners.
 
-A runner must be of the same release as the control plane or older, and no more than 90 days
+A runner must be of the same release as the control plane or older, and no more than <Value name="compatWindow" />
 older. A newer one is refused: it may speak of things the control plane does not know.
 
 ## Placement

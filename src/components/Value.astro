@@ -1,0 +1,12 @@
+---
+// A figure the code decides - a size, a window, a default - as src/data/constants.json has it
+// (src/lib/constants.ts). Its Markdown twin is the same text (src/lib/pages.ts).
+import { value } from '../lib/constants';
+
+interface Props {
+	name: string;
+}
+const { name } = Astro.props;
+---
+
+{value(name)}

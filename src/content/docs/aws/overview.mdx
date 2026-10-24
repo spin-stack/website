@@ -4,13 +4,14 @@ description: What an installation on AWS is made of, what the OpenTofu module cr
 ---
 
 import Figure from '../../../components/Figure.astro';
+import Value from '../../../components/Value.astro';
 
 An installation of Spinbox lives in one AWS account and one region. It is created by one OpenTofu
 module, [spin-terraform-aws](https://github.com/spin-stack/spin-terraform-aws):
 
 ```hcl
 module "spin" {
-  source       = "github.com/spin-stack/spin-terraform-aws?ref=<tag>"
+  source       = "github.com/spin-stack/spin-terraform-aws?ref=v20261024.01"
   spin_version = "v20261019.02"
   domain       = "spin.example.com"
 }
@@ -38,7 +39,7 @@ Pin `ref` to one of the module's tags, which are dated like Spinbox's releases
 - **The installation's secrets**: its CA and the first administrator's password in SSM Parameter
   Store, and its encryption, volume and identity keys in KMS.
 - **IAM roles** for each machine, all under one permissions boundary.
-- **A VPC flow log**, kept in CloudWatch for 30 days.
+- **A VPC flow log**, kept in CloudWatch for <Value name="logRetentionDays" />.
 
 Every machine boots **Spin OS**, the image published for the release, in the regions [Spin OS images](/reference/terraform/images/) lists.
 

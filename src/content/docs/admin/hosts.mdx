@@ -3,6 +3,8 @@ title: Operating hosts
 description: Drain, activate and revoke runners, see what runs where, replace a runner's machine, and add a runner outside the autoscaling group.
 ---
 
+import Value from '../../../components/Value.astro';
+
 Runners are also called **hosts**. An administrator manages them in **Admin → Runners** or with
 `spin admin runner`. For how runners join, scale and go away, see
 [Runners and hosts](/concepts/runners/).
@@ -85,4 +87,4 @@ most 30 days), and is shown once. `--team` makes a runner that only takes the te
 The same flags set what the runner advertises and whether it is preemptible.
 
 Such a machine needs KVM, and must run a release of Spinbox no newer than the control plane's and no
-more than 90 days older.
+more than <Value name="compatWindow" /> older.

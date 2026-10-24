@@ -4,6 +4,7 @@ description: What the internet can reach in an installation, which machine talks
 ---
 
 import Figure from '../../../components/Figure.astro';
+import Value from '../../../components/Value.astro';
 
 ## What the internet reaches
 
@@ -56,7 +57,7 @@ outside the VPC.
 
 ## What crossed the network is kept
 
-The VPC's flow log goes to CloudWatch for 30 days (`log_retention_days`); `flow_logs = false`
+The VPC's flow log goes to CloudWatch for <Value name="logRetentionDays" /> (`log_retention_days`); `flow_logs = false`
 turns it off. `dns_query_logs = true` turns on Route 53 Resolver's query log.
 
 A workspace's own traffic is controlled separately, by its network policies, on the runner. See

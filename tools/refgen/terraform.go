@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -10,17 +9,31 @@ import (
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 )
 
-// The modules an installation is made of, in the order a reader meets them.
-var tfModules = []struct{ dir, slug, title, what string }{
-	{".", "root", "The installation module", "the module an installation uses: every variable it takes and every output it gives"},
-	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own"},
-	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own"},
-	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles"},
+// tfModule is one module of spin-terraform-aws the site has a page of.
+type tfModule struct {
+	dir, slug, title, what string
+	// source is the file the page links as its source: the one its variables are declared in.
+	source string
+	// optional is a module an installation does not have unless it is added beside it: the root
+	// does not call it, so what it serves is not what an installation needs.
+	optional bool
+}
+
+// The modules an installation is made of, in the order a reader meets them, then the ones added
+// beside it.
+var tfModules = []tfModule{
+	{".", "root", "The installation module", "the module an installation uses: every variable it takes and every output it gives", "variables.tf", false},
+	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf", false},
+	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own", "modules/runners/variables.tf", false},
+	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/variables.tf", false},
+	{"modules/terminal", "terminal", "modules/terminal", "the optional browser terminal at term.<domain>, added beside an installation", "modules/terminal/terminal.tf", true},
+	{"modules/identity-issuer", "identity-issuer", "modules/identity-issuer", "the optional identity issuer at id.<domain>, added beside an installation", "modules/identity-issuer/issuer.tf", true},
 }
 
 // terraformPages reads each module's variables and outputs as OpenTofu would, so a variable
-// renamed or a default changed is a page changed.
-func terraformPages(tf string) (map[string][]byte, error) {
+// renamed or a default changed is a page changed. release is the module's newest release, which
+// each page's source pins.
+func terraformPages(tf, release string) (map[string][]byte, error) {
 	pages := map[string][]byte{}
 	for i, m := range tfModules {
 		mod, diags := tfconfig.LoadModule(filepath.Join(tf, m.dir))
@@ -28,12 +41,16 @@ func terraformPages(tf string) (map[string][]byte, error) {
 			return nil, fmt.Errorf("reading %s: %w", m.dir, diags.Err())
 		}
 		var b strings.Builder
-		b.WriteString(frontmatter("spin-terraform-aws:"+path.Join(m.dir, "variables.tf"), m.title, "spin-terraform-aws, "+m.what+".", i+1))
+		b.WriteString(frontmatter("spin-terraform-aws:"+m.source, m.title, "spin-terraform-aws, "+m.what+".", i+1))
 		src := "github.com/spin-stack/spin-terraform-aws"
 		if m.dir != "." {
 			src += "//" + m.dir
 		}
-		fmt.Fprintf(&b, "Source: `%s?ref=<tag>`. Generated from its `variables.tf` and `outputs.tf`.\n\n", src)
+		if m.optional {
+			fmt.Fprintf(&b, "Not part of an installation unless added beside it: the installation module does not call it. "+
+				"Its [README](https://github.com/spin-stack/spin-terraform-aws/tree/%s/%s) says what it needs and how to add it.\n\n", release, m.dir)
+		}
+		fmt.Fprintf(&b, "Source: `%s?ref=%s`. Generated from its variables and outputs.\n\n", src, release)
 
 		vars := make([]*tfconfig.Variable, 0, len(mod.Variables))
 		for _, v := range mod.Variables {

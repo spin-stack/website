@@ -4,7 +4,12 @@ go 1.27
 
 toolchain go1.27.3
 
-require github.com/hashicorp/terraform-config-inspect v0.0.0-20260904064934-75d64de68c31
+require (
+	github.com/hashicorp/hcl/v2 v2.20.1
+	github.com/hashicorp/terraform-config-inspect v0.0.0-20260904064934-75d64de68c31
+	github.com/spin-stack/go-tools v0.0.0-20261024214713-73b6a5169b11
+	github.com/zclconf/go-cty v1.14.4
+)
 
 require (
 	cel.dev/expr v0.25.2 // indirect
@@ -86,7 +91,6 @@ require (
 	github.com/hashicorp/go-getter v1.8.8 // indirect
 	github.com/hashicorp/go-version v1.9.0 // indirect
 	github.com/hashicorp/hcl v0.0.0-20170504190234-a4b07c25de5f // indirect
-	github.com/hashicorp/hcl/v2 v2.20.1 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.19.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.4.0 // indirect
@@ -109,14 +113,12 @@ require (
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.8.1 // indirect
-	github.com/spin-stack/go-tools v0.0.0-20261024214713-73b6a5169b11 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/stretchr/testify v1.12.1 // indirect
 	github.com/u-root/u-root v0.16.0 // indirect
 	github.com/u-root/uio v0.0.0-20240224005618-d2acac8f3701 // indirect
 	github.com/ulikunitz/xz v0.5.16 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	github.com/zclconf/go-cty v1.14.4 // indirect
 	github.com/zeebo/xxh3 v1.1.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.45.0 // indirect

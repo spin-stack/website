@@ -68,8 +68,27 @@ no CLI and keeps what the site says of spin as `reference.json` has it.
   The board is `src/data/features.json`, written by `task reference`.
 - **Commands on the other pages** are held to the same checkouts: every `spin` command in a
   shell block must be one the CLI has, with flags its help lists, and every `task` one spin's
-  Taskfile has (after a `cd` into another checkout, that one's). `task reference:check` fails
-  on one that is not.
+  Taskfile has (after a `cd` into another checkout, that one's). So is every `spin` command a
+  string of `src/lib/*.ts` or `src/components/*.astro` holds - the landing page's story.
+  `task reference:check` fails on one that is not.
+- **The landing page claims only what a test checks end to end**: every `feature="…"` of a
+  component and every step of `src/lib/story.ts` must name a built row of the board that names an
+  end-to-end test.
+- **The AWS pages are held to spin-terraform-aws.** Updating and removing an installation are the
+  module's README, included verbatim between its `<!-- BEGIN website:aws/update -->` and
+  `<!-- BEGIN website:aws/remove -->` markers and their END: edit the README, not
+  `aws/update.md` or `aws/remove.md`. On every `aws/` page, a `tofu state rm` or `tofu import`
+  address must be a resource of the module, a `-var` and a `tofu output` a variable and an output
+  of the root, and a snake_case name in backticks a variable or output of a module, or one of
+  `notTerraformNames` with why. The names `aws/prerequisites.md` lists are the ones the
+  installation's Route 53 records give, and the optional modules' beside them. A module ref,
+  `?ref=`, is the module's newest release (`terraform.release` in `reference.json`, the newest tag
+  the documented commit holds), which `task reference` rewrites it to.
+- **Figures the code decides** - a volume's commit size, how much older a runner may be, how long
+  CloudWatch keeps the logs - are `src/data/constants.json`, read from spin's constants and the
+  module's defaults by `task reference`, and a page shows one with `<Value name="…" />`.
+- **What a release is made of**, `reference/release.md`, is written from spin's `versions.yaml` at
+  the release installations run (its spin-machine), images.json and the module's newest release.
 - **Diagrams** are the ones spin and spin-terraform-aws draw beside their sources (`.dot`, `.d2`):
   `task reference` copies each into `src/assets/diagrams` and writes its words to
   `src/data/figures.json`, which a Markdown twin carries in the picture's place. The site draws

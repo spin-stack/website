@@ -1,0 +1,14 @@
+{
+	"rotateAtBytes": {
+		"text": "1 GiB",
+		"source": "spin:internal/storage/qcow/manager.go"
+	},
+	"compatWindow": {
+		"text": "90 days",
+		"source": "spin:internal/controlplane/compat/compat.go"
+	},
+	"logRetentionDays": {
+		"text": "30 days",
+		"source": "spin-terraform-aws:modules/controlplane/variables.tf"
+	}
+}
