@@ -100,8 +100,10 @@ spin workspace restore demo <clean-id>
 spin workspace start demo --wait
 ```
 
-The disk is back to the snapshot. The disk you left is kept among the workspace's snapshots,
-so you can restore to it too.
+The disk is back to the snapshot. Anything written after the snapshot is given up, unless a
+snapshot was taken after it: the `after` snapshot is still there, so
+`spin workspace restore demo <after-id>` undoes this restore. What the disk wrote after its last
+snapshot is lost.
 
 To go back with the processes as they were, take the snapshot with `--with-memory`, then:
 
