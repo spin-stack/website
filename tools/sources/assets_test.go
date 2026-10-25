@@ -129,3 +129,20 @@ func TestScreenshotsThatAreNotTheReleasesFail(t *testing.T) {
 		}
 	}
 }
+
+// A bump waits for the release's screenshots: a release without them yet is not ready, one with
+// them is, and a source the site takes no asset of is ready as it is.
+func TestABumpWaitsForTheReleasesScreenshots(t *testing.T) {
+	gh := releases(t, map[string][]byte{"v20261025.01": nil, "v20261026.01": []byte("shots")})
+	for tag, want := range map[string]bool{"v20261025.01": false, "v20261026.01": true} {
+		if got, err := ready(context.Background(), gh, spinAt("v20261024.01"), tag); err != nil || got != want {
+			t.Errorf("ready(%s) = %v, %v; want %v", tag, got, err, want)
+		}
+	}
+	if ok, err := ready(context.Background(), gh, versions.Entry{Name: "spin-terraform-aws"}, "v20261025.01"); err != nil || !ok {
+		t.Errorf("a source with no asset: ready = %v, %v; want true", ok, err)
+	}
+	if _, err := ready(context.Background(), gh, spinAt("v20261024.01"), "v20990101.01"); err == nil {
+		t.Error("ready took a 404 for an answer")
+	}
+}
