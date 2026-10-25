@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -86,51 +87,79 @@ func checkEnv(docs, spin string) ([]string, error) {
 	return bad, err
 }
 
-var (
-	stateRow  = regexp.MustCompile("(?m)^\\| `([A-Z_]+)` \\|")
-	enumValue = regexp.MustCompile("`WORKSPACE_STATE_([A-Z_]+)`")
-)
+// statesPage is the hand-written page whose table of states refgen writes.
+var statesPage = filepath.Join("concepts", "workspaces.md")
 
-// checkStates holds the workspaces page's table of states to the API's WorkspaceState, both
-// ways: the table says what each state means, which the API does not, and a state the API adds
-// is one the table must explain.
-func checkStates(docs string, pages map[string][]byte) ([]string, error) {
-	page := filepath.Join(docs, "concepts", "workspaces.md")
-	raw, err := os.ReadFile(page)
+// stateTable writes the workspaces page's table of states from the API's WorkspaceState: a row
+// a value, in the API's order, saying what spin's proto says of it, which the document carries
+// as x-enum-descriptions (spin's buf.gen.openapi.yaml asks for with-enum-value-descriptions).
+// A state is explained once, where it is defined, and one the API adds is a row the next sync
+// brings. The prose around the table is the page's own.
+func stateTable(docs, spin string, check bool) ([]string, error) {
+	raw, err := os.ReadFile(filepath.Join(spin, openAPIPath))
 	if err != nil {
 		return nil, err
 	}
-	types := pages[filepath.Join("api", "types.md")]
-	enum := section(types, "## WorkspaceState")
-	if enum == nil {
-		return []string{"the API reference has no WorkspaceState"}, nil
+	var doc struct {
+		Components struct {
+			Schemas map[string]struct {
+				Enum         []string `json:"enum"`
+				Descriptions []string `json:"x-enum-descriptions"`
+			} `json:"schemas"`
+		} `json:"components"`
 	}
-	want := map[string]bool{}
-	for _, m := range enumValue.FindAllSubmatch(enum, -1) {
-		if s := string(m[1]); s != "UNSPECIFIED" {
-			want[s] = true
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return nil, fmt.Errorf("%s: %w", openAPIPath, err)
+	}
+	state, ok := doc.Components.Schemas["spin.v1.WorkspaceState"]
+	if !ok {
+		return nil, fmt.Errorf("%s has no spin.v1.WorkspaceState", openAPIPath)
+	}
+	if len(state.Descriptions) != len(state.Enum) {
+		return nil, fmt.Errorf("%s: WorkspaceState has %d values and %d x-enum-descriptions: spin's buf.gen.openapi.yaml asks for with-enum-value-descriptions",
+			openAPIPath, len(state.Enum), len(state.Descriptions))
+	}
+	var table strings.Builder
+	table.WriteString("| State | Meaning |\n|---|---|\n")
+	for i, v := range state.Enum {
+		name := strings.TrimPrefix(v, "WORKSPACE_STATE_")
+		if name == "UNSPECIFIED" {
+			continue // never a workspace's state
 		}
-	}
-	table := section(raw, "## States")
-	if table == nil {
-		return []string{page + `: no "## States" section`}, nil
-	}
-	have := map[string]bool{}
-	for _, m := range stateRow.FindAllSubmatch(table, -1) {
-		have[string(m[1])] = true
-	}
-	var bad []string
-	for s := range have {
-		if !want[s] {
-			bad = append(bad, fmt.Sprintf("%s: the state %s is not one of the API's WorkspaceState", page, s))
+		meaning := strings.Join(strings.Fields(state.Descriptions[i]), " ")
+		if meaning == "" {
+			return nil, fmt.Errorf("%s: WorkspaceState %s says nothing of what it means: its comment in spin's proto is the row", openAPIPath, v)
 		}
+		fmt.Fprintf(&table, "| `%s` | %s |\n", name, strings.ReplaceAll(meaning, "|", `\|`))
 	}
-	for s := range want {
-		if !have[s] {
-			bad = append(bad, fmt.Sprintf("%s: the API's WorkspaceState %s has no row in the table of states", page, s))
+
+	page := filepath.Join(docs, statesPage)
+	have, err := os.ReadFile(page)
+	if err != nil {
+		return nil, err
+	}
+	// The table is the run of | lines that starts at the States section's header row.
+	_, after, ok := bytes.Cut(have, []byte("\n## States\n"))
+	header := bytes.Index(after, []byte("\n| State | Meaning |\n"))
+	if !ok || header < 0 || bytes.Contains(after[:header], []byte("\n#")) {
+		return nil, fmt.Errorf("%s: no table of states (| State | Meaning |) under \"## States\"", page)
+	}
+	begin := len(have) - len(after) + header + 1
+	end := begin
+	for end < len(have) && have[end] == '|' {
+		next := bytes.IndexByte(have[end:], '\n')
+		if next < 0 {
+			end = len(have)
+			break
 		}
+		end += next + 1
 	}
-	return bad, nil
+	want := append(append(append([]byte{}, have[:begin]...), table.String()...), have[end:]...)
+	differs, err := syncFile(page, want, check)
+	if err != nil || !differs {
+		return nil, err
+	}
+	return []string{page}, nil
 }
 
 // publicRepos are the spin-stack repositories a page may link to: each public, or made public

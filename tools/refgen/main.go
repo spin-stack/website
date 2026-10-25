@@ -260,6 +260,11 @@ func spinHalf(spin, docs, src string, pages map[string][]byte, outputsDir, featu
 		return w, err
 	}
 	w.stale = append(w.stale, printed...)
+	tabled, err := stateTable(docs, spin, check)
+	if err != nil {
+		return w, err
+	}
+	w.stale = append(w.stale, tabled...)
 	board, err := json.MarshalIndent(rows, "", "\t")
 	if err != nil {
 		return w, err
@@ -283,7 +288,6 @@ func spinHalf(spin, docs, src string, pages map[string][]byte, outputsDir, featu
 	for _, c := range []func() ([]string, error){
 		func() ([]string, error) { return checkLimits(docs, rows) },
 		func() ([]string, error) { return checkEnv(docs, spin) },
-		func() ([]string, error) { return checkStates(docs, pages) },
 		func() ([]string, error) { return checkFeatureLinks(docs, rows) },
 		func() ([]string, error) { return checkCardFeatures(docs, src, rows) },
 	} {
