@@ -7,7 +7,7 @@ toolchain go1.27.3
 require (
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20260904064934-75d64de68c31
-	github.com/spin-stack/go-tools v0.0.0-20261024214713-73b6a5169b11
+	github.com/spin-stack/go-tools v0.0.0-20261025033823-e4cbb3c884cc
 	github.com/zclconf/go-cty v1.14.4
 )
 
