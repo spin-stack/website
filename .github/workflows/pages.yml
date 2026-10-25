@@ -54,7 +54,7 @@ jobs:
         if: env.SOURCES_APP == 'true'
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
-          app-id: ${{ secrets.SOURCES_APP_ID }}
+          client-id: Iv23li1IcazrCq1yAVQt # spin-stack-website-sources' client ID, public: app-id is deprecated
           private-key: ${{ secrets.SOURCES_APP_KEY }}
           owner: spin-stack
           repositories: spin
