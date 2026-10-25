@@ -18,8 +18,8 @@
 - name: spin-terraform-aws
   kind: git
   source: https://github.com/spin-stack/spin-terraform-aws
-  version: v20261024.01
-  pin: 3df623f0ca2b7f91650e0ac857ba0bde295e0481
+  version: v20261025.01
+  pin: 488dc2db08ac7d0c177e5a7355902c258446342f
   track: github-release
   note: >-
     The module the AWS pages describe and pin, and images.json, the releases an installation can
