@@ -11063,7 +11063,10 @@
         "enum": [
           "NULL_VALUE"
         ],
-        "description": "Represents a JSON `null`.\n\n `NullValue` is a sentinel, using an enum with only one value to represent\n the null value for the `Value` type union.\n\n A field of type `NullValue` with any value other than `0` is considered\n invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set\n as a JSON `null` regardless of the integer value, and so will round trip to\n a `0` value."
+        "description": "Represents a JSON `null`.\n\n `NullValue` is a sentinel, using an enum with only one value to represent\n the null value for the `Value` type union.\n\n A field of type `NullValue` with any value other than `0` is considered\n invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set\n as a JSON `null` regardless of the integer value, and so will round trip to\n a `0` value.\n\n- `NULL_VALUE`: Null value.",
+        "x-enum-descriptions": [
+          "Null value."
+        ]
       },
       "google.protobuf.Struct": {
         "type": "object",
@@ -11379,7 +11382,12 @@
           "ALLOWED_EMAIL_TYPE_EMAIL",
           "ALLOWED_EMAIL_TYPE_DOMAIN"
         ],
-        "description": "Allowed email type enum"
+        "description": "Allowed email type enum\n\n- `ALLOWED_EMAIL_TYPE_EMAIL`: Exact email address match\n- `ALLOWED_EMAIL_TYPE_DOMAIN`: Domain suffix match (@domain.com)",
+        "x-enum-descriptions": [
+          "",
+          "Exact email address match",
+          "Domain suffix match (@domain.com)"
+        ]
       },
       "spin.v1.ApproveWorkspaceSignInRequest": {
         "type": "object",
@@ -11681,7 +11689,13 @@
           "BURST_MODE_TO_PRESET",
           "BURST_MODE_TO_HOST"
         ],
-        "description": "BurstMode is how a workspace of a preset may grow past what it starts with."
+        "description": "BurstMode is how a workspace of a preset may grow past what it starts with.\n\n- `BURST_MODE_FIXED`: FIXED starts at the preset's size and stays there.\n- `BURST_MODE_TO_PRESET`: TO_PRESET starts at the preset's burst floor and may grow to its size.\n- `BURST_MODE_TO_HOST`: TO_HOST starts at the preset's burst floor and may grow to everything its host has.",
+        "x-enum-descriptions": [
+          "",
+          "FIXED starts at the preset's size and stays there.",
+          "TO_PRESET starts at the preset's burst floor and may grow to its size.",
+          "TO_HOST starts at the preset's burst floor and may grow to everything its host has."
+        ]
       },
       "spin.v1.ChangePasswordRequest": {
         "type": "object",
@@ -12062,7 +12076,14 @@
           "CONFIG_ITEM_KIND_PRESET",
           "CONFIG_ITEM_KIND_POLICY"
         ],
-        "description": "What one item of the installation's config file is."
+        "description": "What one item of the installation's config file is.\n\n- `CONFIG_ITEM_KIND_SETTING`: A setting, by its key: registration_mode, default_network_tags, allowed_images...\n- `CONFIG_ITEM_KIND_EMAIL`: An address or domain registration admits, by itself.",
+        "x-enum-descriptions": [
+          "",
+          "A setting, by its key: registration_mode, default_network_tags, allowed_images...",
+          "An address or domain registration admits, by itself.",
+          "",
+          ""
+        ]
       },
       "spin.v1.ConfigureGitHubOAuthRequest": {
         "type": "object",
@@ -12932,6 +12953,14 @@
           "DEVICE_LOGIN_STATUS_COMPLETE",
           "DEVICE_LOGIN_STATUS_EXPIRED",
           "DEVICE_LOGIN_STATUS_DENIED"
+        ],
+        "description": "- `DEVICE_LOGIN_STATUS_PENDING`: User hasn't completed login yet\n- `DEVICE_LOGIN_STATUS_COMPLETE`: Login complete, token available\n- `DEVICE_LOGIN_STATUS_EXPIRED`: Device code expired\n- `DEVICE_LOGIN_STATUS_DENIED`: User denied the request",
+        "x-enum-descriptions": [
+          "",
+          "User hasn't completed login yet",
+          "Login complete, token available",
+          "Device code expired",
+          "User denied the request"
         ]
       },
       "spin.v1.DiffSnapshotsRequest": {
@@ -13337,6 +13366,14 @@
           "FILE_CHANGE_KIND_REMOVED",
           "FILE_CHANGE_KIND_MODIFIED",
           "FILE_CHANGE_KIND_TYPE_CHANGED"
+        ],
+        "description": "- `FILE_CHANGE_KIND_MODIFIED`: The same type on both sides, and a different content, mode, owner or symlink target.",
+        "x-enum-descriptions": [
+          "",
+          "",
+          "",
+          "The same type on both sides, and a different content, mode, owner or symlink target.",
+          ""
         ]
       },
       "spin.v1.FileState": {
@@ -13404,6 +13441,14 @@
           "FILE_TYPE_DIRECTORY",
           "FILE_TYPE_SYMLINK",
           "FILE_TYPE_OTHER"
+        ],
+        "description": "- `FILE_TYPE_OTHER`: A device, a FIFO or a socket.",
+        "x-enum-descriptions": [
+          "",
+          "",
+          "",
+          "",
+          "A device, a FIFO or a socket."
         ]
       },
       "spin.v1.FleetHostVersion": {
@@ -17249,7 +17294,12 @@
           "OUTSIDE_SHARE_STATE_PREPARING",
           "OUTSIDE_SHARE_STATE_READY"
         ],
-        "description": "OutsideShareState is how far a snapshot's share outside its team is."
+        "description": "OutsideShareState is how far a snapshot's share outside its team is.\n\n- `OUTSIDE_SHARE_STATE_UNSPECIFIED`: None: the snapshot was never shared outside its team, nor made public.\n- `OUTSIDE_SHARE_STATE_PREPARING`: A host is writing the keys a clone outside the team reads the snapshot with.\n- `OUTSIDE_SHARE_STATE_READY`: Somebody of another team can create a workspace from it.",
+        "x-enum-descriptions": [
+          "None: the snapshot was never shared outside its team, nor made public.",
+          "A host is writing the keys a clone outside the team reads the snapshot with.",
+          "Somebody of another team can create a workspace from it."
+        ]
       },
       "spin.v1.OwnerWord": {
         "type": "object",
@@ -17437,6 +17487,12 @@
           "PLATFORM_IMAGE_ARTIFACT_UNSPECIFIED",
           "PLATFORM_IMAGE_ARTIFACT_BASE",
           "PLATFORM_IMAGE_ARTIFACT_SUPERVISOR"
+        ],
+        "description": "- `PLATFORM_IMAGE_ARTIFACT_BASE`: The machine's base image, every workspace's disk's floor.\n- `PLATFORM_IMAGE_ARTIFACT_SUPERVISOR`: The supervisor extension every workspace is handed.",
+        "x-enum-descriptions": [
+          "",
+          "The machine's base image, every workspace's disk's floor.",
+          "The supervisor extension every workspace is handed."
         ]
       },
       "spin.v1.PlatformImageState": {
@@ -17450,6 +17506,16 @@
           "PLATFORM_IMAGE_STATE_FAILED",
           "PLATFORM_IMAGE_STATE_UNAVAILABLE",
           "PLATFORM_IMAGE_STATE_FOREIGN"
+        ],
+        "description": "- `PLATFORM_IMAGE_STATE_UNAVAILABLE`: This build carries nothing to publish.\n- `PLATFORM_IMAGE_STATE_FOREIGN`: The ref names an image somebody else published, which is left as it is.",
+        "x-enum-descriptions": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "This build carries nothing to publish.",
+          "The ref names an image somebody else published, which is left as it is."
         ]
       },
       "spin.v1.PlatformLogFieldValuesRequest": {
@@ -17518,7 +17584,13 @@
           "PORT_ACCESS_WHITELIST",
           "PORT_ACCESS_PUBLIC"
         ],
-        "description": "Who may reach a published port.\n\n Per port rather than per workspace: one workspace serves a demo anyone may see and an\n admin panel only its owner may, and a single setting for both makes the safe answer for\n one the wrong answer for the other.\n\n UNSPECIFIED is not a level and is never stored - the column's CHECK excludes it. A\n request that leaves it at proto3's zero is treated as PRIVATE, which is the direction to\n be wrong in: the cost of failing closed is a confusing error, and the cost of failing\n open is a port somebody published without meaning to."
+        "description": "Who may reach a published port.\n\n Per port rather than per workspace: one workspace serves a demo anyone may see and an\n admin panel only its owner may, and a single setting for both makes the safe answer for\n one the wrong answer for the other.\n\n UNSPECIFIED is not a level and is never stored - the column's CHECK excludes it. A\n request that leaves it at proto3's zero is treated as PRIVATE, which is the direction to\n be wrong in: the cost of failing closed is a confusing error, and the cost of failing\n open is a port somebody published without meaning to.\n\n- `PORT_ACCESS_PRIVATE`: Only the workspace's owner, who must be signed in.\n- `PORT_ACCESS_WHITELIST`: The owner, and the users the owner granted. See GrantPortAccess.\n- `PORT_ACCESS_PUBLIC`: Anyone, with no session at all. Nothing is asked and nobody is redirected to a login.\n  Until the workspace stops or fails: then the port is PRIVATE again, and made public again\n  when it is meant to be.",
+        "x-enum-descriptions": [
+          "",
+          "Only the workspace's owner, who must be signed in.",
+          "The owner, and the users the owner granted. See GrantPortAccess.",
+          "Anyone, with no session at all. Nothing is asked and nobody is redirected to a login.\n Until the workspace stops or fails: then the port is PRIVATE again, and made public again\n when it is meant to be."
+        ]
       },
       "spin.v1.PortGrant": {
         "type": "object",
@@ -17640,6 +17712,14 @@
           "PREBUILD_STATE_READY",
           "PREBUILD_STATE_FAILED",
           "PREBUILD_STATE_RETIRED"
+        ],
+        "description": "- `PREBUILD_STATE_RETIRED`: Superseded and given back: its snapshot is being deleted.",
+        "x-enum-descriptions": [
+          "",
+          "",
+          "",
+          "",
+          "Superseded and given back: its snapshot is being deleted."
         ]
       },
       "spin.v1.PreemptionSource": {
@@ -17968,7 +18048,13 @@
           "REGISTRATION_MODE_WHITELIST",
           "REGISTRATION_MODE_CLOSED"
         ],
-        "description": "Registration mode enum"
+        "description": "Registration mode enum\n\n- `REGISTRATION_MODE_OPEN`: Anyone can register\n- `REGISTRATION_MODE_WHITELIST`: Only whitelisted emails/domains\n- `REGISTRATION_MODE_CLOSED`: No new registrations",
+        "x-enum-descriptions": [
+          "",
+          "Anyone can register",
+          "Only whitelisted emails/domains",
+          "No new registrations"
+        ]
       },
       "spin.v1.RegistrationToken": {
         "type": "object",
@@ -18048,7 +18134,13 @@
           "REKEY_STATE_COPYING",
           "REKEY_STATE_READY"
         ],
-        "description": "RekeyState is how far a disk's re-key is."
+        "description": "RekeyState is how far a disk's re-key is.\n\n- `REKEY_STATE_PENDING`: Marked by a revoke: re-keyed once its workspace cannot run.\n- `REKEY_STATE_COPYING`: A host is copying the disk.\n- `REKEY_STATE_READY`: Copied: the workspace is pointed at the copy and the disk deleted on the next pass.",
+        "x-enum-descriptions": [
+          "",
+          "Marked by a revoke: re-keyed once its workspace cannot run.",
+          "A host is copying the disk.",
+          "Copied: the workspace is pointed at the copy and the disk deleted on the next pass."
+        ]
       },
       "spin.v1.RekeyVolumeRequest": {
         "type": "object",
@@ -19445,6 +19537,12 @@
           "SIGNATURE_KIND_UNSPECIFIED",
           "SIGNATURE_KIND_KEYRING",
           "SIGNATURE_KIND_ROSTER"
+        ],
+        "description": "- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n  keyring before it; the first, and one started anew, with a key it lists.\n- `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n  an owner the roster before it lists; the first, by an owner it lists.",
+        "x-enum-descriptions": [
+          "",
+          "A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n keyring before it; the first, and one started anew, with a key it lists.",
+          "A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n an owner the roster before it lists; the first, by an owner it lists."
         ]
       },
       "spin.v1.SignedDocument": {
@@ -19541,7 +19639,13 @@
           "SNAPSHOT_ACCESS_TYPE_SHARED",
           "SNAPSHOT_ACCESS_TYPE_PUBLIC"
         ],
-        "description": "Access type for snapshots"
+        "description": "Access type for snapshots\n\n- `SNAPSHOT_ACCESS_TYPE_OWNER`: Owner of the source workspace\n- `SNAPSHOT_ACCESS_TYPE_SHARED`: Explicitly shared with user\n- `SNAPSHOT_ACCESS_TYPE_PUBLIC`: Public snapshot",
+        "x-enum-descriptions": [
+          "",
+          "Owner of the source workspace",
+          "Explicitly shared with user",
+          "Public snapshot"
+        ]
       },
       "spin.v1.SnapshotShare": {
         "type": "object",
@@ -19593,7 +19697,14 @@
           "SNAPSHOT_STATE_FAILED",
           "SNAPSHOT_STATE_DELETING"
         ],
-        "description": "How far along a snapshot is. A snapshot is taken by the host serving the volume, so it\n exists before it is usable: CREATING is the window between asking for one and the host\n reporting the commit it published."
+        "description": "How far along a snapshot is. A snapshot is taken by the host serving the volume, so it\n exists before it is usable: CREATING is the window between asking for one and the host\n reporting the commit it published.\n\n- `SNAPSHOT_STATE_CREATING`: Requested; the host has not published a commit yet\n- `SNAPSHOT_STATE_PUBLISHED`: Usable: a workspace can be created from it",
+        "x-enum-descriptions": [
+          "",
+          "Requested; the host has not published a commit yet",
+          "Usable: a workspace can be created from it",
+          "",
+          ""
+        ]
       },
       "spin.v1.Span": {
         "type": "object",
@@ -19819,6 +19930,15 @@
           "STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE",
           "STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING",
           "STATUS_DISAGREEMENT_KIND_UNHEALTHY"
+        ],
+        "description": "- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`: The control plane says the workspace runs and the supervisor has gone quiet for longer\n  than several heartbeat intervals.\n- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`: The control plane says the workspace runs and no supervisor ever reported.\n- `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`: The host holding this workspace is not ACTIVE, or has stopped heartbeating.\n- `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`: The volume under the workspace is refusing to serve.\n- `STATUS_DISAGREEMENT_KIND_UNHEALTHY`: The supervisor reports a failing health check.",
+        "x-enum-descriptions": [
+          "",
+          "The control plane says the workspace runs and the supervisor has gone quiet for longer\n than several heartbeat intervals.",
+          "The control plane says the workspace runs and no supervisor ever reported.",
+          "The host holding this workspace is not ACTIVE, or has stopped heartbeating.",
+          "The volume under the workspace is refusing to serve.",
+          "The supervisor reports a failing health check."
         ]
       },
       "spin.v1.StopWorkspaceRequest": {
@@ -19999,6 +20119,15 @@
           "STORED_VOLUME_KIND_EXTENSION",
           "STORED_VOLUME_KIND_UNCLAIMED",
           "STORED_VOLUME_KIND_ORPHAN"
+        ],
+        "description": "- `STORED_VOLUME_KIND_WORKSPACE`: A workspace's disk, now or before.\n- `STORED_VOLUME_KIND_IMAGE`: An image a workspace's disk is cloned from.\n- `STORED_VOLUME_KIND_EXTENSION`: A release of an extension: the supervisor, the VS Code servers.\n- `STORED_VOLUME_KIND_UNCLAIMED`: A volume the database has and nothing names: a clone being made, or a delete not finished.\n- `STORED_VOLUME_KIND_ORPHAN`: Objects under a volume the database does not have.",
+        "x-enum-descriptions": [
+          "",
+          "A workspace's disk, now or before.",
+          "An image a workspace's disk is cloned from.",
+          "A release of an extension: the supervisor, the VS Code servers.",
+          "A volume the database has and nothing names: a clone being made, or a delete not finished.",
+          "Objects under a volume the database does not have."
         ]
       },
       "spin.v1.SubmitSignatureRequest": {
@@ -20325,7 +20454,13 @@
           "TEAM_ROLE_ADMIN",
           "TEAM_ROLE_MEMBER"
         ],
-        "description": "Team member role enum"
+        "description": "Team member role enum\n\n- `TEAM_ROLE_OWNER`: Full control, can delete team\n- `TEAM_ROLE_ADMIN`: Can manage members and settings\n- `TEAM_ROLE_MEMBER`: Can create workspaces, view team resources",
+        "x-enum-descriptions": [
+          "",
+          "Full control, can delete team",
+          "Can manage members and settings",
+          "Can create workspaces, view team resources"
+        ]
       },
       "spin.v1.TeamSecret": {
         "type": "object",
@@ -21244,6 +21379,14 @@
           "VS_CODE_SERVER_PUBLISH_STATE_WORKING",
           "VS_CODE_SERVER_PUBLISH_STATE_PUBLISHED",
           "VS_CODE_SERVER_PUBLISH_STATE_FAILED"
+        ],
+        "description": "- `VS_CODE_SERVER_PUBLISH_STATE_IDLE`: Nothing published since this control plane started.",
+        "x-enum-descriptions": [
+          "",
+          "Nothing published since this control plane started.",
+          "",
+          "",
+          ""
         ]
       },
       "spin.v1.ValidateTaskfileRequest": {
@@ -21667,7 +21810,17 @@
           "WORKSPACE_ACTION_SUSPEND",
           "WORKSPACE_ACTION_START_FROM_DISK"
         ],
-        "description": "WorkspaceAction is an act a person can ask of a workspace."
+        "description": "WorkspaceAction is an act a person can ask of a workspace.\n\n- `WORKSPACE_ACTION_FORCE_STOP`: Stop without waiting for the guest: also what ends a stop that does not finish.\n- `WORKSPACE_ACTION_SUSPEND`: Put down with its memory, to be resumed where it was.\n- `WORKSPACE_ACTION_START_FROM_DISK`: Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n  offered when that memory's machine is run by no host (Workspace.memory_machine_gone).",
+        "x-enum-descriptions": [
+          "",
+          "",
+          "",
+          "Stop without waiting for the guest: also what ends a stop that does not finish.",
+          "",
+          "",
+          "Put down with its memory, to be resumed where it was.",
+          "Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n offered when that memory's machine is run by no host (Workspace.memory_machine_gone)."
+        ]
       },
       "spin.v1.WorkspaceCost": {
         "type": "object",
@@ -21837,6 +21990,32 @@
           "WORKSPACE_EVENT_TYPE_SUSPENSION_DUE",
           "WORKSPACE_EVENT_TYPE_KEPT",
           "WORKSPACE_EVENT_TYPE_UNRESPONSIVE"
+        ],
+        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back",
+        "x-enum-descriptions": [
+          "",
+          "Workspace was created",
+          "Workspace was started",
+          "Workspace was stopped; its disk is kept, and no snapshot is taken",
+          "Manual snapshot",
+          "Workspace was deleted",
+          "Workspace start failed",
+          "Its disk was put back to a snapshot",
+          "It went on from a snapshot's memory",
+          "Suspended, its memory could not be resumed, and its disk was booted",
+          "An administrator held it: stopped, and startable by nobody until released",
+          "The hold was released: back to stopped, where it was held from",
+          "A workspace that waited for a host was given one, and its disk there",
+          "Deleted into the trash: its disk kept, its owner able to undelete it",
+          "Taken back out of the trash",
+          "Suspended on its host and resumed on another, which had room for what it was granted",
+          "Its host was drained or went away: suspended there, it is resumed on another on its own",
+          "A stop on a host that can be taken away could not publish its disk first, so it runs on",
+          "Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them",
+          "It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them",
+          "A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it",
+          "Somebody kept it awake until a time: no suspension before it",
+          "Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back"
         ]
       },
       "spin.v1.WorkspaceFailure": {
@@ -21857,7 +22036,22 @@
           "WORKSPACE_FAILURE_NO_HOST",
           "WORKSPACE_FAILURE_MACHINE_CHANGED"
         ],
-        "description": "WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a\n person can do about it - and a failure rate split by the repair it needs - is decided by the\n kind rather than by the text of an error. The reason beside it is the detail.\n\n One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a\n person is shown is the one the host named, with no second list to keep in step."
+        "description": "WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a\n person can do about it - and a failure rate split by the repair it needs - is decided by the\n kind rather than by the text of an error. The reason beside it is the detail.\n\n One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a\n person is shown is the one the host named, with no second list to keep in step.\n\n- `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification.\n- `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says\n  why), or what the disk was to be made from is gone.\n- `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named.\n- `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up.\n- `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for.\n- `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot.\n- `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem.\n- `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory\n  cannot be resumed anywhere, and the control plane boots the disk with the newest releases.\n- `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to: its guest powered off, or its QEMU crashed or was\n  killed.\n- `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed.\n- `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n  attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.\n- `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host\n  that is not connected. The control plane's verdict, never a host's.\n- `WORKSPACE_FAILURE_MACHINE_CHANGED`: Its memory was taken on a machine no host of the installation runs now: the machine's\n  contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n  the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n  owner's to choose (StartWorkspaceRequest.from_disk).",
+        "x-enum-descriptions": [
+          "Not classified. A failure that lands here is a site missing its classification.",
+          "Its disk could not be served or made: the host is not serving its volume (its refusal says\n why), or what the disk was to be made from is gone.",
+          "An extension could not be attached, or the releases it starts with could not be named.",
+          "The machine's network namespace or its tags could not be set up.",
+          "The machine could not be given the cores or memory it was asked for.",
+          "QEMU could not be prepared or did not boot.",
+          "The guest booted and did not take its identity or its own filesystem.",
+          "A resume needs an extension release that is no longer in the object store: the memory\n cannot be resumed anywhere, and the control plane boots the disk with the newest releases.",
+          "The machine ended without being asked to: its guest powered off, or its QEMU crashed or was\n killed.",
+          "The machine could not be stopped or removed.",
+          "Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.",
+          "No host could take it: none came with room while it waited, or its disk is only on a host\n that is not connected. The control plane's verdict, never a host's.",
+          "Its memory was taken on a machine no host of the installation runs now: the machine's\n contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n owner's to choose (StartWorkspaceRequest.from_disk)."
+        ]
       },
       "spin.v1.WorkspaceHostStatus": {
         "type": "object",
@@ -21989,7 +22183,17 @@
           "WORKSPACE_PHASE_GUEST",
           "WORKSPACE_PHASE_BACKUP"
         ],
-        "description": "WorkspacePhase is what a host is doing to bring a workspace up."
+        "description": "WorkspacePhase is what a host is doing to bring a workspace up.\n\n- `WORKSPACE_PHASE_DISK`: Waiting for its disk to be served on the host.\n- `WORKSPACE_PHASE_EXTENSIONS`: Holding the extension releases it runs with.\n- `WORKSPACE_PHASE_NETWORK`: Setting up its network.\n- `WORKSPACE_PHASE_MACHINE`: Booting its machine, or resuming it from a checkpoint.\n- `WORKSPACE_PHASE_FIRST_BOOT`: Its first boot of a disk another person's workspace was cloned from.\n- `WORKSPACE_PHASE_GUEST`: The machine is up and its workspace inside is starting.\n- `WORKSPACE_PHASE_BACKUP`: Stopping on a host that can be taken away: its disk is being published before the machine\n  stops, the control plane's doing rather than the host's, and retried if it restarts.",
+        "x-enum-descriptions": [
+          "",
+          "Waiting for its disk to be served on the host.",
+          "Holding the extension releases it runs with.",
+          "Setting up its network.",
+          "Booting its machine, or resuming it from a checkpoint.",
+          "Its first boot of a disk another person's workspace was cloned from.",
+          "The machine is up and its workspace inside is starting.",
+          "Stopping on a host that can be taken away: its disk is being published before the machine\n stops, the control plane's doing rather than the host's, and retried if it restarts."
+        ]
       },
       "spin.v1.WorkspaceProgress": {
         "type": "object",
@@ -22060,7 +22264,15 @@
           "WORKSPACE_PROXY_STATUS_PORT_NOT_EXPOSED",
           "WORKSPACE_PROXY_STATUS_WAKING"
         ],
-        "description": "Proxy status for workspace access"
+        "description": "Proxy status for workspace access\n\n- `WORKSPACE_PROXY_STATUS_ACCESSIBLE`: Port exposed, workspace running\n- `WORKSPACE_PROXY_STATUS_NOT_RUNNING`: Return 503\n- `WORKSPACE_PROXY_STATUS_NOT_FOUND`: Return 404\n- `WORKSPACE_PROXY_STATUS_PORT_NOT_EXPOSED`: Return 403\n- `WORKSPACE_PROXY_STATUS_WAKING`: Not running, and woken for this caller (Workspace.wake_on_access): the proxy opens a session,\n  which resumes it and waits a while, and shows a page that asks again while it is not up.",
+        "x-enum-descriptions": [
+          "",
+          "Port exposed, workspace running",
+          "Return 503",
+          "Return 404",
+          "Return 403",
+          "Not running, and woken for this caller (Workspace.wake_on_access): the proxy opens a session,\n which resumes it and waits a while, and shows a page that asks again while it is not up."
+        ]
       },
       "spin.v1.WorkspaceRuntime": {
         "type": "object",
@@ -22113,7 +22325,19 @@
           "WORKSPACE_STATE_WAITING",
           "WORKSPACE_STATE_QUARANTINED"
         ],
-        "description": "Workspace states"
+        "description": "WorkspaceState is where a workspace is in its life. Each value's comment is what the API's\n document says of it (buf.gen.openapi.yaml's with-enum-value-descriptions), and the website's\n table of states is generated from it: it is written for a person reading that table, in the\n site's words (a runner, the CLI's commands). Why a value is what it is goes in a comment\n apart, above the value's own, which the document does not carry.\n\n- `WORKSPACE_STATE_UNSPECIFIED`: Never a workspace's state: a client that reads it read a field nothing set.\n- `WORKSPACE_STATE_CREATING`: The workspace exists and has not run yet.\n- `WORKSPACE_STATE_STARTING`: A runner is preparing its disk and starting its machine.\n- `WORKSPACE_STATE_RUNNING`: Its machine is up.\n- `WORKSPACE_STATE_STOPPING`: Its machine is shutting down, and then what its disk wrote since its last commit is\n  uploaded to the bucket. A stop stays here until the upload is done, and says why it is not;\n  `spin workspace stop --force` does not wait for it.\n- `WORKSPACE_STATE_STOPPED`: Not running. Its disk is kept, and the next start boots from it.\n- `WORKSPACE_STATE_FAILED`: A start or a stop failed: `spin workspace status` says which part, and why. It stays so\n  until it is started again.\n- `WORKSPACE_STATE_DELETED`: In the trash, with its disk, for the days the installation keeps it there\n  (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation\n  that keeps no trash erases it at once.\n- `WORKSPACE_STATE_WAITING`: Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one\n  is being started, and the workspace starts on it once it is up.\n- `WORKSPACE_STATE_QUARANTINED`: Held by an administrator with `spin workspace quarantine`: it cannot start until\n  `spin workspace unquarantine` releases it, and its disk is kept as it was.",
+        "x-enum-descriptions": [
+          "Never a workspace's state: a client that reads it read a field nothing set.",
+          "The workspace exists and has not run yet.",
+          "A runner is preparing its disk and starting its machine.",
+          "Its machine is up.",
+          "Its machine is shutting down, and then what its disk wrote since its last commit is\n uploaded to the bucket. A stop stays here until the upload is done, and says why it is not;\n `spin workspace stop --force` does not wait for it.",
+          "Not running. Its disk is kept, and the next start boots from it.",
+          "A start or a stop failed: `spin workspace status` says which part, and why. It stays so\n until it is started again.",
+          "In the trash, with its disk, for the days the installation keeps it there\n (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation\n that keeps no trash erases it at once.",
+          "Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one\n is being started, and the workspace starts on it once it is up.",
+          "Held by an administrator with `spin workspace quarantine`: it cannot start until\n `spin workspace unquarantine` releases it, and its disk is kept as it was."
+        ]
       },
       "spin.v1.WorkspaceSuspendFailure": {
         "type": "object",
