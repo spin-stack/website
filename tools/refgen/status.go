@@ -162,7 +162,7 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 	}
 
 	var b strings.Builder
-	b.WriteString(frontmatter("spin:internal/features/features.go", "Status", "What Spinbox does today with what proves each, what is partly there, what is not built, and its limits, each row held to the code.", 0))
+	b.WriteString(frontmatter("spin:internal/features/features.go", "Status", "What Spinbox does today with what proves each, what is partly there, what is not built, and its limits.", 0))
 	b.WriteString("Every row of this page is a line of `internal/features` in spin, and a test there resolves " +
 		"it against the tree. A row that says **built** names what shows the feature exists - a procedure " +
 		"the control plane serves, a command the CLI has, or a test - and, under **End to end**, the tests " +
