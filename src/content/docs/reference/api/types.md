@@ -45,7 +45,7 @@ Allowed email/domain entry
 
 ## AllowedEmailType
 
-Allowed email type enum
+Allowed email type enum - `ALLOWED_EMAIL_TYPE_EMAIL`: Exact email address match - `ALLOWED_EMAIL_TYPE_DOMAIN`: Domain suffix match (@domain.com)
 
 One of: `ALLOWED_EMAIL_TYPE_UNSPECIFIED`, `ALLOWED_EMAIL_TYPE_EMAIL`, `ALLOWED_EMAIL_TYPE_DOMAIN`.
 
@@ -106,7 +106,7 @@ BrokeredRequest is one request the egress proxy read from the workspace's machin
 
 ## BurstMode
 
-BurstMode is how a workspace of a preset may grow past what it starts with.
+BurstMode is how a workspace of a preset may grow past what it starts with. - `BURST_MODE_FIXED`: FIXED starts at the preset's size and stays there. - `BURST_MODE_TO_PRESET`: TO_PRESET starts at the preset's burst floor and may grow to its size. - `BURST_MODE_TO_HOST`: TO_HOST starts at the preset's burst floor and may grow to everything its host has.
 
 One of: `BURST_MODE_UNSPECIFIED`, `BURST_MODE_FIXED`, `BURST_MODE_TO_PRESET`, `BURST_MODE_TO_HOST`.
 
@@ -134,7 +134,7 @@ One thing the config file says differently from the installation.
 
 ## ConfigItemKind
 
-What one item of the installation's config file is.
+What one item of the installation's config file is. - `CONFIG_ITEM_KIND_SETTING`: A setting, by its key: registration_mode, default_network_tags, allowed_images... - `CONFIG_ITEM_KIND_EMAIL`: An address or domain registration admits, by itself.
 
 One of: `CONFIG_ITEM_KIND_UNSPECIFIED`, `CONFIG_ITEM_KIND_SETTING`, `CONFIG_ITEM_KIND_EMAIL`, `CONFIG_ITEM_KIND_PRESET`, `CONFIG_ITEM_KIND_POLICY`.
 
@@ -150,6 +150,8 @@ DeletedWorkspace is a workspace in the trash.
 | `trashedUntil` | `Timestamp` |  |
 
 ## DeviceLoginStatus
+
+- `DEVICE_LOGIN_STATUS_PENDING`: User hasn't completed login yet - `DEVICE_LOGIN_STATUS_COMPLETE`: Login complete, token available - `DEVICE_LOGIN_STATUS_EXPIRED`: Device code expired - `DEVICE_LOGIN_STATUS_DENIED`: User denied the request
 
 One of: `DEVICE_LOGIN_STATUS_UNSPECIFIED`, `DEVICE_LOGIN_STATUS_PENDING`, `DEVICE_LOGIN_STATUS_COMPLETE`, `DEVICE_LOGIN_STATUS_EXPIRED`, `DEVICE_LOGIN_STATUS_DENIED`.
 
@@ -218,6 +220,8 @@ FieldValue is one value a field has, and how many of a search's records have it.
 
 ## FileChangeKind
 
+- `FILE_CHANGE_KIND_MODIFIED`: The same type on both sides, and a different content, mode, owner or symlink target.
+
 One of: `FILE_CHANGE_KIND_UNSPECIFIED`, `FILE_CHANGE_KIND_ADDED`, `FILE_CHANGE_KIND_REMOVED`, `FILE_CHANGE_KIND_MODIFIED`, `FILE_CHANGE_KIND_TYPE_CHANGED`.
 
 ## FileState
@@ -235,6 +239,8 @@ One of: `FILE_CHANGE_KIND_UNSPECIFIED`, `FILE_CHANGE_KIND_ADDED`, `FILE_CHANGE_K
 | `modifiedAt` | `Timestamp` |  |
 
 ## FileType
+
+- `FILE_TYPE_OTHER`: A device, a FIFO or a socket.
 
 One of: `FILE_TYPE_UNSPECIFIED`, `FILE_TYPE_REGULAR`, `FILE_TYPE_DIRECTORY`, `FILE_TYPE_SYMLINK`, `FILE_TYPE_OTHER`.
 
@@ -565,7 +571,7 @@ ObservedDestination is one address the workspace was allowed to reach, with what
 
 ## OutsideShareState
 
-OutsideShareState is how far a snapshot's share outside its team is.
+OutsideShareState is how far a snapshot's share outside its team is. - `OUTSIDE_SHARE_STATE_UNSPECIFIED`: None: the snapshot was never shared outside its team, nor made public. - `OUTSIDE_SHARE_STATE_PREPARING`: A host is writing the keys a clone outside the team reads the snapshot with. - `OUTSIDE_SHARE_STATE_READY`: Somebody of another team can create a workspace from it.
 
 One of: `OUTSIDE_SHARE_STATE_UNSPECIFIED`, `OUTSIDE_SHARE_STATE_PREPARING`, `OUTSIDE_SHARE_STATE_READY`.
 
@@ -618,15 +624,19 @@ PendingSignature is one document the caller is asked to sign.
 
 ## PlatformImageArtifact
 
+- `PLATFORM_IMAGE_ARTIFACT_BASE`: The machine's base image, every workspace's disk's floor. - `PLATFORM_IMAGE_ARTIFACT_SUPERVISOR`: The supervisor extension every workspace is handed.
+
 One of: `PLATFORM_IMAGE_ARTIFACT_UNSPECIFIED`, `PLATFORM_IMAGE_ARTIFACT_BASE`, `PLATFORM_IMAGE_ARTIFACT_SUPERVISOR`.
 
 ## PlatformImageState
+
+- `PLATFORM_IMAGE_STATE_UNAVAILABLE`: This build carries nothing to publish. - `PLATFORM_IMAGE_STATE_FOREIGN`: The ref names an image somebody else published, which is left as it is.
 
 One of: `PLATFORM_IMAGE_STATE_UNSPECIFIED`, `PLATFORM_IMAGE_STATE_PENDING`, `PLATFORM_IMAGE_STATE_PUBLISHED`, `PLATFORM_IMAGE_STATE_PUBLISHING`, `PLATFORM_IMAGE_STATE_FAILED`, `PLATFORM_IMAGE_STATE_UNAVAILABLE`, `PLATFORM_IMAGE_STATE_FOREIGN`.
 
 ## PortAccess
 
-Who may reach a published port. Per port rather than per workspace: one workspace serves a demo anyone may see and an admin panel only its owner may, and a single setting for both makes the safe answer for one the wrong answer for the other. UNSPECIFIED is not a level and is never stored - the column's CHECK excludes it. A request that leaves it at proto3's zero is treated as PRIVATE, which is the direction to be wrong in: the cost of failing closed is a confusing error, and the cost of failing open is a port somebody published without meaning to.
+Who may reach a published port. Per port rather than per workspace: one workspace serves a demo anyone may see and an admin panel only its owner may, and a single setting for both makes the safe answer for one the wrong answer for the other. UNSPECIFIED is not a level and is never stored - the column's CHECK excludes it. A request that leaves it at proto3's zero is treated as PRIVATE, which is the direction to be wrong in: the cost of failing closed is a confusing error, and the cost of failing open is a port somebody published without meaning to. - `PORT_ACCESS_PRIVATE`: Only the workspace's owner, who must be signed in. - `PORT_ACCESS_WHITELIST`: The owner, and the users the owner granted. See GrantPortAccess. - `PORT_ACCESS_PUBLIC`: Anyone, with no session at all. Nothing is asked and nobody is redirected to a login. Until the workspace stops or fails: then the port is PRIVATE again, and made public again when it is meant to be.
 
 One of: `PORT_ACCESS_UNSPECIFIED`, `PORT_ACCESS_PRIVATE`, `PORT_ACCESS_WHITELIST`, `PORT_ACCESS_PUBLIC`.
 
@@ -663,6 +673,8 @@ A prebuild: one build of a project's ref at a commit, and the snapshot it left.
 | `builtAt` | `Timestamp` |  |
 
 ## PrebuildState
+
+- `PREBUILD_STATE_RETIRED`: Superseded and given back: its snapshot is being deleted.
 
 One of: `PREBUILD_STATE_UNSPECIFIED`, `PREBUILD_STATE_BUILDING`, `PREBUILD_STATE_READY`, `PREBUILD_STATE_FAILED`, `PREBUILD_STATE_RETIRED`.
 
@@ -727,7 +739,7 @@ RateLimitSettings configures API rate limiting
 
 ## RegistrationMode
 
-Registration mode enum
+Registration mode enum - `REGISTRATION_MODE_OPEN`: Anyone can register - `REGISTRATION_MODE_WHITELIST`: Only whitelisted emails/domains - `REGISTRATION_MODE_CLOSED`: No new registrations
 
 One of: `REGISTRATION_MODE_UNSPECIFIED`, `REGISTRATION_MODE_OPEN`, `REGISTRATION_MODE_WHITELIST`, `REGISTRATION_MODE_CLOSED`.
 
@@ -749,7 +761,7 @@ One of: `REGISTRATION_MODE_UNSPECIFIED`, `REGISTRATION_MODE_OPEN`, `REGISTRATION
 
 ## RekeyState
 
-RekeyState is how far a disk's re-key is.
+RekeyState is how far a disk's re-key is. - `REKEY_STATE_PENDING`: Marked by a revoke: re-keyed once its workspace cannot run. - `REKEY_STATE_COPYING`: A host is copying the disk. - `REKEY_STATE_READY`: Copied: the workspace is pointed at the copy and the disk deleted on the next pass.
 
 One of: `REKEY_STATE_UNSPECIFIED`, `REKEY_STATE_PENDING`, `REKEY_STATE_COPYING`, `REKEY_STATE_READY`.
 
@@ -871,6 +883,8 @@ ServiceHealth is one service over a window: the traces begun in it - what it was
 
 ## SignatureKind
 
+- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the keyring before it; the first, and one started anew, with a key it lists. - `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by an owner the roster before it lists; the first, by an owner it lists.
+
 One of: `SIGNATURE_KIND_UNSPECIFIED`, `SIGNATURE_KIND_KEYRING`, `SIGNATURE_KIND_ROSTER`.
 
 ## SignedDocument
@@ -901,7 +915,7 @@ A snapshot is a rotation of a workspace's volume, published as a commit. It has 
 
 ## SnapshotAccessType
 
-Access type for snapshots
+Access type for snapshots - `SNAPSHOT_ACCESS_TYPE_OWNER`: Owner of the source workspace - `SNAPSHOT_ACCESS_TYPE_SHARED`: Explicitly shared with user - `SNAPSHOT_ACCESS_TYPE_PUBLIC`: Public snapshot
 
 One of: `SNAPSHOT_ACCESS_TYPE_UNSPECIFIED`, `SNAPSHOT_ACCESS_TYPE_OWNER`, `SNAPSHOT_ACCESS_TYPE_SHARED`, `SNAPSHOT_ACCESS_TYPE_PUBLIC`.
 
@@ -921,7 +935,7 @@ A share record for a snapshot
 
 ## SnapshotState
 
-How far along a snapshot is. A snapshot is taken by the host serving the volume, so it exists before it is usable: CREATING is the window between asking for one and the host reporting the commit it published.
+How far along a snapshot is. A snapshot is taken by the host serving the volume, so it exists before it is usable: CREATING is the window between asking for one and the host reporting the commit it published. - `SNAPSHOT_STATE_CREATING`: Requested; the host has not published a commit yet - `SNAPSHOT_STATE_PUBLISHED`: Usable: a workspace can be created from it
 
 One of: `SNAPSHOT_STATE_UNSPECIFIED`, `SNAPSHOT_STATE_CREATING`, `SNAPSHOT_STATE_PUBLISHED`, `SNAPSHOT_STATE_FAILED`, `SNAPSHOT_STATE_DELETING`.
 
@@ -951,6 +965,8 @@ Span is one operation of a trace, as OpenTelemetry names its parts.
 | `detail` | string | One sentence naming both sides and the gap between them, for a person to read. The kind is what a script branches on. |
 
 ## StatusDisagreementKind
+
+- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`: The control plane says the workspace runs and the supervisor has gone quiet for longer than several heartbeat intervals. - `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`: The control plane says the workspace runs and no supervisor ever reported. - `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`: The host holding this workspace is not ACTIVE, or has stopped heartbeating. - `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`: The volume under the workspace is refusing to serve. - `STATUS_DISAGREEMENT_KIND_UNHEALTHY`: The supervisor reports a failing health check.
 
 One of: `STATUS_DISAGREEMENT_KIND_UNSPECIFIED`, `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`, `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`, `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`, `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`, `STATUS_DISAGREEMENT_KIND_UNHEALTHY`.
 
@@ -995,6 +1011,8 @@ StoredVolume is one volume in the store: what is under volumes/&lt;volume_id>/, 
 | `keptBecause` | string | Why it stays, in words, where it is an image or a release that may not go. |
 
 ## StoredVolumeKind
+
+- `STORED_VOLUME_KIND_WORKSPACE`: A workspace's disk, now or before. - `STORED_VOLUME_KIND_IMAGE`: An image a workspace's disk is cloned from. - `STORED_VOLUME_KIND_EXTENSION`: A release of an extension: the supervisor, the VS Code servers. - `STORED_VOLUME_KIND_UNCLAIMED`: A volume the database has and nothing names: a clone being made, or a delete not finished. - `STORED_VOLUME_KIND_ORPHAN`: Objects under a volume the database does not have.
 
 One of: `STORED_VOLUME_KIND_UNSPECIFIED`, `STORED_VOLUME_KIND_WORKSPACE`, `STORED_VOLUME_KIND_IMAGE`, `STORED_VOLUME_KIND_EXTENSION`, `STORED_VOLUME_KIND_UNCLAIMED`, `STORED_VOLUME_KIND_ORPHAN`.
 
@@ -1070,7 +1088,7 @@ What the supervisor inside the guest last reported. Absent (`connected` false wi
 
 ## TeamRole
 
-Team member role enum
+Team member role enum - `TEAM_ROLE_OWNER`: Full control, can delete team - `TEAM_ROLE_ADMIN`: Can manage members and settings - `TEAM_ROLE_MEMBER`: Can create workspaces, view team resources
 
 One of: `TEAM_ROLE_UNSPECIFIED`, `TEAM_ROLE_OWNER`, `TEAM_ROLE_ADMIN`, `TEAM_ROLE_MEMBER`.
 
@@ -1130,6 +1148,8 @@ VSCodeServerPublish is this control plane's publish: the last one, or the one un
 | `updatedAt` | `Timestamp` |  |
 
 ## VSCodeServerPublishState
+
+- `VS_CODE_SERVER_PUBLISH_STATE_IDLE`: Nothing published since this control plane started.
 
 One of: `VS_CODE_SERVER_PUBLISH_STATE_UNSPECIFIED`, `VS_CODE_SERVER_PUBLISH_STATE_IDLE`, `VS_CODE_SERVER_PUBLISH_STATE_WORKING`, `VS_CODE_SERVER_PUBLISH_STATE_PUBLISHED`, `VS_CODE_SERVER_PUBLISH_STATE_FAILED`.
 
@@ -1192,7 +1212,7 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 
 ## WorkspaceAction
 
-WorkspaceAction is an act a person can ask of a workspace.
+WorkspaceAction is an act a person can ask of a workspace. - `WORKSPACE_ACTION_FORCE_STOP`: Stop without waiting for the guest: also what ends a stop that does not finish. - `WORKSPACE_ACTION_SUSPEND`: Put down with its memory, to be resumed where it was. - `WORKSPACE_ACTION_START_FROM_DISK`: Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk): offered when that memory's machine is run by no host (Workspace.memory_machine_gone).
 
 One of: `WORKSPACE_ACTION_UNSPECIFIED`, `WORKSPACE_ACTION_START`, `WORKSPACE_ACTION_STOP`, `WORKSPACE_ACTION_FORCE_STOP`, `WORKSPACE_ACTION_DELETE`, `WORKSPACE_ACTION_FORCE_DELETE`, `WORKSPACE_ACTION_SUSPEND`, `WORKSPACE_ACTION_START_FROM_DISK`.
 
@@ -1240,11 +1260,13 @@ Timeline event for workspace state changes
 
 ## WorkspaceEventType
 
+- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back
+
 One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`.
 
 ## WorkspaceFailure
 
-WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a person can do about it - and a failure rate split by the repair it needs - is decided by the kind rather than by the text of an error. The reason beside it is the detail. One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a person is shown is the one the host named, with no second list to keep in step.
+WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a person can do about it - and a failure rate split by the repair it needs - is decided by the kind rather than by the text of an error. The reason beside it is the detail. One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a person is shown is the one the host named, with no second list to keep in step. - `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification. - `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says why), or what the disk was to be made from is gone. - `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named. - `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up. - `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for. - `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot. - `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem. - `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory cannot be resumed anywhere, and the control plane boots the disk with the newest releases. - `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to: its guest powered off, or its QEMU crashed or was killed. - `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed. - `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's. - `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host that is not connected. The control plane's verdict, never a host's. - `WORKSPACE_FAILURE_MACHINE_CHANGED`: Its memory was taken on a machine no host of the installation runs now: the machine's contract moved (a release that changed it), or the processor did. The memory resumes nowhere; the workspace stays suspended, and booting it from its disk, which drops the memory, is its owner's to choose (StartWorkspaceRequest.from_disk).
 
 One of: `WORKSPACE_FAILURE_UNSPECIFIED`, `WORKSPACE_FAILURE_VOLUME`, `WORKSPACE_FAILURE_EXTENSION`, `WORKSPACE_FAILURE_NETWORK`, `WORKSPACE_FAILURE_RESOURCES`, `WORKSPACE_FAILURE_MACHINE`, `WORKSPACE_FAILURE_GUEST`, `WORKSPACE_FAILURE_RELEASE_GONE`, `WORKSPACE_FAILURE_EXITED`, `WORKSPACE_FAILURE_STOP`, `WORKSPACE_FAILURE_TIMED_OUT`, `WORKSPACE_FAILURE_NO_HOST`, `WORKSPACE_FAILURE_MACHINE_CHANGED`.
 
@@ -1270,7 +1292,7 @@ WorkspaceLease is a process in the workspace keeping it awake while it lives.
 
 ## WorkspacePhase
 
-WorkspacePhase is what a host is doing to bring a workspace up.
+WorkspacePhase is what a host is doing to bring a workspace up. - `WORKSPACE_PHASE_DISK`: Waiting for its disk to be served on the host. - `WORKSPACE_PHASE_EXTENSIONS`: Holding the extension releases it runs with. - `WORKSPACE_PHASE_NETWORK`: Setting up its network. - `WORKSPACE_PHASE_MACHINE`: Booting its machine, or resuming it from a checkpoint. - `WORKSPACE_PHASE_FIRST_BOOT`: Its first boot of a disk another person's workspace was cloned from. - `WORKSPACE_PHASE_GUEST`: The machine is up and its workspace inside is starting. - `WORKSPACE_PHASE_BACKUP`: Stopping on a host that can be taken away: its disk is being published before the machine stops, the control plane's doing rather than the host's, and retried if it restarts.
 
 One of: `WORKSPACE_PHASE_UNSPECIFIED`, `WORKSPACE_PHASE_DISK`, `WORKSPACE_PHASE_EXTENSIONS`, `WORKSPACE_PHASE_NETWORK`, `WORKSPACE_PHASE_MACHINE`, `WORKSPACE_PHASE_FIRST_BOOT`, `WORKSPACE_PHASE_GUEST`, `WORKSPACE_PHASE_BACKUP`.
 
@@ -1290,7 +1312,7 @@ WorkspaceProgress is a transition under way.
 
 ## WorkspaceProxyStatus
 
-Proxy status for workspace access
+Proxy status for workspace access - `WORKSPACE_PROXY_STATUS_ACCESSIBLE`: Port exposed, workspace running - `WORKSPACE_PROXY_STATUS_NOT_RUNNING`: Return 503 - `WORKSPACE_PROXY_STATUS_NOT_FOUND`: Return 404 - `WORKSPACE_PROXY_STATUS_PORT_NOT_EXPOSED`: Return 403 - `WORKSPACE_PROXY_STATUS_WAKING`: Not running, and woken for this caller (Workspace.wake_on_access): the proxy opens a session, which resumes it and waits a while, and shows a page that asks again while it is not up.
 
 One of: `WORKSPACE_PROXY_STATUS_UNSPECIFIED`, `WORKSPACE_PROXY_STATUS_ACCESSIBLE`, `WORKSPACE_PROXY_STATUS_NOT_RUNNING`, `WORKSPACE_PROXY_STATUS_NOT_FOUND`, `WORKSPACE_PROXY_STATUS_PORT_NOT_EXPOSED`, `WORKSPACE_PROXY_STATUS_WAKING`.
 
@@ -1308,7 +1330,7 @@ WorkspaceRuntime is a running workspace's machine as its host measures it from o
 
 ## WorkspaceState
 
-Workspace states
+WorkspaceState is where a workspace is in its life. Each value's comment is what the API's document says of it (buf.gen.openapi.yaml's with-enum-value-descriptions), and the website's table of states is generated from it: it is written for a person reading that table, in the site's words (a runner, the CLI's commands). Why a value is what it is goes in a comment apart, above the value's own, which the document does not carry. - `WORKSPACE_STATE_UNSPECIFIED`: Never a workspace's state: a client that reads it read a field nothing set. - `WORKSPACE_STATE_CREATING`: The workspace exists and has not run yet. - `WORKSPACE_STATE_STARTING`: A runner is preparing its disk and starting its machine. - `WORKSPACE_STATE_RUNNING`: Its machine is up. - `WORKSPACE_STATE_STOPPING`: Its machine is shutting down, and then what its disk wrote since its last commit is uploaded to the bucket. A stop stays here until the upload is done, and says why it is not; `spin workspace stop --force` does not wait for it. - `WORKSPACE_STATE_STOPPED`: Not running. Its disk is kept, and the next start boots from it. - `WORKSPACE_STATE_FAILED`: A start or a stop failed: `spin workspace status` says which part, and why. It stays so until it is started again. - `WORKSPACE_STATE_DELETED`: In the trash, with its disk, for the days the installation keeps it there (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation that keeps no trash erases it at once. - `WORKSPACE_STATE_WAITING`: Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one is being started, and the workspace starts on it once it is up. - `WORKSPACE_STATE_QUARANTINED`: Held by an administrator with `spin workspace quarantine`: it cannot start until `spin workspace unquarantine` releases it, and its disk is kept as it was.
 
 One of: `WORKSPACE_STATE_UNSPECIFIED`, `WORKSPACE_STATE_CREATING`, `WORKSPACE_STATE_STARTING`, `WORKSPACE_STATE_RUNNING`, `WORKSPACE_STATE_STOPPING`, `WORKSPACE_STATE_STOPPED`, `WORKSPACE_STATE_FAILED`, `WORKSPACE_STATE_DELETED`, `WORKSPACE_STATE_WAITING`, `WORKSPACE_STATE_QUARANTINED`.
 
