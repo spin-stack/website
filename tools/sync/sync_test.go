@@ -122,6 +122,8 @@ func TestChainReportsEachLinkAndWhatItCouldNotRead(t *testing.T) {
   track: github-release https://github.com/spin-stack/spin-machine
 `,
 		"/repos/spin-stack/spin-machine/releases/latest":                                           `{"tag_name": "v20261023.01"}`,
+		"/repos/spin-stack/spin-terraform-aws/contents/images.json?ref=main":                       `{"v20261019.9": {}, "v20261019.10": {}, "v20261018.01": {}}`,
+		"/repos/spin-stack/spin/releases/latest":                                                   `{"tag_name": "v20261025.01"}`,
 		"/repos/spin-stack/spin/actions/workflows/machine.yml/runs?per_page=1":                     `{"workflow_runs": [{"created_at": "2026-10-14T09:00:00Z", "status": "completed", "conclusion": "success", "html_url": "https://github.com/spin-stack/spin/actions/runs/1"}]}`,
 		"/repos/spin-stack/spin-terraform-aws/actions/workflows/propose.yml/runs?per_page=1":       `{"workflow_runs": []}`,
 		"/repos/spin-stack/spin-terraform-aws/actions/workflows/fresh-install.yml/runs?per_page=1": "404",
@@ -131,6 +133,7 @@ func TestChainReportsEachLinkAndWhatItCouldNotRead(t *testing.T) {
 	got := chain(context.Background(), gh)
 	for _, want := range []string{
 		"| spin-machine | spin main pins v20261014.01; the newest release is **v20261023.01** |",
+		"| images.json | the newest release with an image is v20261019.10; spin's newest is **v20261025.01**",
 		"| `machine.yml` a spin-machine release proposed to spin | last ran 2026-10-14, [success](https://github.com/spin-stack/spin/actions/runs/1) |",
 		"| `propose.yml` the module proposed to the deployments | never ran |",
 		"| `fresh-install.yml` an installation from nothing, weekly | could not read: GET /repos/spin-stack/spin-terraform-aws/actions/workflows/fresh-install.yml/runs?per_page=1: 404 Not Found",
