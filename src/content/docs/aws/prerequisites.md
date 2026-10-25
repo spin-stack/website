@@ -83,4 +83,4 @@ your own instead, name them with [`image_ids`](/reference/terraform/root/#image_
 ## Pick a release
 
 Releases are named by date: `v<YYYYMMDD>.<N>`, the Nth release of that day. This site documents
-`v20261019.02`. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).
+`v20261025.01`. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).

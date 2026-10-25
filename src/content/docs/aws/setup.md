@@ -35,7 +35,7 @@ $(tofu -chdir=../../bootstrap output -raw init)
 That runs `tofu init` against the state bucket. Then write `terraform.tfvars`:
 
 ```hcl
-spin_version = "v20261019.02"
+spin_version = "v20261025.01"
 domain       = "spin.example.com"
 # name   = "spin"        # a prefix for every resource; one installation per name
 # region = "us-west-2"   # the region bootstrap was applied in
