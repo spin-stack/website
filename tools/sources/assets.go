@@ -50,6 +50,29 @@ const stamp = ".release"
 // one, and nothing a path could climb out of the directory with.
 var shotName = regexp.MustCompile(`^[a-z0-9][a-z0-9-]*\.png$`)
 
+// ready is whether e's release tag already holds the asset the site takes of it: a bump moves
+// to a release only once it does. site-shots.yml puts it there about an hour after Release, and
+// a sync in that hour would otherwise move the pin and then fail on the missing screenshots; it
+// stays instead, and the next day's takes the release.
+func ready(ctx context.Context, gh *github.Client, e versions.Entry, tag string) (bool, error) {
+	a, ok := assets[e.Name]
+	if !ok {
+		return true, nil
+	}
+	var rel struct {
+		Assets []struct{ Name string } `json:"assets"`
+	}
+	if err := gh.Get(ctx, "/repos/"+strings.TrimPrefix(e.Source, "https://github.com/")+"/releases/tags/"+tag, &rel); err != nil {
+		return false, err
+	}
+	for _, have := range rel.Assets {
+		if have.Name == a.name {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 // fetchAsset unpacks a's asset of e's release into dir. A directory already stamped with e's
 // release and pin is left as it is, so a run after the one with the token needs none. A release
 // without the asset fails, saying how to give it one: the site never keeps another release's

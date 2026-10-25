@@ -33,6 +33,13 @@ func bumpFile(ctx context.Context, file string, names []string, gh *github.Clien
 			fmt.Printf("%s: stays at %s %s\n", st.Entry.Name, st.Entry.Version, st.Entry.Pin)
 			continue
 		}
+		if ok, err := ready(ctx, gh, st.Entry, to); err != nil {
+			return fmt.Errorf("%s: %w", st.Entry.Name, err)
+		} else if !ok {
+			fmt.Printf("%s: stays at %s %s: %s has no %s yet, which site-shots.yml puts on it about an hour after Release; the next sync takes it\n",
+				st.Entry.Name, st.Entry.Version, st.Entry.Pin, to, assets[st.Entry.Name].name)
+			continue
+		}
 		e, b, err := upstream.Bump(ctx, v, st.Entry.Name, to)
 		if err != nil {
 			return err
