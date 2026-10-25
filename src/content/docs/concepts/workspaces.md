@@ -46,21 +46,22 @@ space.
 
 ## States
 
+<!-- The table is written by tools/refgen from the API's WorkspaceState, each row from its value's comment in spin's api/proto/spin/v1/common.proto: edit that, not the table. -->
+
 | State | Meaning |
 |---|---|
 | `CREATING` | The workspace exists and has not run yet. |
-| `WAITING` | No runner has room for it yet. On AWS, one is being started. |
-| `STARTING` | A runner is preparing its disk and starting the machine. |
-| `RUNNING` | The machine is up. |
-| `STOPPING` | The machine is shutting down, and then its disk's last writes are uploaded to the bucket. A stop stays here until they are, and says why. |
-| `STOPPED` | Not running. Its disk is kept. |
-| `FAILED` | A start or a stop failed. The state says which part failed. |
-| `QUARANTINED` | An administrator holds it with `spin workspace quarantine`. It does not run until released. |
-| `DELETED` | In the trash, with its disk. `spin workspace undelete` brings it back, stopped. |
+| `STARTING` | A runner is preparing its disk and starting its machine. |
+| `RUNNING` | Its machine is up. |
+| `STOPPING` | Its machine is shutting down, and then what its disk wrote since its last commit is uploaded to the bucket. A stop stays here until the upload is done, and says why it is not; `spin workspace stop --force` does not wait for it. |
+| `STOPPED` | Not running. Its disk is kept, and the next start boots from it. |
+| `FAILED` | A start or a stop failed: `spin workspace status` says which part, and why. It stays so until it is started again. |
+| `DELETED` | In the trash, with its disk, for the days the installation keeps it there (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation that keeps no trash erases it at once. |
+| `WAITING` | Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one is being started, and the workspace starts on it once it is up. |
+| `QUARANTINED` | Held by an administrator with `spin workspace quarantine`: it cannot start until `spin workspace unquarantine` releases it, and its disk is kept as it was. |
 
-A runner tries a start three times. After that, the workspace is `FAILED`, and it stays that way
-until you start it again. `spin workspace status` says why a workspace is not behaving, and
-`spin workspace console` shows what its machine printed.
+A runner tries a start three times before the workspace is `FAILED`. `spin workspace status`
+says why a workspace is not behaving, and `spin workspace console` shows what its machine printed.
 
 ## Stop, suspend, delete
 
