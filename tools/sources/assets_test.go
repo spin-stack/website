@@ -80,13 +80,13 @@ func spinAt(version string) versions.Entry {
 // and pin, and a later run - Sync's task reference, with no token - asks nothing again.
 func TestTheReleasesScreenshotsAreUnpackedAndStamped(t *testing.T) {
 	ctx := context.Background()
-	gh := releases(t, map[string][]byte{"v20261024.01": tarGz(t, map[string]string{"workspace.png": "one", "./workspaces.png": "two"})})
+	gh := releases(t, map[string][]byte{"v20261024.01": tarGz(t, map[string]string{"workspace.png": "one", "./workspaces.png": "two", "diff.txt": "A  /etc/greeting\n", "diff.json": "{}"})})
 	dir := filepath.Join(t.TempDir(), "spin-site-shots")
 	e := spinAt("v20261024.01")
 	if err := fetchAsset(ctx, gh, dir, e, assets["spin"]); err != nil {
 		t.Fatal(err)
 	}
-	for name, want := range map[string]string{"workspace.png": "one", "workspaces.png": "two", stamp: "v20261024.01 " + e.Pin + "\n"} {
+	for name, want := range map[string]string{"workspace.png": "one", "workspaces.png": "two", "diff.txt": "A  /etc/greeting\n", "diff.json": "{}", stamp: "v20261024.01 " + e.Pin + "\n"} {
 		if got, err := os.ReadFile(filepath.Join(dir, name)); err != nil || string(got) != want {
 			t.Errorf("%s = %q, %v; want %q", name, got, err, want)
 		}
@@ -108,8 +108,9 @@ func TestScreenshotsThatAreNotTheReleasesFail(t *testing.T) {
 	}{
 		{"a release without the asset", "v20261019.02", nil, "gh workflow run site-shots.yml -R spin-stack/spin -f tag=v20261019.02"},
 		{"a pin that is no release", "main", nil, "which is no release"},
-		{"an archive with a directory in it", "v20261024.01", tarGz(t, map[string]string{"shots/workspace.png": "x"}), "not a PNG at the top"},
-		{"an archive that climbs out", "v20261024.01", tarGz(t, map[string]string{"../workspace.png": "x"}), "not a PNG at the top"},
+		{"an archive with a directory in it", "v20261024.01", tarGz(t, map[string]string{"shots/workspace.png": "x"}), "not a screenshot or the story's diff at the top"},
+		{"an archive that climbs out", "v20261024.01", tarGz(t, map[string]string{"../workspace.png": "x"}), "not a screenshot or the story's diff at the top"},
+		{"an archive with another file", "v20261024.01", tarGz(t, map[string]string{"workspace.png": "x", "notes.txt": "x"}), "not a screenshot or the story's diff at the top"},
 		{"an empty archive", "v20261024.01", tarGz(t, nil), "no screenshot"},
 	} {
 		dir := filepath.Join(t.TempDir(), "spin-site-shots")
