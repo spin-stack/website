@@ -3,14 +3,14 @@ title: Spinbox
 description: Self-hosted sandboxes in your own AWS account, a virtual machine per workspace, with snapshots, rollback and a diff of what changed.
 template: splash
 hero:
-  title: A virtual machine per workspace. A snapshot before, a diff after.
-  tagline: Sandboxes for people and agents that run in your own AWS account. Take a snapshot with the memory of the running processes, see which files changed, and roll back. A workspace's network stays closed until you open it.
+  title: Run untrusted code. Keep control of what it changes.
+  tagline: A virtual machine per workspace, a snapshot before, a diff after. Sandboxes for people and AI agents that run in your own AWS account, with the memory of the running processes in every snapshot and the network closed until you open it.
   actions:
+    - text: Evaluate Spinbox
+      link: overview/evaluate/
+      icon: right-arrow
     - text: Install on AWS
       link: aws/overview/
-      icon: right-arrow
-    - text: Evaluate
-      link: overview/
       variant: minimal
 ---
 
@@ -18,6 +18,7 @@ import Answers from '../../components/Answers.astro';
 import Bento from '../../components/Bento.astro';
 import BentoCard from '../../components/BentoCard.astro';
 import Cta from '../../components/Cta.astro';
+import Figure from '../../components/Figure.astro';
 import Stats from '../../components/Stats.astro';
 import Story from '../../components/Story.astro';
 
@@ -25,37 +26,30 @@ import Story from '../../components/Story.astro';
 
 <Story />
 
-## What you get
+## Three things it does
 
 <Bento>
-<BentoCard size="big" art="isolation" icon="machine" title="A whole machine, not a container" feature="A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH">
-Every workspace is a KVM virtual machine with its own kernel, root and a persistent disk. Install anything, break anything: nothing reaches the workspace next door.
+<BentoCard size="big" art="isolation" icon="machine" title="Isolate: a whole machine, not a container" feature="A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH">
+Every workspace is a KVM virtual machine with its own kernel, root and a persistent disk. A person or an agent can install anything and break anything: nothing reaches the workspace next door, or the host.
 </BentoCard>
-<BentoCard icon="memory" title="Snapshots with memory" feature="Snapshots with memory, resumed with their processes">
-Restore and the processes are running where they were.
+<BentoCard size="wide" icon="diff" title="Inspect: snapshot, diff, roll back" feature="A diff of the files that changed between two snapshots">
+A snapshot before, with the memory of the running processes. Every file added, modified or removed between two snapshots, read by a separate machine. Restore, and the processes are running where they were.
 </BentoCard>
-<BentoCard icon="diff" title="A diff of what changed" feature="A diff of the files that changed between two snapshots">
-Every file added, modified or removed between two snapshots.
-</BentoCard>
-<BentoCard size="wide" icon="shield" title="Closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">
-Egress is closed by default. Policies name what a workspace may reach, and you can watch what it reached, looked up and was refused.
-</BentoCard>
-<BentoCard size="wide" icon="key" title="Secrets the workspace never holds" feature="A brokered rule names whose it is, the agent's or the person's: one policy says what each may reach and with what">
-The host's proxy stands in for a brokered name and adds the team's secret on the way out. The person and the agent in one workspace each get their own.
-</BentoCard>
-<BentoCard icon="agent" title="Built for agents" feature="Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults">
-Claude Code and Codex on the PATH, API keys, JSON output, and a machine an agent can break and you can undo.
-</BentoCard>
-<BentoCard icon="move" title="Moves while it runs" feature="Move a running workspace to another host, its processes as they are">
-A running workspace goes to another host with its processes as they are.
-</BentoCard>
-<BentoCard size="wide" icon="cloud" title="In your AWS account" href="/aws/overview/">
-One OpenTofu module installs it in your account. There is no hosted version, so your code and your data stay in your account.
-</BentoCard>
-<BentoCard size="wide" icon="moon" title="Asleep when idle, awake as it was" feature="Suspend with the processes where they are; a start resumes them">
-A workspace nobody uses is suspended with its processes where they are, after asking first, and a start resumes them.
+<BentoCard size="wide" icon="shield" title="Control: closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">
+Egress is closed by default, and policies name what a workspace may reach. A team's secret stays on the host's proxy and never enters the workspace. All of it in your AWS account, where the logs stay too.
 </BentoCard>
 </Bento>
+
+<Figure name="installation" caption="Where the boundary is: people and agents reach the proxy; the control plane, the runners, the buckets and the keys are the module's, in your account and your region." />
+
+## And
+
+- **Built for agents.** [Claude Code and Codex on every workspace's PATH](<feature:Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults>), API keys with scopes, JSON output.
+- **Secrets the workspace never holds.** [A brokered rule](<feature:A brokered rule names whose it is, the agent's or the person's: one policy says what each may reach and with what>) adds the team's secret on the way out, one for the person and one for the agent.
+- **Moves while it runs.** [A running workspace goes to another host](<feature:Move a running workspace to another host, its processes as they are>) with its processes as they are.
+- **Asleep when idle, awake as it was.** [A workspace nobody uses is suspended](<feature:Suspend with the processes where they are; a start resumes them>), after asking first, and a start resumes it.
+- **Reset in one command.** [A disk goes back to what it was created from](<feature:Reset a disk to what it was created from>), its snapshots kept.
+- **In your AWS account.** [One OpenTofu module installs it](/aws/overview/). There is no hosted version, so your code and your data stay in your account.
 
 ## Proof, not promises
 
@@ -76,6 +70,6 @@ A workspace nobody uses is suspended with its processes where they are, after as
 Each answer is a limit row of the [status page](/reference/status/).
 The rest are on [Limitations](/overview/limitations/).
 
-<Cta title="Sandboxes you own, from the first snapshot." links={[{ text: 'Install on AWS', href: 'aws/overview/', variant: 'primary' }, { text: 'Evaluate', href: 'overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
-Read what it is for, what it costs to run, and how to install it.
+<Cta title="Sandboxes you own, from the first snapshot." links={[{ text: 'Evaluate Spinbox', href: 'overview/evaluate/', variant: 'primary' }, { text: 'Install on AWS', href: 'aws/overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
+What it is for, what it costs to run, how to try it on one machine, and how to install it.
 </Cta>
