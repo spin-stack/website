@@ -4,7 +4,7 @@ description: Self-hosted sandboxes in your own AWS account, a virtual machine pe
 template: splash
 hero:
   title: A virtual machine per workspace. A snapshot before, a diff after.
-  tagline: Sandboxes for people and agents that run in your own AWS account. Take a snapshot with the memory of the running processes, see exactly which files changed, and roll back. A workspace's network stays closed until you open it.
+  tagline: Sandboxes for people and agents that run in your own AWS account. Take a snapshot with the memory of the running processes, see which files changed, and roll back. A workspace's network stays closed until you open it.
   actions:
     - text: Install on AWS
       link: aws/overview/
@@ -34,7 +34,7 @@ Every workspace is a KVM virtual machine with its own kernel, root and a persist
 <BentoCard icon="memory" title="Snapshots with memory" feature="Snapshots with memory, resumed with their processes">
 Restore and the processes are running where they were.
 </BentoCard>
-<BentoCard icon="diff" title="A diff of everything" feature="A diff of the files that changed between two snapshots">
+<BentoCard icon="diff" title="A diff of what changed" feature="A diff of the files that changed between two snapshots">
 Every file added, modified or removed between two snapshots.
 </BentoCard>
 <BentoCard size="wide" icon="shield" title="Closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">

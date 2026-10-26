@@ -6,6 +6,12 @@ description: What an installation on AWS is made of, what the OpenTofu module cr
 import Figure from '../../../components/Figure.astro';
 import Value from '../../../components/Value.astro';
 
+Three limits to know before the first command, each a row of [Limitations](/overview/limitations/):
+Spinbox is experimental, and its APIs change; a runner that is lost takes with it
+[what it had not uploaded yet](/overview/limitations/#durability), up to the installation's RPO;
+and [an update is one way](/overview/limitations/#operations), so going back past a schema change
+is a restore of the database.
+
 An installation of Spinbox lives in one AWS account and one region. It is created by one OpenTofu
 module, [spin-terraform-aws](https://github.com/spin-stack/spin-terraform-aws):
 

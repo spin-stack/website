@@ -171,7 +171,8 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 		"checks the whole feature is its review's. A row that says **not built** is an item of " +
 		"[`docs/ROADMAP.md`](https://github.com/spin-stack/spin/blob/" + commit + "/docs/ROADMAP.md). " +
 		"The page is written by `task reference` from `spin features` at spin `" + commit[:9] + "`, and " +
-		"cannot say a feature the binary does not.\n\n")
+		"cannot say a feature the binary does not. spin is a private repository: a link to its code " +
+		"opens only for someone with access to it.\n\n")
 
 	b.WriteString("## Built\n\n")
 	var areas []string
