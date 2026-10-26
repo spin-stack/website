@@ -64,6 +64,11 @@ that is not one task (`go tool taskgate`).
   characters (it is its line in `llms.txt`), every `SPIN_` variable a page names is one spin's
   `hack/env-catalog.txt` lists, and the table of states in `concepts/workspaces.md` is the API's
   `WorkspaceState`, both ways. `task reference:check` fails on each.
+- **The cost page's numbers are generated and dated**: `task pricing` (`tools/pricing`) writes
+  `src/data/pricing.json` - the machines the module starts by default, priced on demand in each
+  region with images, from the lists the AWS pricing page loads - and `task reference:check`
+  fails on a record a month old or of other machines than the module's defaults at its pin. The
+  daily sync rewrites it.
 - **What the site documents** is `src/data/reference.json`, written by `task reference`. Two
   things it keeps apart: the spin release an installation runs (`spin.installs`, the newest
   release `images.json` has images of), and the spin commit the reference is generated from

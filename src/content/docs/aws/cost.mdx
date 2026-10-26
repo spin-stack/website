@@ -3,11 +3,27 @@ title: Cost
 description: "What an installation costs on AWS: the small part that runs all the time, the runners that run only while workspaces do, and the settings that change it."
 ---
 
+import Scenarios from '../../../components/Scenarios.astro';
 import Value from '../../../components/Value.astro';
+import { generated, published } from '../../../lib/pricing';
 
 An installation has two kinds of cost: a small one that runs all the time, and runners, which
 run only while workspaces do. Prices depend on your region and change; use the
 [AWS Pricing Calculator](https://calculator.aws/) with the sizes below.
+
+## Three months, priced
+
+The module's default machines, on demand, in the regions Spin OS has images in, at the prices
+the AWS pricing page listed on {published} (the record was written on {generated}, and the
+daily sync rewrites it):
+
+<Scenarios />
+
+Runners are spot by default, and a spot runner costs a fraction of the on-demand hour shown:
+the calculator has your region's spot price, and `aws ec2 describe-spot-price-history` today's.
+Not in the table: what the volumes bucket holds, at S3 Standard's price per GB a month, and
+what leaves the region, at EC2's price per GB - both depend on what your workspaces do, and the
+calculator has both.
 
 ## All the time
 
