@@ -21,6 +21,7 @@ const issueHead = "What the site at https://spin-stack.github.io/website/ docume
 
 // sections, in the order the body has them: each job writes its own and leaves the others.
 var sections = []struct{ key, title string }{
+	{"behind", "What keeps it open"},
 	{"release", "The last release sync"},
 	{"main", "spin main past the pin"},
 	{"chain", "The release chain"},
@@ -51,25 +52,28 @@ func withSection(body, key, text string) string {
 	return b.String()
 }
 
-// writeIssue writes the sections given into the open issue issueTitle in repo, which bot opened,
-// and opens it when there is none. It is found by its author, not searched for: GitHub's search
-// is behind its writes, and a second issue is what that would make.
-func writeIssue(ctx context.Context, gh *github.Client, repo, bot string, texts map[string]string) (string, error) {
-	var open []struct {
+// writeIssue writes the sections given into the issue issueTitle in repo, which bot opened, and
+// has it open while something is behind and closed once settled says nothing is: the same issue,
+// reopened, never a second. With none yet, it is opened only for something to say. It is found by
+// its author, not searched for: GitHub's search is behind its writes, and a second issue is what
+// that would make. Newest first, as GitHub lists them, so an older one closed by hand is passed by.
+func writeIssue(ctx context.Context, gh *github.Client, repo, bot string, texts map[string]string, settled bool) (string, error) {
+	var mine []struct {
 		Number int    `json:"number"`
 		Title  string `json:"title"`
 		Body   string `json:"body"`
+		State  string `json:"state"`
 		URL    string `json:"html_url"`
 		PR     any    `json:"pull_request"`
 	}
-	q := url.Values{"state": {"open"}, "creator": {bot}, "per_page": {"100"}}
-	if err := gh.Get(ctx, "/repos/"+repo+"/issues?"+q.Encode(), &open); err != nil {
+	q := url.Values{"state": {"all"}, "creator": {bot}, "per_page": {"100"}}
+	if err := gh.Get(ctx, "/repos/"+repo+"/issues?"+q.Encode(), &mine); err != nil {
 		return "", err
 	}
-	body, number, link := "", 0, ""
-	for _, i := range open {
+	body, number, state, link := "", 0, "", ""
+	for _, i := range mine {
 		if i.Title == issueTitle && i.PR == nil {
-			body, number, link = i.Body, i.Number, i.URL
+			body, number, state, link = i.Body, i.Number, i.State, i.URL
 			break
 		}
 	}
@@ -81,11 +85,25 @@ func writeIssue(ctx context.Context, gh *github.Client, repo, bot string, texts 
 	var out struct {
 		URL string `json:"html_url"`
 	}
-	if number == 0 {
+	want := "open"
+	if settled {
+		want = "closed"
+	}
+	switch {
+	case number == 0 && settled:
+		return "", nil
+	case number == 0:
 		err := gh.Do(ctx, http.MethodPost, "/repos/"+repo+"/issues", map[string]string{"title": issueTitle, "body": body}, &out)
 		return out.URL, err
 	}
-	err := gh.Do(ctx, http.MethodPatch, fmt.Sprintf("/repos/%s/issues/%d", repo, number), map[string]string{"body": body}, &out)
+	patch := map[string]string{"body": body}
+	if state != want {
+		patch["state"] = want
+		if settled {
+			patch["state_reason"] = "completed"
+		}
+	}
+	err := gh.Do(ctx, http.MethodPatch, fmt.Sprintf("/repos/%s/issues/%d", repo, number), patch, &out)
 	if out.URL == "" {
 		out.URL = link
 	}

@@ -130,7 +130,15 @@ func TestChainReportsEachLinkAndWhatItCouldNotRead(t *testing.T) {
 		"/repos/spin-stack/spinbox.dev-deploy/contents/terraform.tfvars?ref=main":                  "spin_version = \"v20260928.07\"\ndomain       = \"spinbox.dev\"\n",
 		"/repos/spin-stack/spinbox.dev-deploy/contents/main.tf?ref=main":                           "module \"spin\" {\n  source = \"github.com/spin-stack/spin-terraform-aws?ref=1d7e2a2\"\n}\n",
 	})
-	got := chain(context.Background(), gh)
+	got, behind := chain(context.Background(), gh)
+	wantBehind := []string{
+		"spin-machine", "images.json",
+		"`propose.yml` the module proposed to the deployments",
+		"`fresh-install.yml` an installation from nothing, weekly",
+	}
+	if !slices.Equal(behind, wantBehind) {
+		t.Errorf("behind = %q, want %q: a link not where it should be keeps the issue open, a run that succeeded and spinbox.dev do not", behind, wantBehind)
+	}
 	for _, want := range []string{
 		"| spin-machine | spin main pins v20261014.01; the newest release is **v20261023.01** |",
 		"| images.json | the newest release with an image is v20261019.10; spin's newest is **v20261025.01**",
@@ -158,7 +166,7 @@ func (s *issues) handler(t *testing.T) http.HandlerFunc {
 		defer s.mu.Unlock()
 		switch {
 		case r.Method == http.MethodGet && r.URL.Path == "/repos/spin-stack/spin/issues":
-			if r.URL.Query().Get("creator") != "sources[bot]" || r.URL.Query().Get("state") != "open" {
+			if r.URL.Query().Get("creator") != "sources[bot]" || r.URL.Query().Get("state") != "all" {
 				t.Errorf("issues listed by %q", r.URL.RawQuery)
 			}
 			list := []map[string]any{{"number": 7, "title": "Something else", "body": "x"}}
@@ -171,7 +179,7 @@ func (s *issues) handler(t *testing.T) http.HandlerFunc {
 			_ = json.NewDecoder(r.Body).Decode(&in)
 			s.created++
 			n := 100 + s.created
-			in["number"], in["html_url"] = n, fmt.Sprintf("https://github.com/spin-stack/spin/issues/%d", n)
+			in["number"], in["html_url"], in["state"] = n, fmt.Sprintf("https://github.com/spin-stack/spin/issues/%d", n), "open"
 			s.byNum[n] = in
 			_ = json.NewEncoder(w).Encode(in)
 		case r.Method == http.MethodPatch && strings.HasPrefix(r.URL.Path, "/repos/spin-stack/spin/issues/"):
@@ -180,6 +188,9 @@ func (s *issues) handler(t *testing.T) http.HandlerFunc {
 			var in map[string]any
 			_ = json.NewDecoder(r.Body).Decode(&in)
 			s.byNum[n]["body"] = in["body"]
+			if st, ok := in["state"]; ok {
+				s.byNum[n]["state"] = st
+			}
 			_ = json.NewEncoder(w).Encode(s.byNum[n])
 		default:
 			t.Errorf("unexpected request %s %s", r.Method, r.URL.RequestURI())
@@ -197,10 +208,10 @@ func TestTheIssueIsOneAndEachWriteKeepsTheOtherSections(t *testing.T) {
 	gh := &github.Client{Base: srv.URL, HTTP: srv.Client()}
 	ctx := context.Background()
 
-	if _, err := writeIssue(ctx, gh, "spin-stack/spin", "sources[bot]", map[string]string{"release": "moved to v20261025.01", "chain": "chain one"}); err != nil {
+	if _, err := writeIssue(ctx, gh, "spin-stack/spin", "sources[bot]", map[string]string{"release": "moved to v20261025.01", "chain": "chain one"}, false); err != nil {
 		t.Fatal(err)
 	}
-	link, err := writeIssue(ctx, gh, "spin-stack/spin", "sources[bot]", map[string]string{"main": "main is 40 past", "chain": "chain two"})
+	link, err := writeIssue(ctx, gh, "spin-stack/spin", "sources[bot]", map[string]string{"main": "main is 40 past", "chain": "chain two"}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -221,6 +232,48 @@ func TestTheIssueIsOneAndEachWriteKeepsTheOtherSections(t *testing.T) {
 	}
 	if strings.Contains(body, "chain one") || strings.Index(body, "## The last release sync") > strings.Index(body, "## spin main past the pin") {
 		t.Errorf("a section was kept that was written over, or the order moved:\n%s", body)
+	}
+}
+
+// The issue is open while something is behind and closed once nothing is - the same issue,
+// reopened, never a second - and with none yet, nothing settled opens one.
+func TestTheIssueIsClosedWhileSettledAndTheSameOneReopened(t *testing.T) {
+	st := &issues{byNum: map[int]map[string]any{}}
+	srv := httptest.NewServer(st.handler(t))
+	defer srv.Close()
+	gh := &github.Client{Base: srv.URL, HTTP: srv.Client()}
+	ctx := context.Background()
+	sync := func(settled bool, behind string) {
+		t.Helper()
+		if _, err := writeIssue(ctx, gh, "spin-stack/spin", "sources[bot]", map[string]string{"behind": behind, "chain": "chain"}, settled); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	sync(true, "nothing")
+	if st.created != 0 {
+		t.Fatalf("a settled chain with no issue opened one")
+	}
+	for _, step := range []struct {
+		settled bool
+		behind  string
+		state   string
+	}{
+		{false, "images.json", "open"},
+		{true, "nothing", "closed"},
+		{true, "nothing", "closed"},
+		{false, "the site documents an old release", "open"},
+	} {
+		sync(step.settled, step.behind)
+		if st.created != 1 {
+			t.Fatalf("%d issues opened; want the one, reopened", st.created)
+		}
+		if got := st.byNum[101]["state"]; got != step.state {
+			t.Errorf("with %q behind the issue is %v, want %s", step.behind, got, step.state)
+		}
+		if body := st.byNum[101]["body"].(string); !strings.Contains(body, step.behind) {
+			t.Errorf("the body does not say what keeps it open, %q:\n%s", step.behind, body)
+		}
 	}
 }
 
