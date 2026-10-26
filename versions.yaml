@@ -7,8 +7,8 @@
 - name: spin
   kind: git
   source: https://github.com/spin-stack/spin
-  version: v20261025.01
-  pin: 4534f652122fbb0bb2ba8e434f6e4cd73212fa18
+  version: v20261026.01
+  pin: 55e6962b058f3d27f94255704b1ab96250a32de2
   track: github-release
   note: >-
     The release the site documents (D2: the newest, exactly). The daily sync moves it to the next

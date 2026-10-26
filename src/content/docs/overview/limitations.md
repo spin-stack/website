@@ -45,7 +45,8 @@ Each bullet here is a limit row of that same list, and the build fails when the 
 
 - **No multi-factor authentication of Spinbox's own.** Sign in through GitHub or an OIDC provider
   that enforces it.
-- **No invitations.** A person must sign in once before they can be added to a team.
+- **No team invitations.** A person must sign in once before they can be added to a team. A
+  workspace's guests are invited by email.
 - **Team roles are fixed.** Owner, admin and member.
 
 ## Security
@@ -54,8 +55,8 @@ The open items of the security model are listed in [Known gaps](/reference/secur
 
 ## Operations
 
-- **Nothing pages anyone.** Metrics, logs and traces are kept inside the installation, and
-  there are no alerts.
+- **Nothing pages anyone.** Metrics, logs and traces are kept inside the installation. Alert
+  rules fire in its Grafana, and no contact point tells anyone.
 - **An update is one way.** A release older than the one that last started the database
   refuses to start on it. Going back past a schema change is a point-in-time restore of the
   database.

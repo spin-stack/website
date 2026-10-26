@@ -22,7 +22,7 @@ Usage:
 Available Commands:
   admin       Administrative commands
   api-key     Manage API keys
-  code        Open a workspace in VS Code
+  code        Open a workspace in your editor over SSH
   completion  Generate the autocompletion script for the specified shell
   cp          Copy files to or from a workspace
   exec        Run a command in a workspace
@@ -57,7 +57,7 @@ Use "spin [command] --help" for more information about a command.
 
 - [`spin admin`](/reference/cli/admin/): Administrative commands
 - [`spin api-key`](/reference/cli/api-key/): Manage API keys
-- [`spin code`](/reference/cli/code/): Open a workspace in VS Code
+- [`spin code`](/reference/cli/code/): Open a workspace in your editor over SSH
 - [`spin cp`](/reference/cli/cp/): Copy files to or from a workspace
 - [`spin exec`](/reference/cli/exec/): Run a command in a workspace
 - [`spin login`](/reference/cli/login/): Authenticate with the platform

@@ -1,6 +1,6 @@
 {
 	"datapath": {
-		"source": "https://github.com/spin-stack/spin/blob/4534f652122fbb0bb2ba8e434f6e4cd73212fa18/docs/network/datapath",
+		"source": "https://github.com/spin-stack/spin/blob/55e6962b058f3d27f94255704b1ab96250a32de2/docs/network/datapath",
 		"width": 552,
 		"words": [
 			"How a packet leaves a workspace",
@@ -56,7 +56,7 @@
 		]
 	},
 	"egress-policy": {
-		"source": "https://github.com/spin-stack/spin/blob/4534f652122fbb0bb2ba8e434f6e4cd73212fa18/docs/network/egress-policy",
+		"source": "https://github.com/spin-stack/spin/blob/55e6962b058f3d27f94255704b1ab96250a32de2/docs/network/egress-policy",
 		"width": 854,
 		"words": [
 			"What the forward chain decides, in order",
@@ -157,7 +157,7 @@
 		]
 	},
 	"isolation": {
-		"source": "https://github.com/spin-stack/spin/blob/4534f652122fbb0bb2ba8e434f6e4cd73212fa18/docs/network/isolation",
+		"source": "https://github.com/spin-stack/spin/blob/55e6962b058f3d27f94255704b1ab96250a32de2/docs/network/isolation",
 		"width": 499,
 		"words": [
 			"Same address, different segment",
@@ -204,7 +204,7 @@
 		]
 	},
 	"traffic": {
-		"source": "https://github.com/spin-stack/spin/blob/4534f652122fbb0bb2ba8e434f6e4cd73212fa18/docs/security/traffic",
+		"source": "https://github.com/spin-stack/spin/blob/55e6962b058f3d27f94255704b1ab96250a32de2/docs/security/traffic",
 		"width": 1889,
 		"words": [
 			"Traffic: every arrow is a connection opened in its direction, and nothing else is let in",
