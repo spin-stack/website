@@ -46,9 +46,10 @@ var assets = map[string]asset{
 // refgen reads it to hold the copy to the release it documents.
 const stamp = ".release"
 
-// shotName is what an unpacked file may be called: a PNG named as site.spec.ts's shoot() names
-// one, and nothing a path could climb out of the directory with.
-var shotName = regexp.MustCompile(`^[a-z0-9][a-z0-9-]*\.png$`)
+// fileName is what an unpacked file may be called: a PNG named as site.spec.ts's shoot() names
+// one, the story's diff as spin's site:diff writes it in text and JSON, and nothing a path could
+// climb out of the directory with.
+var fileName = regexp.MustCompile(`^([a-z0-9][a-z0-9-]*\.png|diff\.(txt|json))$`)
 
 // ready is whether e's release tag already holds the asset the site takes of it: a bump moves
 // to a release only once it does. site-shots.yml puts it there about an hour after Release, and
@@ -117,9 +118,10 @@ func fetchAsset(ctx context.Context, gh *github.Client, dir string, e versions.E
 	return os.WriteFile(filepath.Join(dir, stamp), []byte(want), 0o644)
 }
 
-// untar is the files of a .tar.gz that holds only PNGs, flat. Anything else in it - a directory,
-// a link, another name - is refused rather than skipped: the archive is not this repository's,
-// and one that is not what site-shots.yml writes is one to look at.
+// untar is the files of a .tar.gz that holds only the screenshots and the story's diff, flat.
+// Anything else in it - a directory, a link, another name - is refused rather than skipped: the
+// archive is not this repository's, and one that is not what site-shots.yml writes is one to
+// look at.
 func untar(raw []byte) (map[string][]byte, error) {
 	gz, err := gzip.NewReader(bytes.NewReader(raw))
 	if err != nil {
@@ -139,8 +141,8 @@ func untar(raw []byte) (map[string][]byte, error) {
 		if h.Typeflag == tar.TypeDir && name == "" {
 			continue
 		}
-		if h.Typeflag != tar.TypeReg || !shotName.MatchString(name) {
-			return nil, fmt.Errorf("%q is not a PNG at the top of the archive", h.Name)
+		if h.Typeflag != tar.TypeReg || !fileName.MatchString(name) {
+			return nil, fmt.Errorf("%q is not a screenshot or the story's diff at the top of the archive", h.Name)
 		}
 		if h.Size > 16<<20 {
 			return nil, fmt.Errorf("%s is %d bytes, more than a screenshot", name, h.Size)
