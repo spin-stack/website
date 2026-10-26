@@ -76,8 +76,11 @@
 		"name": "Cores and memory lent while the host has them, and taken back",
 		"state": "built",
 		"proof": "e2e:TestABusyWorkspaceIsLentCoresAndGivesThemBack",
-		"note": "",
-		"endToEndGap": "memory lent and taken back, and a loan refused while the host is full"
+		"note": "A loan refused while the host is full has no test against the stack: the budget is the host's own cores and half its memory, which no lane's workspaces fill.",
+		"endToEnd": [
+			"go:internal/e2e.TestABusyWorkspaceIsLentCoresAndGivesThemBack",
+			"go:internal/e2e.TestABusyWorkspaceIsLentMemoryAndGivesItBack"
+		]
 	},
 	{
 		"area": "Workspaces",
@@ -136,7 +139,9 @@
 		"state": "built",
 		"proof": "e2e:TestHostsAWorkspaceWhoseHostIsGoneIsRecoveredOnAnother",
 		"note": "",
-		"endToEndGap": "the cost asked of the owner before a recovery, and what was written after the snapshot gone"
+		"endToEnd": [
+			"go:internal/e2e.TestHostsAWorkspaceWhoseHostIsGoneIsRecoveredOnAnother"
+		]
 	},
 	{
 		"area": "Workspaces",
@@ -302,8 +307,10 @@
 		"name": "Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role",
 		"state": "built",
 		"proof": "cli:team secret set",
-		"note": "",
-		"endToEndGap": "the forge, identity and cloud role injections, and the secret's value seen at the origin"
+		"note": "The team secret's value is read at the origin; the forge token, identity and cloud role injections have no test against the stack.",
+		"endToEnd": [
+			"go:internal/e2e.TestAPersonsRuleAndAnAgentsOnOneNameEachArriveWithTheirOwnInjection"
+		]
 	},
 	{
 		"area": "Network",
@@ -372,8 +379,11 @@
 		"name": "HTTP/2 to a brokered name, the proxy's ALPN the real host's: a rule's headers set stream by stream, gRPC's trailers both ways",
 		"state": "built",
 		"proof": "e2e:TestHTTP2ToABrokeredNameIsTheRealHosts",
-		"note": "",
-		"endToEndGap": "headers on several streams and gRPC's trailers, which need an h2 origin that echoes them"
+		"note": "gRPC's trailers are egressproxy's h2 test against an origin of its own; the lane has no gRPC origin to reach.",
+		"endToEnd": [
+			"go:internal/e2e.TestHTTP2ToABrokeredNameIsTheRealHosts",
+			"go:internal/e2e.TestEachStreamOfAnHTTP2ConnectionToABrokeredNameCarriesTheRulesHeader"
+		]
 	},
 	{
 		"area": "Network",
@@ -481,7 +491,7 @@
 		"name": "VS Code over SSH, with the server the installation publishes and nothing downloaded",
 		"state": "built",
 		"proof": "e2e:TestAVSCodeServerOfAnotherCommitIsHandedToTheRunningMachine",
-		"note": "spin code itself is run by its unit tests only: it opens VS Code desktop, which no lane has.",
+		"note": "The server is Microsoft's, for Remote-SSH; spin code also opens an editor with Open Remote - SSH, which downloads its own. spin code itself is run by its unit tests only: it opens a desktop editor, which no lane has.",
 		"endToEnd": [
 			"go:internal/e2e.TestTheCarriedVSCodeServerRunsOfflineAndAnswersOverTheSSHTunnel",
 			"go:internal/e2e.TestAVSCodeServerOfAnotherCommitIsHandedToTheRunningMachine"
@@ -492,7 +502,7 @@
 		"name": "Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults",
 		"state": "built",
 		"proof": "e2e:TestTheAgentCLIsAreOnPathWithThePinnedVersions",
-		"note": "",
+		"note": "Where the installation fetches them (agents_fetch) or an operator publishes them: no image carries Claude Code, which only Anthropic may distribute.",
 		"endToEnd": [
 			"go:internal/e2e.TestTheAgentCLIsAreOnPathWithThePinnedVersions"
 		]
@@ -581,7 +591,9 @@
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/DecideConfigChange",
 		"note": "",
-		"endToEndGap": "the real file read, an apply and its effect, and a dismiss kept when the file is read again"
+		"endToEnd": [
+			"go:internal/e2e.TestTheInstallationFileSeedsAndItsChangesAreAnAdministratorsToDecide"
+		]
 	},
 	{
 		"area": "Administration",
@@ -660,7 +672,10 @@
 		"state": "built",
 		"proof": "cli:admin runner drain",
 		"note": "",
-		"endToEndGap": "a runner registered with a token the API made, an expired or revoked token refused, and a revoke carried out"
+		"endToEnd": [
+			"go:internal/e2e.TestARunnerRegisteredWithATokenTheAPIMadeIsRevokedByTheAdmin",
+			"go:internal/e2e.TestARegistrationTokenExpiredOrRevokedRegistersNothing"
+		]
 	},
 	{
 		"area": "Administration",
@@ -772,20 +787,6 @@
 	},
 	{
 		"area": "Platform",
-		"name": "Nothing that needs a kernel runs in CI",
-		"state": "not",
-		"proof": "",
-		"note": ""
-	},
-	{
-		"area": "Platform",
-		"name": "`spin/v1` is still ignored by the breaking-change gate",
-		"state": "not",
-		"proof": "",
-		"note": ""
-	},
-	{
-		"area": "Platform",
 		"name": "AWS only",
 		"state": "limit",
 		"proof": "",
@@ -877,10 +878,10 @@
 	},
 	{
 		"area": "Access",
-		"name": "No invitations",
+		"name": "No team invitations",
 		"state": "limit",
 		"proof": "",
-		"note": "A person signs in once before they can be added to a team."
+		"note": "A person signs in once before they can be added to a team; a workspace's guests are invited by email."
 	},
 	{
 		"area": "Access",
@@ -894,7 +895,7 @@
 		"name": "Nothing pages anyone",
 		"state": "limit",
 		"proof": "",
-		"note": "Metrics, logs and traces stay inside the installation; there are no alerts."
+		"note": "Metrics, logs and traces stay inside the installation; alert rules fire in its Grafana and no contact point tells anyone."
 	},
 	{
 		"area": "Administration",

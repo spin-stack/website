@@ -58,12 +58,13 @@ settings:
   team_network_policies: false
   # Whether the control plane fetches VS Code servers from Microsoft on its own: the newest stable
   # release, looked for daily, and the server of a client's commit the installation has not
-  # released. Off, it fetches none, and workspaces get the server the image carries or one an
-  # administrator published.
+  # released, and at start the release this one pins. Off, it fetches none, and workspaces get
+  # the servers an administrator published; no image carries one.
   vscode_fetch: false
   # Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their
-  # publishers on its own: the newest release of each, looked for daily. Off, it fetches none,
-  # and workspaces get the pair the image carries or one an administrator published.
+  # publishers on its own: the pair this release pins at start, and the newest of each, looked
+  # for daily. Off, it fetches none, and workspaces get the pair an operator published; no image
+  # carries one.
   agents_fetch: false
   # The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a
   # session tagged spin-team-id with the team; it reads only a secret or a parameter tagged the

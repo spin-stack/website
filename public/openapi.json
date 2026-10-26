@@ -15473,7 +15473,7 @@
           "vscodeFetch": {
             "type": "boolean",
             "title": "vscode_fetch",
-            "description": "Whether the control plane fetches VS Code servers from Microsoft on its own: the newest\n stable release, looked for daily, and the server of a client's commit the installation has\n not released. False, it fetches none, and a workspace is given the server the control plane's\n image carries or one an administrator published."
+            "description": "Whether the control plane fetches VS Code servers from Microsoft on its own: the release it\n pins, at start, the newest stable release, looked for daily, and the server of a client's\n commit the installation has not released. False, it fetches none, and a workspace is given\n a server an administrator published; no image carries one."
           },
           "workspaceTrashDays": {
             "type": "integer",
@@ -15532,7 +15532,7 @@
           "agentsFetch": {
             "type": "boolean",
             "title": "agents_fetch",
-            "description": "Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their\n publishers on its own: the newest release of each, looked for daily. False, it fetches none,\n and a workspace is given the pair the control plane's image carries or one an administrator\n published."
+            "description": "Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their\n publishers on its own: the pair it pins, at start, and the newest release of each, looked for\n daily. False, it fetches none, and a workspace is given a pair an operator published; no\n image carries one."
           }
         },
         "title": "InstallationSettings",

@@ -17,8 +17,10 @@ release's public package:
 oras pull ghcr.io/spin-stack/spin-release:v20261025.01-spin-linux-amd64
 ```
 
-`spin version` prints the release it was built from. Use a CLI of the installation's release or
-close to it.
+`spin version` prints the release it was built from, and the CLI says it on every request. An
+installation refuses a CLI more than 90 days older than its own release, and says to install the
+installation's. A CLI newer than the installation is served, and says once that what it asks for
+and the installation does not know is ignored. Use a CLI of the installation's release.
 
 ## Sign in
 
