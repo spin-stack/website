@@ -1,0 +1,43 @@
+---
+// The cost page's three scenarios (src/lib/pricing.ts), a column a region. Its Markdown twin is
+// the same table (scenariosMarkdown, src/lib/pages.ts).
+import { dollars, regions, scenarios } from '../lib/pricing';
+
+const rows = scenarios();
+---
+
+<table class="scenarios">
+	<thead>
+		<tr>
+			<th>Scenario</th>
+			<th>What runs</th>
+			{regions.map((r) => <th class="num">{r}<br /><span class="unit">$ a month</span></th>)}
+		</tr>
+	</thead>
+	<tbody>
+		{
+			rows.map((s) => (
+				<tr>
+					<td><strong>{s.name}</strong></td>
+					<td>{s.what}</td>
+					{regions.map((r) => <td class="num">{dollars(s.monthly[r])}</td>)}
+				</tr>
+			))
+		}
+	</tbody>
+</table>
+
+<style>
+	.num {
+		text-align: right;
+		font-family: var(--sl-font-mono);
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.unit {
+		font-family: var(--sl-font);
+		font-weight: normal;
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+</style>

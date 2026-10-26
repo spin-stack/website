@@ -5,6 +5,7 @@ import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
 import figures from '../data/figures.json';
 import { output } from './output';
+import { generated, published, scenariosMarkdown } from './pricing';
 import { statusLine } from './reference';
 import { storyMarkdown } from './story';
 import { twinPath } from './twin';
@@ -106,6 +107,9 @@ export function toMarkdown(d: Doc, base: string): string {
 	});
 	// A figure the code decides is its text.
 	body = body.replace(/<Value\s+name="(\w+)"\s*\/>/g, (_, name: string) => value(name));
+	// The cost page's scenarios are the same table, and the dates it names are the record's.
+	body = body.replace(/<Scenarios\s*\/>/g, () => scenariosMarkdown());
+	body = body.replace(/\{published\}/g, published).replace(/\{generated\}/g, generated);
 	// A screenshot is its alt text: a twin has no picture to show.
 	body = body.replace(/!\[([^\]]*)\]\([^)]*\.png\)/g, '*Screenshot: $1.*');
 	// What a command prints is the same block of output.

@@ -31,9 +31,18 @@ tasks:
       - go run ./tools/sources spin spin-terraform-aws brand
 
   sources:bump:
-    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned, brand to its main - and fetch them. Then task reference.
+    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned, brand to its main - and fetch them, and rewrite the prices. Then task reference.
     cmds:
       - go run ./tools/sources -bump spin spin-terraform-aws brand
+      - task: pricing
+
+  # The cost page's numbers: generated, dated, and refused by reference:check once they are a
+  # month old or of other machines than the module starts, so a figure on the page is never
+  # quietly stale. The sync rewrites them every day.
+  pricing:
+    desc: Write src/data/pricing.json - what the machines the module starts by default cost an hour, on demand, in each region with images, from the lists the AWS pricing page loads (tools/pricing).
+    cmds:
+      - go run ./tools/pricing -terraform {{.TERRAFORM}} -out src/data/pricing.json
 
   sync:pr:
     desc: Commit what sources:bump and reference changed to branch sync/sources as the sync App (SYNC_TOKEN, BOT its login), and open its one pull request or update it. sync.yml runs it.
@@ -56,6 +65,7 @@ tasks:
     cmds:
       - task: sources
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -shots {{.SHOTS}} -check
+      - go run ./tools/pricing -terraform {{.TERRAFORM}} -check
 
   reference:public:
     desc: Fail if what the site has of spin-terraform-aws and brand is not what they say at the commits versions.yaml pins. Needs no spin checkout, nor any credential.
@@ -64,6 +74,7 @@ tasks:
     cmds:
       - go run ./tools/sources spin-terraform-aws brand
       - go run ./tools/refgen -only terraform,brand -terraform .sources/spin-terraform-aws -brand .sources/brand -check
+      - go run ./tools/pricing -terraform .sources/spin-terraform-aws -check
 
   build:
     desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page.
