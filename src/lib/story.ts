@@ -31,7 +31,7 @@ export const steps: Step[] = [
 		claim: 'A person or an agent is root in a KVM machine with its own kernel: nothing they do reaches another workspace.',
 		feature: 'A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH',
 		commands: [
-			"spin exec demo -- sh -c 'echo hello > /etc/greeting; rm /etc/issue'",
+			"spin exec demo -- sh -c 'echo hello > /etc/greeting; rm /etc/issue; echo \"# edited\" >> /etc/hosts'",
 			'spin snapshot create demo --description after --wait',
 		],
 	},
