@@ -15,6 +15,7 @@ export const nav = [
 		topic: 'docs',
 		items: [
 			['What is Spinbox', 'overview'],
+			['Evaluate Spinbox', 'overview/evaluate'],
 			['Status', 'reference/status'],
 			['What this release is made of', 'reference/release'],
 			['How it works', 'overview/how-it-works'],
