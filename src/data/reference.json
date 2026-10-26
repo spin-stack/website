@@ -1,8 +1,8 @@
 {
 	"spin": {
 		"installs": "v20261025.01",
-		"commit": "55e6962b058f3d27f94255704b1ab96250a32de2",
-		"tag": "v20261026.01",
+		"commit": "c02ffc3acfd56cb242d21547cb177da68a3d4f11",
+		"tag": "v20261026.02",
 		"machine": "v20261014.01"
 	},
 	"terraform": {
