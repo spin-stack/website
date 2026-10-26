@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"github.com/spin-stack/go-tools/versions"
@@ -90,12 +91,14 @@ func run(ctx context.Context, argv []string) error {
 		if err != nil {
 			return err
 		}
-		texts := map[string]string{*mode: text, "chain": chain(ctx, gh)}
+		report, behind := chain(ctx, gh)
+		behind = append(siteBehind(ctx, gh, now), behind...)
+		texts := map[string]string{*mode: text, "chain": report, "behind": behindText(behind)}
 		if *dry {
-			fmt.Print(withSection(withSection("", *mode, text), "chain", texts["chain"]))
+			fmt.Print(withSection(withSection(withSection("", "behind", texts["behind"]), *mode, text), "chain", report))
 			return nil
 		}
-		link, err := writeIssue(ctx, gh, "spin-stack/spin", *bot, texts)
+		link, err := writeIssue(ctx, gh, "spin-stack/spin", *bot, texts, len(behind) == 0)
 		if err != nil {
 			return err
 		}
@@ -135,6 +138,34 @@ func issueText(ctx context.Context, gh *github.Client, mode string, was, now *ve
 		return "", err
 	}
 	return intro + "\n\n" + digest(cs, total, fds), nil
+}
+
+// siteBehind is the site, when the release it documents is not spin's newest: the one thing of
+// the issue's own that keeps it open. What spin main has past the pin does not - main is past
+// every release between two of them, and that is for the next release to bring.
+func siteBehind(ctx context.Context, gh *github.Client, now *versions.Versions) []string {
+	pinned, err := now.Get("spin")
+	if err != nil {
+		return []string{"the site's pin: " + err.Error()}
+	}
+	var latest struct {
+		Tag string `json:"tag_name"`
+	}
+	if err := gh.Get(ctx, "/repos/spin-stack/spin/releases/latest", &latest); err != nil {
+		return []string{"spin's newest release: could not read: " + err.Error()}
+	}
+	if pinned.Version != latest.Tag {
+		return []string{fmt.Sprintf("the site documents %s; spin's newest release is %s", pinned.Version, latest.Tag)}
+	}
+	return nil
+}
+
+// behindText is what keeps the issue open, a line each, or that nothing does.
+func behindText(behind []string) string {
+	if len(behind) == 0 {
+		return today() + ": nothing. The site documents spin's newest release and every link of the chain is where it should be, so the issue is closed until one is not."
+	}
+	return today() + ":\n\n- " + strings.Join(behind, "\n- ")
 }
 
 func today() string { return time.Now().UTC().Format(time.DateOnly) }
