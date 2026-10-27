@@ -46,6 +46,7 @@
 	--spin-brand-frost: #EAF0F6;
 	--spin-brand-mint: #5FE3D6;
 	--spin-brand-navy: #111827;
+	--spin-wordmark: "Spinbox";
 	--spin-font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 	--spin-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 	--spin-text-reading: 16px;
@@ -60,6 +61,9 @@
 	--spin-radius-lg: 12px;
 	--spin-target: 24px;
 	--spin-target-touch: 44px;
+	--spin-width-contained: 1200px;
+	--spin-width-detail: 1152px;
+	--spin-width-wide: 1600px;
 	--spin-duration-fast: 120ms;
 	--spin-duration: 200ms;
 	--spin-duration-slow: 400ms;

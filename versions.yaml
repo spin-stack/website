@@ -29,7 +29,7 @@
   kind: git
   source: https://github.com/spin-stack/brand
   version: main
-  pin: 31d07eb9b76596695a138ff96403d881f358e80d
+  pin: 7e17029f6a087f386a4798af03df6e9623ecfe12
   track: branch
   note: >-
     The palette and the logos. brand cuts no releases, so its main is what it has to say. The
