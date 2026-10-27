@@ -27,22 +27,11 @@ zone in Route 53, and you point the domain's nameservers at it. The installation
 | `app.<domain>` | The dashboard and the API |
 | `tunnel.app.<domain>` | The relay runners connect to |
 | `term.<domain>` | The browser terminal: an SSH client for a workspace, in the browser, that signs in with a passkey |
+| `id.<domain>` | The identity issuer: what a system outside Spinbox verifies a workspace's identity token, or a commit it signed, with |
 | `*.ws.<domain>` | Workspaces' ports |
 
 Workspaces are under a name of their own so that a workspace is never a subdomain of the
 dashboard: nothing a workspace serves can set a cookie the dashboard reads.
-
-### Optional modules
-
-One module of spin-terraform-aws is not part of an installation unless you add it beside it. It
-serves one more name, on its own CloudFront origin, and takes a provider in `us-east-1` for its
-certificate:
-
-| Name | Module | What |
-|---|---|---|
-| `id.<domain>` | [`modules/identity-issuer`](/reference/terraform/identity-issuer/) | The identity issuer: the documents a system outside Spinbox verifies a workspace's identity token with |
-
-Its page says what it takes, and its README what it needs and how to add it.
 
 ## Room for runners
 
