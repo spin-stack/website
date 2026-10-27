@@ -27,6 +27,7 @@ zone in Route 53, and you point the domain's nameservers at it. The installation
 | `app.<domain>` | The dashboard and the API |
 | `tunnel.app.<domain>` | The relay runners connect to |
 | `term.<domain>` | The browser terminal: an SSH client for a workspace, in the browser, that signs in with a passkey |
+| `agents.<domain>` | The agent's client the browser terminal opens a workspace's agent in |
 | `id.<domain>` | The identity issuer: what a system outside Spinbox verifies a workspace's identity token, or a commit it signed, with |
 | `*.ws.<domain>` | Workspaces' ports |
 
@@ -72,4 +73,4 @@ your own instead, name them with [`image_ids`](/reference/terraform/root/#image_
 ## Pick a release
 
 Releases are named by date: `v<YYYYMMDD>.<N>`, the Nth release of that day. This site documents
-`v20261025.01`. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).
+`v20261026.02`. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).
