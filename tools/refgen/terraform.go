@@ -26,7 +26,6 @@ var tfModules = []tfModule{
 	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf", false},
 	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own", "modules/runners/variables.tf", false},
 	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/variables.tf", false},
-	{"modules/terminal", "terminal", "modules/terminal", "the optional browser terminal at term.<domain>, added beside an installation", "modules/terminal/terminal.tf", true},
 	{"modules/identity-issuer", "identity-issuer", "modules/identity-issuer", "the optional identity issuer at id.<domain>, added beside an installation", "modules/identity-issuer/issuer.tf", true},
 }
 
