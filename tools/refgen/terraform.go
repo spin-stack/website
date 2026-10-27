@@ -14,19 +14,14 @@ type tfModule struct {
 	dir, slug, title, what string
 	// source is the file the page links as its source: the one its variables are declared in.
 	source string
-	// optional is a module an installation does not have unless it is added beside it: the root
-	// does not call it, so what it serves is not what an installation needs.
-	optional bool
 }
 
-// The modules an installation is made of, in the order a reader meets them, then the ones added
-// beside it.
+// The modules an installation is made of, in the order a reader meets them.
 var tfModules = []tfModule{
-	{".", "root", "The installation module", "the module an installation uses: every variable it takes and every output it gives", "variables.tf", false},
-	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf", false},
-	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own", "modules/runners/variables.tf", false},
-	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/variables.tf", false},
-	{"modules/identity-issuer", "identity-issuer", "modules/identity-issuer", "the optional identity issuer at id.<domain>, added beside an installation", "modules/identity-issuer/issuer.tf", true},
+	{".", "root", "The installation module", "the module an installation uses: every variable it takes and every output it gives", "variables.tf"},
+	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf"},
+	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own", "modules/runners/variables.tf"},
+	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/variables.tf"},
 }
 
 // terraformPages reads each module's variables and outputs as OpenTofu would, so a variable
@@ -44,10 +39,6 @@ func terraformPages(tf, release string) (map[string][]byte, error) {
 		src := "github.com/spin-stack/spin-terraform-aws"
 		if m.dir != "." {
 			src += "//" + m.dir
-		}
-		if m.optional {
-			fmt.Fprintf(&b, "Not part of an installation unless added beside it: the installation module does not call it. "+
-				"Its [README](https://github.com/spin-stack/spin-terraform-aws/tree/%s/%s) says what it needs and how to add it.\n\n", release, m.dir)
 		}
 		fmt.Fprintf(&b, "Source: `%s?ref=%s`. Generated from its variables and outputs.\n\n", src, release)
 

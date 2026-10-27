@@ -48,22 +48,17 @@ func TestTheNamesAModuleServesAreItsRecords(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"*.ws.<domain>", "app.<domain>", "term.<domain>", "tunnel.app.<domain>"}
+	want := []string{"*.ws.<domain>", "app.<domain>", "id.<domain>", "term.<domain>", "tunnel.app.<domain>"}
 	if !slices.Equal(got, want) {
 		t.Errorf("installationNames = %q, want %q", got, want)
-	}
-	if got, _ := servedNames(filepath.Join(fixtureTF, "modules", "identity-issuer")); !slices.Equal(got, []string{"id.<domain>"}) {
-		t.Errorf("the identity issuer serves %q", got)
 	}
 }
 
 const prerequisites = "---\ntitle: Before you start\n---\n\n## A domain\n\n| Name | What |\n|---|---|\n" +
 	"| `app.<domain>` | The dashboard |\n| `tunnel.app.<domain>` | The relay |\n| `term.<domain>` | The terminal |\n" +
-	"| `*.ws.<domain>` | Ports |\n\n" +
-	"### Optional modules\n\n| Name | Module | What |\n|---|---|---|\n" +
-	"| `id.<domain>` | [`modules/identity-issuer`](/reference/terraform/identity-issuer/) | The issuer |\n\n## Next\n"
+	"| `id.<domain>` | The issuer |\n| `*.ws.<domain>` | Ports |\n\n## Next\n"
 
-// The page's names are the modules', both ways, and each optional one beside its module.
+// The page's names are the modules', both ways.
 func TestThePrerequisitesNameWhatTheModulesServe(t *testing.T) {
 	bad, err := checkDomains(writePage(t, map[string]string{"aws/prerequisites.md": prerequisites}), fixtureTF)
 	if err != nil {
@@ -71,17 +66,14 @@ func TestThePrerequisitesNameWhatTheModulesServe(t *testing.T) {
 	}
 	wantBad(t, bad)
 
-	wrong := strings.NewReplacer("| `tunnel.app.<domain>` | The relay |\n", "| `old.<domain>` | Gone |\n",
-		"[`modules/identity-issuer`](/reference/terraform/identity-issuer/)", "[`modules/runners`](/reference/terraform/runners/)").Replace(prerequisites)
+	wrong := strings.NewReplacer("| `tunnel.app.<domain>` | The relay |\n", "| `old.<domain>` | Gone |\n").Replace(prerequisites)
 	bad, err = checkDomains(writePage(t, map[string]string{"aws/prerequisites.md": wrong}), fixtureTF)
 	if err != nil {
 		t.Fatal(err)
 	}
 	wantBad(t, bad,
 		"the installation serves tunnel.app.<domain>, and the page does not name it",
-		"names old.<domain>, which the installation does not serve",
-		"modules/identity-issuer serves id.<domain>, and the page does not name it",
-		`under "modules/runners", which is no optional module`)
+		"names old.<domain>, which the installation does not serve")
 }
 
 // What an aws/ page tells people to type and to set is what the module has.
@@ -183,7 +175,7 @@ func TestPagesPinTheModuleAndTheRelease(t *testing.T) {
 	page := "source = \"github.com/spin-stack/spin-terraform-aws?ref=<tag>\"\n" +
 		"spin_version = \"v20261019.02\"\n" +
 		"pin one (`?ref=v<YYYYMMDD>.<NN>`)\n" +
-		"`//modules/identity-issuer?ref=v20261001.01` and v20261001.01\n"
+		"`//modules/runners?ref=v20261001.01` and v20261001.01\n"
 	// The dashboard's page names its screenshots' release, the documented one.
 	shotsLine := "These screenshots are of spin v20261024.01.\n"
 	docs := writePage(t, map[string]string{"aws/overview.mdx": page, shotsPageDoc: shotsLine})
@@ -202,7 +194,7 @@ func TestPagesPinTheModuleAndTheRelease(t *testing.T) {
 	want := "source = \"github.com/spin-stack/spin-terraform-aws?ref=v20261024.01\"\n" +
 		"spin_version = \"v20261019.02\"\n" +
 		"pin one (`?ref=v<YYYYMMDD>.<NN>`)\n" +
-		"`//modules/identity-issuer?ref=v20261024.01` and v20261019.02\n"
+		"`//modules/runners?ref=v20261024.01` and v20261019.02\n"
 	if string(raw) != want {
 		t.Errorf("rewritten:\n%s\nwant:\n%s", raw, want)
 	}

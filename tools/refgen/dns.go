@@ -146,14 +146,12 @@ func installationNames(tf string) ([]string, error) {
 	return slices.Compact(names), nil
 }
 
-// domainRow is a row of a table of names: the name, and the module that serves it when the
-// table says.
-var domainRow = regexp.MustCompile("(?m)^\\| `([^`]+)` \\|(?: \\[`(modules/[\\w-]+)`\\])?")
+// domainRow is a row of a table of names: the name.
+var domainRow = regexp.MustCompile("(?m)^\\| `([^`]+)` \\|")
 
 // checkDomains holds aws/prerequisites.md's names to the modules: the table under "A domain" is
-// every name the installation serves and nothing else, and the one under "Optional modules" is
-// every name each optional module serves, beside that module. A name the module adds is one a
-// reader must point the domain at, and the page is where they learn it.
+// every name the installation serves and nothing else. A name the module adds is one a reader
+// must point the domain at, and the page is where they learn it.
 func checkDomains(docs, tf string) ([]string, error) {
 	page := filepath.Join(docs, "aws", "prerequisites.md")
 	raw, err := os.ReadFile(page)
@@ -173,29 +171,6 @@ func checkDomains(docs, tf string) ([]string, error) {
 		have = append(have, string(m[1]))
 	}
 	bad := diffNames(page, "the installation", want, have)
-
-	optional := section(raw, "### Optional modules")
-	if optional == nil {
-		return append(bad, page+`: no "### Optional modules" section`), nil
-	}
-	byModule := map[string][]string{}
-	for _, m := range domainRow.FindAllSubmatch(optional, -1) {
-		byModule[string(m[2])] = append(byModule[string(m[2])], string(m[1]))
-	}
-	for _, m := range tfModules {
-		if !m.optional {
-			continue
-		}
-		names, err := servedNames(filepath.Join(tf, m.dir))
-		if err != nil {
-			return nil, err
-		}
-		bad = append(bad, diffNames(page, m.dir, names, byModule[m.dir])...)
-		delete(byModule, m.dir)
-	}
-	for mod, names := range byModule {
-		bad = append(bad, fmt.Sprintf("%s: the optional modules name %v under %q, which is no optional module of spin-terraform-aws", page, names, mod))
-	}
 	sort.Strings(bad)
 	return bad, nil
 }
