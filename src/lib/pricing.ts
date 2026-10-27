@@ -36,8 +36,9 @@ function price(region: string, type: string): number {
 
 /** The three scenarios, each a month in dollars per region. */
 export function scenarios(): Scenario[] {
-	const { controlPlane, proxy, runners, maxRunners } = machines;
-	const runner = runners[0];
+	const { controlPlane, proxy, maxRunners } = machines;
+	// The cheapest type a runner may be: what the group's on-demand price is at the least.
+	const runner = pricing.runners[0];
 	const perRegion = (f: (region: string) => number) => Object.fromEntries(regions.map((r) => [r, f(r)]));
 	const idle = (r: string) => (price(r, controlPlane) + price(r, proxy) + ipv4Hourly) * hours + zones * zoneMonthly;
 	const n = maxRunners;
