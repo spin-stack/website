@@ -16,6 +16,14 @@ resource "aws_route53_record" "app" {
   name     = each.value
 }
 
+locals {
+  term = "term.${var.domain}"
+}
+
+resource "aws_route53_record" "terminal" {
+  name = local.term
+}
+
 # Named by the certificate AWS issues, which no page can say.
 resource "aws_route53_record" "validation" {
   for_each = { for o in aws_acm_certificate.app.domain_validation_options : o.domain_name => o }
