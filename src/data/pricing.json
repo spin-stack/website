@@ -1,19 +1,33 @@
 {
-	"generated": "2026-10-26",
+	"generated": "2026-10-27",
 	"published": "2026-10-23T22:13:55Z",
 	"source": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/\u003cregion\u003e/Linux/index.json",
 	"machines": {
 		"controlPlane": "t8i.medium",
 		"proxy": "t8i.micro",
-		"runners": [
-			"m8id.8xlarge",
-			"c8id.8xlarge",
-			"r8id.8xlarge",
-			"m8id.12xlarge",
-			"c8id.12xlarge"
+		"runnerTypes": [
+			"c8i.*",
+			"c8id.*",
+			"m8i.*",
+			"m8id.*",
+			"r8i.*",
+			"r8id.*"
 		],
+		"runnerVcpus": [
+			32,
+			48
+		],
+		"runnerLocalDisk": true,
 		"maxRunners": 1
 	},
+	"runners": [
+		"c8id.8xlarge",
+		"m8id.8xlarge",
+		"c8id.12xlarge",
+		"r8id.8xlarge",
+		"m8id.12xlarge",
+		"r8id.12xlarge"
+	],
 	"regions": {
 		"us-east-1": {
 			"c8id.12xlarge": {
@@ -35,6 +49,11 @@
 				"hourly": 2.08832,
 				"vcpu": 32,
 				"memory": "128 GiB"
+			},
+			"r8id.12xlarge": {
+				"hourly": 3.99168,
+				"vcpu": 48,
+				"memory": "384 GiB"
 			},
 			"r8id.8xlarge": {
 				"hourly": 2.66112,
@@ -72,6 +91,11 @@
 				"hourly": 2.08832,
 				"vcpu": 32,
 				"memory": "128 GiB"
+			},
+			"r8id.12xlarge": {
+				"hourly": 3.99168,
+				"vcpu": 48,
+				"memory": "384 GiB"
 			},
 			"r8id.8xlarge": {
 				"hourly": 2.66112,
