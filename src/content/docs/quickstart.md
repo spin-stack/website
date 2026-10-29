@@ -25,7 +25,7 @@ spin version
 The Linux build is also in the release's public package:
 
 ```bash
-oras pull ghcr.io/spin-stack/spin-release:v20261026.02-spin-linux-amd64
+oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
 ```
 
 ## 2. Sign in
