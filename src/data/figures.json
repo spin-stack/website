@@ -110,7 +110,7 @@
 		]
 	},
 	"installation": {
-		"source": "https://github.com/spin-stack/spin-terraform-aws/blob/307060ab855fb648811aaf450e13db808f33f4a3/docs/diagrams/installation",
+		"source": "https://github.com/spin-stack/spin-terraform-aws/blob/358445c95280923876ef3e95658fe45e367462a1/docs/diagrams/installation",
 		"width": 0,
 		"words": [
 			"AWS",

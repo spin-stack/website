@@ -14,7 +14,7 @@ machine, make it executable and put it on your `PATH` as `spin`. The Linux build
 release's public package:
 
 ```bash
-oras pull ghcr.io/spin-stack/spin-release:v20261026.02-spin-linux-amd64
+oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
 ```
 
 `spin version` prints the release it was built from, and the CLI says it on every request. An
