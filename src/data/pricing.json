@@ -1,6 +1,6 @@
 {
-	"generated": "2026-10-29",
-	"published": "2026-10-28T18:03:52Z",
+	"generated": "2026-10-30",
+	"published": "2026-10-29T17:56:34Z",
 	"source": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/\u003cregion\u003e/Linux/index.json",
 	"machines": {
 		"controlPlane": "t8i.medium",
