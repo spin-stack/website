@@ -11,7 +11,7 @@ sidebar:
 
 The control plane's API, spin.v1, generated from its protobuf schema. Every procedure is a Connect unary call: POST a JSON body to /&lt;service>/&lt;method> with `Content-Type: application/json` and `Authorization: Bearer &lt;API key>`.
 
-Every installation serves the document this reference is made from at `https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. This site serves the same document, of the commit it documents, at [`/openapi.json`](/openapi.json); its sha256 is `openapiSha256` in the site's [`reference.json`](https://github.com/spin-stack/website/blob/main/src/data/reference.json). An error is Connect's: a non-200 status with a JSON body naming a `code` and a `message`.
+Every installation serves the document this reference is made from at `https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. This site serves the same document, of the commit it documents, at [`/openapi.json`](../../../../../public/openapi.json); its sha256 is `openapiSha256` in the site's [`reference.json`](https://github.com/spin-stack/website/blob/main/src/data/reference.json). An error is Connect's: a non-200 status with a JSON body naming a `code` and a `message`.
 
 ```sh
 curl -s https://app.example.com/spin.v1.WorkspaceService/ListWorkspaces \
