@@ -14,7 +14,7 @@ inside the workspace — even as root — can change them.
 
 [Egress is closed by default](<feature:Egress is closed by default; policies, by tag, name what a workspace may reach>). A workspace created without `--network-tag` runs under the installation's
 `default_network_tags`. If the installation has not set any, it runs under **`offline`**, which
-every runner has and which allows nothing.
+every runner has and which allows nothing, a DNS question included.
 
 No setting means "open". An installation that wants workspaces to reach the internet by
 default declares a policy that says so, for example `allow: ["0.0.0.0/0"]`, and names it in
@@ -58,9 +58,22 @@ allows them all.
 
 **Tags add up.** A workspace with two tags reaches everything either one allows.
 
-**DNS always works.** A workspace's resolver is the runner's, which answers under every policy,
-so no policy needs to open port 53. It removes from its answers any address of the runner's own
-networks, and every IPv6 answer.
+**DNS follows the policy.** A workspace's resolver is the runner's, so no policy needs to open
+port 53. A DNS question leaves from the runner, where no firewall rule sees it, and reaches whoever
+answers that name, so the resolver only takes up the ones a workspace's policy names:
+
+- A workspace with no tag, or with a rule that reaches every address (ports with no destination,
+  or `0.0.0.0/0`), resolves anything. DNS gives it nothing it could not already do.
+- Under any other policy, a name one of its rules names resolves, wildcards included, in any
+  record type. Any other question is answered `REFUSED` and goes no further, and
+  `spin workspace egress` lists it.
+- Under `offline`, nothing goes up. A rule of narrow `allow` prefixes names nothing either, so a
+  workspace under one alone reaches those addresses and resolves no name: add the names to the rule.
+
+Allowing a name trusts whoever answers it, as much for what it asks them as for the address they
+send a connection to, so a wildcard over a domain anyone can publish under is a way out. The
+resolver also removes from its answers any address of the runner's own networks, and every IPv6
+answer.
 
 <Figure name="egress-policy" caption="What the host's forward chain decides for a packet from a workspace, in order." />
 

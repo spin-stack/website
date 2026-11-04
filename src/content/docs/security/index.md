@@ -23,8 +23,9 @@ else is built so that being root in a workspace gives nothing outside it.
 - **[Isolation](/security/isolation/).** Every workspace is a virtual machine with its own kernel.
   Its QEMU runs as its own user, in an empty network namespace and a bounded cgroup, and reaches
   nothing on the host but what it is handed.
-- **Network.** A workspace reaches nothing until a policy allows it, never reaches the runner's
-  own networks or the cloud's metadata service, and cannot be reached from the network at all.
+- **Network.** A workspace reaches nothing until a policy allows it, a DNS question for a name the
+  policy does not name included, never reaches the runner's own networks or the cloud's metadata
+  service, and cannot be reached from the network at all.
   See [Network and egress](/concepts/network/) and [Network on AWS](/aws/network/).
 - **[Data and encryption](/security/data/).** Every layer of every disk is encrypted with its
   volume's key before it leaves the runner. Keys are wrapped under a key the database does not
