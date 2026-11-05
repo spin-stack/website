@@ -122,3 +122,15 @@ func TestTheStatusPageFailsOnATestSpinDoesNotHave(t *testing.T) {
 		})
 	}
 }
+
+// Only spin.v1 has pages: a link to a page of another API is one the build did not produce.
+func TestAProofLinksAProcedureOnlyWhereTheAPIHasPages(t *testing.T) {
+	for p, want := range map[string]string{
+		"rpc:spin.v1.WorkspaceService/GetWorkspace": "[`WorkspaceService/GetWorkspace`](/reference/api/workspaceservice/)",
+		"rpc:spin.vm.v1.AgentService/Run":           "`AgentService/Run`",
+	} {
+		if got := proof(p); got != want {
+			t.Errorf("proof(%q) = %s, want %s", p, got, want)
+		}
+	}
+}
