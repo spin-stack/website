@@ -235,14 +235,17 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 	return map[string][]byte{filepath.Join("status", "index.md"): []byte(b.String())}, nil
 }
 
-// proof is a proof as the page shows it: the procedure linked to its service's page, the
-// command linked to its page, the test by name.
+// proof is a proof as the page shows it: a procedure of spin.v1 linked to its service's page, one of
+// an API the site has no pages for by name, the command linked to its page, the test by name.
 func proof(p string) string {
 	kind, what, _ := strings.Cut(p, ":")
 	switch kind {
 	case "rpc":
 		service, method, _ := strings.Cut(what, "/")
 		short := service[strings.LastIndex(service, ".")+1:]
+		if !strings.HasPrefix(service, "spin.v1.") {
+			return fmt.Sprintf("`%s/%s`", short, method)
+		}
 		return fmt.Sprintf("[`%s/%s`](/reference/api/%s/)", short, method, strings.ToLower(short))
 	case "cli":
 		top := strings.Fields(what)[0]
