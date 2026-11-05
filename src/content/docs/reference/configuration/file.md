@@ -70,6 +70,8 @@ settings:
   # session tagged spin-team-id with the team; it reads only a secret or a parameter tagged the
   # same. Unset, a team's secrets are sealed in the database and none is a reference.
   # team_secrets_role: arn:aws:iam::123456789012:role/spin-team-secrets
+  # Who makes projects: everyone signed in, or only the installation's admins. Unset, everyone.
+  # project_creation: everyone
   # What a workspace created without a tag of its own runs under, by policy name - the
   # network_policies block below, or a host's own. Unset, it is "offline", the policy every
   # host has and which allows nothing: a workspace nobody chose a policy for reaches nothing
@@ -135,9 +137,10 @@ registration:
 # burst says how a workspace of it grows: fixed (the default) runs at its size; to_preset
 # starts at the floor (burst_floor_cpu, burst_floor_memory_mb; 1 and 1024 if left out) and
 # grows to its size; to_host starts at the floor and grows to what its host has.
-# bandwidth_mbps is what its network carries each way (left out: unshaped); ssh, the editor
-# and forwarded ports are not held to it. rpo_seconds is how far behind the object store its
-# disk may fall (left out: the installation's volume_rpo_seconds).
+# bandwidth_mbps is what its network carries each way (left out: 100; 0: unshaped, a bill with
+# no bound that has to be asked for); ssh, the editor and forwarded ports are not held to it.
+# rpo_seconds is how far behind the object store its disk may fall (left out: the installation's
+# volume_rpo_seconds).
 presets:
   - name: small
     description: For an agent doing one task at a time
@@ -176,7 +179,9 @@ presets:
 # ICMP type. A rule with no destination is its ports anywhere, and one with no port is every
 # port at its destinations. Two things on two sets of ports are two rules: one rule of both
 # would open each port at each destination. A workspace needs no port for DNS: its resolver is
-# the host's, which answers under every policy.
+# the host's. It asks upstream only for a name a rule names, and for anything where a rule reaches
+# every address on some port (no destination, or 0.0.0.0/0); it refuses every other lookup, so a
+# rule of narrow CIDRs resolves nothing, and offline resolves nothing.
 #
 # A policy is as exact as DNS: an address serving several names is open to all of them once
 # one is allowed - unless the rule says verifySNI: true, which passes a TLS connection only when
@@ -198,6 +203,8 @@ network_policies:
           - 80
           - 443
   # A resolver of the workspace's own on UDP, and ping anywhere: two rules, not their product.
+  # Neither names a host nor reaches every address, so the host's resolver answers nothing for it:
+  # under this alone, names resolve only through the workspace's own resolver.
   - name: diagnostics
     rules:
       - allow: [1.1.1.1/32]
