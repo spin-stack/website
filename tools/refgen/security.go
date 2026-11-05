@@ -10,6 +10,9 @@ import (
 	"strings"
 )
 
+// limitsHeading is the README's section on what the model does not protect, beside its open items.
+const limitsHeading = "What this does not protect"
+
 // securityPages writes the security model's rules and its open items from spin's own
 // docs/security/README.md, where code cites each rule at the line that keeps it and a gate fails
 // the build when one is broken. A page that restated them went stale within a week of being
@@ -53,6 +56,12 @@ func securityPages(spin, commit string) (map[string][]byte, error) {
 		"[its rules](/reference/security/rules/).\n", source, commit[:9])
 	gaps.Write(bytes.TrimRight(open, "\n"))
 	gaps.WriteString("\n")
+	// Older tags have no such section: the page is built from whichever tag the site documents.
+	if limits := section(raw, "## "+limitsHeading); limits != nil {
+		gaps.WriteString("\n## " + limitsHeading + "\n")
+		gaps.Write(bytes.TrimRight(limits, "\n"))
+		gaps.WriteString("\n")
+	}
 
 	return map[string][]byte{
 		filepath.Join("security", "rules.md"):      []byte(rules.String()),
