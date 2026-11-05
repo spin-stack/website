@@ -89,7 +89,19 @@
 		"proof": "e2e:TestAGrantWhoseTimeIsUpIsGivenBackToTheMachine",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestAGrantWhoseTimeIsUpIsGivenBackToTheMachine"
+			"go:internal/e2e.TestAGrantWhoseTimeIsUpIsGivenBackToTheMachine",
+			"go:internal/e2e.TestAResumedWorkspaceIsGivenWhatItIsGrantedWhileItRuns"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "An administrator changes a running workspace's bandwidth, its connections open",
+		"state": "built",
+		"proof": "e2e:TestAnAdministratorChangesARunningWorkspacesBandwidth",
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAnAdministratorChangesARunningWorkspacesBandwidth",
+			"go:internal/e2e.TestAWorkspacesBandwidthHoldsAcrossItsRunsAndItsRunner"
 		]
 	},
 	{
@@ -237,7 +249,8 @@
 		"proof": "e2e:TestARestoredWorkspaceBootsOnTheSnapshotItWasRestoredTo",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestARestoredWorkspaceBootsOnTheSnapshotItWasRestoredTo"
+			"go:internal/e2e.TestARestoredWorkspaceBootsOnTheSnapshotItWasRestoredTo",
+			"go:cmd/cli.TestE2E_TheQuickstartsDiffIsWhatTheSiteShows"
 		]
 	},
 	{
@@ -247,7 +260,8 @@
 		"proof": "e2e:TestADiffOfTwoSnapshotsIsWhatChangedBetweenThem",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestADiffOfTwoSnapshotsNamesWhatWasAddedChangedAndRemoved"
+			"go:internal/e2e.TestADiffOfTwoSnapshotsNamesWhatWasAddedChangedAndRemoved",
+			"go:cmd/cli.TestE2E_TheQuickstartsDiffIsWhatTheSiteShows"
 		]
 	},
 	{
@@ -289,6 +303,16 @@
 		"endToEnd": [
 			"go:internal/e2e.TestAWorkspaceNamedNoPolicyReachesNothing",
 			"go:internal/e2e.TestChangingAWorkspacesPoliciesReachesTheHostThatRunsIt"
+		]
+	},
+	{
+		"area": "Network",
+		"name": "A workspace's DNS goes upstream only for what its policy names, so a policy that closes egress closes the tunnel through names",
+		"state": "built",
+		"proof": "e2e:TestAWorkspaceAsksItsResolverOnlyWhatItsPolicyNames",
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceAsksItsResolverOnlyWhatItsPolicyNames"
 		]
 	},
 	{
@@ -499,12 +523,64 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "Claude Code and Codex on every workspace's PATH, at the versions the release pins, with their own defaults",
+		"name": "Claude Code, Codex and T3 Code on every workspace's PATH, at the versions the release pins, with their own defaults",
 		"state": "built",
 		"proof": "e2e:TestTheAgentCLIsAreOnPathWithThePinnedVersions",
 		"note": "Where the installation fetches them (agents_fetch) or an operator publishes them: no image carries Claude Code, which only Anthropic may distribute.",
 		"endToEnd": [
 			"go:internal/e2e.TestTheAgentCLIsAreOnPathWithThePinnedVersions"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the workspace's Agent tab in the dashboard, which frames the terminal's agent page that carries the client over a passkey's session",
+		"state": "built",
+		"proof": "cli:agent --port",
+		"note": "The lane has no provider credential, so no test has a model answer through the brokered egress: the server is reached, as the agent's user, and nothing is asked of it. The browser's test drives the page with a virtual authenticator, which no real passkey's maker vouches for.",
+		"endToEnd": [
+			"go:internal/e2e.TestTheSupervisorRunsTheAgentForItsOwner",
+			"go:cmd/cli.TestE2E_TheAgentIsServedOnThisComputerWhileTheSessionIsOpen",
+			"pw:agent.spec.ts:a passkey signs the person in, and the agent runs in their workspace from the terminal's page"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "Claude Code and Codex signed in from the agent's page: each CLI's own login, run by the supervisor as the agent's user, its credentials kept in the agent's home and never passing through the page",
+		"state": "built",
+		"proof": "rpc:spin.vm.v1.AgentService/BeginLogin",
+		"note": "The lane has no provider account: it begins a login and sees the provider's page, and finishing one is the unit tests' on each CLI's own output.",
+		"endToEnd": [
+			"go:internal/e2e.TestTheSupervisorRunsTheAgentForItsOwner"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "The supervisor runs the agent for its owner while it is used: started, paired and listed over the owner's own session on a socket only root opens, and stopped once nobody has used it for half an hour and no chat is at work",
+		"state": "built",
+		"proof": "rpc:spin.vm.v1.AgentService/Start",
+		"note": "That it stops once idle is the sweep's unit test on a clock the test moves: no lane waits half an hour.",
+		"endToEnd": [
+			"go:internal/e2e.TestTheSupervisorRunsTheAgentForItsOwner"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "The agent's chats listed on the workspace - titles, paths and times, never a message - reported by its supervisor only with the owner's consent",
+		"state": "built",
+		"proof": "rpc:spin.v1.WorkspaceService/ListAgentThreads",
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestTheAgentsThreadsAreListedOnlyWithTheOwnersConsent"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "The agent's home is a volume of its own: the chats and sessions outlive the workspace, kept in the installation's store as every disk is, and a new workspace mounts them at its creation",
+		"state": "built",
+		"proof": "cli:workspace create --agent-home",
+		"note": "Sealed with the workspace's checkpoints, claimed with the launch beside the disk, and moved with the workspace.",
+		"endToEnd": [
+			"go:internal/e2e.TestAnAgentsHomeOutlivesItsWorkspace"
 		]
 	},
 	{
@@ -539,11 +615,27 @@
 	},
 	{
 		"area": "Teams and projects",
-		"name": "A team's forge app: private repositories cloned and pushed with nothing on the disk",
+		"name": "Your GitHub account, connected once: private repositories cloned and pushed with nothing on the disk",
 		"state": "built",
-		"proof": "cli:team forge set",
+		"proof": "rpc:spin.v1.ForgeService/CompleteConnect",
 		"note": "",
-		"endToEndGap": "a real GitHub App and a private repository for the lane to clone and push"
+		"endToEndGap": "consent takes a person on GitHub's page, and revoking a grant would end the one authorization a lane could live on: checked by hand once per release"
+	},
+	{
+		"area": "Teams and projects",
+		"name": "Your GitHub account connected from the CLI, with a code entered on GitHub's page",
+		"state": "built",
+		"proof": "cli:git connect",
+		"note": "",
+		"endToEndGap": "the code is entered by a person on GitHub's page: checked by hand once per release"
+	},
+	{
+		"area": "Teams and projects",
+		"name": "A repository picked from the ones your account reaches",
+		"state": "built",
+		"proof": "cli:git repos",
+		"note": "",
+		"endToEndGap": "a real GitHub account the lane can search with"
 	},
 	{
 		"area": "Teams and projects",
@@ -557,7 +649,7 @@
 	},
 	{
 		"area": "Teams and projects",
-		"name": "Projects: a repository and the shape of the workspace that opens it",
+		"name": "Projects of the installation: a repository and the shape of the workspace that opens it, shared with everyone or some",
 		"state": "built",
 		"proof": "e2e:TestAProjectsWorkspaceHasItsRepositoryCheckedOutAtTheRef",
 		"note": "",
@@ -634,7 +726,7 @@
 		"proof": "cli:admin jobs",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestACarryResumesASuspendedWorkspaceAndStopsIt",
+			"go:cmd/cli.TestE2E_Admin",
 			"pw:admin.spec.ts:admin runs a job by hand and sees how it ended"
 		]
 	},
@@ -684,6 +776,16 @@
 		"proof": "rpc:spin.v1.HostService/GetFleet",
 		"note": "",
 		"endToEndGap": "an autoscaling group to start and stop: the one group is AWS's, and no lane has an account"
+	},
+	{
+		"area": "Administration",
+		"name": "A root shell on a runner, for a while and with a reason: the runner emptied first, every session recorded under Object Lock, the runner retired after",
+		"state": "built",
+		"proof": "cli:admin shell open",
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestHostsARootShellOnAHostIsRecordedAndItsHostRetired"
+		]
 	},
 	{
 		"area": "Administration",

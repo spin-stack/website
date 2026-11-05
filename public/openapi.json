@@ -68,6 +68,67 @@
         }
       }
     },
+    "/spin.v1.AdminService/CreateHostClass": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "CreateHostClass",
+        "operationId": "spin.v1.AdminService.CreateHostClass",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.CreateHostClassRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.CreateHostClassResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/CreateNetworkPolicy": {
       "post": {
         "tags": [
@@ -246,6 +307,67 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.DecideConfigChangeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/DeleteHostClass": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "DeleteHostClass",
+        "operationId": "spin.v1.AdminService.DeleteHostClass",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DeleteHostClassRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DeleteHostClassResponse"
                 }
               }
             }
@@ -1369,6 +1491,67 @@
         }
       }
     },
+    "/spin.v1.AdminService/ListHostClasses": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListHostClasses",
+        "operationId": "spin.v1.AdminService.ListHostClasses",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListHostClassesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListHostClassesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/ListJobRuns": {
       "post": {
         "tags": [
@@ -2292,6 +2475,67 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.UntagImageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/UpdateHostClass": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "UpdateHostClass",
+        "operationId": "spin.v1.AdminService.UpdateHostClass",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.UpdateHostClassRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.UpdateHostClassResponse"
                 }
               }
             }
@@ -3598,6 +3842,746 @@
         }
       }
     },
+    "/spin.v1.ForgeService/CompleteAppCreation": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "CompleteAppCreation",
+        "operationId": "spin.v1.ForgeService.CompleteAppCreation",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.CompleteAppCreationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.CompleteAppCreationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/CompleteConnect": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "CompleteConnect",
+        "operationId": "spin.v1.ForgeService.CompleteConnect",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.CompleteConnectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.CompleteConnectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/DeleteForgeApp": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "DeleteForgeApp",
+        "description": "Takes the app out of use at once. Every connection through it is revoked at the forge, and the\n app is gone when that is done.",
+        "operationId": "spin.v1.ForgeService.DeleteForgeApp",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DeleteForgeAppRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DeleteForgeAppResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/Disconnect": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "Disconnect",
+        "description": "Forgets the token and revokes it at the forge.",
+        "operationId": "spin.v1.ForgeService.Disconnect",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DisconnectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DisconnectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/ListConnections": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "ListConnections",
+        "operationId": "spin.v1.ForgeService.ListConnections",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListConnectionsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListConnectionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/ListForgeApps": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "ListForgeApps",
+        "description": "The installation's app on each forge: whether a person can connect, and where. Its secrets are\n never answered with.",
+        "operationId": "spin.v1.ForgeService.ListForgeApps",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListForgeAppsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListForgeAppsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/PollDeviceConnect": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "PollDeviceConnect",
+        "operationId": "spin.v1.ForgeService.PollDeviceConnect",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.PollDeviceConnectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.PollDeviceConnectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/SearchRepositories": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "SearchRepositories",
+        "description": "The repositories the person's account reaches that match query, as the forge searches them\n with the person's token: what they can see there is what they can pick here.",
+        "operationId": "spin.v1.ForgeService.SearchRepositories",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.SearchRepositoriesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.SearchRepositoriesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/SetForgeApp": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "SetForgeApp",
+        "description": "Keeping an app that was made elsewhere. Refused while the forge has one: an app is never\n edited, because another client id could not revoke what this one granted.",
+        "operationId": "spin.v1.ForgeService.SetForgeApp",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.SetForgeAppRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.SetForgeAppResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/StartAppCreation": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "StartAppCreation",
+        "description": "Making the app, by an instance admin, through the forge's manifest flow: StartAppCreation\n answers the form the browser posts to the forge, which makes the app and sends the admin back\n with a code; CompleteAppCreation exchanges it for the app's credentials. Nobody copies a key.",
+        "operationId": "spin.v1.ForgeService.StartAppCreation",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.StartAppCreationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.StartAppCreationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/StartConnect": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "StartConnect",
+        "description": "Connecting: StartConnect answers where the person authorizes the app and a binding only this\n client keeps; the forge sends the browser back to redirect_uri with a code and the state, and\n CompleteConnect exchanges them, with the binding, for the person's token.",
+        "operationId": "spin.v1.ForgeService.StartConnect",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.StartConnectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.StartConnectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ForgeService/StartDeviceConnect": {
+      "post": {
+        "tags": [
+          "ForgeService"
+        ],
+        "summary": "StartDeviceConnect",
+        "description": "Connecting from somewhere with no browser to send back to, the CLI: the control plane asks the\n forge for a device code (RFC 8628) and keeps it, and answers with the code the person types on\n the forge's page and a handle only the caller can poll with. PollDeviceConnect asks the forge,\n at most once an interval, and on the person's approval keeps their token as CompleteConnect\n does: once, for the person who began it.",
+        "operationId": "spin.v1.ForgeService.StartDeviceConnect",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.StartDeviceConnectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.StartDeviceConnectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.HostService/ActivateHost": {
       "post": {
         "tags": [
@@ -4086,6 +5070,316 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.TestHostWritebackResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.HostShellService/ApproveHostShell": {
+      "post": {
+        "tags": [
+          "HostShellService"
+        ],
+        "summary": "ApproveHostShell",
+        "description": "Approves a shell another administrator asked for.",
+        "operationId": "spin.v1.HostShellService.ApproveHostShell",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ApproveHostShellRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ApproveHostShellResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.HostShellService/CloseHostShell": {
+      "post": {
+        "tags": [
+          "HostShellService"
+        ],
+        "summary": "CloseHostShell",
+        "description": "Ends a shell: one not yet approved is refused, any other is ended and its host retired.",
+        "operationId": "spin.v1.HostShellService.CloseHostShell",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.CloseHostShellRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.CloseHostShellResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.HostShellService/GetHostShellRecording": {
+      "post": {
+        "tags": [
+          "HostShellService"
+        ],
+        "summary": "GetHostShellRecording",
+        "description": "What a shell's sessions recorded, asciicast v2, each session's in turn.",
+        "operationId": "spin.v1.HostShellService.GetHostShellRecording",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetHostShellRecordingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetHostShellRecordingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.HostShellService/ListHostShells": {
+      "post": {
+        "tags": [
+          "HostShellService"
+        ],
+        "summary": "ListHostShells",
+        "description": "The installation's host shells, newest first: all of them, or one host's.",
+        "operationId": "spin.v1.HostShellService.ListHostShells",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListHostShellsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListHostShellsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.HostShellService/RequestHostShell": {
+      "post": {
+        "tags": [
+          "HostShellService"
+        ],
+        "summary": "RequestHostShell",
+        "description": "Asks for a shell on a host. Where the installation has a second administrator approve\n (host_shell_needs_approval), it waits for one; otherwise the host is emptied at once.",
+        "operationId": "spin.v1.HostShellService.RequestHostShell",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.RequestHostShellRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.RequestHostShellResponse"
                 }
               }
             }
@@ -4706,6 +6000,496 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.WorkspaceLogFieldValuesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/CreateProject": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "CreateProject",
+        "operationId": "spin.v1.ProjectService.CreateProject",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.CreateProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.CreateProjectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/DeleteProject": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "DeleteProject",
+        "operationId": "spin.v1.ProjectService.DeleteProject",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DeleteProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DeleteProjectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/GetProject": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "GetProject",
+        "operationId": "spin.v1.ProjectService.GetProject",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetProjectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/ListPrebuilds": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "ListPrebuilds",
+        "description": "A project's prebuilds, to whoever sees it; and a build of one of its refs now, by its admins,\n rather than at the next look.",
+        "operationId": "spin.v1.ProjectService.ListPrebuilds",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListPrebuildsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListPrebuildsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/ListProjects": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "ListProjects",
+        "operationId": "spin.v1.ProjectService.ListProjects",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListProjectsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListProjectsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/RunPrebuild": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "RunPrebuild",
+        "operationId": "spin.v1.ProjectService.RunPrebuild",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.RunPrebuildRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.RunPrebuildResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/ShareProject": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "ShareProject",
+        "operationId": "spin.v1.ProjectService.ShareProject",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ShareProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ShareProjectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/UpdateProject": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "UpdateProject",
+        "description": "Changed, shared and deleted by its admins. A project with a workspace open on it is not\n deleted.",
+        "operationId": "spin.v1.ProjectService.UpdateProject",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.UpdateProjectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.UpdateProjectResponse"
                 }
               }
             }
@@ -6384,68 +8168,6 @@
         }
       }
     },
-    "/spin.v1.TeamService/CreateProject": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "CreateProject",
-        "description": "A team's projects: a repository and the shape of the workspace that opens it\n (CreateWorkspaceRequest.project_id). Made, changed and deleted by the team's admins, listed\n and opened by its members. A project with a workspace open on it is not deleted.",
-        "operationId": "spin.v1.TeamService.CreateProject",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.CreateProjectRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.CreateProjectResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.TeamService/CreateTeam": {
       "post": {
         "tags": [
@@ -6501,67 +8223,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.CreateTeamResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/DeleteForge": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "DeleteForge",
-        "operationId": "spin.v1.TeamService.DeleteForge",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.DeleteTeamForgeRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.DeleteTeamForgeResponse"
                 }
               }
             }
@@ -6684,67 +8345,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.DeleteTeamNetworkPolicyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/DeleteProject": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "DeleteProject",
-        "operationId": "spin.v1.TeamService.DeleteProject",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.DeleteProjectRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.DeleteProjectResponse"
                 }
               }
             }
@@ -6937,67 +8537,6 @@
         }
       }
     },
-    "/spin.v1.TeamService/ListForges": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "ListForges",
-        "operationId": "spin.v1.TeamService.ListForges",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.ListTeamForgesRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.ListTeamForgesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.TeamService/ListIdentityProviders": {
       "post": {
         "tags": [
@@ -7115,129 +8654,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListTeamMembersResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/ListPrebuilds": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "ListPrebuilds",
-        "description": "A project's prebuilds, to its team's members; and a build of one of its refs now, by its\n admins, rather than at the next look.",
-        "operationId": "spin.v1.TeamService.ListPrebuilds",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.ListPrebuildsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.ListPrebuildsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/ListProjects": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "ListProjects",
-        "operationId": "spin.v1.TeamService.ListProjects",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.ListProjectsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.ListProjectsResponse"
                 }
               }
             }
@@ -7422,129 +8838,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.RemoveTeamMemberResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/RunPrebuild": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "RunPrebuild",
-        "operationId": "spin.v1.TeamService.RunPrebuild",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.RunPrebuildRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.RunPrebuildResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/SetForge": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "SetForge",
-        "description": "A team's forges: the app it installed on its organization, from which the control plane mints\n the credential a brokered rule injecting that forge has the egress proxy set - an hour's, so a\n workspace of the team clones and pushes its private repositories with nothing of it on the disk.\n Set and deleted by the team's admins, after the forge has minted one with what was given; listed\n to its members. The app's key is never answered with again.",
-        "operationId": "spin.v1.TeamService.SetForge",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.SetTeamForgeRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.SetTeamForgeResponse"
                 }
               }
             }
@@ -7791,67 +9084,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.UpdateTeamMemberRoleResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.TeamService/UpdateProject": {
-      "post": {
-        "tags": [
-          "TeamService"
-        ],
-        "summary": "UpdateProject",
-        "operationId": "spin.v1.TeamService.UpdateProject",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.UpdateProjectRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.UpdateProjectResponse"
                 }
               }
             }
@@ -8348,6 +9580,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.CreateWorkspaceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/DeleteAgentVolume": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "DeleteAgentVolume",
+        "description": "Erase an agent home no workspace mounts: its volume, its key and its bytes.",
+        "operationId": "spin.v1.WorkspaceService.DeleteAgentVolume",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DeleteAgentVolumeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DeleteAgentVolumeResponse"
                 }
               }
             }
@@ -9215,6 +10509,130 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.KeepWorkspaceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/ListAgentThreads": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "ListAgentThreads",
+        "description": "The agent's threads - T3 Code's chats - as the workspace's supervisor last reported them,\n which it does only while the owner's access consents (collect_logs). Titles, paths and\n times, never a message: the chat itself is read in T3 Code, over the owner's own session\n (`spin agent`).",
+        "operationId": "spin.v1.WorkspaceService.ListAgentThreads",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListAgentThreadsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListAgentThreadsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/ListAgentVolumes": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "ListAgentVolumes",
+        "description": "The caller's agent homes: the volume each workspace of theirs mounts at /home/spin-agent-t3,\n which outlives the workspace - its chats, its sessions - and which another workspace mounts\n at its creation (CreateWorkspaceRequest.agent_volume_id).",
+        "operationId": "spin.v1.WorkspaceService.ListAgentVolumes",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListAgentVolumesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListAgentVolumesResponse"
                 }
               }
             }
@@ -10336,6 +11754,68 @@
         }
       }
     },
+    "/spin.v1.WorkspaceService/SetWorkspaceBandwidth": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "SetWorkspaceBandwidth",
+        "description": "Set what a workspace's network carries each way, an instance admin's to change: the limit\n bounds the installation's egress bill. A running machine is brought to it where it runs, with\n its connections open; any other takes it at its next start.",
+        "operationId": "spin.v1.WorkspaceService.SetWorkspaceBandwidth",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.SetWorkspaceBandwidthRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.SetWorkspaceBandwidthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.WorkspaceService/SetWorkspaceNetworkTags": {
       "post": {
         "tags": [
@@ -11063,7 +12543,7 @@
         "enum": [
           "NULL_VALUE"
         ],
-        "description": "Represents a JSON `null`.\n\n `NullValue` is a sentinel, using an enum with only one value to represent\n the null value for the `Value` type union.\n\n A field of type `NullValue` with any value other than `0` is considered\n invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set\n as a JSON `null` regardless of the integer value, and so will round trip to\n a `0` value.\n\n- `NULL_VALUE`: Null value.",
+        "description": "Represents a JSON `null`.\n\n `NullValue` is a sentinel, using an enum with only one value to represent\n the null value for the `Value` type union.\n\n A field of type `NullValue` with any value other than `0` is considered\n invalid. Most ProtoJSON serializers will emit a `Value` with a `null_value`\n set as a JSON `null` regardless of the integer value, and so will round trip\n to a `0` value.\n\n- `NULL_VALUE`: Null value.",
         "x-enum-descriptions": [
           "Null value."
         ]
@@ -11336,6 +12816,78 @@
         "title": "AddWorkspaceGuestResponse",
         "additionalProperties": false
       },
+      "spin.v1.AgentThread": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "title": {
+            "type": "string",
+            "title": "title"
+          },
+          "project": {
+            "type": "string",
+            "title": "project",
+            "description": "project is the directory the thread works in."
+          },
+          "model": {
+            "type": "string",
+            "title": "model"
+          },
+          "updatedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "updated_at"
+          },
+          "archived": {
+            "type": "boolean",
+            "title": "archived"
+          }
+        },
+        "title": "AgentThread",
+        "additionalProperties": false,
+        "description": "AgentThread is one of the agent's threads as T3 Code names it: what a person is shown of a\n chat without opening it."
+      },
+      "spin.v1.AgentVolume": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "sizeBytes": {
+            "type": "string",
+            "title": "size_bytes",
+            "format": "int64"
+          },
+          "createdAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "created_at"
+          },
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id",
+            "description": "The workspace mounting it, or empty for one no workspace mounts - which a new workspace may."
+          },
+          "workspaceName": {
+            "type": "string",
+            "title": "workspace_name",
+            "description": "The name of the workspace that mounts it, or mounted it last."
+          }
+        },
+        "title": "AgentVolume",
+        "additionalProperties": false,
+        "description": "AgentVolume is one agent home of the caller's."
+      },
       "spin.v1.AllowedEmail": {
         "type": "object",
         "properties": {
@@ -11388,6 +12940,32 @@
           "Exact email address match",
           "Domain suffix match (@domain.com)"
         ]
+      },
+      "spin.v1.ApproveHostShellRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "ApproveHostShellRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ApproveHostShellResponse": {
+        "type": "object",
+        "properties": {
+          "shell": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostShell"
+              }
+            ],
+            "title": "shell"
+          }
+        },
+        "title": "ApproveHostShellResponse",
+        "additionalProperties": false
       },
       "spin.v1.ApproveWorkspaceSignInRequest": {
         "type": "object",
@@ -11902,6 +13480,32 @@
         "title": "CloneWorkspaceResponse",
         "additionalProperties": false
       },
+      "spin.v1.CloseHostShellRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "CloseHostShellRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.CloseHostShellResponse": {
+        "type": "object",
+        "properties": {
+          "shell": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostShell"
+              }
+            ],
+            "title": "shell"
+          }
+        },
+        "title": "CloseHostShellResponse",
+        "additionalProperties": false
+      },
       "spin.v1.CloudAccess": {
         "type": "object",
         "properties": {
@@ -11918,6 +13522,74 @@
         "title": "CloudAccess",
         "additionalProperties": false,
         "description": "CloudAccess is a principal on a cloud a brokered rule's requests are authorized as."
+      },
+      "spin.v1.CompleteAppCreationRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "code"
+          },
+          "state": {
+            "type": "string",
+            "title": "state"
+          },
+          "binding": {
+            "type": "string",
+            "title": "binding"
+          }
+        },
+        "title": "CompleteAppCreationRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.CompleteAppCreationResponse": {
+        "type": "object",
+        "properties": {
+          "app": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ForgeApp"
+              }
+            ],
+            "title": "app"
+          }
+        },
+        "title": "CompleteAppCreationResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.CompleteConnectRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "code"
+          },
+          "state": {
+            "type": "string",
+            "title": "state"
+          },
+          "binding": {
+            "type": "string",
+            "title": "binding"
+          }
+        },
+        "title": "CompleteConnectRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.CompleteConnectResponse": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ForgeConnection"
+              }
+            ],
+            "title": "connection"
+          }
+        },
+        "title": "CompleteConnectResponse",
+        "additionalProperties": false
       },
       "spin.v1.CompleteLoginRequest": {
         "type": "object",
@@ -12074,15 +13746,17 @@
           "CONFIG_ITEM_KIND_SETTING",
           "CONFIG_ITEM_KIND_EMAIL",
           "CONFIG_ITEM_KIND_PRESET",
-          "CONFIG_ITEM_KIND_POLICY"
+          "CONFIG_ITEM_KIND_POLICY",
+          "CONFIG_ITEM_KIND_HOST_CLASS"
         ],
-        "description": "What one item of the installation's config file is.\n\n- `CONFIG_ITEM_KIND_SETTING`: A setting, by its key: registration_mode, default_network_tags, allowed_images...\n- `CONFIG_ITEM_KIND_EMAIL`: An address or domain registration admits, by itself.",
+        "description": "What one item of the installation's config file is.\n\n- `CONFIG_ITEM_KIND_SETTING`: A setting, by its key: registration_mode, default_network_tags, allowed_images...\n- `CONFIG_ITEM_KIND_EMAIL`: An address or domain registration admits, by itself.\n- `CONFIG_ITEM_KIND_HOST_CLASS`: A host class, by its name: the shape of a group of runners (HostClass).",
         "x-enum-descriptions": [
           "",
           "A setting, by its key: registration_mode, default_network_tags, allowed_images...",
           "An address or domain registration admits, by itself.",
           "",
-          ""
+          "",
+          "A host class, by its name: the shape of a group of runners (HostClass)."
         ]
       },
       "spin.v1.ConfigureGitHubOAuthRequest": {
@@ -12177,6 +13851,36 @@
         "title": "CreateAPIKeyResponse",
         "additionalProperties": false
       },
+      "spin.v1.CreateHostClassRequest": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostClass"
+              }
+            ],
+            "title": "class"
+          }
+        },
+        "title": "CreateHostClassRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.CreateHostClassResponse": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostClass"
+              }
+            ],
+            "title": "class"
+          }
+        },
+        "title": "CreateHostClassResponse",
+        "additionalProperties": false
+      },
       "spin.v1.CreateNetworkPolicyRequest": {
         "type": "object",
         "properties": {
@@ -12200,10 +13904,6 @@
       "spin.v1.CreateProjectRequest": {
         "type": "object",
         "properties": {
-          "teamId": {
-            "type": "string",
-            "title": "team_id"
-          },
           "name": {
             "type": "string",
             "title": "name"
@@ -12401,16 +14101,24 @@
             "format": "int32"
           },
           "bandwidthMbps": {
-            "type": "integer",
+            "type": [
+              "integer",
+              "null"
+            ],
             "title": "bandwidth_mbps",
             "format": "int32",
-            "description": "What a workspace of it may carry each way, in megabits a second; 0 is unshaped."
+            "description": "What a workspace of it may carry each way, in megabits a second. Present, since 0 - unshaped -\n is an answer; absent, the installation's default."
           },
           "rpoSeconds": {
             "type": "integer",
             "title": "rpo_seconds",
             "format": "int32",
             "description": "How far behind the object store a workspace of it may fall, in seconds; 0 is the\n installation's."
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class",
+            "description": "The host class its workspaces run on; empty is the default."
           }
         },
         "title": "CreateResourcePresetRequest",
@@ -12627,7 +14335,7 @@
           "projectId": {
             "type": "string",
             "title": "project_id",
-            "description": "A project of a team the caller is in: the workspace is the project's - its team, image,\n preset and tags, which the request then names none of - and its guest clones the project's\n repository at ref, the project's own when empty."
+            "description": "A project the caller sees: the workspace is the project's - its image, preset and tags, which\n the request then names none of - in team_id, the caller's personal team when empty, and its\n guest clones the project's repository at ref, the project's own when empty. Refused while the\n repository is on a forge the installation connects to (ForgeService) and the caller has not\n connected their account there."
           },
           "ref": {
             "type": "string",
@@ -12637,6 +14345,11 @@
             "type": "string",
             "title": "request_id",
             "description": "Optional, at most 128 bytes: the client's key for this create, so a retry after an answer\n it never got is answered with the workspace the first attempt made. The same key with\n another request is refused (FAILED_PRECONDITION)."
+          },
+          "agentVolumeId": {
+            "type": "string",
+            "title": "agent_volume_id",
+            "description": "Optional: an agent's home of the caller's to mount (ListAgentVolumes), one no workspace\n mounts now - the history of a workspace since erased, found again in this one. Empty makes\n the workspace a new one. Refused while no host has room: a workspace that waits for a host\n gets its new home when it is placed, and mounts none it was named."
           }
         },
         "title": "CreateWorkspaceRequest",
@@ -12689,6 +14402,55 @@
       "spin.v1.DecideConfigChangeResponse": {
         "type": "object",
         "title": "DecideConfigChangeResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteAgentVolumeRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "DeleteAgentVolumeRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteAgentVolumeResponse": {
+        "type": "object",
+        "title": "DeleteAgentVolumeResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteForgeAppRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          }
+        },
+        "title": "DeleteForgeAppRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteForgeAppResponse": {
+        "type": "object",
+        "title": "DeleteForgeAppResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteHostClassRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "name"
+          }
+        },
+        "title": "DeleteHostClassRequest",
+        "additionalProperties": false,
+        "description": "Refused while a preset or a workspace not deleted runs on it, and for the default. Its group is\n emptied and taken away by the autoscaler."
+      },
+      "spin.v1.DeleteHostClassResponse": {
+        "type": "object",
+        "title": "DeleteHostClassResponse",
         "additionalProperties": false
       },
       "spin.v1.DeleteNetworkPolicyRequest": {
@@ -12775,26 +14537,6 @@
       "spin.v1.DeleteSnapshotResponse": {
         "type": "object",
         "title": "DeleteSnapshotResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.DeleteTeamForgeRequest": {
-        "type": "object",
-        "properties": {
-          "teamId": {
-            "type": "string",
-            "title": "team_id"
-          },
-          "forge": {
-            "type": "string",
-            "title": "forge"
-          }
-        },
-        "title": "DeleteTeamForgeRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.DeleteTeamForgeResponse": {
-        "type": "object",
-        "title": "DeleteTeamForgeResponse",
         "additionalProperties": false
       },
       "spin.v1.DeleteTeamIdentityProviderRequest": {
@@ -12938,6 +14680,11 @@
               }
             ],
             "title": "trashed_until"
+          },
+          "agentVolumeId": {
+            "type": "string",
+            "title": "agent_volume_id",
+            "description": "The agent's home it mounts, which its erase keeps for another workspace (ListAgentVolumes);\n empty for a workspace with none."
           }
         },
         "title": "DeletedWorkspace",
@@ -13017,6 +14764,22 @@
       "spin.v1.DisableBootstrapAdminResponse": {
         "type": "object",
         "title": "DisableBootstrapAdminResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.DisconnectRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          }
+        },
+        "title": "DisconnectRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.DisconnectResponse": {
+        "type": "object",
+        "title": "DisconnectResponse",
         "additionalProperties": false
       },
       "spin.v1.DotfilesConfig": {
@@ -13451,6 +15214,66 @@
           "A device, a FIFO or a socket."
         ]
       },
+      "spin.v1.FleetClass": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostClass"
+              }
+            ],
+            "title": "class"
+          },
+          "desired": {
+            "type": "integer",
+            "title": "desired",
+            "format": "int32",
+            "description": "What it last asked the group for, and the most it may ask now - the class's own limit, or\n what the installation's leaves it: zero of one is a group at rest."
+          },
+          "most": {
+            "type": "integer",
+            "title": "most",
+            "format": "int32"
+          },
+          "waiting": {
+            "type": "integer",
+            "title": "waiting",
+            "format": "int32",
+            "description": "Workspaces of the class that have nowhere to run yet, and when the first of them started\n waiting: this is what makes the control plane ask for a machine."
+          },
+          "oldestWaiting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "oldest_waiting"
+          },
+          "busy": {
+            "type": "integer",
+            "title": "busy",
+            "format": "int32",
+            "description": "Workspaces of the class keeping its group up."
+          },
+          "launchFailure": {
+            "type": "string",
+            "title": "launch_failure",
+            "description": "Why the group has fewer machines running than it was asked for, in its cloud's own words -\n \"AWS could not start a runner: \u003cmessage\u003e\" - and when the cloud said it. Empty while it has\n as many, or while the cloud said nothing that explains it."
+          },
+          "launchFailedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "launch_failed_at"
+          }
+        },
+        "title": "FleetClass",
+        "additionalProperties": false,
+        "description": "One host class's group, as the control plane last saw it."
+      },
       "spin.v1.FleetHostVersion": {
         "type": "object",
         "properties": {
@@ -13496,6 +15319,127 @@
         "title": "FleetHostVersion",
         "additionalProperties": false,
         "description": "FleetHostVersion is one host's halves: the runner binary and the machine under it."
+      },
+      "spin.v1.ForgeApp": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge",
+            "description": "netpolicy.Forges: \"github\"."
+          },
+          "appId": {
+            "type": "string",
+            "title": "app_id",
+            "format": "int64"
+          },
+          "slug": {
+            "type": "string",
+            "title": "slug"
+          },
+          "clientId": {
+            "type": "string",
+            "title": "client_id"
+          },
+          "apiUrl": {
+            "type": "string",
+            "title": "api_url"
+          },
+          "webUrl": {
+            "type": "string",
+            "title": "web_url"
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "hosts",
+            "description": "The exact names a person's token may be sent to."
+          },
+          "installUrl": {
+            "type": "string",
+            "title": "install_url",
+            "description": "Where the app is installed on an account, which is what lets a token reach its repositories."
+          },
+          "deleting": {
+            "type": "boolean",
+            "title": "deleting",
+            "description": "Being deleted: it takes no connection, and goes once what it granted has been revoked."
+          },
+          "updatedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "updated_at"
+          }
+        },
+        "title": "ForgeApp",
+        "additionalProperties": false
+      },
+      "spin.v1.ForgeConnection": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          },
+          "login": {
+            "type": "string",
+            "title": "login",
+            "description": "The account, as the forge names it."
+          },
+          "expiresAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "expires_at",
+            "description": "When the token ends: it is refreshed before then."
+          },
+          "connectedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "connected_at"
+          }
+        },
+        "title": "ForgeConnection",
+        "additionalProperties": false
+      },
+      "spin.v1.ForgeRepository": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "title": "full_name",
+            "description": "owner/name."
+          },
+          "cloneUrl": {
+            "type": "string",
+            "title": "clone_url",
+            "description": "What a project's repository is: https, with nothing of a credential in it."
+          },
+          "defaultBranch": {
+            "type": "string",
+            "title": "default_branch"
+          },
+          "private": {
+            "type": "boolean",
+            "title": "private"
+          },
+          "description": {
+            "type": "string",
+            "title": "description"
+          }
+        },
+        "title": "ForgeRepository",
+        "additionalProperties": false
       },
       "spin.v1.GetBillRequest": {
         "type": "object",
@@ -13692,55 +15636,19 @@
           "autoscaling": {
             "type": "boolean",
             "title": "autoscaling",
-            "description": "False when no group is configured: the hosts of this installation are whatever somebody\n registered by hand, and none of the numbers below mean anything."
-          },
-          "group": {
-            "type": "string",
-            "title": "group",
-            "description": "The group the control plane sizes, as its cloud names it."
-          },
-          "desired": {
-            "type": "integer",
-            "title": "desired",
-            "format": "int32",
-            "description": "What it last asked the group for, and the most it may ask: zero of one is a fleet at rest,\n which is what an idle installation looks like."
-          },
-          "most": {
-            "type": "integer",
-            "title": "most",
-            "format": "int32"
+            "description": "False when no fleet is configured: the hosts of this installation are whatever somebody\n registered by hand, and none of the numbers below mean anything."
           },
           "connected": {
             "type": "integer",
             "title": "connected",
             "format": "int32",
-            "description": "The hosts that are connected now, which lags desired by a machine's boot: one desired and\n none connected is a machine on its way."
-          },
-          "waiting": {
-            "type": "integer",
-            "title": "waiting",
-            "format": "int32",
-            "description": "Workspaces that have nowhere to run yet, and when the first of them started waiting: this\n is what makes the control plane ask for a machine."
-          },
-          "oldestWaiting": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.Timestamp"
-              }
-            ],
-            "title": "oldest_waiting"
-          },
-          "busy": {
-            "type": "integer",
-            "title": "busy",
-            "format": "int32",
-            "description": "Workspaces that are keeping the fleet up."
+            "description": "The hosts that are connected now, of every class, which lags what was asked for by a\n machine's boot."
           },
           "idleMinutes": {
             "type": "integer",
             "title": "idle_minutes",
             "format": "int32",
-            "description": "How long the fleet may be idle before the group is emptied, and the window in which it is\n emptied at once. Empty quiet_hours is none."
+            "description": "How long a class's group may be idle before it is emptied, and the window in which it is\n emptied at once. Empty quiet_hours is none."
           },
           "quietHours": {
             "type": "string",
@@ -13749,6 +15657,20 @@
           "timeZone": {
             "type": "string",
             "title": "time_zone"
+          },
+          "maxHosts": {
+            "type": "integer",
+            "title": "max_hosts",
+            "format": "int32",
+            "description": "The most hosts of every class together; 0 is no limit of the installation's own."
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.FleetClass"
+            },
+            "title": "classes",
+            "description": "Each host class's group, the default first."
           }
         },
         "title": "GetFleetResponse",
@@ -13857,6 +15779,38 @@
           }
         },
         "title": "GetHostResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetHostShellRecordingRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "GetHostShellRecordingRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetHostShellRecordingResponse": {
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            },
+            "title": "sessions",
+            "description": "Each session's asciicast v2, in the order they were opened."
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "truncated",
+            "description": "Whether there was more than one answer carries: the rest is in the bucket, under\n host-shells/\u003cid\u003e/."
+          }
+        },
+        "title": "GetHostShellRecordingResponse",
         "additionalProperties": false
       },
       "spin.v1.GetInstallationSettingsRequest": {
@@ -14075,10 +16029,41 @@
               "$ref": "#/components/schemas/spin.v1.ExtensionRelease"
             },
             "title": "agent_releases",
-            "description": "Every release of the agent CLIs (Claude Code and Codex, one extension), newest first."
+            "description": "Every release of the agents' programs (Claude Code, Codex and T3 Code, one extension), newest\n first."
           }
         },
         "title": "GetPlatformImagesResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetProjectRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "slug"
+          }
+        },
+        "title": "GetProjectRequest",
+        "additionalProperties": false,
+        "description": "By id, or by slug."
+      },
+      "spin.v1.GetProjectResponse": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Project"
+              }
+            ],
+            "title": "project"
+          }
+        },
+        "title": "GetProjectResponse",
         "additionalProperties": false
       },
       "spin.v1.GetRegistrationModeRequest": {
@@ -14860,7 +16845,7 @@
           "forge": {
             "type": "string",
             "title": "forge",
-            "description": "The forge whose credential for the workspace's team goes in the header, whole: \"github\" is an\n installation token of the team's GitHub App, minted by the control plane (TeamService.SetForge)."
+            "description": "The forge whose credential goes in the header, whole: \"github\" is the workspace owner's own\n token, connected through the installation's OAuth App (ForgeService), which the control plane\n keeps and refreshes."
           },
           "methods": {
             "type": "array",
@@ -15141,6 +17126,58 @@
         "additionalProperties": false,
         "description": "HostCheck is one thing a host asks itself about, at start and every few minutes: a clock that\n is not synchronised, a KVM it cannot open, a resolver that answers its workspaces nothing - each\n a host that looks healthy to every other signal and fails its workspaces."
       },
+      "spin.v1.HostClass": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "name",
+            "description": "Lower-case letters, digits and -, a letter first, up to 31: it is part of the group's name."
+          },
+          "description": {
+            "type": "string",
+            "title": "description"
+          },
+          "instanceTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "instance_types",
+            "description": "The instance types it may be, as the cloud names them, patterns allowed (\"c8id.*\"); none is\n any type the rest admits."
+          },
+          "vcpusMin": {
+            "type": "integer",
+            "title": "vcpus_min",
+            "format": "int32"
+          },
+          "vcpusMax": {
+            "type": "integer",
+            "title": "vcpus_max",
+            "format": "int32"
+          },
+          "memoryMibPerVcpu": {
+            "type": "integer",
+            "title": "memory_mib_per_vcpu",
+            "format": "int32",
+            "description": "The least memory a vCPU of it has, in MiB; 0 is 2048."
+          },
+          "spot": {
+            "type": "boolean",
+            "title": "spot",
+            "description": "A machine the cloud may take back (each host drains first), or an on-demand one."
+          },
+          "maxHosts": {
+            "type": "integer",
+            "title": "max_hosts",
+            "format": "int32",
+            "description": "The most hosts of it; 0 is no limit of its own (InstallationSettings.autoscaling_max_hosts\n bounds them all)."
+          }
+        },
+        "title": "HostClass",
+        "additionalProperties": false,
+        "description": "A kind of runner: the shape of the machines a group of the installation's cloud starts for it,\n which the control plane makes and sizes. What a machine boots is the installation's launch\n template, never this. \"default\" is the class a preset that names none runs on."
+      },
       "spin.v1.HostNetworkPolicy": {
         "type": "object",
         "properties": {
@@ -15293,6 +17330,130 @@
         "title": "HostPolicy",
         "additionalProperties": false,
         "description": "HostPolicy is what an installation decides about one host. An unset field is the\n installation saying nothing about that setting, which leaves the host on its own default -\n not the same as setting it to nothing."
+      },
+      "spin.v1.HostShell": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "hostId": {
+            "type": "string",
+            "title": "host_id"
+          },
+          "requestedBy": {
+            "type": "string",
+            "title": "requested_by",
+            "description": "Who asked, and who approved: an email, or empty for a person no longer on the installation.\n Approved by nobody where the installation asks for no second administrator."
+          },
+          "approvedBy": {
+            "type": "string",
+            "title": "approved_by"
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason"
+          },
+          "incident": {
+            "type": "boolean",
+            "title": "incident",
+            "description": "An incident's shell opens on a host still running workspaces."
+          },
+          "minutes": {
+            "type": "integer",
+            "title": "minutes",
+            "format": "int32",
+            "description": "How long it is open once it opens."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostShellState"
+              }
+            ],
+            "title": "state"
+          },
+          "requestedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "requested_at"
+          },
+          "approvedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "approved_at"
+          },
+          "openedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "opened_at"
+          },
+          "closesAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "closes_at"
+          },
+          "endedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "ended_at"
+          },
+          "ended": {
+            "type": "string",
+            "title": "ended",
+            "description": "How it ended, in words."
+          },
+          "hostRetired": {
+            "type": "boolean",
+            "title": "host_retired",
+            "description": "Whether its host has been retired since: revoked, its disks marked to be re-keyed, and given\n back to its group where it has one."
+          },
+          "running": {
+            "type": "integer",
+            "title": "running",
+            "format": "int32",
+            "description": "How many workspaces the host still runs, while it is emptied."
+          }
+        },
+        "title": "HostShell",
+        "additionalProperties": false
+      },
+      "spin.v1.HostShellState": {
+        "type": "string",
+        "title": "HostShellState",
+        "enum": [
+          "HOST_SHELL_STATE_UNSPECIFIED",
+          "HOST_SHELL_STATE_REQUESTED",
+          "HOST_SHELL_STATE_EMPTYING",
+          "HOST_SHELL_STATE_OPEN",
+          "HOST_SHELL_STATE_ENDED",
+          "HOST_SHELL_STATE_REFUSED"
+        ],
+        "description": "- `HOST_SHELL_STATE_REQUESTED`: Asked for, waiting for a second administrator.\n- `HOST_SHELL_STATE_EMPTYING`: Approved: the host is cordoned and its workspaces are being suspended to run elsewhere.\n- `HOST_SHELL_STATE_OPEN`: Open: a terminal may attach until closes_at.\n- `HOST_SHELL_STATE_ENDED`: Over: closed, or past its time. Its host is retired.\n- `HOST_SHELL_STATE_REFUSED`: Refused, or withdrawn before it was approved. Its host was never touched.",
+        "x-enum-descriptions": [
+          "",
+          "Asked for, waiting for a second administrator.",
+          "Approved: the host is cordoned and its workspaces are being suspended to run elsewhere.",
+          "Open: a terminal may attach until closes_at.",
+          "Over: closed, or past its time. Its host is retired.",
+          "Refused, or withdrawn before it was approved. Its host was never touched."
+        ]
       },
       "spin.v1.HostState": {
         "type": "string",
@@ -15532,7 +17693,41 @@
           "agentsFetch": {
             "type": "boolean",
             "title": "agents_fetch",
-            "description": "Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their\n publishers on its own: the pair it pins, at start, and the newest release of each, looked for\n daily. False, it fetches none, and a workspace is given a pair an operator published; no\n image carries one."
+            "description": "Whether the control plane fetches the agents' programs - Claude Code, Codex and T3 Code -\n from their publishers on its own: the triple it pins, at start, and the newest release of\n each, looked for daily. False, it fetches none, and a workspace is given a triple an operator\n published; no image carries one."
+          },
+          "projectCreation": {
+            "type": "string",
+            "title": "project_creation",
+            "description": "Who makes projects (ProjectService.CreateProject): \"everyone\" signed in, or only the\n instance's \"admins\". Empty is everyone."
+          },
+          "autoscalingIdleMinutes": {
+            "type": "integer",
+            "title": "autoscaling_idle_minutes",
+            "format": "int32",
+            "description": "How the runner fleet is sized (GetFleet): the minutes it may be idle before it is emptied,\n above zero; the quiet hours, HH:MM-HH:MM in the IANA time zone, when it is emptied at once,\n empty for none; and the most hosts it is asked for, under the group's own maximum - zero is\n that maximum. Each takes effect at the autoscaler's next pass."
+          },
+          "autoscalingQuietHours": {
+            "type": "string",
+            "title": "autoscaling_quiet_hours"
+          },
+          "autoscalingTimeZone": {
+            "type": "string",
+            "title": "autoscaling_time_zone"
+          },
+          "autoscalingMaxHosts": {
+            "type": "integer",
+            "title": "autoscaling_max_hosts",
+            "format": "int32"
+          },
+          "hostShellNeedsApproval": {
+            "type": "boolean",
+            "title": "host_shell_needs_approval",
+            "description": "A root shell on a host (HostShellService): whether a second administrator approves each one\n before its host is touched, and the most minutes one may be open, 30 where unset."
+          },
+          "hostShellMaxMinutes": {
+            "type": "integer",
+            "title": "host_shell_max_minutes",
+            "format": "int32"
           }
         },
         "title": "InstallationSettings",
@@ -15734,6 +17929,65 @@
         "title": "ListAPIKeysResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListAgentThreadsRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          }
+        },
+        "title": "ListAgentThreadsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListAgentThreadsResponse": {
+        "type": "object",
+        "properties": {
+          "environmentId": {
+            "type": "string",
+            "title": "environment_id",
+            "description": "environment_id is T3 Code's id for the workspace's server: a thread's page in its web client\n is /\u003cenvironment_id\u003e/\u003cthread id\u003e, served at the port `spin agent` forwards."
+          },
+          "threads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.AgentThread"
+            },
+            "title": "threads",
+            "description": "Newest first."
+          },
+          "reportedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "reported_at",
+            "description": "reported_at is when the supervisor last sent the index; unset where it never has - an owner\n who does not consent, or a workspace that ran no agent."
+          }
+        },
+        "title": "ListAgentThreadsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListAgentVolumesRequest": {
+        "type": "object",
+        "title": "ListAgentVolumesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListAgentVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.AgentVolume"
+            },
+            "title": "volumes"
+          }
+        },
+        "title": "ListAgentVolumesResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListAllowedEmailsRequest": {
         "type": "object",
         "properties": {
@@ -15869,6 +18123,25 @@
         "title": "ListConfigChangesResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListConnectionsRequest": {
+        "type": "object",
+        "title": "ListConnectionsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListConnectionsResponse": {
+        "type": "object",
+        "properties": {
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ForgeConnection"
+            },
+            "title": "connections"
+          }
+        },
+        "title": "ListConnectionsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListDeletedWorkspacesRequest": {
         "type": "object",
         "title": "ListDeletedWorkspacesRequest",
@@ -15927,6 +18200,70 @@
           }
         },
         "title": "ListExposedPortsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListForgeAppsRequest": {
+        "type": "object",
+        "title": "ListForgeAppsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListForgeAppsResponse": {
+        "type": "object",
+        "properties": {
+          "apps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ForgeApp"
+            },
+            "title": "apps"
+          }
+        },
+        "title": "ListForgeAppsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListHostClassesRequest": {
+        "type": "object",
+        "title": "ListHostClassesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListHostClassesResponse": {
+        "type": "object",
+        "properties": {
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.HostClass"
+            },
+            "title": "classes"
+          }
+        },
+        "title": "ListHostClassesResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListHostShellsRequest": {
+        "type": "object",
+        "properties": {
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "One host's; empty for every host's."
+          }
+        },
+        "title": "ListHostShellsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListHostShellsResponse": {
+        "type": "object",
+        "properties": {
+          "shells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.HostShell"
+            },
+            "title": "shells"
+          }
+        },
+        "title": "ListHostShellsResponse",
         "additionalProperties": false
       },
       "spin.v1.ListHostsRequest": {
@@ -16128,6 +18465,20 @@
               "$ref": "#/components/schemas/spin.v1.PendingSignature"
             },
             "title": "pending"
+          },
+          "keyringSigned": {
+            "type": "boolean",
+            "title": "keyring_signed",
+            "description": "keyring_signed is whether the caller has signed a keyring at all. Until they have, no\n workspace is made for them (CreateWorkspace refuses it): its access is signed with a key of\n the keyring. Always true on an installation with no bucket, which keeps no keyrings."
+          },
+          "userId": {
+            "type": "string",
+            "title": "user_id",
+            "description": "user_id is the caller, and keyring their keyring by the version it began at (empty until they\n signed one): who a grant the browser terminal signs for them names. A control plane that says\n another only makes a grant no host admits."
+          },
+          "keyring": {
+            "type": "string",
+            "title": "keyring"
           }
         },
         "title": "ListPendingSignaturesResponse",
@@ -16161,12 +18512,6 @@
       },
       "spin.v1.ListProjectsRequest": {
         "type": "object",
-        "properties": {
-          "teamId": {
-            "type": "string",
-            "title": "team_id"
-          }
-        },
         "title": "ListProjectsRequest",
         "additionalProperties": false
       },
@@ -16462,31 +18807,6 @@
           }
         },
         "title": "ListSnapshotsResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.ListTeamForgesRequest": {
-        "type": "object",
-        "properties": {
-          "teamId": {
-            "type": "string",
-            "title": "team_id"
-          }
-        },
-        "title": "ListTeamForgesRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.ListTeamForgesResponse": {
-        "type": "object",
-        "properties": {
-          "forges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/spin.v1.TeamForge"
-            },
-            "title": "forges"
-          }
-        },
-        "title": "ListTeamForgesResponse",
         "additionalProperties": false
       },
       "spin.v1.ListTeamIdentityProvidersRequest": {
@@ -17433,6 +19753,11 @@
             "type": "string",
             "title": "summary",
             "description": "summary is a line saying what it changes, for a list: the document itself is what to read."
+          },
+          "deferred": {
+            "type": "boolean",
+            "title": "deferred",
+            "description": "deferred is a document nothing asks for until the person uses what it gives: the roster of a\n team that has only ever been its one member, read only for an identity. Offered there, not on\n every page."
           }
         },
         "title": "PendingSignature",
@@ -17486,13 +19811,15 @@
         "enum": [
           "PLATFORM_IMAGE_ARTIFACT_UNSPECIFIED",
           "PLATFORM_IMAGE_ARTIFACT_BASE",
-          "PLATFORM_IMAGE_ARTIFACT_SUPERVISOR"
+          "PLATFORM_IMAGE_ARTIFACT_SUPERVISOR",
+          "PLATFORM_IMAGE_ARTIFACT_AGENT_HOME"
         ],
-        "description": "- `PLATFORM_IMAGE_ARTIFACT_BASE`: The machine's base image, every workspace's disk's floor.\n- `PLATFORM_IMAGE_ARTIFACT_SUPERVISOR`: The supervisor extension every workspace is handed.",
+        "description": "- `PLATFORM_IMAGE_ARTIFACT_BASE`: The machine's base image, every workspace's disk's floor.\n- `PLATFORM_IMAGE_ARTIFACT_SUPERVISOR`: The supervisor extension every workspace is handed.\n- `PLATFORM_IMAGE_ARTIFACT_AGENT_HOME`: The empty home every agent's volume is cloned from.",
         "x-enum-descriptions": [
           "",
           "The machine's base image, every workspace's disk's floor.",
-          "The supervisor extension every workspace is handed."
+          "The supervisor extension every workspace is handed.",
+          "The empty home every agent's volume is cloned from."
         ]
       },
       "spin.v1.PlatformImageState": {
@@ -17573,6 +19900,38 @@
           }
         },
         "title": "PlatformLogFieldValuesResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.PollDeviceConnectRequest": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "title": "handle"
+          }
+        },
+        "title": "PollDeviceConnectRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.PollDeviceConnectResponse": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ForgeConnection"
+              }
+            ],
+            "title": "connection",
+            "description": "Set once the person approved: the connection, kept. Unset is pending: poll again after\n interval_seconds, which the forge may have lengthened."
+          },
+          "intervalSeconds": {
+            "type": "integer",
+            "title": "interval_seconds",
+            "format": "int32"
+          }
+        },
+        "title": "PollDeviceConnectResponse",
         "additionalProperties": false
       },
       "spin.v1.PortAccess": {
@@ -17740,10 +20099,6 @@
             "type": "string",
             "title": "id"
           },
-          "teamId": {
-            "type": "string",
-            "title": "team_id"
-          },
           "name": {
             "type": "string",
             "title": "name"
@@ -17751,7 +20106,7 @@
           "slug": {
             "type": "string",
             "title": "slug",
-            "description": "What a person names it by in the team: teams.slug's shape"
+            "description": "What a person names it by in the installation: teams.slug's shape"
           },
           "description": {
             "type": "string",
@@ -17823,7 +20178,39 @@
           "prebuildOwnerId": {
             "type": "string",
             "title": "prebuild_owner_id",
-            "description": "Who the builds run as, for what they use: the admin who last named the refs."
+            "description": "Who the builds run as, for what they use: the project admin who last named the refs."
+          },
+          "sharedWithEveryone": {
+            "type": "boolean",
+            "title": "shared_with_everyone",
+            "description": "Seen by everybody signed in; otherwise by its admins and shares."
+          },
+          "administers": {
+            "type": "boolean",
+            "title": "administers",
+            "description": "Whether the caller may change, share and delete it."
+          },
+          "adminIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "admin_ids",
+            "description": "Its admins and whom it is shared with: shown to its admins, empty to everybody else."
+          },
+          "sharedUserIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "shared_user_ids"
+          },
+          "sharedTeamIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "shared_team_ids"
           }
         },
         "title": "Project",
@@ -18344,6 +20731,48 @@
         "additionalProperties": false,
         "description": "The repository a workspace opened, as its guest clones it: the project's URL, the ref the\n workspace was opened at, and where on the disk it goes (projects.CheckoutPath). Part of the\n settings the owner approves, as the environment is: a disk is written to only as its owner said."
       },
+      "spin.v1.RequestHostShellRequest": {
+        "type": "object",
+        "properties": {
+          "hostId": {
+            "type": "string",
+            "title": "host_id"
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason",
+            "description": "Why: said to whoever approves it, and kept."
+          },
+          "minutes": {
+            "type": "integer",
+            "title": "minutes",
+            "format": "int32",
+            "description": "How long it is open once it opens, up to the installation's host_shell_max_minutes."
+          },
+          "incident": {
+            "type": "boolean",
+            "title": "incident",
+            "description": "Opens on the host as it is, its workspaces running: for a host that has to be looked at busy."
+          }
+        },
+        "title": "RequestHostShellRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.RequestHostShellResponse": {
+        "type": "object",
+        "properties": {
+          "shell": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostShell"
+              }
+            ],
+            "title": "shell"
+          }
+        },
+        "title": "RequestHostShellResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ResolverLookup": {
         "type": "object",
         "properties": {
@@ -18465,6 +20894,11 @@
             "title": "rpo_seconds",
             "format": "int32",
             "description": "How far behind the object store a workspace of it may fall, in seconds; 0 is the\n installation's (InstallationSettings.volume_rpo_seconds)."
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class",
+            "description": "The host class its workspaces run on (HostClass)."
           }
         },
         "title": "ResourcePreset",
@@ -18822,6 +21256,36 @@
         "title": "SearchPlatformLogsRequest",
         "additionalProperties": false
       },
+      "spin.v1.SearchRepositoriesRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          },
+          "query": {
+            "type": "string",
+            "title": "query",
+            "description": "Empty lists the account's repositories, most recently pushed first."
+          }
+        },
+        "title": "SearchRepositoriesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.SearchRepositoriesResponse": {
+        "type": "object",
+        "properties": {
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ForgeRepository"
+            },
+            "title": "repositories"
+          }
+        },
+        "title": "SearchRepositoriesResponse",
+        "additionalProperties": false
+      },
       "spin.v1.SearchTracesRequest": {
         "type": "object",
         "properties": {
@@ -19161,6 +21625,62 @@
         "title": "ServiceInterval",
         "additionalProperties": false
       },
+      "spin.v1.SetForgeAppRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          },
+          "appId": {
+            "type": "string",
+            "title": "app_id",
+            "format": "int64"
+          },
+          "slug": {
+            "type": "string",
+            "title": "slug"
+          },
+          "clientId": {
+            "type": "string",
+            "title": "client_id"
+          },
+          "clientSecret": {
+            "type": "string",
+            "title": "client_secret"
+          },
+          "webhookSecret": {
+            "type": "string",
+            "title": "webhook_secret"
+          },
+          "apiUrl": {
+            "type": "string",
+            "title": "api_url",
+            "description": "As StartAppCreationRequest's."
+          },
+          "webUrl": {
+            "type": "string",
+            "title": "web_url"
+          }
+        },
+        "title": "SetForgeAppRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.SetForgeAppResponse": {
+        "type": "object",
+        "properties": {
+          "app": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ForgeApp"
+              }
+            ],
+            "title": "app"
+          }
+        },
+        "title": "SetForgeAppResponse",
+        "additionalProperties": false
+      },
       "spin.v1.SetHostPolicyRequest": {
         "type": "object",
         "properties": {
@@ -19316,56 +21836,6 @@
         "title": "SetSnapshotVisibilityResponse",
         "additionalProperties": false
       },
-      "spin.v1.SetTeamForgeRequest": {
-        "type": "object",
-        "properties": {
-          "teamId": {
-            "type": "string",
-            "title": "team_id"
-          },
-          "forge": {
-            "type": "string",
-            "title": "forge",
-            "description": "netpolicy.Forges: \"github\"."
-          },
-          "appId": {
-            "type": "string",
-            "title": "app_id",
-            "format": "int64",
-            "description": "The GitHub App's id, and its installation on the organization the team's repositories are in."
-          },
-          "installationId": {
-            "type": "string",
-            "title": "installation_id",
-            "format": "int64"
-          },
-          "privateKey": {
-            "type": "string",
-            "title": "private_key",
-            "description": "The app's private key, PEM: what signs the request for an installation token. Replaces what\n the team held."
-          },
-          "apiUrl": {
-            "type": "string",
-            "title": "api_url",
-            "description": "Where the forge's API is, https; empty is github.com's. A GitHub Enterprise Server's is\n https://\u003chost\u003e/api/v3."
-          },
-          "hosts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "hosts",
-            "description": "The exact names the credential may be sent to, 1 to 16; empty is github.com and\n api.github.com. A brokered rule that injects the forge and names any other host is refused it."
-          }
-        },
-        "title": "SetTeamForgeRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.SetTeamForgeResponse": {
-        "type": "object",
-        "title": "SetTeamForgeResponse",
-        "additionalProperties": false
-      },
       "spin.v1.SetTeamNetworkPolicyRequest": {
         "type": "object",
         "properties": {
@@ -19432,6 +21902,39 @@
         "type": "object",
         "title": "SetTeamSecretResponse",
         "additionalProperties": false
+      },
+      "spin.v1.SetWorkspaceBandwidthRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "bandwidthMbps": {
+            "type": "integer",
+            "title": "bandwidth_mbps",
+            "format": "int32"
+          }
+        },
+        "title": "SetWorkspaceBandwidthRequest",
+        "additionalProperties": false,
+        "description": "SetWorkspaceBandwidthRequest is the whole of what the workspace carries from now on, not a\n change to it: bandwidth_mbps in megabits a second each way, and zero is unshaped."
+      },
+      "spin.v1.SetWorkspaceBandwidthResponse": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Workspace"
+              }
+            ],
+            "title": "workspace"
+          }
+        },
+        "title": "SetWorkspaceBandwidthResponse",
+        "additionalProperties": false,
+        "description": "SetWorkspaceBandwidthResponse is the workspace as recorded, which its host is then sent: a host\n that cannot take the value leaves the machine as it was and is asked again by the next set."
       },
       "spin.v1.SetWorkspaceNetworkTagsRequest": {
         "type": "object",
@@ -19501,6 +22004,58 @@
           }
         },
         "title": "SetWorkspaceNetworkWatchResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ShareProjectRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "sharedWithEveryone": {
+            "type": "boolean",
+            "title": "shared_with_everyone"
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "user_ids"
+          },
+          "teamIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "team_ids"
+          },
+          "adminIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "admin_ids"
+          }
+        },
+        "title": "ShareProjectRequest",
+        "additionalProperties": false,
+        "description": "Who sees the project and who administers it, whole. The admins are at least one person, and\n always include the prebuild owner while the project prebuilds."
+      },
+      "spin.v1.ShareProjectResponse": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Project"
+              }
+            ],
+            "title": "project"
+          }
+        },
+        "title": "ShareProjectResponse",
         "additionalProperties": false
       },
       "spin.v1.ShareSnapshotRequest": {
@@ -19773,6 +22328,139 @@
         "title": "Span",
         "additionalProperties": false,
         "description": "Span is one operation of a trace, as OpenTelemetry names its parts."
+      },
+      "spin.v1.StartAppCreationRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          },
+          "organization": {
+            "type": "string",
+            "title": "organization",
+            "description": "The organization the app belongs to; empty is the admin's own account."
+          },
+          "apiUrl": {
+            "type": "string",
+            "title": "api_url",
+            "description": "Empty is github.com's; a GitHub Enterprise Server's API is https://\u003chost\u003e/api/v3, and its web\n origin https://\u003chost\u003e."
+          },
+          "webUrl": {
+            "type": "string",
+            "title": "web_url"
+          },
+          "public": {
+            "type": "boolean",
+            "title": "public",
+            "description": "Whether any account can install it. A private app installs only on the account that owns it,\n so only that account's repositories are reached."
+          }
+        },
+        "title": "StartAppCreationRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.StartAppCreationResponse": {
+        "type": "object",
+        "properties": {
+          "formUrl": {
+            "type": "string",
+            "title": "form_url",
+            "description": "Where to send the browser: a page of this control plane's that posts the manifest to the forge,\n because the dashboard's own policy lets it post nowhere else."
+          },
+          "state": {
+            "type": "string",
+            "title": "state"
+          },
+          "binding": {
+            "type": "string",
+            "title": "binding",
+            "description": "A secret for the client that began this, kept where only it reads it and never in a URL:\n CompleteAppCreation requires it with the state."
+          }
+        },
+        "title": "StartAppCreationResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.StartConnectRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          },
+          "redirectUri": {
+            "type": "string",
+            "title": "redirect_uri",
+            "description": "The dashboard's /git/callback, over https; anything else is refused. Empty is the\n installation's own."
+          }
+        },
+        "title": "StartConnectRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.StartConnectResponse": {
+        "type": "object",
+        "properties": {
+          "authorizeUrl": {
+            "type": "string",
+            "title": "authorize_url"
+          },
+          "state": {
+            "type": "string",
+            "title": "state"
+          },
+          "binding": {
+            "type": "string",
+            "title": "binding",
+            "description": "A secret for the client that began this, kept where only it reads it and never in a URL:\n CompleteConnect requires it with the state."
+          }
+        },
+        "title": "StartConnectResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.StartDeviceConnectRequest": {
+        "type": "object",
+        "properties": {
+          "forge": {
+            "type": "string",
+            "title": "forge"
+          }
+        },
+        "title": "StartDeviceConnectRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.StartDeviceConnectResponse": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string",
+            "title": "handle",
+            "description": "What PollDeviceConnect is asked with: a secret of the caller's, polled by them alone. The\n forge's device code stays on the control plane."
+          },
+          "userCode": {
+            "type": "string",
+            "title": "user_code",
+            "description": "What the person types at verification_uri, signed in to the forge."
+          },
+          "verificationUri": {
+            "type": "string",
+            "title": "verification_uri"
+          },
+          "expiresAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "expires_at"
+          },
+          "intervalSeconds": {
+            "type": "integer",
+            "title": "interval_seconds",
+            "format": "int32",
+            "description": "How long to wait before each poll."
+          }
+        },
+        "title": "StartDeviceConnectResponse",
+        "additionalProperties": false
       },
       "spin.v1.StartDeviceLoginRequest": {
         "type": "object",
@@ -20324,46 +23012,6 @@
         "title": "Team",
         "additionalProperties": false
       },
-      "spin.v1.TeamForge": {
-        "type": "object",
-        "properties": {
-          "forge": {
-            "type": "string",
-            "title": "forge"
-          },
-          "appId": {
-            "type": "string",
-            "title": "app_id",
-            "format": "int64"
-          },
-          "installationId": {
-            "type": "string",
-            "title": "installation_id",
-            "format": "int64"
-          },
-          "apiUrl": {
-            "type": "string",
-            "title": "api_url"
-          },
-          "hosts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "hosts"
-          },
-          "updatedAt": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.Timestamp"
-              }
-            ],
-            "title": "updated_at"
-          }
-        },
-        "title": "TeamForge",
-        "additionalProperties": false
-      },
       "spin.v1.TeamIdentityProvider": {
         "type": "object",
         "properties": {
@@ -20632,6 +23280,37 @@
         "title": "UntagImageResponse",
         "additionalProperties": false
       },
+      "spin.v1.UpdateHostClassRequest": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostClass"
+              }
+            ],
+            "title": "class"
+          }
+        },
+        "title": "UpdateHostClassRequest",
+        "additionalProperties": false,
+        "description": "The class named class.name, made what class says. Its group is held to it at the autoscaler's\n next pass; machines it started already keep their shape until they go."
+      },
+      "spin.v1.UpdateHostClassResponse": {
+        "type": "object",
+        "properties": {
+          "class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostClass"
+              }
+            ],
+            "title": "class"
+          }
+        },
+        "title": "UpdateHostClassResponse",
+        "additionalProperties": false
+      },
       "spin.v1.UpdateInstallationSettingsRequest": {
         "type": "object",
         "properties": {
@@ -20856,6 +23535,11 @@
             "title": "rpo_seconds",
             "format": "int32",
             "description": "Optional: a new RPO. Present, since zero - the installation's - is an answer and not \"keep\"."
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class",
+            "description": "Optional: a new host class; empty keeps it. Its workspaces made before keep theirs."
           }
         },
         "title": "UpdateResourcePresetRequest",
@@ -22511,11 +25195,23 @@
       "description": "AdminService manages installation-wide settings, user management, and resource presets\n Only accessible to instance administrators --- Installation Settings ---"
     },
     {
+      "name": "ForgeService",
+      "description": "ForgeService is a person's account on a forge, connected through the installation's GitHub App\n (spin#758): the control plane keeps the token, lists the person's repositories with it, and a\n host's egress proxy sets it on their workspaces' brokered requests. No workspace holds it."
+    },
+    {
       "name": "HostService"
+    },
+    {
+      "name": "HostShellService",
+      "description": "HostShellService is a root shell on a host, asked for by an administrator, for a while, with a\n reason (spin#712). The host is emptied of its workspaces first - unless the request is an\n incident's, which says so - and retired after, whatever happened in it: once a person has had root\n on a host it runs no workspace again. Every session is recorded by the control plane, which\n carries it; the terminal itself is a WebSocket at /api/host-shells/\u003cid\u003e/terminal\n (internal/hostshell)."
     },
     {
       "name": "LogService",
       "description": "LogService is what the installation logged, as its store of logs and traces keeps it\n (internal/logstore). Every search is confined by the control plane to what the caller may see;\n what the caller types is searched inside that and cannot widen it."
+    },
+    {
+      "name": "ProjectService",
+      "description": "ProjectService is the installation's projects (spin#720): a repository and the shape of the\n workspace that opens it (CreateWorkspaceRequest.project_id). Anybody signed in makes one where\n the installation lets everybody (InstallationSettings.project_creation), and is its first admin.\n A project is seen by everybody while it is shared with everyone, and otherwise by its admins and\n whom it is shared with; the instance's admins see and administer every one. Whoever sees one\n opens workspaces from it, in a team of theirs."
     },
     {
       "name": "RunnerTokenService"
