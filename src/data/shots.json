@@ -1,6 +1,6 @@
 {
-	"release": "v20261026.02",
-	"commit": "c02ffc3acfd56cb242d21547cb177da68a3d4f11",
+	"release": "v20261104.01",
+	"commit": "2cfbcd74db9e1b599cc29f342d1d35ce1dbe1be9",
 	"shots": [
 		{
 			"name": "workspaces",
@@ -9,6 +9,10 @@
 		{
 			"name": "workspace",
 			"test": "a running workspace"
+		},
+		{
+			"name": "snapshots",
+			"test": "a workspace's snapshots"
 		}
 	]
 }
