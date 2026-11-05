@@ -30,8 +30,8 @@ the answer names the runners' role. There is no token to create, store or rotate
 
 A machine outside the group can join with a one-time registration token from Admin → Runners.
 
-A runner must be of the same release as the control plane or older, and no more than <Value name="compatWindow" />
-older. A newer one is refused: it may speak of things the control plane does not know.
+A runner must run the control plane's release. One of any other, older or newer, is refused when it
+registers, and the refusal says which release to run.
 
 ## Placement
 

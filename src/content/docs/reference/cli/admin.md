@@ -23,6 +23,7 @@ Available Commands:
   jobs        The control plane's periodic work, and running a job now
   logs        Search what the installation's processes logged
   runner      Manage registered runners
+  shell       A root shell on a runner, for a while: asked for, recorded, and the runner retired after
   storage     What the object store holds, and taking out what nothing needs
   token       Manage runner registration tokens
   versions    What is running where: this control plane, each runner and its machine
@@ -321,6 +322,138 @@ Flags:
   -h, --help               help for revoke
       --leave-workspaces   revoke although workspaces are on this host; each runs again only once recovered elsewhere
   -y, --yes                Skip confirmation
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+### spin admin shell
+
+```
+A root shell on a runner, for a while, with a reason.
+
+The runner is emptied of its workspaces first - each suspended and resumed on another
+runner - unless the shell is an incident's (--incident), which opens on the runner as it is.
+Where the installation asks for it (host_shell_needs_approval), a second administrator
+approves the shell before the runner is touched. Every session is recorded by the control
+plane, kept in the installation's logs bucket under Object Lock. Once the shell has ended - its
+minutes up, or closed - the runner is retired: revoked, every disk it held the key of marked
+to be re-keyed, and its machine given back to its group, which replaces it.
+
+Usage:
+  spin admin shell [flags]
+  spin admin shell [command]
+
+Available Commands:
+  approve     Approve a root shell another administrator asked for: its runner is emptied at once
+  close       End a root shell: one not yet approved is refused; any other ends, and its runner is retired
+  list        The installation's root shells on runners, newest first: every runner's, or one's
+  open        Ask for a root shell on a runner, wait for it, and open a session on it
+  recording   What a root shell's sessions recorded, asciicast v2, each session's in turn
+
+Flags:
+  -h, --help   help for shell
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+
+Use "spin admin shell [command] --help" for more information about a command.
+```
+
+#### spin admin shell approve
+
+```
+Approve a root shell another administrator asked for: its runner is emptied at once
+
+Usage:
+  spin admin shell approve <shell-id> [flags]
+
+Flags:
+  -h, --help   help for approve
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+#### spin admin shell close
+
+```
+End a root shell: one not yet approved is refused; any other ends, and its runner is retired
+
+Usage:
+  spin admin shell close <shell-id> [flags]
+
+Flags:
+  -h, --help   help for close
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+#### spin admin shell list
+
+```
+The installation's root shells on runners, newest first: every runner's, or one's
+
+Usage:
+  spin admin shell list [runner-id] [flags]
+
+Flags:
+  -h, --help   help for list
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+#### spin admin shell open
+
+```
+Ask for a root shell on a runner - or take the one asked for already - wait until it is open,
+and open a session on it in this terminal. The session ends when the shell exits, this terminal
+closes, or the shell's minutes are up. Opening another session on the same shell, while it is
+open, is running this again.
+
+Examples:
+  spin admin shell open 0199... --reason "the disk fills and nothing says why" --minutes 20
+  spin admin shell open 0199... --reason "it drops every stream" --incident
+
+Usage:
+  spin admin shell open <runner-id> [flags]
+
+Flags:
+  -h, --help            help for open
+      --incident        Open on the runner as it is, its workspaces running, without emptying it first
+      --minutes int32   How long the shell is open once it opens, up to the installation's host_shell_max_minutes (default 30)
+      --reason string   Why: said to whoever approves it, and kept
+
+Global Flags:
+      --config string    config file (default is $HOME/.spin/config.yaml)
+  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+```
+
+#### spin admin shell recording
+
+```
+What a root shell's sessions recorded, asciicast v2: each session's in turn, on standard output.
+One session's plays with asciinema (asciinema play); the recordings stay in the logs bucket, under
+host-shells/<shell-id>/, for as long as the installation keeps its logs.
+
+Usage:
+  spin admin shell recording <shell-id> [flags]
+
+Flags:
+  -h, --help   help for recording
 
 Global Flags:
       --config string    config file (default is $HOME/.spin/config.yaml)

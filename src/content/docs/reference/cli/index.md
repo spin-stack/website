@@ -21,17 +21,19 @@ Usage:
 
 Available Commands:
   admin       Administrative commands
+  agent       Run T3 Code in a workspace and use it from this computer
   api-key     Manage API keys
   code        Open a workspace in your editor over SSH
   completion  Generate the autocompletion script for the specified shell
   cp          Copy files to or from a workspace
   exec        Run a command in a workspace
+  git         Your accounts on forges: GitHub, connected through this installation's app
   help        Help about any command
   login       Authenticate with the platform
   logout      End the profile's session and forget its login
   open        Open a repository, branch, commit or pull request from its URL
   port        Manage exposed ports for workspaces
-  project     Manage a team's projects: a repository and the workspace that opens it
+  project     Manage projects: a repository and the workspace that opens it
   settings    Manage user settings
   share       Manage snapshot sharing
   sign        Sign what only you can: your keyring and your teams' rosters
@@ -56,15 +58,17 @@ Use "spin [command] --help" for more information about a command.
 ```
 
 - [`spin admin`](/reference/cli/admin/): Administrative commands
+- [`spin agent`](/reference/cli/agent/): Run T3 Code in a workspace and use it from this computer
 - [`spin api-key`](/reference/cli/api-key/): Manage API keys
 - [`spin code`](/reference/cli/code/): Open a workspace in your editor over SSH
 - [`spin cp`](/reference/cli/cp/): Copy files to or from a workspace
 - [`spin exec`](/reference/cli/exec/): Run a command in a workspace
+- [`spin git`](/reference/cli/git/): Your accounts on forges: GitHub, connected through this installation's app
 - [`spin login`](/reference/cli/login/): Authenticate with the platform
 - [`spin logout`](/reference/cli/logout/): End the profile's session and forget its login
 - [`spin open`](/reference/cli/open/): Open a repository, branch, commit or pull request from its URL
 - [`spin port`](/reference/cli/port/): Manage exposed ports for workspaces
-- [`spin project`](/reference/cli/project/): Manage a team's projects: a repository and the workspace that opens it
+- [`spin project`](/reference/cli/project/): Manage projects: a repository and the workspace that opens it
 - [`spin settings`](/reference/cli/settings/): Manage user settings
 - [`spin share`](/reference/cli/share/): Manage snapshot sharing
 - [`spin sign`](/reference/cli/sign/): Sign what only you can: your keyring and your teams' rosters

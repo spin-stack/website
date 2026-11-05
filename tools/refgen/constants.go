@@ -22,8 +22,6 @@ import (
 type constants struct {
 	// RotateAtBytes is the size a volume's top layer commits at whatever its age.
 	RotateAtBytes codeValue `json:"rotateAtBytes"`
-	// CompatWindow is how much older than its control plane a runner may be.
-	CompatWindow codeValue `json:"compatWindow"`
 	// LogRetentionDays is how long CloudWatch keeps the flow log and the boot logs by default.
 	LogRetentionDays codeValue `json:"logRetentionDays"`
 }
@@ -36,7 +34,6 @@ type codeValue struct {
 
 const (
 	rotatePath = "internal/storage/qcow/manager.go"
-	compatPath = "internal/controlplane/compat/compat.go"
 	logsModule = "modules/controlplane"
 )
 
@@ -51,13 +48,6 @@ func spinConstants(c *constants, spin string) error {
 		return fmt.Errorf("%s: DefaultRotateAtBytes is no int64", rotatePath)
 	}
 	c.RotateAtBytes = codeValue{bytesText(n), "spin:" + rotatePath}
-	if v, err = goConstant(filepath.Join(spin, compatPath), "Window"); err != nil {
-		return err
-	}
-	if n, ok = constant.Int64Val(v); !ok {
-		return fmt.Errorf("%s: Window is no duration", compatPath)
-	}
-	c.CompatWindow = codeValue{durationText(time.Duration(n)), "spin:" + compatPath}
 	return nil
 }
 

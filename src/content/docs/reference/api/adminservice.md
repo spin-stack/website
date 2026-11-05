@@ -31,6 +31,22 @@ Add allowed email/domain
 |---|---|---|
 | `entry` | [AllowedEmail](/reference/api/types/#allowedemail) |  |
 
+## CreateHostClass
+
+`POST /spin.v1.AdminService/CreateHostClass`
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `class` | [HostClass](/reference/api/types/#hostclass) |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `class` | [HostClass](/reference/api/types/#hostclass) |  |
+
 ## CreateNetworkPolicy
 
 `POST /spin.v1.AdminService/CreateNetworkPolicy`
@@ -66,8 +82,9 @@ Create a resource preset
 | `sortOrder` | integer (int32) | Optional: display order |
 | `burstFloorCpuCores` | integer (int32) | Required for a burst mode: what its workspaces start with, at most the preset's size. |
 | `burstFloorMemoryMb` | integer (int32) |  |
-| `bandwidthMbps` | integer (int32) | What a workspace of it may carry each way, in megabits a second; 0 is unshaped. |
+| `bandwidthMbps` | integer or null (int32) | What a workspace of it may carry each way, in megabits a second. Present, since 0 - unshaped - is an answer; absent, the installation's default. |
 | `rpoSeconds` | integer (int32) | How far behind the object store a workspace of it may fall, in seconds; 0 is the installation's. |
+| `hostClass` | string | The host class its workspaces run on; empty is the default. |
 
 **Response**
 
@@ -89,6 +106,20 @@ Apply a change the file proposes, or dismiss it. Either is remembered until the 
 | `name` | string |  |
 | `says` | string | ConfigChange.says, as listed. |
 | `apply` | boolean | True writes what the file says; false keeps what the installation has. |
+
+**Response**
+
+No fields: `{}`.
+
+## DeleteHostClass
+
+`POST /spin.v1.AdminService/DeleteHostClass`
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `name` | string |  |
 
 **Response**
 
@@ -262,7 +293,7 @@ No fields: `{}`.
 | `images` | list of [PlatformImage](/reference/api/types/#platformimage) | Empty until the object store is configured: there is nowhere to publish to. |
 | `baseImages` | list of [BaseImage](/reference/api/types/#baseimage) | Every base image published, one per machine release, newest first. |
 | `supervisorReleases` | list of [ExtensionRelease](/reference/api/types/#extensionrelease) | Every release of the supervisor, newest first. |
-| `agentReleases` | list of [ExtensionRelease](/reference/api/types/#extensionrelease) | Every release of the agent CLIs (Claude Code and Codex, one extension), newest first. |
+| `agentReleases` | list of [ExtensionRelease](/reference/api/types/#extensionrelease) | Every release of the agents' programs (Claude Code, Codex and T3 Code, one extension), newest first. |
 
 ## GetRegistrationMode
 
@@ -429,6 +460,20 @@ No fields: `{}`.
 | Field | Type | What it is |
 |---|---|---|
 | `changes` | list of [ConfigChange](/reference/api/types/#configchange) |  |
+
+## ListHostClasses
+
+`POST /spin.v1.AdminService/ListHostClasses`
+
+**Request**
+
+No fields: `{}`.
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `classes` | list of [HostClass](/reference/api/types/#hostclass) |  |
 
 ## ListJobRuns
 
@@ -690,6 +735,22 @@ Take a ref off what it names: no new workspace gets those bytes by it, the disks
 
 No fields: `{}`.
 
+## UpdateHostClass
+
+`POST /spin.v1.AdminService/UpdateHostClass`
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `class` | [HostClass](/reference/api/types/#hostclass) |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `class` | [HostClass](/reference/api/types/#hostclass) |  |
+
 ## UpdateInstallationSettings
 
 `POST /spin.v1.AdminService/UpdateInstallationSettings`
@@ -747,6 +808,7 @@ Update a resource preset
 | `burstFloorMemoryMb` | integer (int32) | Optional: new burst floor |
 | `bandwidthMbps` | integer or null (int32) | Optional: a new bandwidth. Present, since zero - unshaped - is an answer and not "keep". |
 | `rpoSeconds` | integer or null (int32) | Optional: a new RPO. Present, since zero - the installation's - is an answer and not "keep". |
+| `hostClass` | string | Optional: a new host class; empty keeps it. Its workspaces made before keep theirs. |
 
 **Response**
 
