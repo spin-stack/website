@@ -30,9 +30,10 @@ Flags:
   -h, --help   help for ssh-key
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin ssh-key [command] --help" for more information about a command.
 ```
@@ -41,6 +42,11 @@ Use "spin ssh-key [command] --help" for more information about a command.
 
 ```
 Upload an SSH public key that will be added to all your workspaces.
+
+At a terminal, or with --wait, this goes on to get it signed: where this machine holds a key
+your keyring lists it signs your keyring with it - when the keyring waiting is the one before
+and this key, and nothing else; 'spin sign' shows and signs one that says more - and otherwise
+it opens the page where your passkey signs and waits until you have.
 
 Examples:
   spin ssh-key add laptop ~/.ssh/id_ed25519.pub
@@ -51,13 +57,15 @@ Usage:
   spin ssh-key add <name> <public-key-file> [flags]
 
 Flags:
-  -h, --help   help for add
-      --wait   wait until your keyring lists the key, signed elsewhere
+  -h, --help         help for add
+      --no-browser   print the page where a passkey signs, instead of opening it
+      --wait         wait until your keyring lists the key, signed elsewhere
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin ssh-key delete
@@ -73,9 +81,10 @@ Flags:
   -y, --yes    Skip confirmation
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin ssh-key list
@@ -90,8 +99,9 @@ Flags:
   -h, --help   help for list
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 

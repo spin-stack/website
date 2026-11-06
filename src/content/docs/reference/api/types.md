@@ -701,7 +701,7 @@ One of: `OUTSIDE_SHARE_STATE_UNSPECIFIED`, `OUTSIDE_SHARE_STATE_PREPARING`, `OUT
 
 ## OwnerWord
 
-OwnerWord is a workspace's access, as its owner signed it with a key of their keyring (internal/ownerword): document is the access as framed JSON, signature the key's SSH signature over it (sshsig, namespace "spin-access") - what `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent.
+OwnerWord is a workspace's access, as its owner signed it with a key of their keyring (internal/ownerword): document is the access as framed JSON, signature the key's over it for namespace "spin-access": an SSH signature (sshsig) - what `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent - or a set's (sshsig.SignSet), one passkey prompt over several documents, which ssh-keygen does not read.
 
 | Field | Type | What it is |
 |---|---|---|
@@ -736,6 +736,7 @@ PendingSignature is one document the caller is asked to sign.
 | `signers` | list of string | signers are the keys, in authorized_keys form, any one of which may sign it. |
 | `summary` | string | summary is a line saying what it changes, for a list: the document itself is what to read. |
 | `deferred` | boolean | deferred is a document nothing asks for until the person uses what it gives: the roster of a team that has only ever been its one member, read only for an identity. Offered there, not on every page. |
+| `previous` | string (byte) | previous is the version this one follows, as kept, for the client to show what changes against it; empty for none. |
 
 ## PlatformImage
 
@@ -796,6 +797,7 @@ A prebuild: one build of a project's ref at a commit, and the snapshot it left.
 | `error` | string |  |
 | `createdAt` | `Timestamp` |  |
 | `builtAt` | `Timestamp` |  |
+| `workspaceCount` | integer (int32) | In ListPrebuilds: the workspaces opened from it that are not deleted, whoever's they are. |
 
 ## PrebuildState
 
@@ -835,6 +837,7 @@ A project: a repository and the shape of the workspace that opens it.
 | `adminIds` | list of string | Its admins and whom it is shared with: shown to its admins, empty to everybody else. |
 | `sharedUserIds` | list of string |  |
 | `sharedTeamIds` | list of string |  |
+| `readyPrebuildCount` | integer (int32) | In ListProjects: how many of its prebuilds are ready to open from. |
 
 ## QuarantineDenial
 
@@ -894,23 +897,6 @@ RekeyState is how far a disk's re-key is. - `REKEY_STATE_PENDING`: Marked by a r
 
 One of: `REKEY_STATE_UNSPECIFIED`, `REKEY_STATE_PENDING`, `REKEY_STATE_COPYING`, `REKEY_STATE_READY`.
 
-## RepositoryConfig
-
-The repository a workspace opened, as its guest clones it: the project's URL, the ref the workspace was opened at, and where on the disk it goes (projects.CheckoutPath). Part of the settings the owner approves, as the environment is: a disk is written to only as its owner said.
-
-| Field | Type | What it is |
-|---|---|---|
-| `url` | string |  |
-| `ref` | string |  |
-| `path` | string |  |
-| `authorName` | string | Who the checkout's commits are by: the workspace's owner's name and email as the installation knows them, set as the checkout's own user.name and user.email - the push goes as the team's app, and the commit says the person. Empty is neither set. |
-| `authorEmail` | string |  |
-| `commit` | string | commit is the one a prebuild's build checks out and runs create at; empty for a workspace a person opens, which follows the ref. |
-| `fromCommit` | string | from_commit is the commit the disk's checkout already is, for a disk cloned from a prebuild: the guest holds the tree to it (git fsck, no tracked file changed) before it fetches. |
-| `prebuildId` | string | The prebuild the disk is a clone of, and the SHA-256 of the claim its host signed of it (PrebuildClaim): what the owner approves when the open was from one. |
-| `prebuildClaimDigest` | string |  |
-| `pullRef` | string | pull_ref is a pull request's ref as its forge serves it (refs/pull/&lt;n>/head, GitLab's refs/merge-requests/&lt;n>/head), fetched once ref is cloned and checked out as pr-&lt;n> or mr-&lt;n>; empty for a workspace that opens at ref itself. |
-
 ## ResolverLookup
 
 | Field | Type | What it is |
@@ -942,6 +928,7 @@ ResourcePreset is a class of workspace: its size, and how a workspace of it may 
 | `bandwidthMbps` | integer (int32) | What a workspace of it may carry each way, in megabits a second; 0 is unshaped. |
 | `rpoSeconds` | integer (int32) | How far behind the object store a workspace of it may fall, in seconds; 0 is the installation's (InstallationSettings.volume_rpo_seconds). |
 | `hostClass` | string | The host class its workspaces run on (HostClass). |
+| `agentMinMemoryMb` | integer (int32) | What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset. |
 
 ## Resources
 
@@ -1013,13 +1000,13 @@ ServiceHealth is one service over a window: the traces begun in it - what it was
 
 ## SignatureKind
 
-- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the keyring before it; the first, and one started anew, with a key it lists. - `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by an owner the roster before it lists; the first, by an owner it lists.
+- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the keyring before it; the first, and one started anew, with a key it lists. - `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by an owner the roster before it lists; the first, by an owner it lists. - `SIGNATURE_KIND_SETTINGS`: A user's settings: what their workspaces apply - dotfiles, shell, environment, editor, Taskfile, each workspace's own environment - and the repositories, by URL and ref, their workspaces may clone (ownersettings.Settings). Signed with a key of their newest keyring, never a session's: a host applies nothing else of theirs.
 
-One of: `SIGNATURE_KIND_UNSPECIFIED`, `SIGNATURE_KIND_KEYRING`, `SIGNATURE_KIND_ROSTER`.
+One of: `SIGNATURE_KIND_UNSPECIFIED`, `SIGNATURE_KIND_KEYRING`, `SIGNATURE_KIND_ROSTER`, `SIGNATURE_KIND_SETTINGS`.
 
 ## SignedDocument
 
-SignedDocument is a document as framed JSON and an SSH signature over it (sshsig) - what `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent, and a passkey's WebAuthn assertion is one too (internal/sshauth).
+SignedDocument is a document as framed JSON and a signature over it: an SSH signature (sshsig) - what `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent, and a passkey's WebAuthn assertion is one too (internal/sshauth) - or a set's (sshsig.SignSet), one passkey prompt over several documents, which ssh-keygen does not read.
 
 | Field | Type | What it is |
 |---|---|---|
@@ -1328,6 +1315,9 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `ref` | string |  |
 | `wakeOnAccess` | boolean | Suspended, it is resumed by a signed-in visitor of one of its published ports (OpenWorkspaceProxySession). Never by an anonymous one: that would undo the idle suspension for whoever has a public port's URL. |
 | `suspendedSnapshotId` | string | The snapshot it was suspended into: its next start resumes it rather than booting its disk. Empty when a start boots the disk - never suspended, resumed since, or the snapshot deleted. |
+| `fromPrebuildId` | string | The prebuild its disk is a clone of; empty for one that opened with none. |
+| `agentMinMemoryMb` | integer (int32) | What it has to hold for its agent to start there, in MB (the supervisor refuses below it). |
+| `projectError` | string | project_error is what its guest last said went wrong with its project - the clone, its .spin.yaml or its create tasks - as the guest said it; empty when all of it went, or nothing has reported. The next boot tries again. |
 
 ## WorkspaceAction
 

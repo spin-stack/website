@@ -14,7 +14,7 @@ Who logs in to a workspace is its access, which its owner signs with a key of th
 (the keys that sign for you), and its identity - the token it presents to a cloud, the
 certificate it signs a commit with - names its team as the team's roster says (its members,
 signed by its owners). The host a workspace runs on holds both to these, and the control plane
-proposes each from what it holds and signs none of them: a control plane that is taken can
+proposes each from what it holds and signs none of them: the control plane can
 neither let somebody into your workspace nor put one in your team.
 
 This shows each document waiting for your signature, and signs it with a key this machine holds
@@ -35,8 +35,9 @@ Flags:
   -y, --yes          sign without asking about each document
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
