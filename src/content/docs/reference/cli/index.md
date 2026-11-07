@@ -43,16 +43,17 @@ Available Commands:
   ssh-config  Make every workspace reachable with plain ssh, as the host spin.<workspace>
   ssh-key     Manage SSH keys
   team        Manage teams
-  trust       What this machine trusts of an installation
+  update      Install the CLI of the release your installation runs
   version     Print version information
   whoami      Show current user info
   workspace   Manage workspaces
 
 Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -h, --help             help for spin
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -h, --help                 help for spin
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin [command] --help" for more information about a command.
 ```
@@ -78,7 +79,7 @@ Use "spin [command] --help" for more information about a command.
 - [`spin ssh-config`](/reference/cli/ssh-config/): Make every workspace reachable with plain ssh, as the host spin.<workspace>
 - [`spin ssh-key`](/reference/cli/ssh-key/): Manage SSH keys
 - [`spin team`](/reference/cli/team/): Manage teams
-- [`spin trust`](/reference/cli/trust/): What this machine trusts of an installation
+- [`spin update`](/reference/cli/update/): Install the CLI of the release your installation runs
 - [`spin version`](/reference/cli/version/): Print version information
 - [`spin whoami`](/reference/cli/whoami/): Show current user info
 - [`spin workspace`](/reference/cli/workspace/): Manage workspaces

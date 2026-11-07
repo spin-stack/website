@@ -29,9 +29,10 @@ Flags:
   -h, --help   help for settings
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin settings [command] --help" for more information about a command.
 ```
@@ -57,9 +58,10 @@ Flags:
       --repo string      Git repository URL
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin settings get
@@ -74,9 +76,10 @@ Flags:
   -h, --help   help for get
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin settings set
@@ -101,9 +104,10 @@ Flags:
   -h, --help   help for set
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin settings taskfile
@@ -126,8 +130,9 @@ Flags:
       --validate string   Validate a Taskfile without saving
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 

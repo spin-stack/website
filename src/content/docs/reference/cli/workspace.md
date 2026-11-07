@@ -20,122 +20,50 @@ Aliases:
   workspace, ws
 
 Available Commands:
-  approve-egress-root Let the workspace trust the installation's egress root
-  approve-settings    Approve the startup settings the workspace is handed
-  audiences           Who the workspace's identity may be given for, as its owner's word says
-  bandwidth           Set what a workspace's network carries each way (admin)
-  clone               Clone a running workspace
-  console             What the workspace's machine printed to its serial console
-  create              Create a new workspace
-  delete              Delete a workspace
-  deleted             List your workspaces in the trash
-  denials             What a workspace attempted past its policy (admin)
-  egress              What a workspace has reached beyond this installation
-  get                 Get workspace details
-  grant               Give a workspace more cores and memory of its own
-  guests              The people who log in to a workspace besides its owner
-  history             Show workspace state change history
-  keep                Keep a running workspace awake for a while
-  list                List your workspaces
-  logs                Search what the workspace's machine printed to its console
-  logs-consent        Say whether the workspace's journal and console may be collected
-  move                Move a running workspace to another host
-  policies            The network policies a workspace can be created with
-  quarantine          Hold a workspace in quarantine (admin)
-  recover             Re-home a workspace whose host is gone
-  release             Give back what a workspace was granted
-  reset               Put a stopped workspace's disk back to what it was created from
-  restore             Put a stopped workspace's disk back to a snapshot, or to what it was created from
-  retag               Change which network policies a workspace runs under
-  sign                Sign the workspace's next access: who logs in, as you invited them
-  start               Start a stopped workspace
-  status              Why a workspace is not behaving
-  stop                Stop a running workspace
-  suspend             Put a running workspace down with its processes where they are
-  threads             The agent's chats, as the workspace last reported them
-  undelete            Take a workspace out of the trash, stopped
-  unquarantine        Release a quarantined workspace (admin)
-  update              Update workspace properties
-  watch               Record where a workspace connects, into its logs
+  bandwidth    Set what a workspace's network carries each way (admin)
+  clone        Clone a running workspace
+  console      What the workspace's machine printed to its serial console
+  create       Create a new workspace
+  delete       Delete a workspace
+  deleted      List your workspaces in the trash
+  denials      What a workspace attempted past its policy (admin)
+  egress       What a workspace has reached beyond this installation
+  get          Get workspace details
+  grant        Give a workspace more cores and memory of its own
+  guests       The people who log in to a workspace besides its owner
+  history      Show workspace state change history
+  keep         Keep a running workspace awake for a while
+  list         List your workspaces
+  logs         Search what the workspace's machine printed to its console
+  move         Move a running workspace to another host
+  policies     The network policies a workspace can be created with
+  quarantine   Hold a workspace in quarantine (admin)
+  recover      Re-home a workspace whose host is gone
+  release      Give back what a workspace was granted
+  reset        Put a stopped workspace's disk back to what it was created from
+  restore      Put a stopped workspace's disk back to a snapshot, or to what it was created from
+  retag        Change which network policies a workspace runs under
+  sign         Sign the workspace's next access: who logs in, as you invited them
+  start        Start a stopped workspace
+  status       Why a workspace is not behaving
+  stop         Stop a running workspace
+  suspend      Put a running workspace down with its processes where they are
+  threads      The agent's chats, as the workspace last reported them
+  undelete     Take a workspace out of the trash, stopped
+  unquarantine Release a quarantined workspace (admin)
+  update       Update workspace properties
+  watch        Record where a workspace connects, into its logs
 
 Flags:
   -h, --help   help for workspace
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin workspace [command] --help" for more information about a command.
-```
-
-### spin workspace approve-egress-root
-
-```
-A workspace's guest puts the installation's egress root in its trust store - the CA its host's
-egress proxy stands in for brokered hosts with - only while its owner's word names it: a root
-there reads what the guest's TLS clients send through the proxy. This signs a word naming the
-root the control plane offers, once held to the one this machine pinned for the installation
-(the first offered; 'spin trust egress-root' pins another).
-
-Usage:
-  spin workspace approve-egress-root <workspace> [flags]
-
-Flags:
-  -h, --help   help for approve-egress-root
-
-Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
-```
-
-### spin workspace approve-settings
-
-```
-A workspace applies its startup settings - dotfiles and the command that installs them, the
-login shell, the environment, the editor's settings and the Taskfile - only as its access
-approves them, by their digest. This shows the settings the control plane would hand it now,
-and signs an access approving exactly those: settings changed afterwards, by anyone, are not
-applied until approved again.
-
-Usage:
-  spin workspace approve-settings <workspace> [flags]
-
-Flags:
-  -h, --help   help for approve-settings
-  -y, --yes    Skip confirmation
-
-Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
-```
-
-### spin workspace audiences
-
-```
-A host gives a workspace's identity token - to the guest, or through its egress proxy - only
-for an audience its owner's word names and the installation allows: the installation's list is
-the control plane's to write, so it alone never widens who the identity reaches.
-
-With no flags this shows the word's audiences and the installation's. --add and --remove sign
-the owner's next word naming more or fewer; --any signs one naming any audience the
-installation allows, which trusts the installation's list.
-
-Usage:
-  spin workspace audiences <workspace> [flags]
-
-Flags:
-      --add strings      an audience to name
-      --any              name any audience the installation allows
-  -h, --help             help for audiences
-      --remove strings   an audience to name no more
-
-Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
 ```
 
 ### spin workspace bandwidth
@@ -156,9 +84,10 @@ Flags:
   -h, --help   help for bandwidth
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace clone
@@ -185,9 +114,10 @@ Flags:
       --wait               Return once the clone is running
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace console
@@ -209,9 +139,10 @@ Flags:
       --lines int32   How many lines from the end (default 200)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace create
@@ -223,14 +154,18 @@ preset the installation offers; without --preset, the installation's default.
 
 Every workspace answers to its access, which you sign here with a key of your keyring (the keys
 you registered, 'spin ssh-key add', and signed, 'spin sign'): who logs in - you, and the guests
-you invite - whether logs leave the workspace and which settings it applies. The host it runs
-on lets a key in only by it, and the control plane cannot write one. Settings are applied once
-you approve them (--approve-settings, or 'spin workspace approve-settings').
+you invite. The host it runs on lets a key in only by it, and the control plane cannot write one.
+
+What it applies of yours - dotfiles, shell, environment, editor settings, Taskfile, this
+workspace's own --env, and the repository a project clones - is your settings, signed once for
+every workspace ('spin sign'): its host applies only what a key of your keyring signed. A
+workspace that adds to them - a project or a ref you have not signed, an --env of its own - shows
+what you would sign and asks (--sign-settings: without asking); until you sign, it applies what
+you signed before.
 
 A project (--project) is the workspace's shape - its image, preset and network policies - and
 the repository its guest clones into /workspace/<repository name>, at --ref or the project's own;
-the workspace is made in --team, or your personal team. Opening one approves the settings, since
-the repository is one of them. A project whose repository is on GitHub opens once you have
+the workspace is made in --team, or your personal team. A project whose repository is on GitHub opens once you have
 connected your GitHub account (Settings → Git in the dashboard).
 
 Examples:
@@ -245,7 +180,6 @@ Usage:
 
 Flags:
       --agent-home string      An agent's home of yours to mount, by id (spin agent home list): the chats of a workspace since erased
-      --approve-settings       Show your startup settings and approve them in the first access
       --env strings            Environment variables (KEY=VALUE)
       --from-snapshot string   Start from a snapshot instead of an image
   -h, --help                   help for create
@@ -255,14 +189,16 @@ Flags:
       --preset string          The preset it is sized by, by name (default: the installation's)
       --project string         A project to open, by slug: its image, preset and policies, and its repository cloned
       --ref string             The branch or tag to open the project at (default: the project's)
+      --sign-settings          Sign your settings, shown, without asking, when this workspace adds to them
       --team string            The team, by id, path or me (your personal team if empty)
       --timeout duration       How long --wait waits; by default, until the control plane gives up on it
       --wait                   Return once the workspace is running
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace delete
@@ -282,9 +218,10 @@ Flags:
   -y, --yes           Skip confirmation
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace deleted
@@ -299,9 +236,10 @@ Flags:
   -h, --help   help for deleted
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace denials
@@ -319,9 +257,10 @@ Flags:
       --limit int32   How many of the newest to read (default 100)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace egress
@@ -342,9 +281,10 @@ Flags:
   -h, --help   help for egress
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace get
@@ -359,9 +299,10 @@ Flags:
   -h, --help   help for get
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace grant
@@ -396,9 +337,10 @@ Flags:
       --move           Move it to a host with room when its own has none (it is paused while it moves)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace guests
@@ -421,9 +363,10 @@ Flags:
   -h, --help   help for guests
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin workspace guests [command] --help" for more information about a command.
 ```
@@ -440,9 +383,10 @@ Flags:
   -h, --help   help for add
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 #### spin workspace guests list
@@ -457,9 +401,10 @@ Flags:
   -h, --help   help for list
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 #### spin workspace guests remove
@@ -475,9 +420,10 @@ Flags:
   -h, --help   help for remove
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace history
@@ -493,9 +439,10 @@ Flags:
       --limit int32   Number of events to show (default 50)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace keep
@@ -514,9 +461,10 @@ Flags:
   -h, --help   help for keep
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace list
@@ -532,9 +480,10 @@ Flags:
       --state string   Filter by state (running, stopped, etc.)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace logs
@@ -559,27 +508,10 @@ Flags:
       --since duration   how far back to look, at most 744h (31 days) (default 1h0m0s)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
-```
-
-### spin workspace logs-consent
-
-```
-A workspace's journal and its console leave it only while its access consents, and the
-installation collects them: either can say no. The owner signs the consent, on this machine.
-
-Usage:
-  spin workspace logs-consent <workspace> <on|off> [flags]
-
-Flags:
-  -h, --help   help for logs-consent
-
-Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace move
@@ -601,9 +533,10 @@ Flags:
   -h, --help   help for move
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace policies
@@ -624,9 +557,10 @@ Flags:
   -h, --help   help for policies
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace quarantine
@@ -646,9 +580,10 @@ Flags:
   -y, --yes             Skip confirmation
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace recover
@@ -670,9 +605,10 @@ Flags:
   -h, --help               help for recover
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace release
@@ -689,9 +625,10 @@ Flags:
   -h, --help   help for release
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace reset
@@ -714,9 +651,10 @@ Flags:
   -y, --yes                Skip confirmation
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace restore
@@ -742,9 +680,10 @@ Flags:
       --with-memory        Resume the snapshot's processes too; the workspace may be running
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace retag
@@ -774,9 +713,10 @@ Flags:
       --network-tag strings   Network policy to run under, by name (repeatable); the whole set, not an addition
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace sign
@@ -784,9 +724,8 @@ Global Flags:
 ```
 A workspace lets in whoever its access names - you, and the guests you invited - and nobody
 else: its host holds every login to it, with each person's own keyring. This signs the next
-access with a key of your keyring, on this machine, naming the guests as they are now and
-keeping every consent as it was. A workspace you created and never signed lets nobody in
-until you do.
+access with a key of your keyring, on this machine, naming the guests as they are now. A
+workspace you created and never signed lets nobody in until you do.
 
 Usage:
   spin workspace sign <workspace> [flags]
@@ -795,9 +734,10 @@ Flags:
   -h, --help   help for sign
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace start
@@ -819,9 +759,10 @@ Flags:
       --wait               Return once the workspace is running
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace status
@@ -841,9 +782,10 @@ Flags:
   -h, --help   help for status
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace stop
@@ -864,9 +806,10 @@ Flags:
       --wait               Return once the workspace is stopped
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace suspend
@@ -890,9 +833,10 @@ Flags:
   -h, --help   help for suspend
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace threads
@@ -902,10 +846,6 @@ The agent's threads - T3 Code's chats - as the workspace's supervisor last repor
 newest first: a title, the directory it works in, the model, and when it last moved. Never a
 message: a chat is read in T3 Code, over your own session (spin agent).
 
-The supervisor reports the index only while the workspace's access consents to its logs
-leaving the machine (spin workspace logs-consent); a workspace whose owner has not says
-nothing here.
-
 Usage:
   spin workspace threads <workspace> [flags]
 
@@ -913,9 +853,10 @@ Flags:
   -h, --help   help for threads
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace undelete
@@ -932,9 +873,10 @@ Flags:
   -h, --help   help for undelete
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace unquarantine
@@ -953,9 +895,10 @@ Flags:
   -y, --yes    Skip confirmation
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace update
@@ -981,9 +924,10 @@ Flags:
       --wake-on-access   Resume it, when suspended, for a signed-in visitor of one of its ports (never an anonymous one)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin workspace watch
@@ -1005,8 +949,9 @@ Flags:
       --off    Stop recording where the workspace connects
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 

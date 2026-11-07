@@ -18,8 +18,9 @@ workspace is made in --team, or your personal team. A repository no project has 
 project of first ('spin project create').
 
 The workspace is the project's shape, and its first access is signed here with a key of your
-keyring, with the settings approved - the repository is one of them. It ends in 'spin ssh'
-unless --no-connect.
+keyring. Its repository is cloned once your settings name it at that ref: when they do not yet,
+the settings you would sign are shown and asked about (--sign-settings: without asking), and
+with no terminal to ask on they wait for 'spin sign'. It ends in 'spin ssh' unless --no-connect.
 
 Examples:
   spin open https://github.com/spin-stack/qboot
@@ -34,13 +35,15 @@ Flags:
       --name string        Workspace name (auto-generated if empty)
       --no-connect         Create the workspace and print it, without connecting
       --project string     The project to open, by slug, when more than one has the repository
+      --sign-settings      Sign your settings, shown, without asking, when this workspace adds to them
       --team string        The team the workspace is made in, by id, path or me (your personal team if empty)
       --timeout duration   How long --wait waits; by default, until the control plane gives up on it
       --wait               Return once the workspace is running, with --no-connect
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
