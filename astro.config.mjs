@@ -22,8 +22,9 @@ export default defineConfig({
 			title: 'Spinbox',
 			description:
 				'Self-hosted sandboxes in your own AWS account: a virtual machine per workspace, snapshots with memory, rollback, and a diff of what changed.',
-			// The organization's own mark (spin-stack/brand): the tile on its navy in dark, and clear in light,
-			// where the tile would read as a sticker. No alt: the name is written beside it.
+			// The organization's own mark (spin-stack/brand), clear in both: in dark with its shadow drawn
+			// for the navy page (mark-dark), where the tile read as a box on the header. No alt: the name is
+			// written beside it.
 			logo: { dark: './src/assets/logo.png', light: './src/assets/logo-light.png', alt: '' },
 			favicon: '/favicon.png',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
