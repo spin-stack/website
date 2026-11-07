@@ -188,13 +188,14 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "The owner's shell, environment, editor settings, Taskfile and dotfiles reach the guest",
+		"name": "The owner's shell, environment, editor settings, Taskfile and dotfiles reach the guest once they sign them, and a change nobody signed reaches none",
 		"state": "built",
 		"proof": "e2e:TestAWorkspacesOwnEnvironmentIsInItsOwnersLoginShell",
 		"note": "",
 		"endToEnd": [
 			"go:internal/e2e.TestTheOwnersSettingsArriveInTheGuest",
-			"go:internal/e2e.TestAWorkspacesOwnEnvironmentIsInItsOwnersLoginShell"
+			"go:internal/e2e.TestAWorkspacesOwnEnvironmentIsInItsOwnersLoginShell",
+			"go:internal/e2e.TestSettingsChangedWithoutThePersonsKeyApplyNowhere"
 		]
 	},
 	{
@@ -334,16 +335,6 @@
 		"note": "The team secret's value is read at the origin; the forge token, identity and cloud role injections have no test against the stack.",
 		"endToEnd": [
 			"go:internal/e2e.TestAPersonsRuleAndAnAgentsOnOneNameEachArriveWithTheirOwnInjection"
-		]
-	},
-	{
-		"area": "Network",
-		"name": "A workspace trusts the egress root only by its owner's word",
-		"state": "built",
-		"proof": "e2e:TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord",
-		"note": "",
-		"endToEnd": [
-			"go:internal/e2e.TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord"
 		]
 	},
 	{
@@ -555,6 +546,16 @@
 	},
 	{
 		"area": "Workspaces",
+		"name": "A person signs Claude Code and Codex in once: every workspace of theirs, plain or a project's, is handed the same credentials and hands back each refresh and logout, and a workspace that names a guest holds none",
+		"state": "built",
+		"proof": "e2e:TestAPersonSignsInToTheAgentOnceForEveryWorkspaceOfTheirs",
+		"note": "The lane has no provider account: its login is the file the CLI writes, written as the agent's user. Only a workspace its owner's alone through all it came from holds them: a project opened from its prebuild does, but not a prebuild's build, a copy of another person's snapshot, or one made before the release that keeps the mark.",
+		"endToEnd": [
+			"go:internal/e2e.TestAPersonSignsInToTheAgentOnceForEveryWorkspaceOfTheirs"
+		]
+	},
+	{
+		"area": "Workspaces",
 		"name": "The supervisor runs the agent for its owner while it is used: started, paired and listed over the owner's own session on a socket only root opens, and stopped once nobody has used it for half an hour and no chat is at work",
 		"state": "built",
 		"proof": "rpc:spin.vm.v1.AgentService/Start",
@@ -565,12 +566,12 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "The agent's chats listed on the workspace - titles, paths and times, never a message - reported by its supervisor only with the owner's consent",
+		"name": "The agent's chats listed on the workspace - titles, paths and times, never a message - reported by its supervisor",
 		"state": "built",
 		"proof": "rpc:spin.v1.WorkspaceService/ListAgentThreads",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestTheAgentsThreadsAreListedOnlyWithTheOwnersConsent"
+			"go:internal/e2e.TestTheAgentsThreadsAreListed"
 		]
 	},
 	{
@@ -858,9 +859,9 @@
 	},
 	{
 		"area": "Observability",
-		"name": "A workspace's journal and console are collected only with its owner's consent",
+		"name": "A workspace's journal and console are collected as the installation's policy says",
 		"state": "built",
-		"proof": "cli:workspace logs-consent",
+		"proof": "cli:workspace logs",
 		"note": "",
 		"endToEnd": [
 			"go:cmd/cli.TestE2E_AWorkspacesConsoleIsKeptAndSearchable"
