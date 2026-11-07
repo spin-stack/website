@@ -26,8 +26,13 @@ There are two ways to authenticate:
 The server is --endpoint, else SPIN_ENDPOINT, else the one the profile is already logged in
 to, else https://app.spinbox.dev.
 
+With --no-browser and -o json, the code is written as a first line of JSON before the wait
+({verification_url, user_code, expires_in}), and the login as a second
+({profile, endpoint, user}): a program shows the code itself and reads each line as it comes.
+
 Examples:
   spin login                                    # Sign in with a code, in a browser
+  spin login --no-browser -o json               # the same, for a program that shows the code
   spin login --token-stdin < key.txt            # Login with an API key (recommended for CI)
   printenv SPIN_KEY | spin login --token-stdin  # the same, from a CI secret
 
@@ -37,11 +42,13 @@ Usage:
 Flags:
       --endpoint string   API endpoint URL (default: SPIN_ENDPOINT, the profile's, or https://app.spinbox.dev)
   -h, --help              help for login
+      --no-browser        do not open the code's page in a browser; with -o json, write the code as a first line of JSON
       --token-stdin       read an API key (Settings > API Keys) from standard input instead of signing in with a code
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 

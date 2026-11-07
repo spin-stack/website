@@ -7866,7 +7866,7 @@
           "SignatureService"
         ],
         "summary": "ListPendingSignatures",
-        "description": "What the caller is asked to sign: their keyring when their keys changed, and the roster of\n each team they own when its members changed.",
+        "description": "What the caller is asked to sign: their keyring when their keys changed, the roster of each\n team they own when its members changed, and their settings when they or their projects did.",
         "operationId": "spin.v1.SignatureService.ListPendingSignatures",
         "parameters": [
           {
@@ -9903,7 +9903,7 @@
           "WorkspaceService"
         ],
         "summary": "GetOwnerWord",
-        "description": "A workspace's newest access - who logs in, consent to collect logs, the settings approved -\n with what the next must say: the people the owner invited and the settings the guest would be\n handed now, for the owner to sign. Its owner's and its guests' to read.",
+        "description": "A workspace's newest access - who logs in - with what the next must say: the people the owner\n invited, for the owner to sign. Its owner's and its guests' to read.",
         "operationId": "spin.v1.WorkspaceService.GetOwnerWord",
         "parameters": [
           {
@@ -10522,7 +10522,7 @@
           "WorkspaceService"
         ],
         "summary": "ListAgentThreads",
-        "description": "The agent's threads - T3 Code's chats - as the workspace's supervisor last reported them,\n which it does only while the owner's access consents (collect_logs). Titles, paths and\n times, never a message: the chat itself is read in T3 Code, over the owner's own session\n (`spin agent`).",
+        "description": "The agent's threads - T3 Code's chats - as the workspace's supervisor last reported them.\n Titles, paths and\n times, never a message: the chat itself is read in T3 Code, over the owner's own session\n (`spin agent`).",
         "operationId": "spin.v1.WorkspaceService.ListAgentThreads",
         "parameters": [
           {
@@ -13400,6 +13400,11 @@
             "type": "string",
             "title": "workspace_id",
             "description": "The workspace the name was decided about, when allowed. The proxy pools connections by\n it and opens sessions for it: a name is freed by a rename and taken by someone else's\n workspace, and a connection pooled by name would carry the next request into the old one."
+          },
+          "sessionRefused": {
+            "type": "boolean",
+            "title": "session_refused",
+            "description": "The session asked with is no good here: it has ended, or is another workspace's. The proxy\n drops the cookie, which would otherwise be sent and refused until it expires."
           }
         },
         "title": "CheckPortAccessResponse",
@@ -15886,52 +15891,6 @@
             "title": "owner",
             "description": "owner is the workspace's owner, with their keyring as it is now: who signs the next. Empty\n keyring for an owner who has signed none."
           },
-          "dotfiles": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.DotfilesConfig"
-              }
-            ],
-            "title": "dotfiles",
-            "description": "settings are the startup configuration the guest would be handed at its next registration:\n the owner's settings after the team's policy. A word approves them by their digest, which\n the client computes from these, as the guest does from what it is handed."
-          },
-          "defaultShell": {
-            "type": "string",
-            "title": "default_shell"
-          },
-          "env": {
-            "type": "object",
-            "title": "env",
-            "additionalProperties": {
-              "type": "string",
-              "title": "value"
-            }
-          },
-          "editorSettings": {
-            "type": "object",
-            "title": "editor_settings",
-            "additionalProperties": {
-              "type": "string",
-              "title": "value"
-            }
-          },
-          "taskfile": {
-            "type": "string",
-            "title": "taskfile"
-          },
-          "egressRoot": {
-            "type": "string",
-            "title": "egress_root",
-            "description": "egress_root is the installation's egress root, PEM: what the guest is handed at registration,\n and trusts only when a word names its digest. A client names it only once it has held it to\n the root it pinned for the installation, never on this answer's say alone."
-          },
-          "identityAudiences": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "identity_audiences",
-            "description": "identity_audiences is who the installation gives identities for, empty for anybody: what a\n client offers its owner to name in a word, which a host holds every token to as well."
-          },
           "teamId": {
             "type": "string",
             "title": "team_id",
@@ -15962,30 +15921,27 @@
             "title": "role",
             "description": "role is the caller's: \"owner\", or \"guest\" - who reads it and signs nothing."
           },
-          "repository": {
+          "ownerKeyring": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.SignedDocument"
+            },
+            "title": "owner_keyring",
+            "description": "owner_keyring is, answered to the owner alone, their keyring's signed versions from the first:\n what their client holds the key an access is signed by to (roster.VerifyKeyrings), rather than\n the control plane's word of whose key it is."
+          },
+          "standing": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.RepositoryConfig"
+                "$ref": "#/components/schemas/spin.v1.OwnerWord"
               }
             ],
-            "title": "repository",
-            "description": "repository is the one the workspace opened, part of the settings a word approves as the\n five above are: unset for a workspace that opened no project."
+            "title": "standing",
+            "description": "standing is the access a host lets people in by: the newest its owner signed with a key their\n newest keyring lists (ownerword.Newest). It is word, but where the key that signed word left\n the keyring: then it is what the next access is built on, which the client holds to\n owner_keyring before it does. Unset where no access a key of the keyring signed stands."
           },
-          "prebuildClaim": {
+          "checkoutPath": {
             "type": "string",
-            "title": "prebuild_claim",
-            "format": "byte",
-            "description": "prebuild_claim is, for a workspace opened from a prebuild, the claim the host that built it\n signed (PrebuildClaim), whose SHA-256 repository.prebuild_claim_digest is: a client verifies\n it, and that it names the repository and the commit the settings do, before its word approves\n them."
-          },
-          "prebuildWriters": {
-            "type": "object",
-            "title": "prebuild_writers",
-            "additionalProperties": {
-              "type": "string",
-              "title": "value",
-              "format": "byte"
-            },
-            "description": "prebuild_writers is the record of the claim's writer, by its id (writers/\u003cid\u003e.json in the\n installation's store), which the client holds to its own anchors as it does a launch claim's."
+            "title": "checkout_path",
+            "description": "checkout_path is where the workspace's project is checked out (projects.CheckoutPath), empty\n for a workspace that opened none: where its agent works unless told otherwise."
           }
         },
         "title": "GetOwnerWordResponse",
@@ -17963,7 +17919,7 @@
               }
             ],
             "title": "reported_at",
-            "description": "reported_at is when the supervisor last sent the index; unset where it never has - an owner\n who does not consent, or a workspace that ran no agent."
+            "description": "reported_at is when the supervisor last sent the index; unset where it never has - a\n workspace that ran no agent."
           }
         },
         "title": "ListAgentThreadsResponse",
@@ -19637,7 +19593,7 @@
         },
         "title": "OwnerWord",
         "additionalProperties": false,
-        "description": "OwnerWord is a workspace's access, as its owner signed it with a key of their keyring\n (internal/ownerword): document is the access as framed JSON, signature the key's SSH signature\n over it (sshsig, namespace \"spin-access\") - what `ssh-keygen -Y sign` writes, so a FIDO2 key\n signs one through ssh-agent."
+        "description": "OwnerWord is a workspace's access, as its owner signed it with a key of their keyring\n (internal/ownerword): document is the access as framed JSON, signature the key's over it for\n namespace \"spin-access\": an SSH signature (sshsig) - what `ssh-keygen -Y sign` writes, so a\n FIDO2 key signs one through ssh-agent - or a set's (sshsig.SignSet), one passkey prompt over\n several documents, which ssh-keygen does not read."
       },
       "spin.v1.PageRequest": {
         "type": "object",
@@ -19758,6 +19714,12 @@
             "type": "boolean",
             "title": "deferred",
             "description": "deferred is a document nothing asks for until the person uses what it gives: the roster of a\n team that has only ever been its one member, read only for an identity. Offered there, not on\n every page."
+          },
+          "previous": {
+            "type": "string",
+            "title": "previous",
+            "format": "byte",
+            "description": "previous is the version this one follows, as kept, for the client to show what changes\n against it; empty for none."
           }
         },
         "title": "PendingSignature",
@@ -20056,6 +20018,12 @@
               }
             ],
             "title": "built_at"
+          },
+          "workspaceCount": {
+            "type": "integer",
+            "title": "workspace_count",
+            "format": "int32",
+            "description": "In ListPrebuilds: the workspaces opened from it that are not deleted, whoever's they are."
           }
         },
         "title": "Prebuild",
@@ -20211,6 +20179,12 @@
               "type": "string"
             },
             "title": "shared_team_ids"
+          },
+          "readyPrebuildCount": {
+            "type": "integer",
+            "title": "ready_prebuild_count",
+            "format": "int32",
+            "description": "In ListProjects: how many of its prebuilds are ready to open from."
           }
         },
         "title": "Project",
@@ -20678,59 +20652,6 @@
         "title": "RemoveWorkspaceGuestResponse",
         "additionalProperties": false
       },
-      "spin.v1.RepositoryConfig": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "title": "url"
-          },
-          "ref": {
-            "type": "string",
-            "title": "ref"
-          },
-          "path": {
-            "type": "string",
-            "title": "path"
-          },
-          "authorName": {
-            "type": "string",
-            "title": "author_name",
-            "description": "Who the checkout's commits are by: the workspace's owner's name and email as the installation\n knows them, set as the checkout's own user.name and user.email - the push goes as the team's\n app, and the commit says the person. Empty is neither set."
-          },
-          "authorEmail": {
-            "type": "string",
-            "title": "author_email"
-          },
-          "commit": {
-            "type": "string",
-            "title": "commit",
-            "description": "commit is the one a prebuild's build checks out and runs create at; empty for a workspace a\n person opens, which follows the ref."
-          },
-          "fromCommit": {
-            "type": "string",
-            "title": "from_commit",
-            "description": "from_commit is the commit the disk's checkout already is, for a disk cloned from a prebuild:\n the guest holds the tree to it (git fsck, no tracked file changed) before it fetches."
-          },
-          "prebuildId": {
-            "type": "string",
-            "title": "prebuild_id",
-            "description": "The prebuild the disk is a clone of, and the SHA-256 of the claim its host signed of it\n (PrebuildClaim): what the owner approves when the open was from one."
-          },
-          "prebuildClaimDigest": {
-            "type": "string",
-            "title": "prebuild_claim_digest"
-          },
-          "pullRef": {
-            "type": "string",
-            "title": "pull_ref",
-            "description": "pull_ref is a pull request's ref as its forge serves it (refs/pull/\u003cn\u003e/head, GitLab's\n refs/merge-requests/\u003cn\u003e/head), fetched once ref is cloned and checked out as pr-\u003cn\u003e or mr-\u003cn\u003e;\n empty for a workspace that opens at ref itself."
-          }
-        },
-        "title": "RepositoryConfig",
-        "additionalProperties": false,
-        "description": "The repository a workspace opened, as its guest clones it: the project's URL, the ref the\n workspace was opened at, and where on the disk it goes (projects.CheckoutPath). Part of the\n settings the owner approves, as the environment is: a disk is written to only as its owner said."
-      },
       "spin.v1.RequestHostShellRequest": {
         "type": "object",
         "properties": {
@@ -20899,6 +20820,12 @@
             "type": "string",
             "title": "host_class",
             "description": "The host class its workspaces run on (HostClass)."
+          },
+          "agentMinMemoryMb": {
+            "type": "integer",
+            "title": "agent_min_memory_mb",
+            "format": "int32",
+            "description": "What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset."
           }
         },
         "title": "ResourcePreset",
@@ -22091,13 +22018,15 @@
         "enum": [
           "SIGNATURE_KIND_UNSPECIFIED",
           "SIGNATURE_KIND_KEYRING",
-          "SIGNATURE_KIND_ROSTER"
+          "SIGNATURE_KIND_ROSTER",
+          "SIGNATURE_KIND_SETTINGS"
         ],
-        "description": "- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n  keyring before it; the first, and one started anew, with a key it lists.\n- `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n  an owner the roster before it lists; the first, by an owner it lists.",
+        "description": "- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n  keyring before it; the first, and one started anew, with a key it lists.\n- `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n  an owner the roster before it lists; the first, by an owner it lists.\n- `SIGNATURE_KIND_SETTINGS`: A user's settings: what their workspaces apply - dotfiles, shell, environment, editor,\n  Taskfile, each workspace's own environment - and the repositories, by URL and ref, their\n  workspaces may clone (ownersettings.Settings). Signed with a key of their newest keyring, never\n  a session's: a host applies nothing else of theirs.",
         "x-enum-descriptions": [
           "",
           "A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n keyring before it; the first, and one started anew, with a key it lists.",
-          "A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n an owner the roster before it lists; the first, by an owner it lists."
+          "A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n an owner the roster before it lists; the first, by an owner it lists.",
+          "A user's settings: what their workspaces apply - dotfiles, shell, environment, editor,\n Taskfile, each workspace's own environment - and the repositories, by URL and ref, their\n workspaces may clone (ownersettings.Settings). Signed with a key of their newest keyring, never\n a session's: a host applies nothing else of theirs."
         ]
       },
       "spin.v1.SignedDocument": {
@@ -22116,7 +22045,7 @@
         },
         "title": "SignedDocument",
         "additionalProperties": false,
-        "description": "SignedDocument is a document as framed JSON and an SSH signature over it (sshsig) - what\n `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent, and a passkey's\n WebAuthn assertion is one too (internal/sshauth)."
+        "description": "SignedDocument is a document as framed JSON and a signature over it: an SSH signature (sshsig) -\n what `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent, and a passkey's\n WebAuthn assertion is one too (internal/sshauth) - or a set's (sshsig.SignSet), one passkey\n prompt over several documents, which ssh-keygen does not read."
       },
       "spin.v1.Snapshot": {
         "type": "object",
@@ -24476,6 +24405,22 @@
             "type": "string",
             "title": "suspended_snapshot_id",
             "description": "The snapshot it was suspended into: its next start resumes it rather than booting its disk.\n Empty when a start boots the disk - never suspended, resumed since, or the snapshot deleted."
+          },
+          "fromPrebuildId": {
+            "type": "string",
+            "title": "from_prebuild_id",
+            "description": "The prebuild its disk is a clone of; empty for one that opened with none."
+          },
+          "agentMinMemoryMb": {
+            "type": "integer",
+            "title": "agent_min_memory_mb",
+            "format": "int32",
+            "description": "What it has to hold for its agent to start there, in MB (the supervisor refuses below it)."
+          },
+          "projectError": {
+            "type": "string",
+            "title": "project_error",
+            "description": "project_error is what its guest last said went wrong with its project - the clone, its\n .spin.yaml or its create tasks - as the guest said it; empty when all of it went, or nothing\n has reported. The next boot tries again."
           }
         },
         "title": "Workspace",
@@ -25224,15 +25169,15 @@
       "description": "SetupService handles initial platform setup and admin bootstrap.\n Most endpoints require admin authentication, except GetSetupStatus and PasswordLogin."
     },
     {
+      "name": "SignatureService",
+      "description": "SignatureService is what only people sign of themselves: who a user's keys are, who a team's\n members are, and which settings their workspaces apply. A host holds every workspace's access\n and settings to these (internal/roster), so the control plane can say neither which keys are\n somebody's, nor who is in a team, nor what a guest applies for its owner. A workspace's access is\n signed through WorkspaceService.SetOwnerWord.\n\n The control plane proposes each document from what it holds - a key registered, a member added -\n and keeps what was signed; it signs nothing. A client shows a person what they are signing and\n signs it with a key of theirs: `spin sign`, with the keys ssh-agent holds, or the terminal's\n page, with a passkey."
+    },
+    {
       "name": "WorkspaceService"
     },
     {
       "name": "ShareService",
       "description": "ShareService manages snapshot sharing\n Snapshots can be shared with specific users or made public\n Users can create new workspaces from shared snapshots"
-    },
-    {
-      "name": "SignatureService",
-      "description": "SignatureService is what only people sign of themselves: who a user's keys are and who a team's\n members are. A host holds every workspace's access to these (internal/roster), so a control\n plane that is taken can say neither which keys are somebody's nor who is in a team. A\n workspace's access is signed through WorkspaceService.SetOwnerWord.\n\n The control plane proposes each document from what it holds - a key registered, a member added -\n and keeps what was signed; it signs nothing. A client shows a person what they are signing and\n signs it with a key of theirs: `spin sign`, with the keys ssh-agent holds, or the terminal's\n page, with a passkey."
     },
     {
       "name": "SSHKeyService",
