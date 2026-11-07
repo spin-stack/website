@@ -1,0 +1,58 @@
+{
+  "title": "ui-hill-climb review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pairs", "scores", "control", "findings"],
+  "$defs": {
+    "score": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hierarchy", "typography", "spacing", "color", "consistency", "density", "usability", "polish", "responsive", "identity"],
+      "properties": {
+        "hierarchy": { "$ref": "#/$defs/score" },
+        "typography": { "$ref": "#/$defs/score" },
+        "spacing": { "$ref": "#/$defs/score" },
+        "color": { "$ref": "#/$defs/score" },
+        "consistency": { "$ref": "#/$defs/score" },
+        "density": { "$ref": "#/$defs/score" },
+        "usability": { "$ref": "#/$defs/score" },
+        "polish": { "$ref": "#/$defs/score" },
+        "responsive": { "$ref": "#/$defs/score" },
+        "identity": { "$ref": "#/$defs/score" }
+      }
+    }
+  },
+  "properties": {
+    "pairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["screen", "winner", "reason"],
+        "properties": {
+          "screen": { "type": "string", "description": "Pair id, e.g. s01" },
+          "winner": { "type": "string", "enum": ["a", "b", "tie"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "scores": { "$ref": "#/$defs/scores", "description": "Scores of the version preferred overall" },
+    "control": { "$ref": "#/$defs/scores", "description": "Scores of the single cNN screens" },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["screen", "location", "severity", "problem", "fix"],
+        "properties": {
+          "screen": { "type": "string" },
+          "location": { "type": "string" },
+          "severity": { "type": "string", "enum": ["broken", "structural", "systemic", "cosmetic"] },
+          "problem": { "type": "string" },
+          "fix": { "type": "string" }
+        }
+      }
+    }
+  }
+}

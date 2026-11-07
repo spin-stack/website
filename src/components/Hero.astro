@@ -1,7 +1,7 @@
 ---
 // The landing page's hero: Starlight's, with a workspace's disk to work under it and the
 // project's name above the title. The title's second sentence - what Spinbox does, after what it
-// is - is in the accent: one color, flat, as the console sets what matters.
+// is - is in the accent's text colour: one colour, flat, as the console sets what matters.
 import { LinkButton } from '@astrojs/starlight/components';
 import Disk from './Disk.astro';
 
@@ -59,10 +59,9 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 		display: inline-flex;
 		align-items: center;
 		gap: 0.6rem;
-		font-family: var(--sl-font-mono);
 		font-size: var(--sl-text-sm);
+		font-weight: 600;
 		color: var(--spin-label);
-		letter-spacing: 0.04em;
 	}
 	.dot {
 		width: 0.5rem;
@@ -71,10 +70,12 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 		background: var(--spin-label);
 	}
 	h1 {
-		font-family: var(--sl-font-mono);
-		font-size: clamp(2.3rem, 1rem + 3.6vw, 3.9rem);
+		font-family: var(--spin-font-display);
+		font-size: var(--spin-text-display);
+		text-wrap: balance;
 		line-height: 1.08;
-		letter-spacing: var(--spin-heading-tracking);
+		letter-spacing: var(--spin-display-tracking);
+		word-spacing: -0.12em;
 		font-weight: 600;
 		color: var(--sl-color-white);
 		margin: 0;

@@ -24,3 +24,7 @@ pnpm-debug.log*
 
 # the public sources task reference:public fetches
 .sources/
+
+# ui-hill-climb: the captures and the council sets are evidence, not source
+ui-hill-climb/rounds/
+_output/
