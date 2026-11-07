@@ -1,0 +1,104 @@
+{
+ "viewports": {
+  "desktop": [
+   1440,
+   900
+  ],
+  "mobile": [
+   390,
+   844
+  ]
+ },
+ "themes": [
+  "dark",
+  "light"
+ ],
+ "screens": [
+  {
+   "id": "home",
+   "path": "/website/",
+   "viewports": [
+    "desktop",
+    "mobile"
+   ],
+   "steps": [
+    {
+     "wait": 600
+    }
+   ]
+  },
+  {
+   "id": "how-it-works",
+   "path": "/website/overview/how-it-works/",
+   "steps": [
+    {
+     "wait": 400
+    }
+   ]
+  },
+  {
+   "id": "snapshots",
+   "path": "/website/concepts/snapshots/",
+   "steps": [
+    {
+     "wait": 400
+    }
+   ]
+  },
+  {
+   "id": "cost",
+   "path": "/website/aws/cost/",
+   "viewports": [
+    "desktop"
+   ],
+   "steps": [
+    {
+     "wait": 400
+    }
+   ]
+  },
+  {
+   "id": "evaluate",
+   "path": "/website/overview/evaluate/",
+   "viewports": [
+    "desktop"
+   ],
+   "steps": [
+    {
+     "wait": 400
+    }
+   ]
+  },
+  {
+   "id": "release",
+   "path": "/website/reference/release/",
+   "viewports": [
+    "desktop"
+   ],
+   "themes": [
+    "dark"
+   ],
+   "steps": [
+    {
+     "wait": 400
+    }
+   ]
+  },
+  {
+   "id": "cli-exec",
+   "path": "/website/reference/cli/exec/",
+   "viewports": [
+    "desktop",
+    "mobile"
+   ],
+   "themes": [
+    "dark"
+   ],
+   "steps": [
+    {
+     "wait": 400
+    }
+   ]
+  }
+ ]
+}
