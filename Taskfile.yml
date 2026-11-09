@@ -16,9 +16,9 @@ vars:
 
 tasks:
   install:
-    desc: Install the site's dependencies from the lockfile, through Socket Firewall (go tool sfw).
+    desc: Install the site's dependencies from the lockfile, through Socket Firewall (sfw).
     cmds:
-      - go tool sfw pnpm install --frozen-lockfile
+      - sfw pnpm install --frozen-lockfile
 
   dev:
     desc: Serve the site with live reload.
@@ -94,9 +94,9 @@ tasks:
   gate:
     desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, the reference against the public sources, the build, and every link.
     cmds:
-      - go tool sfw check
+      - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
-      - go tool taskgate -task {{.TASK_EXE}}
+      - taskgate -task {{.TASK_EXE}}
       - task: install
       - go vet ./...
       - go test ./...
@@ -110,7 +110,7 @@ tasks:
     # pull request is opened. The private repositories are named, so this finds what the daily
     # workflow does, whose token sees none of the organization's.
     cmds:
-      - go tool exposure -allow .github/exposure-allow.txt -gitleaks-config .gitleaks.toml -private ami,ci,shipset,skills,spin,spinbox.dev-deploy spin-stack/website
+      - exposure -allow .github/exposure-allow.txt -gitleaks-config .gitleaks.toml -private ami,ci,shipset,skills,spin,spinbox.dev-deploy spin-stack/website
 
   check:
     desc: What CI runs with the token that reads spin - the reference against the sources at their pins, and the gate.
