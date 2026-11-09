@@ -8,7 +8,7 @@ The rule this site keeps: a page is generated from the code it describes, or hel
 check that fails the build, or it does not exist. Everything below is one of those checks.
 
 ```
-go tool task install      # dependencies, through Socket Firewall (go tool sfw)
+go tool task install      # dependencies, through Socket Firewall (sfw)
 go tool task dev          # http://localhost:4321, live reload
 go tool task sources      # spin, spin-terraform-aws and brand into .sources/, at the commits versions.yaml pins
 go tool task check        # what CI runs: the reference against the sources, and the gate
@@ -17,10 +17,11 @@ go tool task exposure     # what this public repository shows: every ref, its PR
 go tool task --list       # everything else
 ```
 
-Task is a tool in `go.mod`, so `go tool task` is the version CI runs; the tasks below are named
-without it. `task check` is what CI runs: the reference against its sources, then `task gate`,
-which fails first on an install that skips the firewall (`go tool sfw check`) or a workflow step
-that is not one task (`go tool taskgate`).
+`go tool task` is go-tools' task command, the one tool `go.mod` takes: it runs the Task
+`versions.yaml` pins, the version CI runs, with go-tools' commands on its PATH; the tasks below
+are named without it. `task check` is what CI runs: the reference against its sources, then `task
+gate`, which fails first on an install that skips the firewall (`sfw check`) or a workflow step
+that is not one task (`taskgate`).
 
 - **The sources are pinned** in `versions.yaml`, go-tools' versions format, held by
   `tools/sources/repo_test.go` as every spin-stack repository is: spin, spin-terraform-aws and
@@ -46,7 +47,7 @@ that is not one task (`go tool taskgate`).
   has past the pin. `tools/sync` writes all of it.
 
 - **The repository is public**, and so is every pull request the moment it is opened.
-  `task exposure` (`go tool exposure`) reads every ref's commits, pull request heads included,
+  `task exposure` (go-tools' `exposure`) reads every ref's commits, pull request heads included,
   and the issues, pull requests and comments for secrets and for what is private without being one;
   `.github/workflows/exposure.yml` runs it every morning. A value public on purpose is answered in
   `.github/exposure-allow.txt` with why, a secret gitleaks takes for one in `.gitleaks.toml`.
@@ -148,7 +149,7 @@ that is not one task (`go tool taskgate`).
 
 Pull requests are welcome. One from a fork runs the Gate once a maintainer approves it, and never
 deploys: only `main` publishes. Dependencies are locked and installed through [Socket Firewall](https://spin-stack.github.io/go-tools/sfw/),
-which `go tool sfw check` holds every install and every workflow to; `pnpm-workspace.yaml` names the few that
+which `sfw check` holds every install and every workflow to; `pnpm-workspace.yaml` names the few that
 may run an install script, and a release must be a week old before it is taken.
 
 A security problem in Spinbox goes to a private advisory, never an issue: see
