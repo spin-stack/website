@@ -68,6 +68,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/ClearUserPasskeys": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ClearUserPasskeys",
+        "description": "Clear a person's passkeys, for one who lost them all: their session registers a first again.\n Their keys and workspaces stay as they are.",
+        "operationId": "spin.v1.AdminService.ClearUserPasskeys",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ClearUserPasskeysRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ClearUserPasskeysResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/CreateHostClass": {
       "post": {
         "tags": [
@@ -740,6 +802,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.GetFleetVersionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/GetInstallationHealth": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "GetInstallationHealth",
+        "description": "Whether anything is wrong with the installation, in one answer: each part from what the\n control plane already knows of it - its database, the database's archive, the log store,\n the collector, its jobs, its hosts and the workspaces waiting for one.",
+        "operationId": "spin.v1.AdminService.GetInstallationHealth",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetInstallationHealthRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetInstallationHealthResponse"
                 }
               }
             }
@@ -3346,6 +3470,68 @@
         }
       }
     },
+    "/spin.v1.AuthService/ExchangeWorkloadToken": {
+      "post": {
+        "tags": [
+          "AuthService"
+        ],
+        "summary": "ExchangeWorkloadToken",
+        "description": "Exchanges a workload's JWT-SVID, for the control plane's audience (identity.ControlPlaneAudience),\n for a key delegated from the key that made its workspace: what an agent in a workspace drives\n others with. Verified by go-spiffe against the trust domain's bundle; the key holds no more than\n its parent (delegation.Within), lasts no longer than the token's workload needs, and goes with the\n workspace.",
+        "operationId": "spin.v1.AuthService.ExchangeWorkloadToken",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ExchangeWorkloadTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ExchangeWorkloadTokenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AuthService/GetCurrentUser": {
       "post": {
         "tags": [
@@ -3835,6 +4021,192 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.StartLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ExecService/Exec": {
+      "post": {
+        "tags": [
+          "ExecService"
+        ],
+        "summary": "Exec",
+        "description": "Runs command in the workspace's login shell and answers once it has exited, or once timeout\n has passed: stdin is all of it, given at once, and stdout and stderr are kept up to a bound\n each.",
+        "operationId": "spin.v1.ExecService.Exec",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ExecRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ExecResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ExecService/ReadFile": {
+      "post": {
+        "tags": [
+          "ExecService"
+        ],
+        "summary": "ReadFile",
+        "description": "Reads a file of the workspace's, whole, up to a bound.",
+        "operationId": "spin.v1.ExecService.ReadFile",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ReadFileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ReadFileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ExecService/WriteFile": {
+      "post": {
+        "tags": [
+          "ExecService"
+        ],
+        "summary": "WriteFile",
+        "description": "Writes a file of the workspace's, whole, making the directories it is in.",
+        "operationId": "spin.v1.ExecService.WriteFile",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.WriteFileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.WriteFileResponse"
                 }
               }
             }
@@ -5449,6 +5821,68 @@
         }
       }
     },
+    "/spin.v1.LogService/GetWorkspaceTrace": {
+      "post": {
+        "tags": [
+          "LogService"
+        ],
+        "summary": "GetWorkspaceTrace",
+        "description": "GetWorkspaceTrace is the spans of one trace marked as about one workspace, in the order they\n began, for its owner: the rest of the trace is left out, as SearchWorkspaceTraces leaves it.",
+        "operationId": "spin.v1.LogService.GetWorkspaceTrace",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetWorkspaceTraceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetWorkspaceTraceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.LogService/HistogramPlatformLogs": {
       "post": {
         "tags": [
@@ -5883,6 +6317,68 @@
         }
       }
     },
+    "/spin.v1.LogService/SearchWorkspaceTraces": {
+      "post": {
+        "tags": [
+          "LogService"
+        ],
+        "summary": "SearchWorkspaceTraces",
+        "description": "SearchWorkspaceTraces is the spans marked as about one workspace - its creation, its starts\n and stops, what its host did for it - newest first, for its owner. A trace names every\n workspace it touched, so a span not marked as this one's is never answered, whichever trace\n it is in.",
+        "operationId": "spin.v1.LogService.SearchWorkspaceTraces",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.SearchWorkspaceTracesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.SearchWorkspaceTracesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.LogService/ServiceHealth": {
       "post": {
         "tags": [
@@ -6000,6 +6496,253 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.WorkspaceLogFieldValuesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.PasskeyService/BeginPasskeyCeremony": {
+      "post": {
+        "tags": [
+          "PasskeyService"
+        ],
+        "summary": "BeginPasskeyCeremony",
+        "description": "A challenge for one ceremony of the caller's, bound to what it is for: a passkey registered, a\n key added, a passkey deleted. Taken once, by the call it is answered in, within minutes.",
+        "operationId": "spin.v1.PasskeyService.BeginPasskeyCeremony",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.BeginPasskeyCeremonyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.BeginPasskeyCeremonyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.PasskeyService/DeletePasskey": {
+      "post": {
+        "tags": [
+          "PasskeyService"
+        ],
+        "summary": "DeletePasskey",
+        "description": "Deletes a passkey of the caller's, with an assertion of one of theirs.",
+        "operationId": "spin.v1.PasskeyService.DeletePasskey",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DeletePasskeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DeletePasskeyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.PasskeyService/ListPasskeys": {
+      "post": {
+        "tags": [
+          "PasskeyService"
+        ],
+        "summary": "ListPasskeys",
+        "operationId": "spin.v1.PasskeyService.ListPasskeys",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListPasskeysRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListPasskeysResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.PasskeyService/RegisterPasskey": {
+      "post": {
+        "tags": [
+          "PasskeyService"
+        ],
+        "summary": "RegisterPasskey",
+        "description": "Registers a passkey to the caller's account. The first is registered on their session alone;\n another takes an assertion of one they have, so a session cannot add a passkey of its own.",
+        "operationId": "spin.v1.PasskeyService.RegisterPasskey",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.RegisterPasskeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.RegisterPasskeyResponse"
                 }
               }
             }
@@ -6751,7 +7494,7 @@
           "SSHKeyService"
         ],
         "summary": "AddSSHKey",
-        "description": "Upload a new SSH public key to user's account",
+        "description": "Adds a key, with an assertion of a passkey of the caller's over a PASSKEY_PURPOSE_ADD_SSH_KEY\n challenge naming it.",
         "operationId": "spin.v1.SSHKeyService.AddSSHKey",
         "parameters": [
           {
@@ -7853,192 +8596,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.UnshareSnapshotResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.SignatureService/ListPendingSignatures": {
-      "post": {
-        "tags": [
-          "SignatureService"
-        ],
-        "summary": "ListPendingSignatures",
-        "description": "What the caller is asked to sign: their keyring when their keys changed, and the roster of\n each team they own when its members changed.",
-        "operationId": "spin.v1.SignatureService.ListPendingSignatures",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.ListPendingSignaturesRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.ListPendingSignaturesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.SignatureService/StartKeyringAnew": {
-      "post": {
-        "tags": [
-          "SignatureService"
-        ],
-        "summary": "StartKeyringAnew",
-        "description": "Start the caller's keyring anew: for a person who lost every key its newest version lists.\n The next keyring proposed lists the keys they registered since and is signed with one of\n them. Every workspace they own and every team that names them knows the old keyring, not the\n new one: their workspaces are recovered by cloning a snapshot of each into a new one, and a\n team's owner signs them in again.",
-        "operationId": "spin.v1.SignatureService.StartKeyringAnew",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.StartKeyringAnewRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.StartKeyringAnewResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.SignatureService/SubmitSignature": {
-      "post": {
-        "tags": [
-          "SignatureService"
-        ],
-        "summary": "SubmitSignature",
-        "description": "Take a document a person signed: refused unless it is the one proposed, signed by a key that\n may sign it.",
-        "operationId": "spin.v1.SignatureService.SubmitSignature",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.SubmitSignatureRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.SubmitSignatureResponse"
                 }
               }
             }
@@ -9159,7 +9716,7 @@
           "WorkspaceService"
         ],
         "summary": "AddWorkspaceGuest",
-        "description": "Invite a person to log in to a workspace as its guest, by their email: the owner's to ask,\n and the next access the owner signs names them. They log in once it does.",
+        "description": "Invite a person to log in to a workspace as its guest, by their email: the owner's to ask, with\n an assertion of a passkey of theirs - a guest is root in the workspace, so a session alone\n lets nobody in. They log in from then on.",
         "operationId": "spin.v1.WorkspaceService.AddWorkspaceGuest",
         "parameters": [
           {
@@ -9897,68 +10454,6 @@
         }
       }
     },
-    "/spin.v1.WorkspaceService/GetOwnerWord": {
-      "post": {
-        "tags": [
-          "WorkspaceService"
-        ],
-        "summary": "GetOwnerWord",
-        "description": "A workspace's newest access - who logs in, consent to collect logs, the settings approved -\n with what the next must say: the people the owner invited and the settings the guest would be\n handed now, for the owner to sign. Its owner's and its guests' to read.",
-        "operationId": "spin.v1.WorkspaceService.GetOwnerWord",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.GetOwnerWordRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.GetOwnerWordResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.WorkspaceService/GetWorkspace": {
       "post": {
         "tags": [
@@ -10331,6 +10826,68 @@
         }
       }
     },
+    "/spin.v1.WorkspaceService/GetWorkspaceUsage": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "GetWorkspaceUsage",
+        "description": "What the workspace's machine used of what it held, over the last hour at most, as its host\n sampled it: a running machine's up to now, a stopped or failed one's up to when it ended.\n The samples live on that host, so the series begins where the machine began there, and goes\n with a restart of the host, a move, the workspace's next start or its removal.",
+        "operationId": "spin.v1.WorkspaceService.GetWorkspaceUsage",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetWorkspaceUsageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetWorkspaceUsageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.WorkspaceService/GrantPortAccess": {
       "post": {
         "tags": [
@@ -10522,7 +11079,7 @@
           "WorkspaceService"
         ],
         "summary": "ListAgentThreads",
-        "description": "The agent's threads - T3 Code's chats - as the workspace's supervisor last reported them,\n which it does only while the owner's access consents (collect_logs). Titles, paths and\n times, never a message: the chat itself is read in T3 Code, over the owner's own session\n (`spin agent`).",
+        "description": "The agent's threads - T3 Code's chats - as the workspace's supervisor last reported them.\n Titles, paths and\n times, never a message: the chat itself is read in T3 Code, over the owner's own session\n (`spin agent`).",
         "operationId": "spin.v1.WorkspaceService.ListAgentThreads",
         "parameters": [
           {
@@ -10942,6 +11499,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListSnapshotsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/ListWorkspaceGuests": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "ListWorkspaceGuests",
+        "description": "The people who log in to a workspace besides its owner, oldest invitation first.",
+        "operationId": "spin.v1.WorkspaceService.ListWorkspaceGuests",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListWorkspaceGuestsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListWorkspaceGuestsResponse"
                 }
               }
             }
@@ -11451,7 +12070,7 @@
           "WorkspaceService"
         ],
         "summary": "RemoveWorkspaceGuest",
-        "description": "Take a guest out: refused at the control plane at once, and at the workspace once the owner\n signs an access without them.",
+        "description": "Take a guest out: the next session they ask for is refused, and the one they hold ends with\n its certificate.",
         "operationId": "spin.v1.WorkspaceService.RemoveWorkspaceGuest",
         "parameters": [
           {
@@ -11623,68 +12242,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.RevokePortAccessResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.WorkspaceService/SetOwnerWord": {
-      "post": {
-        "tags": [
-          "WorkspaceService"
-        ],
-        "summary": "SetOwnerWord",
-        "description": "Take an access the owner signed with a key of their keyring, and carry it to the guest:\n refused unless their newest keyring holds the key, of this workspace, at a counter past the\n one kept, saying what the first said of the workspace. The control plane writes no access;\n it only keeps and carries the owner's.",
-        "operationId": "spin.v1.WorkspaceService.SetOwnerWord",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.SetOwnerWordRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.SetOwnerWordResponse"
                 }
               }
             }
@@ -12634,30 +13191,49 @@
               }
             ],
             "title": "last_used_at"
+          },
+          "parentId": {
+            "type": "string",
+            "title": "parent_id",
+            "description": "The key it was delegated from, and how far down the chain (0: made by its person)."
+          },
+          "depth": {
+            "type": "integer",
+            "title": "depth",
+            "format": "int32"
+          },
+          "teamId": {
+            "type": "string",
+            "title": "team_id",
+            "description": "The one team it reaches; empty for every team its person is in. Of that team, the projects it\n reaches; empty for any."
+          },
+          "projectIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "project_ids"
+          },
+          "maxWorkspaces": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "max_workspaces",
+            "format": "int32",
+            "description": "What the workspaces its tree made may hold at once; unset for no bound past its person's."
+          },
+          "maxCores": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "max_cores",
+            "format": "int32"
           }
         },
         "title": "APIKey",
         "additionalProperties": false
-      },
-      "spin.v1.AccessPerson": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "title": "user_id"
-          },
-          "keyring": {
-            "type": "string",
-            "title": "keyring"
-          },
-          "name": {
-            "type": "string",
-            "title": "name"
-          }
-        },
-        "title": "AccessPerson",
-        "additionalProperties": false,
-        "description": "AccessPerson is somebody an access names: a user, and their keyring by the version it began at\n (ownerword.Person). name is how the dashboard shows them, and no part of what is signed."
       },
       "spin.v1.ActivateHostRequest": {
         "type": "object",
@@ -12737,6 +13313,19 @@
             "type": "string",
             "title": "public_key",
             "description": "SSH public key content"
+          },
+          "stepUp": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PasskeyAssertion"
+              }
+            ],
+            "title": "step_up"
+          },
+          "forSession": {
+            "type": "boolean",
+            "title": "for_session",
+            "description": "A key enrolled for twelve hours - a browser's, a CLI's - rather than for good."
           }
         },
         "title": "AddSSHKeyRequest",
@@ -12806,6 +13395,15 @@
           "email": {
             "type": "string",
             "title": "email"
+          },
+          "stepUp": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PasskeyAssertion"
+              }
+            ],
+            "title": "step_up",
+            "description": "An assertion of a passkey of the owner's over a PASSKEY_PURPOSE_ADD_GUEST challenge naming\n \"\u003cworkspace_id\u003e \u003cemail\u003e\"."
           }
         },
         "title": "AddWorkspaceGuestRequest",
@@ -13145,6 +13743,51 @@
         "additionalProperties": false,
         "description": "BaseImage is the base image of one machine release, as published."
       },
+      "spin.v1.BeginPasskeyCeremonyRequest": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PasskeyPurpose"
+              }
+            ],
+            "title": "purpose"
+          },
+          "subject": {
+            "type": "string",
+            "title": "subject"
+          }
+        },
+        "title": "BeginPasskeyCeremonyRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.BeginPasskeyCeremonyResponse": {
+        "type": "object",
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "title": "challenge",
+            "format": "byte"
+          },
+          "rpId": {
+            "type": "string",
+            "title": "rp_id",
+            "description": "The relying party a credential is made for and asserted under: the installation's base domain."
+          },
+          "credentialIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            },
+            "title": "credential_ids",
+            "description": "The caller's passkeys' credential ids, for an assertion's allowCredentials."
+          }
+        },
+        "title": "BeginPasskeyCeremonyResponse",
+        "additionalProperties": false
+      },
       "spin.v1.BeginWorkspaceSignInRequest": {
         "type": "object",
         "properties": {
@@ -13400,6 +14043,11 @@
             "type": "string",
             "title": "workspace_id",
             "description": "The workspace the name was decided about, when allowed. The proxy pools connections by\n it and opens sessions for it: a name is freed by a rename and taken by someone else's\n workspace, and a connection pooled by name would carry the next request into the old one."
+          },
+          "sessionRefused": {
+            "type": "boolean",
+            "title": "session_refused",
+            "description": "The session asked with is no good here: it has ended, or is another workspace's. The proxy\n drops the cookie, which would otherwise be sent and refused until it expires."
           }
         },
         "title": "CheckPortAccessResponse",
@@ -13438,6 +14086,30 @@
           }
         },
         "title": "CheckPortPublishedResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ClearUserPasskeysRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "ClearUserPasskeysRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ClearUserPasskeysResponse": {
+        "type": "object",
+        "properties": {
+          "cleared": {
+            "type": "integer",
+            "title": "cleared",
+            "format": "int32",
+            "description": "cleared is how many passkeys the person had."
+          }
+        },
+        "title": "ClearUserPasskeysResponse",
         "additionalProperties": false
       },
       "spin.v1.CloneWorkspaceRequest": {
@@ -13804,6 +14476,42 @@
         "additionalProperties": false,
         "description": "Empty on success"
       },
+      "spin.v1.CpuUsagePoint": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "start"
+          },
+          "usedCores": {
+            "type": "number",
+            "title": "used_cores",
+            "format": "double"
+          },
+          "heldCores": {
+            "type": "integer",
+            "title": "held_cores",
+            "format": "int32"
+          },
+          "cpuCores": {
+            "type": "integer",
+            "title": "cpu_cores",
+            "format": "int32"
+          },
+          "maxCpuCores": {
+            "type": "integer",
+            "title": "max_cpu_cores",
+            "format": "int32"
+          }
+        },
+        "title": "CpuUsagePoint",
+        "additionalProperties": false,
+        "description": "CpuUsagePoint is the cores the machine used over a step, on average, against what it held:\n held_cores attached, lent ones included; cpu_cores its own; max_cpu_cores what it may be lent."
+      },
       "spin.v1.CreateAPIKeyRequest": {
         "type": "object",
         "properties": {
@@ -13826,6 +14534,43 @@
               }
             ],
             "title": "expires_at"
+          },
+          "stepUp": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PasskeyAssertion"
+              }
+            ],
+            "title": "step_up",
+            "description": "An assertion of a passkey of the caller's over a PASSKEY_PURPOSE_CREATE_EXEC_KEY challenge\n naming the key, asked for a key with workspace:exec alone: that key is a shell, which a session\n alone does not open."
+          },
+          "teamId": {
+            "type": "string",
+            "title": "team_id",
+            "description": "What it reaches and what its tree may hold: as APIKey's. Asked by a key holding keys:delegate,\n it is that key's child, and holds no more than it (delegation.Within)."
+          },
+          "projectIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "project_ids"
+          },
+          "maxWorkspaces": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "max_workspaces",
+            "format": "int32"
+          },
+          "maxCores": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "max_cores",
+            "format": "int32"
           }
         },
         "title": "CreateAPIKeyRequest",
@@ -14469,6 +15214,30 @@
         "title": "DeleteNetworkPolicyResponse",
         "additionalProperties": false
       },
+      "spin.v1.DeletePasskeyRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "stepUp": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PasskeyAssertion"
+              }
+            ],
+            "title": "step_up"
+          }
+        },
+        "title": "DeletePasskeyRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.DeletePasskeyResponse": {
+        "type": "object",
+        "title": "DeletePasskeyResponse",
+        "additionalProperties": false
+      },
       "spin.v1.DeleteProjectRequest": {
         "type": "object",
         "properties": {
@@ -14862,6 +15631,101 @@
       "spin.v1.EnableDevModeResponse": {
         "type": "object",
         "title": "EnableDevModeResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ExchangeWorkloadTokenRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "token",
+            "description": "A JWT-SVID the workspace's Workload API issued for the control plane's audience."
+          }
+        },
+        "title": "ExchangeWorkloadTokenRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ExchangeWorkloadTokenResponse": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.APIKey"
+              }
+            ],
+            "title": "api_key"
+          },
+          "secret": {
+            "type": "string",
+            "title": "secret",
+            "description": "Only shown once"
+          }
+        },
+        "title": "ExchangeWorkloadTokenResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ExecRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "command": {
+            "type": "string",
+            "title": "command",
+            "description": "command is a line for the workspace's shell, as `ssh \u003cworkspace\u003e \u003ccommand\u003e` takes one."
+          },
+          "stdin": {
+            "type": "string",
+            "title": "stdin",
+            "format": "byte"
+          },
+          "timeout": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Duration"
+              }
+            ],
+            "title": "timeout",
+            "description": "timeout bounds the command, past which it is ended and answered as timed out; unset is a\n minute, and more than ten is refused."
+          }
+        },
+        "title": "ExecRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ExecResponse": {
+        "type": "object",
+        "properties": {
+          "exitCode": {
+            "type": "integer",
+            "title": "exit_code",
+            "format": "int32",
+            "description": "exit_code is the command's exit status; -1 when it ended on a signal or was ended for its\n timeout."
+          },
+          "stdout": {
+            "type": "string",
+            "title": "stdout",
+            "format": "byte"
+          },
+          "stderr": {
+            "type": "string",
+            "title": "stderr",
+            "format": "byte"
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "truncated",
+            "description": "truncated says stdout or stderr ran past the bound kept of each, and the rest is not here."
+          },
+          "timedOut": {
+            "type": "boolean",
+            "title": "timed_out",
+            "description": "timed_out says the command was ended for its timeout."
+          }
+        },
+        "title": "ExecResponse",
         "additionalProperties": false
       },
       "spin.v1.ExplainStorageKeyRequest": {
@@ -15813,6 +16677,35 @@
         "title": "GetHostShellRecordingResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetInstallationHealthRequest": {
+        "type": "object",
+        "title": "GetInstallationHealthRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetInstallationHealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HealthStatus"
+              }
+            ],
+            "title": "status",
+            "description": "status is the worst of the checks'."
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.HealthCheck"
+            },
+            "title": "checks",
+            "description": "One per part the installation has: a part it does not have - a database archive on a\n development stack, a log store where none is kept, a collector that never reported, jobs on\n a control plane that does not lead - is left out rather than answered for."
+          }
+        },
+        "title": "GetInstallationHealthResponse",
+        "additionalProperties": false
+      },
       "spin.v1.GetInstallationSettingsRequest": {
         "type": "object",
         "title": "GetInstallationSettingsRequest",
@@ -15852,143 +16745,6 @@
           }
         },
         "title": "GetMonitoringResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.GetOwnerWordRequest": {
-        "type": "object",
-        "properties": {
-          "workspaceId": {
-            "type": "string",
-            "title": "workspace_id"
-          }
-        },
-        "title": "GetOwnerWordRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.GetOwnerWordResponse": {
-        "type": "object",
-        "properties": {
-          "word": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.OwnerWord"
-              }
-            ],
-            "title": "word",
-            "description": "word is the newest the owner signed; unset for a workspace whose owner has signed none."
-          },
-          "owner": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.AccessPerson"
-              }
-            ],
-            "title": "owner",
-            "description": "owner is the workspace's owner, with their keyring as it is now: who signs the next. Empty\n keyring for an owner who has signed none."
-          },
-          "dotfiles": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.DotfilesConfig"
-              }
-            ],
-            "title": "dotfiles",
-            "description": "settings are the startup configuration the guest would be handed at its next registration:\n the owner's settings after the team's policy. A word approves them by their digest, which\n the client computes from these, as the guest does from what it is handed."
-          },
-          "defaultShell": {
-            "type": "string",
-            "title": "default_shell"
-          },
-          "env": {
-            "type": "object",
-            "title": "env",
-            "additionalProperties": {
-              "type": "string",
-              "title": "value"
-            }
-          },
-          "editorSettings": {
-            "type": "object",
-            "title": "editor_settings",
-            "additionalProperties": {
-              "type": "string",
-              "title": "value"
-            }
-          },
-          "taskfile": {
-            "type": "string",
-            "title": "taskfile"
-          },
-          "egressRoot": {
-            "type": "string",
-            "title": "egress_root",
-            "description": "egress_root is the installation's egress root, PEM: what the guest is handed at registration,\n and trusts only when a word names its digest. A client names it only once it has held it to\n the root it pinned for the installation, never on this answer's say alone."
-          },
-          "identityAudiences": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "identity_audiences",
-            "description": "identity_audiences is who the installation gives identities for, empty for anybody: what a\n client offers its owner to name in a word, which a host holds every token to as well."
-          },
-          "teamId": {
-            "type": "string",
-            "title": "team_id",
-            "description": "The workspace as its first access says it: team, image, and the snapshot and workspace it was\n cloned from. The next access says the same; the first says these."
-          },
-          "image": {
-            "type": "string",
-            "title": "image"
-          },
-          "parentSnapshotId": {
-            "type": "string",
-            "title": "parent_snapshot_id"
-          },
-          "parentWorkspaceId": {
-            "type": "string",
-            "title": "parent_workspace_id"
-          },
-          "guests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/spin.v1.AccessPerson"
-            },
-            "title": "guests",
-            "description": "guests are the people the owner invited, each with their keyring as it is now: who the next\n access names besides the owner. One with an empty keyring has signed none, and is named once\n they have."
-          },
-          "role": {
-            "type": "string",
-            "title": "role",
-            "description": "role is the caller's: \"owner\", or \"guest\" - who reads it and signs nothing."
-          },
-          "repository": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.RepositoryConfig"
-              }
-            ],
-            "title": "repository",
-            "description": "repository is the one the workspace opened, part of the settings a word approves as the\n five above are: unset for a workspace that opened no project."
-          },
-          "prebuildClaim": {
-            "type": "string",
-            "title": "prebuild_claim",
-            "format": "byte",
-            "description": "prebuild_claim is, for a workspace opened from a prebuild, the claim the host that built it\n signed (PrebuildClaim), whose SHA-256 repository.prebuild_claim_digest is: a client verifies\n it, and that it names the repository and the commit the settings do, before its word approves\n them."
-          },
-          "prebuildWriters": {
-            "type": "object",
-            "title": "prebuild_writers",
-            "additionalProperties": {
-              "type": "string",
-              "title": "value",
-              "format": "byte"
-            },
-            "description": "prebuild_writers is the record of the claim's writer, by its id (writers/\u003cid\u003e.json in the\n installation's store), which the client holds to its own anchors as it does a launch claim's."
-          }
-        },
-        "title": "GetOwnerWordResponse",
         "additionalProperties": false
       },
       "spin.v1.GetPlatformImagesRequest": {
@@ -16229,7 +16985,7 @@
               }
             ],
             "title": "other",
-            "description": "Everything outside volumes/ and layers/: the control plane's election records."
+            "description": "Everything outside volumes/ and layers/: the control planes' claims to lead, the owners'\n words kept per workspace, the rosters and keyrings, the writers' keys and the identity\n records."
           },
           "measuredAt": {
             "allOf": [
@@ -16697,6 +17453,115 @@
         "title": "GetWorkspaceStatusResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetWorkspaceTraceRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "traceId": {
+            "type": "string",
+            "title": "trace_id",
+            "description": "Hex, as a log record carries it."
+          }
+        },
+        "title": "GetWorkspaceTraceRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceTraceResponse": {
+        "type": "object",
+        "properties": {
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Span"
+            },
+            "title": "spans"
+          }
+        },
+        "title": "GetWorkspaceTraceResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceUsageRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "windowSeconds": {
+            "type": "integer",
+            "title": "window_seconds",
+            "format": "int32",
+            "description": "How far back: an hour at most, which is all a host keeps; zero is the hour."
+          },
+          "stepSeconds": {
+            "type": "integer",
+            "title": "step_seconds",
+            "format": "int32",
+            "description": "How wide each point is: at least 10 seconds, the slowest sampler's period; zero is 10."
+          }
+        },
+        "title": "GetWorkspaceUsageRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceUsageResponse": {
+        "type": "object",
+        "properties": {
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "The host that sampled the series; empty, with no points, when the workspace runs nowhere\n and its host kept nothing of the machine it ran."
+          },
+          "sampledSince": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "sampled_since",
+            "description": "When that host began sampling the machine. Nothing before it is known: the samples are the\n host's, and a restart of it or a move starts them again."
+          },
+          "start": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "start",
+            "description": "The window the points fall in: step_seconds apart from start, each over the step that begins\n at its own start. A step with no sample has no point. For a stopped or failed workspace the\n window ends with the step its machine's last sample fell in."
+          },
+          "stepSeconds": {
+            "type": "integer",
+            "title": "step_seconds",
+            "format": "int32"
+          },
+          "cpu": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.CpuUsagePoint"
+            },
+            "title": "cpu"
+          },
+          "memory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.MemoryUsagePoint"
+            },
+            "title": "memory"
+          },
+          "network": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.NetworkUsagePoint"
+            },
+            "title": "network"
+          }
+        },
+        "title": "GetWorkspaceUsageResponse",
+        "additionalProperties": false
+      },
       "spin.v1.Grafana": {
         "type": "object",
         "properties": {
@@ -16864,6 +17729,44 @@
         "additionalProperties": false,
         "description": "HeaderInjection is a header the egress proxy sets: header, to prefix and then a value the\n workspace never holds - a team secret's, or a token of the workspace's identity. One of the two."
       },
+      "spin.v1.HealthCheck": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HealthPart"
+              }
+            ],
+            "title": "part"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HealthStatus"
+              }
+            ],
+            "title": "status"
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason",
+            "description": "reason says in a line what was found, OK or not."
+          },
+          "knownAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "known_at",
+            "description": "known_at is when what decided the status was so: the moment it was asked for a part asked\n now, the collector's last report, the last WAL file archived or failed, a failed job's run."
+          }
+        },
+        "title": "HealthCheck",
+        "additionalProperties": false,
+        "description": "HealthCheck is one part of the installation as the control plane knows it."
+      },
       "spin.v1.HealthCheckResult": {
         "type": "object",
         "properties": {
@@ -16889,6 +17792,31 @@
         "title": "HealthCheckResult",
         "additionalProperties": false
       },
+      "spin.v1.HealthPart": {
+        "type": "string",
+        "title": "HealthPart",
+        "enum": [
+          "HEALTH_PART_UNSPECIFIED",
+          "HEALTH_PART_DATABASE",
+          "HEALTH_PART_DATABASE_ARCHIVE",
+          "HEALTH_PART_LOG_STORE",
+          "HEALTH_PART_COLLECTOR",
+          "HEALTH_PART_JOBS",
+          "HEALTH_PART_HOSTS",
+          "HEALTH_PART_WAITING_WORKSPACES"
+        ],
+        "description": "HealthPart is which part of the installation a check is of.\n\n- `HEALTH_PART_DATABASE`: The control plane's database answers a query.\n- `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base\n  backups are taken by a timer outside the control plane, which records nothing it can read.\n- `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready.\n- `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store\n  (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n  plane is not one of the metric store's readers.\n- `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs).\n- `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet, against those whose command stream is up.\n- `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet.",
+        "x-enum-descriptions": [
+          "",
+          "The control plane's database answers a query.",
+          "The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base\n backups are taken by a timer outside the control plane, which records nothing it can read.",
+          "The log store (Quickwit) beside the control plane answers that it is ready.",
+          "The collector sends what it is given: spans to the trace store, samples to the metric store\n (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n plane is not one of the metric store's readers.",
+          "The control plane's periodic work: a job whose last run failed (ListJobs).",
+          "The hosts registered and not taken out of the fleet, against those whose command stream is up.",
+          "Workspaces waiting for a runner, across the whole fleet."
+        ]
+      },
       "spin.v1.HealthReport": {
         "type": "object",
         "properties": {
@@ -16907,6 +17835,23 @@
         "title": "HealthReport",
         "additionalProperties": false,
         "description": "HealthReport is what the supervisor inside a workspace observes about it. Here rather\n than beside the stream that carries it, for the reason SupervisorState is here: it is\n read from both sides - reported by the supervisor on its own connection\n (spin.agent.v1), and returned to an operator by WorkspaceService.GetWorkspaceStatus.\n\n It is also what keeps the dependency between the two packages pointing one way.\n spin.v1 is the vocabulary and spin.agent.v1 is the machine surface built on it; a type\n the operator's side needs from the agent's side would make each package need the other."
+      },
+      "spin.v1.HealthStatus": {
+        "type": "string",
+        "title": "HealthStatus",
+        "enum": [
+          "HEALTH_STATUS_UNSPECIFIED",
+          "HEALTH_STATUS_OK",
+          "HEALTH_STATUS_DEGRADED",
+          "HEALTH_STATUS_FAILED"
+        ],
+        "description": "- `HEALTH_STATUS_DEGRADED`: Working, and something in it wants a look: some hosts not connected, a job's last run failed,\n  a workspace waiting longer than a machine takes to boot.\n- `HEALTH_STATUS_FAILED`: Not doing what it is for: the database does not answer, the archive's last send failed, no\n  host is connected.",
+        "x-enum-descriptions": [
+          "",
+          "",
+          "Working, and something in it wants a look: some hosts not connected, a job's last run failed,\n a workspace waiting longer than a machine takes to boot.",
+          "Not doing what it is for: the database does not answer, the archive's last send failed, no\n host is connected."
+        ]
       },
       "spin.v1.HistogramLogsResponse": {
         "type": "object",
@@ -17064,7 +18009,7 @@
               }
             ],
             "title": "last_heartbeat",
-            "description": "last_heartbeat is whichever of this host's two channels was heard from last, and they are\n not the same thing: the command stream carries what the host can be *told* (start this,\n stop that), and the volume agent's own heartbeat renews the lease its disks are served\n under. Either refreshes this, so a fresh stamp says one of them is alive and not which."
+            "description": "last_heartbeat is whichever of this host's two channels was heard from last, and they are\n not the same thing: the command stream carries what the host can be *told* (start this,\n stop that), and the volume agent's own heartbeat renews the lease its disks are served\n under. Either refreshes this, so a fresh stamp says one of them is alive and not which:\n stream_heard_at and lease_renewed_at are each on its own. It is what the sweep that forgets\n a host gone for good reads."
           },
           "registeredAt": {
             "allOf": [
@@ -17091,6 +18036,69 @@
             },
             "title": "checks",
             "description": "checks are what the host last found when it asked itself whether a workspace can run on it\n as it should, as its heartbeat said: held for as long as the host is connected, like\n going_away, and empty for a host that has said nothing yet."
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class",
+            "description": "host_class is the class (HostClass.name) of the group that launched the machine, which ties\n the host to its FleetClass: \"default\" for a machine no group launched."
+          },
+          "machineVersion": {
+            "type": "string",
+            "title": "machine_version",
+            "description": "machine_version is the spin-machine release the host registered (its QEMU, kernel and\n firmware); empty for a host with no machine."
+          },
+          "detected": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "detected",
+            "description": "detected is what the host found it has when it last registered (cores, memory, disk GB),\n beside capacity, which is what it advertises: a HostPolicy capacity holds a machine back by\n saying it has less. Zero for a host that has not registered since it was made."
+          },
+          "streamHeardAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "stream_heard_at",
+            "description": "Each channel on its own. stream_heard_at is the command stream's last heartbeat the control\n plane recorded - unset for a host that never held one - and lease_renewed_at the volume\n agent's last renewal of the lease its disks are served under, unset for one that never held\n a lease. A host whose stream is gone while its lease renews serves its disks and can be\n told nothing."
+          },
+          "leaseRenewedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "lease_renewed_at"
+          },
+          "connectedChangedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "connected_changed_at",
+            "description": "connected_changed_at is when connected last changed, as this control plane saw it: the\n stream registering while connected, its end while not. Unset where this control plane has\n seen neither since it started - stream_heard_at then says when the host was last heard.\n Held in memory, as connected is: a control plane that restarts starts again."
+          },
+          "streamEnd": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostStreamEnd"
+              }
+            ],
+            "title": "stream_end",
+            "description": "Why the host's last command stream ended, while it is not connected; UNSPECIFIED while it is\n connected, and where this control plane has not seen one end. stream_end_detail is the error\n the stream ended with, in its own words."
+          },
+          "streamEndDetail": {
+            "type": "string",
+            "title": "stream_end_detail"
+          },
+          "hostname": {
+            "type": "string",
+            "title": "hostname",
+            "description": "hostname is the name the host's machine goes by, as it last registered it: how a person tells\n one host from another where its id says nothing. Empty for a host that has not registered\n since it was made."
           }
         },
         "title": "Host",
@@ -17467,6 +18475,29 @@
         ],
         "description": "HostState mirrors internal/lifecycle.HostState (§28.1) and the CHECK on hosts.state:\n one vocabulary for the fleet, whichever component is asking. Only ACTIVE takes new\n work; a CORDONED or DRAINING host keeps serving (and keeps its lease) while it is\n evacuated, and the Agent needs to be told which of the two it is.\n\n It replaces a second set of names this schema carried for the same states - HEALTHY,\n DEGRADED, OFFLINE - where DEGRADED was a word nothing branched on and no name said\n \"an operator stopped this host\"."
       },
+      "spin.v1.HostStreamEnd": {
+        "type": "string",
+        "title": "HostStreamEnd",
+        "enum": [
+          "HOST_STREAM_END_UNSPECIFIED",
+          "HOST_STREAM_END_HOST_CLOSED",
+          "HOST_STREAM_END_LOST",
+          "HOST_STREAM_END_CONTROL_PLANE_CLOSED",
+          "HOST_STREAM_END_TOO_FAST",
+          "HOST_STREAM_END_REFUSED_RELEASE",
+          "HOST_STREAM_END_ERROR"
+        ],
+        "description": "HostStreamEnd is why a host's command stream ended.\n\n- `HOST_STREAM_END_HOST_CLOSED`: The host closed it: a runner stopping or restarting.\n- `HOST_STREAM_END_LOST`: The connection went without the host closing it: a network fault, a runner killed, a\n  machine that went away, a transport that timed out.\n- `HOST_STREAM_END_CONTROL_PLANE_CLOSED`: The control plane closed it: the host was revoked, or a newer stream of it replaced this one.\n- `HOST_STREAM_END_TOO_FAST`: The host sent far faster than any runner does, and was cut off.\n- `HOST_STREAM_END_REFUSED_RELEASE`: Its registration was refused: the host runs another release than the control plane's.\n- `HOST_STREAM_END_ERROR`: Its registration could not be recorded, or the stream failed in a way none of the above says.",
+        "x-enum-descriptions": [
+          "",
+          "The host closed it: a runner stopping or restarting.",
+          "The connection went without the host closing it: a network fault, a runner killed, a\n machine that went away, a transport that timed out.",
+          "The control plane closed it: the host was revoked, or a newer stream of it replaced this one.",
+          "The host sent far faster than any runner does, and was cut off.",
+          "Its registration was refused: the host runs another release than the control plane's.",
+          "Its registration could not be recorded, or the stream failed in a way none of the above says."
+        ]
+      },
       "spin.v1.IdentityProvider": {
         "type": "object",
         "properties": {
@@ -17728,6 +18759,12 @@
             "type": "integer",
             "title": "host_shell_max_minutes",
             "format": "int32"
+          },
+          "prebuildRetireUnusedDays": {
+            "type": "integer",
+            "title": "prebuild_retire_unused_days",
+            "format": "int32",
+            "description": "How many days a ready prebuild may go without a workspace opened from it before it is retired\n and its disk given back - the newest of its ref too, so a project nobody opens stops holding\n one, and its next open starts from the image. It is not built again until its ref moves to\n another commit, or an admin runs it. Counted from its build for one never opened. 0, what an\n installation that says nothing keeps, retires none for this; a year is the most."
           }
         },
         "title": "InstallationSettings",
@@ -17963,7 +19000,7 @@
               }
             ],
             "title": "reported_at",
-            "description": "reported_at is when the supervisor last sent the index; unset where it never has - an owner\n who does not consent, or a workspace that ran no agent."
+            "description": "reported_at is when the supervisor last sent the index; unset where it never has - a\n workspace that ran no agent."
           }
         },
         "title": "ListAgentThreadsResponse",
@@ -18057,6 +19094,14 @@
             ],
             "title": "since",
             "description": "since bounds the listing at the older end; an audit log is read forward from an\n incident, and the whole of one is not what a page wants."
+          },
+          "excludeActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "exclude_actions",
+            "description": "exclude_actions are actions left out: every sign-in of an installation outnumbers what was\n done on it, and the one action filter can name what to see but not what to look past."
           }
         },
         "title": "ListAuditLogRequest",
@@ -18156,6 +19201,12 @@
               "$ref": "#/components/schemas/spin.v1.DeletedWorkspace"
             },
             "title": "workspaces"
+          },
+          "trashDays": {
+            "type": "integer",
+            "title": "trash_days",
+            "format": "int32",
+            "description": "How many days a delete now keeps a workspace here; 0 is no trash, a delete erases. The\n installation's setting, read by whoever may delete: a delete dialog that could not tell\n which happens said both, at the one moment the difference matters."
           }
         },
         "title": "ListDeletedWorkspacesResponse",
@@ -18451,37 +19502,23 @@
         "title": "ListNetworkPoliciesResponse",
         "additionalProperties": false
       },
-      "spin.v1.ListPendingSignaturesRequest": {
+      "spin.v1.ListPasskeysRequest": {
         "type": "object",
-        "title": "ListPendingSignaturesRequest",
+        "title": "ListPasskeysRequest",
         "additionalProperties": false
       },
-      "spin.v1.ListPendingSignaturesResponse": {
+      "spin.v1.ListPasskeysResponse": {
         "type": "object",
         "properties": {
-          "pending": {
+          "passkeys": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/spin.v1.PendingSignature"
+              "$ref": "#/components/schemas/spin.v1.Passkey"
             },
-            "title": "pending"
-          },
-          "keyringSigned": {
-            "type": "boolean",
-            "title": "keyring_signed",
-            "description": "keyring_signed is whether the caller has signed a keyring at all. Until they have, no\n workspace is made for them (CreateWorkspace refuses it): its access is signed with a key of\n the keyring. Always true on an installation with no bucket, which keeps no keyrings."
-          },
-          "userId": {
-            "type": "string",
-            "title": "user_id",
-            "description": "user_id is the caller, and keyring their keyring by the version it began at (empty until they\n signed one): who a grant the browser terminal signs for them names. A control plane that says\n another only makes a grant no host admits."
-          },
-          "keyring": {
-            "type": "string",
-            "title": "keyring"
+            "title": "passkeys"
           }
         },
-        "title": "ListPendingSignaturesResponse",
+        "title": "ListPasskeysResponse",
         "additionalProperties": false
       },
       "spin.v1.ListPrebuildsRequest": {
@@ -19054,9 +20091,47 @@
               }
             ],
             "title": "page"
+          },
+          "holdings": {
+            "type": "object",
+            "title": "holdings",
+            "additionalProperties": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/spin.v1.UserHoldings"
+                }
+              ],
+              "title": "value"
+            },
+            "description": "What each listed user still holds, by user id: what an administrator asks before taking\n access away. Kept off User, which other calls return without it."
           }
         },
         "title": "ListUsersResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListWorkspaceGuestsRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          }
+        },
+        "title": "ListWorkspaceGuestsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListWorkspaceGuestsResponse": {
+        "type": "object",
+        "properties": {
+          "guests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.WorkspaceGuest"
+            },
+            "title": "guests"
+          }
+        },
+        "title": "ListWorkspaceGuestsResponse",
         "additionalProperties": false
       },
       "spin.v1.ListWorkspaceQuarantineDenialsRequest": {
@@ -19349,6 +20424,42 @@
         "title": "LogoutResponse",
         "additionalProperties": false
       },
+      "spin.v1.MemoryUsagePoint": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "start"
+          },
+          "usedBytes": {
+            "type": "string",
+            "title": "used_bytes",
+            "format": "int64"
+          },
+          "heldBytes": {
+            "type": "string",
+            "title": "held_bytes",
+            "format": "int64"
+          },
+          "memoryBytes": {
+            "type": "string",
+            "title": "memory_bytes",
+            "format": "int64"
+          },
+          "maxMemoryBytes": {
+            "type": "string",
+            "title": "max_memory_bytes",
+            "format": "int64"
+          }
+        },
+        "title": "MemoryUsagePoint",
+        "additionalProperties": false,
+        "description": "MemoryUsagePoint is the most the machine used over a step - running out is a peak, not a mean\n - against what it held, as CpuUsagePoint."
+      },
       "spin.v1.MoveWorkspaceRequest": {
         "type": "object",
         "properties": {
@@ -19495,6 +20606,32 @@
         "additionalProperties": false,
         "description": "NetworkRule is one thing a network policy allows: these destinations on these ports. Within a\n rule the two intersect - every destination on every port - and a policy is the union of its\n rules, so \"53/udp to one resolver and 443 to github.com\" is two rules and not a product of\n both. Here and not beside a policy for the reason HealthReport is: the control plane's policy,\n the one a host reports it enforces and the one a host is given are one vocabulary."
       },
+      "spin.v1.NetworkUsagePoint": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "start"
+          },
+          "sentBytes": {
+            "type": "string",
+            "title": "sent_bytes",
+            "format": "int64"
+          },
+          "receivedBytes": {
+            "type": "string",
+            "title": "received_bytes",
+            "format": "int64"
+          }
+        },
+        "title": "NetworkUsagePoint",
+        "additionalProperties": false,
+        "description": "NetworkUsagePoint is what the machine's network carried over a step."
+      },
       "spin.v1.ObservedDestination": {
         "type": "object",
         "properties": {
@@ -19621,24 +20758,6 @@
           "Somebody of another team can create a workspace from it."
         ]
       },
-      "spin.v1.OwnerWord": {
-        "type": "object",
-        "properties": {
-          "document": {
-            "type": "string",
-            "title": "document",
-            "format": "byte"
-          },
-          "signature": {
-            "type": "string",
-            "title": "signature",
-            "format": "byte"
-          }
-        },
-        "title": "OwnerWord",
-        "additionalProperties": false,
-        "description": "OwnerWord is a workspace's access, as its owner signed it with a key of their keyring\n (internal/ownerword): document is the access as framed JSON, signature the key's SSH signature\n over it (sshsig, namespace \"spin-access\") - what `ssh-keygen -Y sign` writes, so a FIDO2 key\n signs one through ssh-agent."
-      },
       "spin.v1.PageRequest": {
         "type": "object",
         "properties": {
@@ -19671,6 +20790,99 @@
         },
         "title": "PageResponse",
         "additionalProperties": false
+      },
+      "spin.v1.Passkey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "credentialId": {
+            "type": "string",
+            "title": "credential_id",
+            "format": "byte"
+          },
+          "createdAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "created_at"
+          },
+          "lastUsedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "last_used_at"
+          }
+        },
+        "title": "Passkey",
+        "additionalProperties": false
+      },
+      "spin.v1.PasskeyAssertion": {
+        "type": "object",
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "title": "challenge",
+            "format": "byte"
+          },
+          "credentialId": {
+            "type": "string",
+            "title": "credential_id",
+            "format": "byte"
+          },
+          "clientDataJson": {
+            "type": "string",
+            "title": "client_data_json",
+            "format": "byte"
+          },
+          "authenticatorData": {
+            "type": "string",
+            "title": "authenticator_data",
+            "format": "byte"
+          },
+          "signature": {
+            "type": "string",
+            "title": "signature",
+            "format": "byte",
+            "description": "ECDSA's, in ASN.1 DER, as WebAuthn returns it."
+          }
+        },
+        "title": "PasskeyAssertion",
+        "additionalProperties": false,
+        "description": "PasskeyAssertion is what navigator.credentials.get answers, and the challenge it answers."
+      },
+      "spin.v1.PasskeyPurpose": {
+        "type": "string",
+        "title": "PasskeyPurpose",
+        "enum": [
+          "PASSKEY_PURPOSE_UNSPECIFIED",
+          "PASSKEY_PURPOSE_REGISTER",
+          "PASSKEY_PURPOSE_ADD_PASSKEY",
+          "PASSKEY_PURPOSE_ADD_SSH_KEY",
+          "PASSKEY_PURPOSE_DELETE_PASSKEY",
+          "PASSKEY_PURPOSE_ADD_GUEST",
+          "PASSKEY_PURPOSE_CREATE_EXEC_KEY"
+        ],
+        "description": "PasskeyPurpose is what a ceremony's challenge is for.\n\n- `PASSKEY_PURPOSE_REGISTER`: A passkey registered: the registration answers it. Subject: none.\n- `PASSKEY_PURPOSE_ADD_PASSKEY`: Another passkey registered while the account has one: an assertion of one it has answers it.\n  Subject: the new credential's id, base64url.\n- `PASSKEY_PURPOSE_ADD_SSH_KEY`: An SSH key added (SSHKeyService.AddSSHKey). Subject: the key, in authorized_keys form.\n- `PASSKEY_PURPOSE_DELETE_PASSKEY`: A passkey deleted. Subject: its id.\n- `PASSKEY_PURPOSE_ADD_GUEST`: A guest let into a workspace (WorkspaceService.AddWorkspaceGuest). Subject: \"\u003cworkspace id\u003e\n  \u003cemail\u003e\".\n- `PASSKEY_PURPOSE_CREATE_EXEC_KEY`: An API key made with workspace:exec (AuthService.CreateAPIKey), which is a shell in every\n  workspace of its person's. Subject: the key's name.",
+        "x-enum-descriptions": [
+          "",
+          "A passkey registered: the registration answers it. Subject: none.",
+          "Another passkey registered while the account has one: an assertion of one it has answers it.\n Subject: the new credential's id, base64url.",
+          "An SSH key added (SSHKeyService.AddSSHKey). Subject: the key, in authorized_keys form.",
+          "A passkey deleted. Subject: its id.",
+          "A guest let into a workspace (WorkspaceService.AddWorkspaceGuest). Subject: \"\u003cworkspace id\u003e\n \u003cemail\u003e\".",
+          "An API key made with workspace:exec (AuthService.CreateAPIKey), which is a shell in every\n workspace of its person's. Subject: the key's name."
+        ]
       },
       "spin.v1.PasswordLoginRequest": {
         "type": "object",
@@ -19718,51 +20930,6 @@
         },
         "title": "PasswordLoginResponse",
         "additionalProperties": false
-      },
-      "spin.v1.PendingSignature": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.SignatureKind"
-              }
-            ],
-            "title": "kind"
-          },
-          "subjectId": {
-            "type": "string",
-            "title": "subject_id",
-            "description": "subject_id is the user, the team or the workspace the document is of."
-          },
-          "document": {
-            "type": "string",
-            "title": "document",
-            "format": "byte",
-            "description": "document is the document to sign, as framed JSON: what the client shows and signs as it is."
-          },
-          "signers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "signers",
-            "description": "signers are the keys, in authorized_keys form, any one of which may sign it."
-          },
-          "summary": {
-            "type": "string",
-            "title": "summary",
-            "description": "summary is a line saying what it changes, for a list: the document itself is what to read."
-          },
-          "deferred": {
-            "type": "boolean",
-            "title": "deferred",
-            "description": "deferred is a document nothing asks for until the person uses what it gives: the roster of a\n team that has only ever been its one member, read only for an identity. Offered there, not on\n every page."
-          }
-        },
-        "title": "PendingSignature",
-        "additionalProperties": false,
-        "description": "PendingSignature is one document the caller is asked to sign."
       },
       "spin.v1.PlatformImage": {
         "type": "object",
@@ -20021,17 +21188,6 @@
             "type": "string",
             "title": "image"
           },
-          "settingsDigest": {
-            "type": "string",
-            "title": "settings_digest",
-            "description": "The SHA-256 of the settings its word approved, and of the checkout's .spin.yaml at the commit."
-          },
-          "claim": {
-            "type": "string",
-            "title": "claim",
-            "format": "byte",
-            "description": "What its host signed of it (PrebuildClaim), once it is ready."
-          },
           "log": {
             "type": "string",
             "title": "log",
@@ -20056,6 +21212,12 @@
               }
             ],
             "title": "built_at"
+          },
+          "workspaceCount": {
+            "type": "integer",
+            "title": "workspace_count",
+            "format": "int32",
+            "description": "In ListPrebuilds: the workspaces opened from it that are not deleted, whoever's they are."
           }
         },
         "title": "Prebuild",
@@ -20211,6 +21373,12 @@
               "type": "string"
             },
             "title": "shared_team_ids"
+          },
+          "readyPrebuildCount": {
+            "type": "integer",
+            "title": "ready_prebuild_count",
+            "format": "int32",
+            "description": "In ListProjects: how many of its prebuilds are ready to open from."
           }
         },
         "title": "Project",
@@ -20342,6 +21510,34 @@
         "additionalProperties": false,
         "description": "RateLimitSettings configures API rate limiting"
       },
+      "spin.v1.ReadFileRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "path": {
+            "type": "string",
+            "title": "path",
+            "description": "path is absolute, or relative to root's home."
+          }
+        },
+        "title": "ReadFileRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ReadFileResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "title": "content",
+            "format": "byte"
+          }
+        },
+        "title": "ReadFileResponse",
+        "additionalProperties": false
+      },
       "spin.v1.RecoverWorkspaceRequest": {
         "type": "object",
         "properties": {
@@ -20424,6 +21620,67 @@
           }
         },
         "title": "RefusedDestination",
+        "additionalProperties": false
+      },
+      "spin.v1.RegisterPasskeyRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "challenge": {
+            "type": "string",
+            "title": "challenge",
+            "format": "byte"
+          },
+          "credentialId": {
+            "type": "string",
+            "title": "credential_id",
+            "format": "byte"
+          },
+          "clientDataJson": {
+            "type": "string",
+            "title": "client_data_json",
+            "format": "byte"
+          },
+          "authenticatorData": {
+            "type": "string",
+            "title": "authenticator_data",
+            "format": "byte"
+          },
+          "publicKey": {
+            "type": "string",
+            "title": "public_key",
+            "format": "byte",
+            "description": "The credential's public key, SubjectPublicKeyInfo (AuthenticatorAttestationResponse.getPublicKey)."
+          },
+          "stepUp": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PasskeyAssertion"
+              }
+            ],
+            "title": "step_up",
+            "description": "An assertion of a passkey the account has, over a PASSKEY_PURPOSE_ADD_PASSKEY challenge naming\n this credential; unset for the account's first."
+          }
+        },
+        "title": "RegisterPasskeyRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.RegisterPasskeyResponse": {
+        "type": "object",
+        "properties": {
+          "passkey": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Passkey"
+              }
+            ],
+            "title": "passkey"
+          }
+        },
+        "title": "RegisterPasskeyResponse",
         "additionalProperties": false
       },
       "spin.v1.RegistrationMode": {
@@ -20678,59 +21935,6 @@
         "title": "RemoveWorkspaceGuestResponse",
         "additionalProperties": false
       },
-      "spin.v1.RepositoryConfig": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "title": "url"
-          },
-          "ref": {
-            "type": "string",
-            "title": "ref"
-          },
-          "path": {
-            "type": "string",
-            "title": "path"
-          },
-          "authorName": {
-            "type": "string",
-            "title": "author_name",
-            "description": "Who the checkout's commits are by: the workspace's owner's name and email as the installation\n knows them, set as the checkout's own user.name and user.email - the push goes as the team's\n app, and the commit says the person. Empty is neither set."
-          },
-          "authorEmail": {
-            "type": "string",
-            "title": "author_email"
-          },
-          "commit": {
-            "type": "string",
-            "title": "commit",
-            "description": "commit is the one a prebuild's build checks out and runs create at; empty for a workspace a\n person opens, which follows the ref."
-          },
-          "fromCommit": {
-            "type": "string",
-            "title": "from_commit",
-            "description": "from_commit is the commit the disk's checkout already is, for a disk cloned from a prebuild:\n the guest holds the tree to it (git fsck, no tracked file changed) before it fetches."
-          },
-          "prebuildId": {
-            "type": "string",
-            "title": "prebuild_id",
-            "description": "The prebuild the disk is a clone of, and the SHA-256 of the claim its host signed of it\n (PrebuildClaim): what the owner approves when the open was from one."
-          },
-          "prebuildClaimDigest": {
-            "type": "string",
-            "title": "prebuild_claim_digest"
-          },
-          "pullRef": {
-            "type": "string",
-            "title": "pull_ref",
-            "description": "pull_ref is a pull request's ref as its forge serves it (refs/pull/\u003cn\u003e/head, GitLab's\n refs/merge-requests/\u003cn\u003e/head), fetched once ref is cloned and checked out as pr-\u003cn\u003e or mr-\u003cn\u003e;\n empty for a workspace that opens at ref itself."
-          }
-        },
-        "title": "RepositoryConfig",
-        "additionalProperties": false,
-        "description": "The repository a workspace opened, as its guest clones it: the project's URL, the ref the\n workspace was opened at, and where on the disk it goes (projects.CheckoutPath). Part of the\n settings the owner approves, as the environment is: a disk is written to only as its owner said."
-      },
       "spin.v1.RequestHostShellRequest": {
         "type": "object",
         "properties": {
@@ -20899,6 +22103,12 @@
             "type": "string",
             "title": "host_class",
             "description": "The host class its workspaces run on (HostClass)."
+          },
+          "agentMinMemoryMb": {
+            "type": "integer",
+            "title": "agent_min_memory_mb",
+            "format": "int32",
+            "description": "What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset."
           }
         },
         "title": "ResourcePreset",
@@ -21182,8 +22392,16 @@
                 "$ref": "#/components/schemas/google.protobuf.Timestamp"
               }
             ],
-            "title": "created_at",
-            "description": "No last_used_at: a user's key authenticates inside the guest, over SSH, where the\n control plane is not, so the only honest answer it could give is \"unknown\". Compare\n ApiKey.last_used_at, which the control plane stamps because it is the thing being\n presented to."
+            "title": "created_at"
+          },
+          "expiresAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "expires_at",
+            "description": "No last_used_at: a user's key authenticates inside the guest, over SSH, where the\n control plane is not, so the only honest answer it could give is \"unknown\". Compare\n ApiKey.last_used_at, which the control plane stamps because it is the thing being\n presented to.\n When an enrolled key stops logging in; unset for a key of the person's own."
           }
         },
         "title": "SSHKey",
@@ -21455,6 +22673,68 @@
         "additionalProperties": false,
         "description": "As SearchLogsResponse, for one workspace's console."
       },
+      "spin.v1.SearchWorkspaceTracesRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "query": {
+            "type": "string",
+            "title": "query",
+            "description": "As SearchTracesRequest's, over every span: searched among the workspace's spans, never beyond\n them."
+          },
+          "from": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "from"
+          },
+          "to": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "to"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "limit",
+            "format": "int32"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "offset",
+            "format": "int32"
+          }
+        },
+        "title": "SearchWorkspaceTracesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.SearchWorkspaceTracesResponse": {
+        "type": "object",
+        "properties": {
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Span"
+            },
+            "title": "spans"
+          },
+          "total": {
+            "type": "string",
+            "title": "total",
+            "format": "int64"
+          }
+        },
+        "title": "SearchWorkspaceTracesResponse",
+        "additionalProperties": false,
+        "description": "The spans found, each marked as about the workspace asked for, and how many the store holds."
+      },
       "spin.v1.SecuritySettings": {
         "type": "object",
         "properties": {
@@ -21710,30 +22990,6 @@
           }
         },
         "title": "SetHostPolicyResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.SetOwnerWordRequest": {
-        "type": "object",
-        "properties": {
-          "workspaceId": {
-            "type": "string",
-            "title": "workspace_id"
-          },
-          "word": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.OwnerWord"
-              }
-            ],
-            "title": "word"
-          }
-        },
-        "title": "SetOwnerWordRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.SetOwnerWordResponse": {
-        "type": "object",
-        "title": "SetOwnerWordResponse",
         "additionalProperties": false
       },
       "spin.v1.SetPortAccessRequest": {
@@ -22084,39 +23340,6 @@
         "title": "ShareSnapshotResponse",
         "additionalProperties": false,
         "description": "Empty whether or not the address has an account: anything else would say which."
-      },
-      "spin.v1.SignatureKind": {
-        "type": "string",
-        "title": "SignatureKind",
-        "enum": [
-          "SIGNATURE_KIND_UNSPECIFIED",
-          "SIGNATURE_KIND_KEYRING",
-          "SIGNATURE_KIND_ROSTER"
-        ],
-        "description": "- `SIGNATURE_KIND_KEYRING`: A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n  keyring before it; the first, and one started anew, with a key it lists.\n- `SIGNATURE_KIND_ROSTER`: A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n  an owner the roster before it lists; the first, by an owner it lists.",
-        "x-enum-descriptions": [
-          "",
-          "A user's keyring: the keys that may sign for them (roster.Keyring). Signed with a key of the\n keyring before it; the first, and one started anew, with a key it lists.",
-          "A team's roster: its members, its owners and each member's keyring (roster.Roster). Signed by\n an owner the roster before it lists; the first, by an owner it lists."
-        ]
-      },
-      "spin.v1.SignedDocument": {
-        "type": "object",
-        "properties": {
-          "document": {
-            "type": "string",
-            "title": "document",
-            "format": "byte"
-          },
-          "signature": {
-            "type": "string",
-            "title": "signature",
-            "format": "byte"
-          }
-        },
-        "title": "SignedDocument",
-        "additionalProperties": false,
-        "description": "SignedDocument is a document as framed JSON and an SSH signature over it (sshsig) - what\n `ssh-keygen -Y sign` writes, so a FIDO2 key signs one through ssh-agent, and a passkey's\n WebAuthn assertion is one too (internal/sshauth)."
       },
       "spin.v1.Snapshot": {
         "type": "object",
@@ -22508,16 +23731,6 @@
         "title": "StartDeviceLoginResponse",
         "additionalProperties": false
       },
-      "spin.v1.StartKeyringAnewRequest": {
-        "type": "object",
-        "title": "StartKeyringAnewRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.StartKeyringAnewResponse": {
-        "type": "object",
-        "title": "StartKeyringAnewResponse",
-        "additionalProperties": false
-      },
       "spin.v1.StartLoginRequest": {
         "type": "object",
         "properties": {
@@ -22735,16 +23948,17 @@
           "name": {
             "type": "string",
             "title": "name",
-            "description": "The workspace's name, the image's ref, or the extension and its version."
+            "description": "The workspace's name, the prebuild's project, ref and commit, the image's ref, or the\n extension and its version."
           },
           "workspaceId": {
             "type": "string",
             "title": "workspace_id",
-            "description": "The workspace's, for a workspace's disk."
+            "description": "The workspace's, for a workspace's disk and a prebuild."
           },
           "ownerEmail": {
             "type": "string",
-            "title": "owner_email"
+            "title": "owner_email",
+            "description": "The workspace's owner, or the person whose agent's home it is."
           },
           "current": {
             "type": "boolean",
@@ -22790,7 +24004,17 @@
           "keptBecause": {
             "type": "string",
             "title": "kept_because",
-            "description": "Why it stays, in words, where it is an image or a release that may not go."
+            "description": "Why it stays, in words, where it is an image, a release or an agent's home that may not go."
+          },
+          "label": {
+            "type": "string",
+            "title": "label",
+            "description": "What it is and whose, in one line a person reads: \"the prebuild of web main@1a2b3c4,\n ready\", \"ana@example.com's agent's home, mounted by neat-crow\"."
+          },
+          "fromDescriptor": {
+            "type": "boolean",
+            "title": "from_descriptor",
+            "description": "The database names nothing of it, and kind is what its descriptor.json said it was made as\n when the control plane made it: a volume whose rows were lost, or a database restored from\n behind the store. Removable as an orphan or an unclaimed volume is."
           }
         },
         "title": "StoredVolume",
@@ -22806,49 +24030,21 @@
           "STORED_VOLUME_KIND_IMAGE",
           "STORED_VOLUME_KIND_EXTENSION",
           "STORED_VOLUME_KIND_UNCLAIMED",
-          "STORED_VOLUME_KIND_ORPHAN"
+          "STORED_VOLUME_KIND_ORPHAN",
+          "STORED_VOLUME_KIND_PREBUILD",
+          "STORED_VOLUME_KIND_AGENT_HOME"
         ],
-        "description": "- `STORED_VOLUME_KIND_WORKSPACE`: A workspace's disk, now or before.\n- `STORED_VOLUME_KIND_IMAGE`: An image a workspace's disk is cloned from.\n- `STORED_VOLUME_KIND_EXTENSION`: A release of an extension: the supervisor, the VS Code servers.\n- `STORED_VOLUME_KIND_UNCLAIMED`: A volume the database has and nothing names: a clone being made, or a delete not finished.\n- `STORED_VOLUME_KIND_ORPHAN`: Objects under a volume the database does not have.",
+        "description": "- `STORED_VOLUME_KIND_WORKSPACE`: A workspace's disk, now or before.\n- `STORED_VOLUME_KIND_IMAGE`: An image a workspace's disk is cloned from.\n- `STORED_VOLUME_KIND_EXTENSION`: A release of an extension: the supervisor, the VS Code servers.\n- `STORED_VOLUME_KIND_UNCLAIMED`: A volume the database has and nothing names: a clone being made, or a delete not finished.\n- `STORED_VOLUME_KIND_ORPHAN`: Objects under a volume the database does not have.\n- `STORED_VOLUME_KIND_PREBUILD`: A prebuild: the disk of the workspace that built it, which the workspaces opened from it are\n  cloned from.\n- `STORED_VOLUME_KIND_AGENT_HOME`: A person's agent's home, which outlives the workspaces that mount it.",
         "x-enum-descriptions": [
           "",
           "A workspace's disk, now or before.",
           "An image a workspace's disk is cloned from.",
           "A release of an extension: the supervisor, the VS Code servers.",
           "A volume the database has and nothing names: a clone being made, or a delete not finished.",
-          "Objects under a volume the database does not have."
+          "Objects under a volume the database does not have.",
+          "A prebuild: the disk of the workspace that built it, which the workspaces opened from it are\n cloned from.",
+          "A person's agent's home, which outlives the workspaces that mount it."
         ]
-      },
-      "spin.v1.SubmitSignatureRequest": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.SignatureKind"
-              }
-            ],
-            "title": "kind"
-          },
-          "subjectId": {
-            "type": "string",
-            "title": "subject_id"
-          },
-          "signed": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.SignedDocument"
-              }
-            ],
-            "title": "signed"
-          }
-        },
-        "title": "SubmitSignatureRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.SubmitSignatureResponse": {
-        "type": "object",
-        "title": "SubmitSignatureResponse",
-        "additionalProperties": false
       },
       "spin.v1.SupervisorState": {
         "type": "string",
@@ -23959,9 +25155,36 @@
           "disabledReason": {
             "type": "string",
             "title": "disabled_reason"
+          },
+          "lastLoginAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "last_login_at",
+            "description": "When they last signed in, by any route; unset for one who never has."
           }
         },
         "title": "User",
+        "additionalProperties": false
+      },
+      "spin.v1.UserHoldings": {
+        "type": "object",
+        "properties": {
+          "apiKeys": {
+            "type": "integer",
+            "title": "api_keys",
+            "format": "int32",
+            "description": "API keys not yet expired."
+          },
+          "teams": {
+            "type": "integer",
+            "title": "teams",
+            "format": "int32"
+          }
+        },
+        "title": "UserHoldings",
         "additionalProperties": false
       },
       "spin.v1.UserSettings": {
@@ -24407,17 +25630,17 @@
               }
             ],
             "title": "durability",
-            "description": "durability is how much of what runs is in the object store. Answered by GetWorkspace only,\n and only for a workspace with a volume: a listing does not ask every volume."
+            "description": "durability is how much of its disk is in the object store, in every state - running,\n stopped or suspended. Answered by GetWorkspace only, and only for a workspace with a volume:\n a listing does not ask every volume."
           },
           "role": {
             "type": "string",
             "title": "role",
             "description": "role is the caller's in it: \"owner\", or \"guest\" - who may connect, see it and open its\n ports, and nothing that changes it."
           },
-          "accessSigned": {
-            "type": "boolean",
-            "title": "access_signed",
-            "description": "access_signed is whether its owner has signed an access of it: nobody logs in until then."
+          "checkoutPath": {
+            "type": "string",
+            "title": "checkout_path",
+            "description": "checkout_path is where the workspace's project is checked out (projects.CheckoutPath), empty\n for a workspace that opened none: where its agent works unless told otherwise. GetWorkspace\n alone says it."
           },
           "memoryMachineGone": {
             "type": "boolean",
@@ -24476,6 +25699,66 @@
             "type": "string",
             "title": "suspended_snapshot_id",
             "description": "The snapshot it was suspended into: its next start resumes it rather than booting its disk.\n Empty when a start boots the disk - never suspended, resumed since, or the snapshot deleted."
+          },
+          "fromPrebuildId": {
+            "type": "string",
+            "title": "from_prebuild_id",
+            "description": "The prebuild its disk is a clone of; empty for one that opened with none."
+          },
+          "agentMinMemoryMb": {
+            "type": "integer",
+            "title": "agent_min_memory_mb",
+            "format": "int32",
+            "description": "What it has to hold for its agent to start there, in MB (the supervisor refuses below it)."
+          },
+          "projectError": {
+            "type": "string",
+            "title": "project_error",
+            "description": "project_error is what its guest last said went wrong with its project - the clone, its\n .spin.yaml or its create tasks - as the guest said it; empty when all of it went, or nothing\n has reported. The next boot tries again. A running workspace with one is DEGRADED."
+          },
+          "ownerId": {
+            "type": "string",
+            "title": "owner_id",
+            "description": "Whose it is: on a team's workspace, which member's. owner_id is in every answer; the name and\n email are answered by GetWorkspace and ListWorkspaces, whose callers - its owner and the\n guests its owner let in - are who may see it at all."
+          },
+          "ownerName": {
+            "type": "string",
+            "title": "owner_name"
+          },
+          "ownerEmail": {
+            "type": "string",
+            "title": "owner_email"
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class",
+            "description": "host_class is the host class it runs on (HostClass.name), from its preset: placed only on a\n host of it, \"default\" where its preset named none."
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.WorkspaceAttempt"
+            },
+            "title": "attempts",
+            "description": "attempts are the attempts its host failed at its current generation, oldest first: each one\n the host retried, and the last when the host ended the generation FAILED. Kept once it\n settles - FAILED says which attempt it was and what the ones before it hit - and gone with\n the next start, which is a new generation. An attempt whose report never reached the control\n plane is not here: the host reports why the attempt before failed, and a lost report is\n replaced by the next."
+          },
+          "projectReportedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "project_reported_at",
+            "description": "project_reported_at is when its guest said how its project went in this run, unset until it\n has: an empty project_error before then is a clone still going, not one that went.\n project_head is the commit it checked out, as the guest said it; empty when it did not say one."
+          },
+          "projectHead": {
+            "type": "string",
+            "title": "project_head"
+          },
+          "hostName": {
+            "type": "string",
+            "title": "host_name",
+            "description": "host_name is the name host_id's machine registered, for a person to tell hosts apart; empty\n with no host, or one that registered none. Answered by GetWorkspace and ListWorkspaces, so a\n list row says where each runs without a status read per row; never placed or trusted by."
           }
         },
         "title": "Workspace",
@@ -24505,6 +25788,42 @@
           "Put down with its memory, to be resumed where it was.",
           "Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n offered when that memory's machine is run by no host (Workspace.memory_machine_gone)."
         ]
+      },
+      "spin.v1.WorkspaceAttempt": {
+        "type": "object",
+        "properties": {
+          "attempt": {
+            "type": "integer",
+            "title": "attempt",
+            "format": "int32",
+            "description": "attempt is its number, from 1, of the host's attempts at the generation (WorkspaceProgress\n .attempts is how many it makes); zero where the host never said which it was on."
+          },
+          "failure": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceFailure"
+              }
+            ],
+            "title": "failure",
+            "description": "Which part failed, and the host's words for why."
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason"
+          },
+          "failedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "failed_at",
+            "description": "failed_at is when the control plane heard that it failed."
+          }
+        },
+        "title": "WorkspaceAttempt",
+        "additionalProperties": false,
+        "description": "WorkspaceAttempt is one attempt a host made at a workspace's generation that failed."
       },
       "spin.v1.WorkspaceCost": {
         "type": "object",
@@ -24578,7 +25897,7 @@
               }
             ],
             "title": "last_published_at",
-            "description": "last_published_at is when its last commit reached the object store, as its host last said."
+            "description": "last_published_at is when its last commit reached the object store, as its host last said;\n from a snapshot, when that snapshot was taken."
           },
           "unpublishedSeconds": {
             "type": "string",
@@ -24603,12 +25922,22 @@
               }
             ],
             "title": "reported_at",
-            "description": "reported_at is the host's report these are as of."
+            "description": "reported_at is the host's report these are as of; unset when they are a snapshot's."
+          },
+          "snapshotId": {
+            "type": "string",
+            "title": "snapshot_id",
+            "description": "snapshot_id is the published snapshot the last copy is, when no host serves the disk, and\n published_bytes how much of the disk it holds. Empty and zero while they are a host's report."
+          },
+          "publishedBytes": {
+            "type": "string",
+            "title": "published_bytes",
+            "format": "int64"
           }
         },
         "title": "WorkspaceDurability",
         "additionalProperties": false,
-        "description": "WorkspaceDurability is what of a running workspace is published, so it survives its host."
+        "description": "WorkspaceDurability is what of a workspace's disk is published, so it survives its host. While\n a host serves the disk - running, or stopped with its disk kept there - it is that host's last\n report; once none does - suspended, or its disk handed back to the store - it is the newest\n published snapshot of the disk (snapshot_id), which is what a start boots from."
       },
       "spin.v1.WorkspaceEvent": {
         "type": "object",
@@ -24718,9 +26047,10 @@
           "WORKSPACE_FAILURE_STOP",
           "WORKSPACE_FAILURE_TIMED_OUT",
           "WORKSPACE_FAILURE_NO_HOST",
-          "WORKSPACE_FAILURE_MACHINE_CHANGED"
+          "WORKSPACE_FAILURE_MACHINE_CHANGED",
+          "WORKSPACE_FAILURE_GUEST_PANIC"
         ],
-        "description": "WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a\n person can do about it - and a failure rate split by the repair it needs - is decided by the\n kind rather than by the text of an error. The reason beside it is the detail.\n\n One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a\n person is shown is the one the host named, with no second list to keep in step.\n\n- `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification.\n- `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says\n  why), or what the disk was to be made from is gone.\n- `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named.\n- `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up.\n- `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for.\n- `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot.\n- `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem.\n- `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory\n  cannot be resumed anywhere, and the control plane boots the disk with the newest releases.\n- `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to: its guest powered off, or its QEMU crashed or was\n  killed.\n- `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed.\n- `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n  attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.\n- `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host\n  that is not connected. The control plane's verdict, never a host's.\n- `WORKSPACE_FAILURE_MACHINE_CHANGED`: Its memory was taken on a machine no host of the installation runs now: the machine's\n  contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n  the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n  owner's to choose (StartWorkspaceRequest.from_disk).",
+        "description": "WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a\n person can do about it - and a failure rate split by the repair it needs - is decided by the\n kind rather than by the text of an error. The reason beside it is the detail.\n\n One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a\n person is shown is the one the host named, with no second list to keep in step.\n\n- `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification.\n- `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says\n  why), or what the disk was to be made from is gone.\n- `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named.\n- `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up.\n- `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for.\n- `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot.\n- `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem.\n- `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory\n  cannot be resumed anywhere, and the control plane boots the disk with the newest releases.\n- `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to, and not by a panic of its guest's kernel: its guest\n  reset it, or its QEMU was killed, exited with an error or crashed. The detail says which.\n- `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed.\n- `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n  attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.\n- `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host\n  that is not connected. The control plane's verdict, never a host's.\n- `WORKSPACE_FAILURE_MACHINE_CHANGED`: Its memory was taken on a machine no host of the installation runs now: the machine's\n  contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n  the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n  owner's to choose (StartWorkspaceRequest.from_disk).\n- `WORKSPACE_FAILURE_GUEST_PANIC`: The guest's kernel panicked, which ended its machine. The cause is inside the guest: the\n  detail quotes the console's panic line, and the console has what led to it.",
         "x-enum-descriptions": [
           "Not classified. A failure that lands here is a site missing its classification.",
           "Its disk could not be served or made: the host is not serving its volume (its refusal says\n why), or what the disk was to be made from is gone.",
@@ -24730,12 +26060,40 @@
           "QEMU could not be prepared or did not boot.",
           "The guest booted and did not take its identity or its own filesystem.",
           "A resume needs an extension release that is no longer in the object store: the memory\n cannot be resumed anywhere, and the control plane boots the disk with the newest releases.",
-          "The machine ended without being asked to: its guest powered off, or its QEMU crashed or was\n killed.",
+          "The machine ended without being asked to, and not by a panic of its guest's kernel: its guest\n reset it, or its QEMU was killed, exited with an error or crashed. The detail says which.",
           "The machine could not be stopped or removed.",
           "Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.",
           "No host could take it: none came with room while it waited, or its disk is only on a host\n that is not connected. The control plane's verdict, never a host's.",
-          "Its memory was taken on a machine no host of the installation runs now: the machine's\n contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n owner's to choose (StartWorkspaceRequest.from_disk)."
+          "Its memory was taken on a machine no host of the installation runs now: the machine's\n contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n owner's to choose (StartWorkspaceRequest.from_disk).",
+          "The guest's kernel panicked, which ended its machine. The cause is inside the guest: the\n detail quotes the console's panic line, and the console has what led to it."
         ]
+      },
+      "spin.v1.WorkspaceGuest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "title": "user_id"
+          },
+          "email": {
+            "type": "string",
+            "title": "email"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "invitedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "invited_at"
+          }
+        },
+        "title": "WorkspaceGuest",
+        "additionalProperties": false
       },
       "spin.v1.WorkspaceHostStatus": {
         "type": "object",
@@ -24759,6 +26117,15 @@
               }
             ],
             "title": "last_heartbeat"
+          },
+          "hostname": {
+            "type": "string",
+            "title": "hostname",
+            "description": "Which host it is, as a person reads it: the name its machine goes by (Host.hostname), and the\n class of the group that launched it (\"default\" for one no group launched). What its owner and\n guests are shown of the host and no more: its capacity, what else it runs and its policy are\n an administrator's (HostService)."
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class"
           }
         },
         "title": "WorkspaceHostStatus",
@@ -25007,9 +26374,10 @@
           "WORKSPACE_STATE_FAILED",
           "WORKSPACE_STATE_DELETED",
           "WORKSPACE_STATE_WAITING",
-          "WORKSPACE_STATE_QUARANTINED"
+          "WORKSPACE_STATE_QUARANTINED",
+          "WORKSPACE_STATE_DEGRADED"
         ],
-        "description": "WorkspaceState is where a workspace is in its life. Each value's comment is what the API's\n document says of it (buf.gen.openapi.yaml's with-enum-value-descriptions), and the website's\n table of states is generated from it: it is written for a person reading that table, in the\n site's words (a runner, the CLI's commands). Why a value is what it is goes in a comment\n apart, above the value's own, which the document does not carry.\n\n- `WORKSPACE_STATE_UNSPECIFIED`: Never a workspace's state: a client that reads it read a field nothing set.\n- `WORKSPACE_STATE_CREATING`: The workspace exists and has not run yet.\n- `WORKSPACE_STATE_STARTING`: A runner is preparing its disk and starting its machine.\n- `WORKSPACE_STATE_RUNNING`: Its machine is up.\n- `WORKSPACE_STATE_STOPPING`: Its machine is shutting down, and then what its disk wrote since its last commit is\n  uploaded to the bucket. A stop stays here until the upload is done, and says why it is not;\n  `spin workspace stop --force` does not wait for it.\n- `WORKSPACE_STATE_STOPPED`: Not running. Its disk is kept, and the next start boots from it.\n- `WORKSPACE_STATE_FAILED`: A start or a stop failed: `spin workspace status` says which part, and why. It stays so\n  until it is started again.\n- `WORKSPACE_STATE_DELETED`: In the trash, with its disk, for the days the installation keeps it there\n  (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation\n  that keeps no trash erases it at once.\n- `WORKSPACE_STATE_WAITING`: Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one\n  is being started, and the workspace starts on it once it is up.\n- `WORKSPACE_STATE_QUARANTINED`: Held by an administrator with `spin workspace quarantine`: it cannot start until\n  `spin workspace unquarantine` releases it, and its disk is kept as it was.",
+        "description": "WorkspaceState is where a workspace is in its life. Each value's comment is what the API's\n document says of it (buf.gen.openapi.yaml's with-enum-value-descriptions), and the website's\n table of states is generated from it: it is written for a person reading that table, in the\n site's words (a runner, the CLI's commands). Why a value is what it is goes in a comment\n apart, above the value's own, which the document does not carry.\n\n- `WORKSPACE_STATE_UNSPECIFIED`: Never a workspace's state: a client that reads it read a field nothing set.\n- `WORKSPACE_STATE_CREATING`: The workspace exists and has not run yet.\n- `WORKSPACE_STATE_STARTING`: A runner is preparing its disk and starting its machine.\n- `WORKSPACE_STATE_RUNNING`: Its machine is up.\n- `WORKSPACE_STATE_STOPPING`: Its machine is shutting down, and then what its disk wrote since its last commit is\n  uploaded to the bucket. A stop stays here until the upload is done, and says why it is not;\n  `spin workspace stop --force` does not wait for it.\n- `WORKSPACE_STATE_STOPPED`: Not running. Its disk is kept, and the next start boots from it.\n- `WORKSPACE_STATE_FAILED`: A start or a stop failed: `spin workspace status` says which part, and why. It stays so\n  until it is started again.\n- `WORKSPACE_STATE_DELETED`: In the trash, with its disk, for the days the installation keeps it there\n  (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation\n  that keeps no trash erases it at once.\n- `WORKSPACE_STATE_WAITING`: Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one\n  is being started, and the workspace starts on it once it is up.\n- `WORKSPACE_STATE_QUARANTINED`: Held by an administrator with `spin workspace quarantine`: it cannot start until\n  `spin workspace unquarantine` releases it, and its disk is kept as it was.\n- `WORKSPACE_STATE_DEGRADED`: Its machine is up, and what was asked of it inside did not finish: its project's checkout,\n  .spin.yaml or create tasks. Everything a running workspace allows is allowed; `spin workspace\n  get` says what failed, and the next boot tries again.",
         "x-enum-descriptions": [
           "Never a workspace's state: a client that reads it read a field nothing set.",
           "The workspace exists and has not run yet.",
@@ -25020,7 +26388,8 @@
           "A start or a stop failed: `spin workspace status` says which part, and why. It stays so\n until it is started again.",
           "In the trash, with its disk, for the days the installation keeps it there\n (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation\n that keeps no trash erases it at once.",
           "Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one\n is being started, and the workspace starts on it once it is up.",
-          "Held by an administrator with `spin workspace quarantine`: it cannot start until\n `spin workspace unquarantine` releases it, and its disk is kept as it was."
+          "Held by an administrator with `spin workspace quarantine`: it cannot start until\n `spin workspace unquarantine` releases it, and its disk is kept as it was.",
+          "Its machine is up, and what was asked of it inside did not finish: its project's checkout,\n .spin.yaml or create tasks. Everything a running workspace allows is allowed; `spin workspace\n get` says what failed, and the next boot tries again."
         ]
       },
       "spin.v1.WorkspaceSuspendFailure": {
@@ -25061,6 +26430,32 @@
         "title": "WorkspaceVolumeStatus",
         "additionalProperties": false,
         "description": "Whether the disk under the workspace is being served. `refusal` is the token an alert\n keys on; `refusal_detail` is the sentence the agent sent with it."
+      },
+      "spin.v1.WriteFileRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "path": {
+            "type": "string",
+            "title": "path",
+            "description": "path is absolute, or relative to root's home."
+          },
+          "content": {
+            "type": "string",
+            "title": "content",
+            "format": "byte"
+          }
+        },
+        "title": "WriteFileRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.WriteFileResponse": {
+        "type": "object",
+        "title": "WriteFileResponse",
+        "additionalProperties": false
       },
       "spin.v1.WritebackPreset": {
         "type": "object",
@@ -25188,11 +26583,19 @@
   "security": [],
   "tags": [
     {
+      "name": "PasskeyService",
+      "description": "PasskeyService is a person's passkeys: WebAuthn credentials of their account, under the\n installation's base domain (internal/passkey). A passkey signs a challenge the control plane\n issued, never a document: what turns a session into a key that logs in (SSHKeyService.AddSSHKey)\n is an assertion of one, so a session alone - stolen, or an agent's - is no shell."
+    },
+    {
       "name": "AuthService"
     },
     {
       "name": "AdminService",
       "description": "AdminService manages installation-wide settings, user management, and resource presets\n Only accessible to instance administrators --- Installation Settings ---"
+    },
+    {
+      "name": "ExecService",
+      "description": "ExecService runs commands and moves files in a running workspace, as its root, for a caller who\n is no terminal: a program or an agent holding a key with workspace:exec. The control plane logs\n in over the same session a terminal's goes over (a host's stream from the guest's vsock, met at\n the control plane rather than at the relay) with a certificate of its own for five minutes, and\n every call is recorded with who made it and on which credential (audit: workspace_exec)."
     },
     {
       "name": "ForgeService",
@@ -25231,12 +26634,8 @@
       "description": "ShareService manages snapshot sharing\n Snapshots can be shared with specific users or made public\n Users can create new workspaces from shared snapshots"
     },
     {
-      "name": "SignatureService",
-      "description": "SignatureService is what only people sign of themselves: who a user's keys are and who a team's\n members are. A host holds every workspace's access to these (internal/roster), so a control\n plane that is taken can say neither which keys are somebody's nor who is in a team. A\n workspace's access is signed through WorkspaceService.SetOwnerWord.\n\n The control plane proposes each document from what it holds - a key registered, a member added -\n and keeps what was signed; it signs nothing. A client shows a person what they are signing and\n signs it with a key of theirs: `spin sign`, with the keys ssh-agent holds, or the terminal's\n page, with a passkey."
-    },
-    {
       "name": "SSHKeyService",
-      "description": "SSHKeyService is the user's own keys, as a registry: the ones a client offers when the owner\n signs a workspace's word (OwnerWord), and the anchor a create may name. A key here logs in to\n nothing on its own - only a key the owner's word for a workspace lists does, there."
+      "description": "SSHKeyService is the keys that log in as the person, to every workspace that lets them in: a key\n of their own, for good, or a browser's or a CLI's enrolled for twelve hours. Each is added with an\n assertion of a passkey of theirs (PasskeyService), so a session alone adds none."
     },
     {
       "name": "TeamService"

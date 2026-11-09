@@ -72,6 +72,11 @@ settings:
   # team_secrets_role: arn:aws:iam::123456789012:role/spin-team-secrets
   # Who makes projects: everyone signed in, or only the installation's admins. Unset, everyone.
   # project_creation: everyone
+  # How many days a ready prebuild may go without a workspace opened from it before it is retired
+  # and its disk given back - the newest of its ref too, so the project's next open starts from the
+  # image. It is built again when its ref moves to another commit, or when an admin runs it.
+  # Counted from its build for one never opened. 0 or unset retires none for this; at most 365.
+  # prebuild_retire_unused_days: 30
   # What a workspace created without a tag of its own runs under, by policy name - the
   # network_policies block below, or a host's own. Unset, it is "offline", the policy every
   # host has and which allows nothing: a workspace nobody chose a policy for reaches nothing

@@ -21,13 +21,14 @@ the link printed pairs your browser with it. Closing the session, with Ctrl-C, e
 forwarding; the server goes on for half an hour with nothing asked of it and no chat running,
 then stops, and its threads stay in the agent's home on the disk.
 
-path defaults to the project's checkout; a workspace with no project is told where to work.
-T3 Code's server is a Node program that wants a workspace of two gigabytes or more: in one of
-a gigabyte the kernel kills it as it starts.
+path defaults to the project's checkout, /workspace/<repository>, and to /workspace in a
+workspace with no project.
+T3 Code's server is a Node program that needs a workspace of 2048 MB or more; the
+supervisor refuses to start it below that and says how to give the workspace more.
 
 Examples:
   spin agent my-workspace
-  spin agent my-workspace /root/app --start
+  spin agent my-workspace /workspace/app --start
   spin agent my-workspace --port 4000
 
 Usage:
@@ -45,9 +46,10 @@ Flags:
       --timeout duration   How long to wait for the workspace to be running; by default, until the control plane gives up on it
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin agent [command] --help" for more information about a command.
 ```
@@ -72,9 +74,10 @@ Flags:
   -h, --help   help for home
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin agent home [command] --help" for more information about a command.
 ```
@@ -91,9 +94,10 @@ Flags:
   -h, --help   help for delete
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 #### spin agent home list
@@ -108,8 +112,9 @@ Flags:
   -h, --help   help for list
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
