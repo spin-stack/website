@@ -95,7 +95,8 @@ tasks:
     desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, the reference against the public sources, the build, and every link.
     cmds:
       - go tool sfw check
-      - go tool taskgate
+      # The Task running this one, which taskgate asks for the task names a workflow step runs.
+      - go tool taskgate -task {{.TASK_EXE}}
       - task: install
       - go vet ./...
       - go test ./...
