@@ -59,6 +59,7 @@ space.
 | `DELETED` | In the trash, with its disk, for the days the installation keeps it there (`workspace_trash_days`): `spin workspace undelete` brings it back, stopped. An installation that keeps no trash erases it at once. |
 | `WAITING` | Wanted running, and no runner has room for it yet. On AWS, where runners scale to none, one is being started, and the workspace starts on it once it is up. |
 | `QUARANTINED` | Held by an administrator with `spin workspace quarantine`: it cannot start until `spin workspace unquarantine` releases it, and its disk is kept as it was. |
+| `DEGRADED` | Its machine is up, and what was asked of it inside did not finish: its project's checkout, .spin.yaml or create tasks. Everything a running workspace allows is allowed; `spin workspace get` says what failed, and the next boot tries again. |
 
 A runner tries a start three times before the workspace is `FAILED`. `spin workspace status`
 says why a workspace is not behaving, and `spin workspace console` shows what its machine printed.

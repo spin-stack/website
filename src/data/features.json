@@ -188,7 +188,7 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "The owner's shell, environment, editor settings, Taskfile and dotfiles reach the guest",
+		"name": "The owner's shell, environment, editor settings, Taskfile and dotfiles reach the guest as they save them",
 		"state": "built",
 		"proof": "e2e:TestAWorkspacesOwnEnvironmentIsInItsOwnersLoginShell",
 		"note": "",
@@ -338,16 +338,6 @@
 	},
 	{
 		"area": "Network",
-		"name": "A workspace trusts the egress root only by its owner's word",
-		"state": "built",
-		"proof": "e2e:TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord",
-		"note": "",
-		"endToEnd": [
-			"go:internal/e2e.TestAGuestTrustsTheEgressRootOnlyByItsOwnersWord"
-		]
-	},
-	{
-		"area": "Network",
 		"name": "What a workspace reached, what it looked up and what it was refused",
 		"state": "built",
 		"proof": "cli:workspace egress",
@@ -482,32 +472,32 @@
 	},
 	{
 		"area": "Access",
-		"name": "Who logs in to a workspace is what its owner signed",
+		"name": "A key logs in only once its person adds it with a passkey: their own for good, a browser's for twelve hours",
 		"state": "built",
-		"proof": "e2e:TestOnlyThePeopleTheAccessNamesLogInToAWorkspace",
+		"proof": "rpc:spin.v1.PasskeyService/BeginPasskeyCeremony",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestOnlyThePeopleTheAccessNamesLogInToAWorkspace"
+			"go:internal/e2e.TestOnlyTheOwnerAndTheirGuestsLogInToAWorkspace"
 		]
 	},
 	{
 		"area": "Access",
-		"name": "Guests of a workspace, invited by its owner",
+		"name": "Guests of a workspace, let in by its owner with a passkey",
 		"state": "built",
 		"proof": "cli:workspace guests",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestOnlyThePeopleTheAccessNamesLogInToAWorkspace"
+			"go:internal/e2e.TestOnlyTheOwnerAndTheirGuestsLogInToAWorkspace"
 		]
 	},
 	{
 		"area": "Access",
 		"name": "A workspace's identity, signed by its host, for the audiences its owner allows",
 		"state": "built",
-		"proof": "e2e:TestAWorkspacesIdentityIsTheHostsSignatureOfWhatItsOwnerSigned",
+		"proof": "e2e:TestAWorkspacesIdentityIsTheHostsSignatureOfItsSet",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestAWorkspacesIdentityIsTheHostsSignatureOfWhatItsOwnerSigned"
+			"go:internal/e2e.TestAWorkspacesIdentityIsTheHostsSignatureOfItsSet"
 		]
 	},
 	{
@@ -533,14 +523,14 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the workspace's Agent tab in the dashboard, which frames the terminal's agent page that carries the client over a passkey's session",
+		"name": "An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the workspace's Agent tab in the dashboard, which frames the client and carries it over a passkey's session",
 		"state": "built",
 		"proof": "cli:agent --port",
 		"note": "The lane has no provider credential, so no test has a model answer through the brokered egress: the server is reached, as the agent's user, and nothing is asked of it. The browser's test drives the page with a virtual authenticator, which no real passkey's maker vouches for.",
 		"endToEnd": [
 			"go:internal/e2e.TestTheSupervisorRunsTheAgentForItsOwner",
 			"go:cmd/cli.TestE2E_TheAgentIsServedOnThisComputerWhileTheSessionIsOpen",
-			"pw:agent.spec.ts:a passkey signs the person in, and the agent runs in their workspace from the terminal's page"
+			"pw:agent.spec.ts:a passkey signs the person in, and the agent runs in their workspace from the dashboard"
 		]
 	},
 	{
@@ -555,6 +545,16 @@
 	},
 	{
 		"area": "Workspaces",
+		"name": "A person signs Claude Code and Codex in once: every workspace of theirs, plain or a project's, is handed the same credentials and hands back each refresh and logout, and a workspace that names a guest holds none",
+		"state": "built",
+		"proof": "e2e:TestAPersonSignsInToTheAgentOnceForEveryWorkspaceOfTheirs",
+		"note": "The lane has no provider account: its login is the file the CLI writes, written as the agent's user. Only a workspace its owner's alone through all it came from holds them: a project opened from its prebuild does, but not a prebuild's build, a copy of another person's snapshot, or one made before the release that keeps the mark.",
+		"endToEnd": [
+			"go:internal/e2e.TestAPersonSignsInToTheAgentOnceForEveryWorkspaceOfTheirs"
+		]
+	},
+	{
+		"area": "Workspaces",
 		"name": "The supervisor runs the agent for its owner while it is used: started, paired and listed over the owner's own session on a socket only root opens, and stopped once nobody has used it for half an hour and no chat is at work",
 		"state": "built",
 		"proof": "rpc:spin.vm.v1.AgentService/Start",
@@ -565,12 +565,12 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "The agent's chats listed on the workspace - titles, paths and times, never a message - reported by its supervisor only with the owner's consent",
+		"name": "The agent's chats listed on the workspace - titles, paths and times, never a message - reported by its supervisor",
 		"state": "built",
 		"proof": "rpc:spin.v1.WorkspaceService/ListAgentThreads",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestTheAgentsThreadsAreListedOnlyWithTheOwnersConsent"
+			"go:internal/e2e.TestTheAgentsThreadsAreListed"
 		]
 	},
 	{
@@ -591,6 +591,36 @@
 		"note": "",
 		"endToEnd": [
 			"go:cmd/cli.TestE2E_ADetachedRunIsFollowedToItsEndAndFilesGoBothWays"
+		]
+	},
+	{
+		"area": "Access",
+		"name": "A program runs a command and reads and writes files in a workspace through the API, with a key that holds workspace:exec, every call recorded with the key it came on",
+		"state": "built",
+		"proof": "rpc:spin.v1.ExecService/Exec",
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestAKeyWithExecRunsACommandInAWorkspaceAndOneWithoutIsRefused"
+		]
+	},
+	{
+		"area": "Access",
+		"name": "An agent works in workspaces through `spin mcp` on a key delegated to it: never more than the key it came from - scopes, team, projects, end, how many workspaces and cores its tree holds - and revoked with it",
+		"state": "built",
+		"proof": "cli:mcp",
+		"note": "",
+		"endToEnd": [
+			"go:cmd/cli.TestE2E_AnAgentDrivesAWorkspaceThroughMCPOnADelegatedKey"
+		]
+	},
+	{
+		"area": "Access",
+		"name": "An agent in a workspace drives others with spin, on a key it gets for the workspace's own SPIFFE identity - a child of the key that made the workspace, through its host, whatever the workspace's network",
+		"state": "built",
+		"proof": "rpc:spin.v1.AuthService/ExchangeWorkloadToken",
+		"note": "No forge in the lane: a workspace reaches no private or host address, and no test repository has a credential in CI yet, so an agent opening a pull request is not run.",
+		"endToEnd": [
+			"go:internal/e2e.TestAnAgentInAWorkspaceDrivesAnotherOnTheIdentityOfItsWorkspace"
 		]
 	},
 	{
@@ -858,12 +888,22 @@
 	},
 	{
 		"area": "Observability",
-		"name": "A workspace's journal and console are collected only with its owner's consent",
+		"name": "A workspace's journal and console are collected as the installation's policy says",
 		"state": "built",
-		"proof": "cli:workspace logs-consent",
+		"proof": "cli:workspace logs",
 		"note": "",
 		"endToEnd": [
 			"go:cmd/cli.TestE2E_AWorkspacesConsoleIsKeptAndSearchable"
+		]
+	},
+	{
+		"area": "Observability",
+		"name": "A workspace's last hour of CPU, memory and network against what it holds, for its owner",
+		"state": "built",
+		"proof": "rpc:spin.v1.WorkspaceService/GetWorkspaceUsage",
+		"note": "Kept on the host, so it starts again with a restart of it or a move; the disk's use is not sampled.",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspacesUsageIsWhatItsHostSampled"
 		]
 	},
 	{

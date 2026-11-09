@@ -7,8 +7,8 @@
 - name: spin
   kind: git
   source: https://github.com/spin-stack/spin
-  version: v20261104.01
-  pin: 2cfbcd74db9e1b599cc29f342d1d35ce1dbe1be9
+  version: v20261108.01
+  pin: dafe286161a95bb1dd1dba3a99f722946ad65961
   track: github-release
   note: >-
     The release the site documents (D2: the newest, exactly). The daily sync moves it to the next
@@ -29,7 +29,7 @@
   kind: git
   source: https://github.com/spin-stack/brand
   version: main
-  pin: b7e4afcc3f5def534915077a2f4fc79a867f0924
+  pin: 85864c646d05aeedc46af942df0f86674283333d
   track: branch
   note: >-
     The palette and the logos. brand cuts no releases, so its main is what it has to say. The

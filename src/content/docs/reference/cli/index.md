@@ -31,28 +31,30 @@ Available Commands:
   help        Help about any command
   login       Authenticate with the platform
   logout      End the profile's session and forget its login
+  mcp         Serve the Model Context Protocol on stdin and stdout, for an agent to work in workspaces
   open        Open a repository, branch, commit or pull request from its URL
   port        Manage exposed ports for workspaces
   project     Manage projects: a repository and the workspace that opens it
   settings    Manage user settings
   share       Manage snapshot sharing
-  sign        Sign what only you can: your keyring and your teams' rosters
   smoke       Check an installation does what its API promises, with a workspace of its own
   snapshot    Take, list and delete a workspace's snapshots
   ssh         SSH into a workspace
   ssh-config  Make every workspace reachable with plain ssh, as the host spin.<workspace>
   ssh-key     Manage SSH keys
   team        Manage teams
-  trust       What this machine trusts of an installation
+  update      Install the CLI of the release your installation runs
   version     Print version information
+  vscode      The Spinbox extension for VS Code
   whoami      Show current user info
   workspace   Manage workspaces
 
 Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -h, --help             help for spin
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -h, --help                 help for spin
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin [command] --help" for more information about a command.
 ```
@@ -66,19 +68,20 @@ Use "spin [command] --help" for more information about a command.
 - [`spin git`](/reference/cli/git/): Your accounts on forges: GitHub, connected through this installation's app
 - [`spin login`](/reference/cli/login/): Authenticate with the platform
 - [`spin logout`](/reference/cli/logout/): End the profile's session and forget its login
+- [`spin mcp`](/reference/cli/mcp/): Serve the Model Context Protocol on stdin and stdout, for an agent to work in workspaces
 - [`spin open`](/reference/cli/open/): Open a repository, branch, commit or pull request from its URL
 - [`spin port`](/reference/cli/port/): Manage exposed ports for workspaces
 - [`spin project`](/reference/cli/project/): Manage projects: a repository and the workspace that opens it
 - [`spin settings`](/reference/cli/settings/): Manage user settings
 - [`spin share`](/reference/cli/share/): Manage snapshot sharing
-- [`spin sign`](/reference/cli/sign/): Sign what only you can: your keyring and your teams' rosters
 - [`spin smoke`](/reference/cli/smoke/): Check an installation does what its API promises, with a workspace of its own
 - [`spin snapshot`](/reference/cli/snapshot/): Take, list and delete a workspace's snapshots
 - [`spin ssh`](/reference/cli/ssh/): SSH into a workspace
 - [`spin ssh-config`](/reference/cli/ssh-config/): Make every workspace reachable with plain ssh, as the host spin.<workspace>
 - [`spin ssh-key`](/reference/cli/ssh-key/): Manage SSH keys
 - [`spin team`](/reference/cli/team/): Manage teams
-- [`spin trust`](/reference/cli/trust/): What this machine trusts of an installation
+- [`spin update`](/reference/cli/update/): Install the CLI of the release your installation runs
 - [`spin version`](/reference/cli/version/): Print version information
+- [`spin vscode`](/reference/cli/vscode/): The Spinbox extension for VS Code
 - [`spin whoami`](/reference/cli/whoami/): Show current user info
 - [`spin workspace`](/reference/cli/workspace/): Manage workspaces

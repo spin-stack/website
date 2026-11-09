@@ -1,6 +1,6 @@
 {
 	"datapath": {
-		"source": "https://github.com/spin-stack/spin/blob/2cfbcd74db9e1b599cc29f342d1d35ce1dbe1be9/docs/network/datapath",
+		"source": "https://github.com/spin-stack/spin/blob/dafe286161a95bb1dd1dba3a99f722946ad65961/docs/network/datapath",
 		"width": 552,
 		"words": [
 			"How a packet leaves a workspace",
@@ -56,8 +56,8 @@
 		]
 	},
 	"egress-policy": {
-		"source": "https://github.com/spin-stack/spin/blob/2cfbcd74db9e1b599cc29f342d1d35ce1dbe1be9/docs/network/egress-policy",
-		"width": 854,
+		"source": "https://github.com/spin-stack/spin/blob/dafe286161a95bb1dd1dba3a99f722946ad65961/docs/network/egress-policy",
+		"width": 923,
 		"words": [
 			"What the forward chain decides, in order",
 			"a packet from a machine",
@@ -66,16 +66,30 @@
 			"10/8 · 172.16/12 · 192.168/16 · 127/8",
 			"169.254/16 · 100.64/10 · 224/4 · 240/4",
 			"+ every address the node answers on",
+			"1a · ip dscp \u003cagent's mark\u003e",
+			"an agent's packet: only the egress proxy",
+			"stands in for what it may reach",
+			"no",
+			"dropped, and counted",
+			"match",
+			"1b · oifname wan0 ct state established,related",
+			"what the machine already had open",
+			"no",
+			"match",
+			"1c · ip saddr @held",
+			"a machine taken back from the last runner,",
+			"until its record says what it carries",
+			"no",
+			"accepted - and recorded in @observed",
+			"machine . destination, with a counter, 6 h",
+			"match",
 			"2 · ip saddr @tag_\u003cname\u003e ip daddr \u003callowed\u003e",
 			"what a tag permits",
 			"no",
-			"dropped, and counted",
 			"match",
 			"3 · ip saddr @tag_\u003cname\u003e",
 			"and nothing else, when the tag says so",
 			"no",
-			"accepted - and recorded in @observed",
-			"machine . destination, with a counter, 6 h",
 			"match",
 			"4 · oifname wan0",
 			"the default: open beyond the node",
@@ -104,6 +118,8 @@
 			"2 and 3 are between them, so a tag cannot open the node and a",
 			"tag that closes a machine is reached by what its own rules did",
 			"not claim.",
+			"1c is after 1b, so a runner's restart cuts nothing a machine",
+			"had open, and before 4, which a machine in no tag set reaches.",
 			"4 is open on purpose. There is no allowlist to write yet, so",
 			"the accept records where it went instead - see @observed, and",
 			"`SIGUSR1` to the runner."
@@ -157,7 +173,7 @@
 		]
 	},
 	"isolation": {
-		"source": "https://github.com/spin-stack/spin/blob/2cfbcd74db9e1b599cc29f342d1d35ce1dbe1be9/docs/network/isolation",
+		"source": "https://github.com/spin-stack/spin/blob/dafe286161a95bb1dd1dba3a99f722946ad65961/docs/network/isolation",
 		"width": 499,
 		"words": [
 			"Same address, different segment",
@@ -204,7 +220,7 @@
 		]
 	},
 	"traffic": {
-		"source": "https://github.com/spin-stack/spin/blob/2cfbcd74db9e1b599cc29f342d1d35ce1dbe1be9/docs/security/traffic",
+		"source": "https://github.com/spin-stack/spin/blob/dafe286161a95bb1dd1dba3a99f722946ad65961/docs/security/traffic",
 		"width": 1889,
 		"words": [
 			"Traffic: every arrow is a connection opened in its direction, and nothing else is let in",

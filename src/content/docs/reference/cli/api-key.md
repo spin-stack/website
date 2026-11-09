@@ -29,9 +29,10 @@ Flags:
   -h, --help   help for api-key
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin api-key [command] --help" for more information about a command.
 ```
@@ -44,12 +45,17 @@ Create a new API key for programmatic access.
 The secret key will only be shown once. Make sure to save it securely.
 
 A key can do only what its scopes name, and needs at least one. It can never
-create API keys, confirm a login, or administer the instance.
+confirm a login or administer the instance. A key with keys:delegate makes keys of
+its own, run with it as SPIN_TOKEN: each holds no more than it does - its scopes,
+team, projects, end and bounds - and goes when it is revoked.
 
 Available scopes:
   workspace:read   - Read workspaces, snapshots and ports
   workspace:write  - Create, start, stop and change workspaces; open a terminal
   workspace:delete - Delete workspaces
+  workspace:exec   - Run commands and read and write files in workspaces, as root;
+                     made with your passkey, in the dashboard
+  keys:delegate    - Make keys of its own, holding no more than it does
   team:read        - Read teams and their members
   team:write       - Manage teams and members
   settings:read    - Read user settings and SSH keys
@@ -63,14 +69,19 @@ Usage:
   spin api-key create <name> [flags]
 
 Flags:
-      --expires string   How long the key lasts, at most a year: a whole number of d, w or y (30d, 2w, 1y), or a duration like 36h (default "90d")
-  -h, --help             help for create
-      --scope strings    Scopes for the key (can be repeated)
+      --expires string         How long the key lasts, at most a year: a whole number of d, w or y (30d, 2w, 1y), or a duration like 36h (default "90d")
+  -h, --help                   help for create
+      --max-cores int32        How many cores their workspaces may hold at once
+      --max-workspaces int32   How many workspaces the key and the keys it delegates may hold at once
+      --project strings        A project whose workspaces the key reaches, by id (can be repeated; default: any)
+      --scope strings          Scopes for the key (can be repeated)
+      --team string            The one team whose workspaces the key reaches (default: every team you are in)
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin api-key list
@@ -85,9 +96,10 @@ Flags:
   -h, --help   help for list
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 ### spin api-key revoke
@@ -103,8 +115,9 @@ Flags:
   -y, --yes    Skip confirmation
 
 Global Flags:
-      --config string    config file (default is $HOME/.spin/config.yaml)
-  -o, --output string    text for a person, or json: one document of what the API answered, and no prose (default "text")
-      --profile string   named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
