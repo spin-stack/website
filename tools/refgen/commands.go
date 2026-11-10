@@ -152,9 +152,13 @@ func shellLines(path string) ([]shellLine, error) {
 	return out, sc.Err()
 }
 
+// placeholder is a value a page leaves to its reader, <workspace> or <api-key>: part of a word,
+// where a bare < or > is a redirection.
+var placeholder = regexp.MustCompile(`^<[A-Za-z][\w-]*>`)
+
 // shellCommands splits a line into its commands, each its words with the quotes removed: a pipe
-// or a list operator starts the next one, a redirection's target is nobody's word, and a
-// comment ends the line.
+// or a list operator starts the next one, a redirection's target is nobody's word, a
+// placeholder is a word like any other, and a comment ends the line.
 func shellCommands(s string) [][]string {
 	var cmds [][]string
 	var words []string
@@ -171,8 +175,20 @@ func shellCommands(s string) [][]string {
 		w.Reset()
 		inWord = false
 	}
-	for _, r := range s {
+	skip := 0
+	for i, r := range s {
+		if skip > 0 {
+			skip--
+			w.WriteRune(r)
+			continue
+		}
 		switch {
+		case quote == 0 && r == '<' && placeholder.MatchString(s[i:]):
+			// Its runes are ASCII, so the bytes matched are the runes to take.
+			skip = len(placeholder.FindString(s[i:])) - 1
+			w.WriteRune(r)
+			inWord = true
+			continue
 		case quote != 0:
 			if r == quote {
 				quote = 0
