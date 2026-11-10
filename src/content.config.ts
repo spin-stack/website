@@ -9,8 +9,14 @@ export const collections = {
 	docs: defineCollection({
 		loader: docsLoader(),
 		// A generated page names its source as repository:path (tools/refgen), which the footer links.
+		// A hand-written one names what it reads, each with the release it was last read against,
+		// which refgen holds it to (tools/refgen/reads.go).
 		schema: docsSchema({
-			extend: z.object({ description: z.string().min(20), source: z.string().regex(/^[\w-]+:\S+$/).optional() }),
+			extend: z.object({
+				description: z.string().min(20),
+				source: z.string().regex(/^[\w-]+:\S+$/).optional(),
+				reads: z.array(z.string().regex(/^[\w-]+:[^@\s]+@[\w.-]+$/)).optional(),
+			}),
 		}),
 	}),
 };

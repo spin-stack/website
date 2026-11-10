@@ -227,6 +227,10 @@ func pinReleases(docs, release, module string, check bool) ([]string, error) {
 		}
 		lines := bytes.Split(raw, []byte("\n"))
 		for i, line := range lines {
+			// A read's stamp is the release the page was read against, not one it names.
+			if readLine.Match(line) {
+				continue
+			}
 			lines[i] = pinned.ReplaceAllFunc(line, func(m []byte) []byte {
 				sub := pinned.FindSubmatch(m)
 				switch {

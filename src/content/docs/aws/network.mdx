@@ -1,6 +1,10 @@
 ---
 title: Network
 description: What the internet can reach in an installation, which machine talks to which on what port, and how to close the installation to your own networks.
+reads:
+  - "spin-terraform-aws:modules/controlplane/network.tf@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/logging.tf@v20261027.02"
+  - "spin:docs/security/traffic.md@v20261108.01"
 ---
 
 import Figure from '../../../components/Figure.astro';
@@ -58,7 +62,8 @@ outside the VPC.
 ## What crossed the network is kept
 
 The VPC's flow log goes to CloudWatch for <Value name="logRetentionDays" /> (`log_retention_days`); `flow_logs = false`
-turns it off. `dns_query_logs = true` turns on Route 53 Resolver's query log.
+turns it off, and `dns_query_logs = true` turns on Route 53 Resolver's query log. The three are
+variables of the control plane's module, which the root module leaves at their defaults.
 
 A workspace's own traffic is controlled separately, by its network policies, on the runner. See
 [Network and egress](/concepts/network/).

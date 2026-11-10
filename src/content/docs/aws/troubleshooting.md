@@ -1,6 +1,11 @@
 ---
 title: Troubleshooting
 description: Where to look when an installation does not come up, a workspace waits for a host, a start fails, or a workspace cannot reach something.
+reads:
+  - "spin-terraform-aws:outputs.tf@v20261027.02"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
+  - "spin:cmd/cli/cmd/status.go@v20261108.01"
+  - "spin:docs/runbook.md@v20261108.01"
 ---
 
 ## A machine does not come up
@@ -9,7 +14,7 @@ Each machine's group says `InService` when the machine is serving. What its boot
 CloudWatch, even for machines that are gone:
 
 ```bash
-tofu output -raw boot_log   # prints the command that tails every machine's boot log
+tofu output boot_log   # by role, the command that tails its machines' boot logs
 aws autoscaling describe-scaling-activities --auto-scaling-group-name <group> --max-items 3
 ```
 
@@ -19,7 +24,10 @@ means the image and `spin_version` disagree: the images the module names are tho
 
 ## A shell on a machine
 
-No machine runs SSH. Open a shell with Session Manager, on the machine in service:
+No machine runs SSH. The control plane's and the proxy's machines take a shell with Session
+Manager, on the one in service. A runner takes none: its image carries no agent and its role
+grants none, so its serial console, its boot log and its metrics say what it does, and one that
+fails is replaced.
 
 ```bash
 aws autoscaling describe-auto-scaling-groups \
@@ -43,8 +51,8 @@ Spin OS has the tools to look with — `tcpdump`, `strace`, `ss`, `nft`, `conntr
 
 A workspace waits in *Waiting for a host* while no runner has room for it, and says why.
 
-- **No runner is up.** The control plane has asked for one. The first runner takes a minute or
-  two to boot and register.
+- **No runner is up.** The control plane has asked for one. The first runner takes a few
+  minutes to boot and register.
 - **The runner cannot start.** The account's spot vCPU quota is too low, or spot has no capacity
   for the types named. `describe-scaling-activities` on `<name>-runners` says which. See
   [Before you start](/aws/prerequisites/#room-for-runners).
@@ -61,7 +69,7 @@ spin admin runner activate <runner-id>
 ## A workspace does not start, or misbehaves
 
 ```bash
-spin workspace status <name>     # which party disagrees: control plane, runner, disk, supervisor, machine
+spin workspace status <name>     # which party disagrees: control plane, supervisor, host, volume
 spin workspace console <name>    # what the machine printed while it booted
 spin workspace history <name>    # every change of state, with the reason
 ```
@@ -78,8 +86,7 @@ searching for `span_name:workspace.start`.
 spin workspace egress <name>
 ```
 
-It lists what was refused, with the policy that refused it, and the lookups that failed, with
-why. A destination refused by policy is fixed with a policy (`spin workspace retag`), not with the
+It lists what the workspace reached, what was refused, and the lookups that failed, with why. A destination refused by policy is fixed with a policy (`spin workspace retag`), not with the
 network. The record lives only while the workspace runs: start it and try again before reading
 it.
 

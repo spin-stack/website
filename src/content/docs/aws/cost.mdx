@@ -1,6 +1,10 @@
 ---
 title: Cost
 description: "What an installation costs on AWS: the small part that runs all the time, the runners that run only while workspaces do, and the settings that change it."
+reads:
+  - "spin-terraform-aws:variables.tf@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/variables.tf@v20261027.02"
+  - "spin-terraform-aws:modules/runners/variables.tf@v20261027.02"
 ---
 
 import Scenarios from '../../../components/Scenarios.astro';
@@ -64,7 +68,7 @@ a forgotten workspace does not keep a runner up all night. See
 | `runner_spot = false` | On-demand runners: more expensive, never reclaimed |
 | `runner_instance_types` | Smaller or larger runners |
 | `instance_type`, `proxy_instance_type` | The size of the control plane and the proxy |
-| `flow_logs`, `log_retention_days` | What is kept in CloudWatch |
+| `flow_logs`, `log_retention_days` | What is kept in CloudWatch. Variables of the control plane's module, which the root module leaves at their defaults. |
 
 ## Storage
 

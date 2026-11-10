@@ -1,6 +1,10 @@
 ---
 title: Install on AWS
 description: What an installation on AWS is made of, what the OpenTofu module creates in your account, and the choices it makes for you.
+reads:
+  - "spin-terraform-aws:README.md@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
 ---
 
 import Figure from '../../../components/Figure.astro';
@@ -57,7 +61,7 @@ These are made for you, and each one has a reason:
 |---|---|
 | Every machine is replaced to update, never patched | Its root filesystem is read-only and verified; a machine runs exactly what the release signed. |
 | The proxy is the only machine the internet reaches | The control plane, the runners and the database take no connection from outside the VPC. |
-| No SSH on any machine | A shell is AWS Session Manager, decided by IAM and logged by AWS. |
+| No SSH on any machine | A shell on the control plane or the proxy is AWS Session Manager, decided by IAM and logged by AWS. A runner takes none. |
 | No NAT gateway | It would cost more than the machines that run all the time. |
 | Runners are spot and start from zero | They are the largest cost, and they only cost while a workspace runs. |
 | Runners join by their IAM role | There is no join token to create, store, rotate or leak. |

@@ -67,6 +67,16 @@ tasks:
       - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -brand {{.BRAND}} -shots {{.SHOTS}} -check
       - go run ./tools/pricing -terraform {{.TERRAFORM}} -check
 
+  # A hand-written page names what it reads and the release it was read against (tools/refgen's
+  # reads.go), and reference:check fails once that has changed. This is the answer: after reading
+  # the page against the diff the check named, and correcting it.
+  reviewed:
+    desc: Stamp a hand-written page's reads with the sources as they are - PAGE=src/content/docs/<page> - once it has been read against what changed.
+    requires:
+      vars: [PAGE]
+    cmds:
+      - go run ./tools/refgen -spin {{.SPIN}} -terraform {{.TERRAFORM}} -reviewed {{.PAGE}}
+
   reference:public:
     desc: Fail if what the site has of spin-terraform-aws and brand is not what they say at the commits versions.yaml pins. Needs no spin checkout, nor any credential.
     # A fork's pull request has no token to read spin with, and this half needs nothing of it:

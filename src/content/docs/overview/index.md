@@ -1,6 +1,8 @@
 ---
 title: What is Spinbox
 description: What Spinbox is, who it is for, what it lets you do, and the projects an installation is made of.
+reads:
+  - "spin:internal/features/features.go@v20261108.01"
 ---
 
 Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code. You

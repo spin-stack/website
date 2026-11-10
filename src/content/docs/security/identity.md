@@ -1,6 +1,10 @@
 ---
 title: Identity and access
 description: How users, API keys, runners and machines prove who they are, how every request is authorized, and what limits each machine's cloud role.
+reads:
+  - "spin:docs/security/README.md@v20261108.01"
+  - "spin:internal/controlplane/server/middleware/scopes.go@v20261108.01"
+  - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
 ---
 
 ## Users
@@ -78,8 +82,9 @@ key, the first password and the installation's configuration. Session Manager is
 policy of the module's own, not by AWS's managed policy, which would let any machine read every
 parameter in the account.
 
-The machines' metadata service requires **IMDSv2**. No machine runs SSH: a shell is Session
-Manager, decided by IAM and logged by AWS.
+The machines' metadata service requires **IMDSv2**. No machine runs SSH: a shell on the
+control plane or the proxy is Session Manager, decided by IAM and logged by AWS, and a runner
+takes none.
 
 ## What reaches the control plane
 

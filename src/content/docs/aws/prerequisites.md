@@ -1,6 +1,10 @@
 ---
 title: Before you start
 description: The tools, AWS account, region, domain and spot quota you need before installing Spinbox on AWS.
+reads:
+  - "spin-terraform-aws:modules/controlplane/dns.tf@v20261027.02"
+  - "spin-terraform-aws:modules/runners/variables.tf@v20261027.02"
+  - "spin-terraform-aws:modules/runners/quota.tf@v20261027.02"
 ---
 
 ## Tools
@@ -55,10 +59,12 @@ aws service-quotas list-requested-service-quota-change-history --service-code ec
 
 ```bash
 aws ec2 get-spot-placement-scores --target-capacity 1 --region-names <region> \
-  --instance-types <the types>
+  --single-availability-zone --instance-requirements-with-metadata \
+  '{"ArchitectureTypes":["x86_64"],"InstanceRequirements":{"VCpuCount":{"Min":32,"Max":48},"MemoryMiB":{"Min":65536},"LocalStorage":"required","AllowedInstanceTypes":["c8id.*","m8id.*","r8id.*"]}}'
 ```
 
-Below 7, name more types in `runner_instance_types`, or use on-demand with `runner_spot = false`.
+Below 7, widen `runner_vcpus`, give the runners an EBS data volume (`runner_data_volume_gb`,
+which lets the types without a local NVMe in too), or use on-demand with `runner_spot = false`.
 
 In a region where none of these types has local NVMe, give runners an EBS data volume with
 `runner_data_volume_gb`.

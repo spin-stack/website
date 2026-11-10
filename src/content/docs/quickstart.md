@@ -1,6 +1,11 @@
 ---
 title: Quickstart
 description: Sign in to an installation, create a workspace, take a snapshot, change something, see the diff, and go back.
+reads:
+  - "spin:cmd/cli/cmd/auth.go@v20261108.01"
+  - "spin:cmd/cli/cmd/sshkey.go@v20261108.01"
+  - "spin:cmd/cli/cmd/snapshot.go@v20261108.01"
+  - "spin:cmd/cli/cmd/port.go@v20261108.01"
 ---
 
 This page uses an installation that already exists. To make one, see
