@@ -1,6 +1,8 @@
 ---
 title: Reporting a vulnerability
 description: How to report a security problem in Spinbox privately, and what to include.
+reads:
+  - "spin:SECURITY.md@v20261108.01"
 ---
 
 Report a vulnerability through a private security advisory on spin's repository, never in a

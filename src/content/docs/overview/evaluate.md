@@ -1,6 +1,10 @@
 ---
 title: Evaluate Spinbox
 description: What Spinbox is, what it costs, how to try it on one Linux machine, what this release does not do, and how to install it - in that order.
+reads:
+  - "spin:hack/kvm-runner-check.sh@v20261108.01"
+  - "spin:taskfiles/e2e.yml@v20261108.01"
+  - "spin-terraform-aws:README.md@v20261027.02"
 ---
 
 Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code,

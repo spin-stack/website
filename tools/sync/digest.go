@@ -35,6 +35,9 @@ var read = []feed{
 
 var (
 	sourceLine = regexp.MustCompile(`(?m)^source: "spin:([^"]+)"$`)
+	// What a hand-written page reads (tools/refgen/reads.go): the commits that touch it are the
+	// ones its page is read against before it is stamped again.
+	readsLine  = regexp.MustCompile(`(?m)^  - "spin:([^@"]+)@[\w.-]+"$`)
 	figureName = regexp.MustCompile(`<Figure\s+name="([^"]+)"`)
 	blobPath   = regexp.MustCompile(`^https://github\.com/spin-stack/spin/blob/[0-9a-f]{40}/(.+)$`)
 )
@@ -57,6 +60,9 @@ func feeds(docs, figures string) ([]feed, error) {
 		}
 		page := pageName(docs, path)
 		for _, m := range sourceLine.FindAllSubmatch(raw, -1) {
+			by[string(m[1])] = append(by[string(m[1])], page)
+		}
+		for _, m := range readsLine.FindAllSubmatch(raw, -1) {
 			by[string(m[1])] = append(by[string(m[1])], page)
 		}
 		for _, m := range figureName.FindAllSubmatch(raw, -1) {

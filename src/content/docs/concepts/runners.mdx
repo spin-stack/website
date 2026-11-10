@@ -1,6 +1,11 @@
 ---
 title: Runners and hosts
 description: What a runner is, how it joins, how workspaces are placed on it, how runners scale from zero, and what happens when one is lost.
+reads:
+  - "spin:docs/runners.md@v20261108.01"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261108.01"
+  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261108.01"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
 ---
 
 import Value from '../../../components/Value.astro';
@@ -40,7 +45,9 @@ memory. It prefers the runner holding fewer of the same team's workspaces, so on
 pile onto one machine. A runner whose local disk is more than 70% full stops taking new
 workspaces until it is back under 65%.
 
-There is no way yet to ask for a particular kind of runner, such as one with a GPU.
+A preset may name a **host class**, a kind of runner, and its workspaces are placed only on
+runners of that class. An installation the module's current release makes has one class,
+`default`, and every runner is of it.
 
 ## Scaling from zero
 

@@ -1,6 +1,11 @@
 ---
 title: Editors and SSH
 description: Connect to a workspace with spin ssh, plain ssh, scp and rsync, VS Code Remote-SSH, or the terminal in the dashboard.
+reads:
+  - "spin:cmd/cli/cmd/ssh.go@v20261108.01"
+  - "spin:cmd/cli/cmd/sshconfig.go@v20261108.01"
+  - "spin:cmd/cli/cmd/code.go@v20261108.01"
+  - "spin:cmd/cli/cmd/exec.go@v20261108.01"
 ---
 
 Every way into a workspace goes through the installation's relay. You never need network access

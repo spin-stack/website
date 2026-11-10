@@ -1,6 +1,10 @@
 ---
 title: Ports and sharing
 description: How to reach a service running in a workspace over HTTPS, who can reach it, and how to share it with other users or make it public.
+reads:
+  - "spin:cmd/cli/cmd/port.go@v20261108.01"
+  - "spin:cmd/cli/cmd/portaccess.go@v20261108.01"
+  - "spin:cmd/cli/cmd/share.go@v20261108.01"
 ---
 
 A service listening on a TCP port in a workspace can be reached through the installation's

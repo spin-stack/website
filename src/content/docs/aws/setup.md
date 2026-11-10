@@ -1,6 +1,10 @@
 ---
 title: Install
 description: Install Spinbox in an AWS account step by step, from the state bucket to the first sign-in and the first workspace.
+reads:
+  - "spin-terraform-aws:outputs.tf@v20261027.02"
+  - "spin-terraform-aws:examples/complete/main.tf@v20261027.02"
+  - "spin-terraform-aws:bootstrap/main.tf@v20261027.02"
 ---
 
 Read [Before you start](/aws/prerequisites/) first: the region must be one the release has
@@ -41,13 +45,8 @@ domain       = "spin.example.com"
 # region = "us-west-2"   # the region bootstrap was applied in
 ```
 
-The example exports `dashboard` and `next_steps`. Export the two you will want when you
-[update](/aws/update/) as well:
-
-```hcl
-output "update_status" { value = module.spin.update_status }
-output "boot_log"      { value = module.spin.boot_log }
-```
+The example exports `dashboard` and `next_steps`, and the two you will want when you
+[update](/aws/update/): `update_status` and `boot_log`.
 
 The example also sets the runners' idle time, quiet hours and the most runners at once. Every
 variable is in the [module reference](/reference/terraform/root/). The ones most installations

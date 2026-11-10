@@ -43,8 +43,12 @@ func run() error {
 	figuresData := flag.String("figures", "src/data/figures.json", "each diagram's source and words, for its Markdown twin")
 	pinned := flag.String("versions", "versions.yaml", "what the sources are pinned at, which reference.json must record")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
+	reviewed := flag.String("reviewed", "", "a hand-written page just read against what it reads: stamp its reads with the checkouts as they are, and do nothing else")
 	flag.Parse()
 
+	if *reviewed != "" {
+		return stampPage(*reviewed, map[string]checkout{"spin": {root: *spin}, "spin-terraform-aws": {root: *tf}})
+	}
 	withSpin, err := parseOnly(*only)
 	if err != nil {
 		return err
@@ -169,6 +173,7 @@ func run() error {
 		func() ([]string, error) { return checkPins(*pinned, r) },
 		func() ([]string, error) { return checkDomains(*docs, *tf) },
 		func() ([]string, error) { return checkTofu(*docs, *tf) },
+		func() ([]string, error) { return checkReads(*docs, from) },
 	} {
 		b, err := c()
 		if err != nil {

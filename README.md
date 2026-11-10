@@ -66,6 +66,14 @@ that is not one task (`taskgate`).
   a runner out its `docs/runners.md`, each reviewed in spin beside the code it describes. Edit the
   document, not the page; the other pages link to it instead of saying it again. It is checked as
   any page is, so a command it quotes that the CLI no longer has fails here and is fixed there.
+- **A hand-written page names what it reads**, in its frontmatter, each with the release it was
+  last read against: `reads: ["spin:docs/storage/README.md@v20261108.01"]`. What a page says in
+  prose no check reads, so `task reference:check` says when the file a page describes has changed
+  since: the page, the file and the diff to read. Read the page against it, correct it, and
+  `task reviewed PAGE=src/content/docs/<page>` stamps its reads with the sources as they are. A
+  read is a file, the narrowest whose change would make the page wrong; a page with none fails,
+  but for the two whose every claim another check holds (`unsealed` in `tools/refgen/reads.go`).
+  The sync's issue in spin lists the commits that touched each read under its page.
 - **Prose held to spin's own lists**: a page's description is one line of at most 160
   characters (it is its line in `llms.txt`), every `SPIN_` variable a page names is one spin's
   `hack/env-catalog.txt` lists, and the table of states in `concepts/workspaces.md` is the API's
