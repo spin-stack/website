@@ -50,7 +50,8 @@ disk. If no runner is up, it waits in *Waiting for a host* for the few minutes o
 start; `--wait` waits for it.
 
 A workspace lets you in with an SSH key you added with your passkey. Add one once, from this
-machine: the command opens the page where your passkey confirms it, and waits.
+machine: the command opens the page where your passkey confirms it, and waits. See
+[Who gets into your workspaces](/use/access/).
 
 ```bash
 spin ssh-key add laptop ~/.ssh/id_ed25519.pub

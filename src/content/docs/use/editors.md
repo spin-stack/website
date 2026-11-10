@@ -8,19 +8,15 @@ to the runner or to the workspace, only to `https://app.<domain>`.
 
 ## A key that logs in as you
 
-A workspace lets in its owner and the guests the owner let in, each with an SSH key that logs in
-as them, and a key logs in as you only once you add it with your passkey:
+Everything below - `spin ssh`, plain `ssh`, `spin exec`, VS Code - logs in with an SSH key you
+added once, with your passkey:
 
 ```bash
 spin ssh-key add laptop ~/.ssh/id_ed25519.pub
-spin ssh-key list
 ```
 
-`spin ssh-key add` opens the page where your passkey confirms the key, and waits until it has.
-Your first passkey is registered from the dashboard. A key is added once and stays until you
-delete it; a session, an API key or an agent cannot add one, so none of them gets a shell in
-your workspace. Everything below - `spin ssh`, plain `ssh`, `spin exec`, VS Code - logs in with
-a key added this way.
+[Who gets into your workspaces](/use/access/) says what a passkey is for, which keys log in,
+and how a guest is let in.
 
 ## `spin ssh`
 
@@ -102,11 +98,5 @@ its output is safe to pipe.
 
 ## Letting someone else in
 
-```bash
-spin workspace guests add api ana@example.com
-spin workspace guests remove api ana@example.com
-```
-
-Adding a guest is confirmed with your passkey. A guest logs in with a key of their own, sees the
-workspace and opens its ports as private, and cannot start, stop, snapshot or delete it. Inside
-the machine a guest is `root`, as you are: share a workspace with somebody you trust with it.
+`spin workspace guests add` lets a person into a workspace of yours, with a key of their own:
+see [Sharing a workspace](/use/access/#sharing-a-workspace).

@@ -39,14 +39,9 @@ falls under 65%. The automatic cordon never clears one a person set.
 spin admin runner revoke <runner-id>
 ```
 
-Revoke is for a machine that should never connect again: it is being replaced, or it may be
-compromised. Its credentials are deleted and it is disconnected. **It cannot be undone**: the
-runner's id is burned, and the capacity comes back only with a new machine, which joins as a new
-runner. If the machine may be compromised, do not reuse its disk.
-
-A runner that holds workspaces' disks is refused, and the refusal names them. Delete or move them
-first, or revoke anyway with `--leave-workspaces`; each of them can then run again only once it is
-recovered onto another runner, losing what the revoked one had not uploaded.
+Revoke is for a machine that should never connect again, and **cannot be undone**.
+[Taking a runner out, and bringing it back](/admin/runners/) says what each action leaves
+behind, what a revoke refuses, and how the capacity comes back.
 
 ## Replacing a runner's machine on AWS
 
@@ -66,12 +61,9 @@ and there is nothing to replace.
 
 ## Workspaces on a runner that is gone
 
-A workspace whose runner was revoked or is gone stops, in the record. Its owner moves it with
-**Move to another runner** on its page, or `spin workspace recover`. See
-[Workspaces](/concepts/workspaces/#when-a-runner-is-lost).
-
-To have the control plane move them on its own when little would be lost, set
-`rehome_after_seconds` and `rehome_max_unpublished_bytes` in the
+A workspace whose runner was revoked or is gone stops, in the record, and its owner moves it: see
+[A workspace on a runner that is gone](/admin/runners/#a-workspace-on-a-runner-that-is-gone).
+The thresholds that let the control plane move them on its own are in the
 [installation settings](/admin/configuration/).
 
 ## A runner outside the group

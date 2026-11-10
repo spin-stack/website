@@ -85,3 +85,20 @@ func TestShellCommandsKeepWhatFollowsAPlaceholder(t *testing.T) {
 		}
 	}
 }
+
+// A document of spin's becomes a page: its heading the title, its bare blocks of spin commands
+// named as shell so the CLI check reads them, a log's block left alone.
+func TestSpinDocBecomesAPage(t *testing.T) {
+	title, body, err := titled([]byte("# Who gets in\n\nYou.\n"))
+	if err != nil || title != "Who gets in" || string(body) != "\nYou.\n" {
+		t.Errorf("titled: %q, %q, %v", title, body, err)
+	}
+	if _, _, err := titled([]byte("Who gets in\n")); err == nil {
+		t.Error("a document with no heading was given a title")
+	}
+	got := string(shellFences([]byte("```\nspin admin runner list\nspin admin runner activate <runner-id>\n```\n\n```\nWRN no suitable host\n```\n\n```yaml\nspin: true\n```\n")))
+	want := "```bash\nspin admin runner list\nspin admin runner activate <runner-id>\n```\n\n```\nWRN no suitable host\n```\n\n```yaml\nspin: true\n```\n"
+	if got != want {
+		t.Errorf("shellFences:\n%s\nwant:\n%s", got, want)
+	}
+}

@@ -42,6 +42,7 @@ export const nav = [
 		topic: 'docs',
 		items: [
 			['The CLI', 'use/cli'],
+			['Who gets in', 'use/access'],
 			['Editors and SSH', 'use/editors'],
 			['Agents and automation', 'use/agents'],
 			['An agent without keys', 'use/agent-keys'],
@@ -69,6 +70,7 @@ export const nav = [
 			['Installation settings', 'admin/configuration'],
 			['Users and teams', 'admin/users'],
 			['Operating hosts', 'admin/hosts'],
+			['Taking a runner out', 'admin/runners'],
 			['Observability', 'admin/observability'],
 			['Backups and recovery', 'admin/recovery'],
 		],
