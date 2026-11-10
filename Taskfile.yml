@@ -107,6 +107,9 @@ tasks:
       - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
       - taskgate -task {{.TASK_EXE}}
+      # AGENTS.md is loaded into every session of an agent's: a path or a task it names that the
+      # tree does not have is an instruction to do what cannot be done.
+      - refs -task {{.TASK_EXE}}
       - task: install
       - go vet ./...
       - go test ./...
