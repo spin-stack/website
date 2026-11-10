@@ -42,11 +42,10 @@ installation. Administrators can list and revoke every user's keys.
 
 ## Who logs in to a workspace
 
-Only a workspace's owner and the guests the owner let in log in to it, each with an SSH key the
-control plane certifies for five minutes at a time. A key logs in as a person only once that
-person adds it with their passkey; a browser's own key is added the same way, for twelve hours.
-A session, an API key or an agent cannot add a key or a guest. A person who lost every passkey
-is cleared by an administrator and registers again.
+Only a workspace's owner and the guests the owner let in, each with a key they added with their
+passkey: [Who gets into your workspaces](/use/access/) is the whole of it, in spin's own words,
+and [Known gaps](/reference/security/known-gaps/#what-this-does-not-protect) what it does not
+protect.
 
 ## Runners
 

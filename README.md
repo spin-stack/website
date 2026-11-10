@@ -61,6 +61,11 @@ that is not one task (`taskgate`).
   links that source at the documented commit instead of an edit link. Edit the source, not the
   page. Every page's footer says which spin release an installation runs, and the tree the
   reference is generated from.
+- **A page that is a document of spin's** is written whole from it by `task reference`
+  (`spinDocs` in `tools/refgen`): who gets into a workspace is spin's `docs/access.md`, and taking
+  a runner out its `docs/runners.md`, each reviewed in spin beside the code it describes. Edit the
+  document, not the page; the other pages link to it instead of saying it again. It is checked as
+  any page is, so a command it quotes that the CLI no longer has fails here and is fixed there.
 - **Prose held to spin's own lists**: a page's description is one line of at most 160
   characters (it is its line in `llms.txt`), every `SPIN_` variable a page names is one spin's
   `hack/env-catalog.txt` lists, and the table of states in `concepts/workspaces.md` is the API's

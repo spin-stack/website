@@ -280,6 +280,12 @@ func spinHalf(spin, docs, src string, pages map[string][]byte, outputsDir, featu
 			w.stale = append(w.stale, path)
 		}
 	}
+	// Before the pages are checked: these are among them.
+	said, err := spinDocPages(spin, commit, docs, check)
+	if err != nil {
+		return w, err
+	}
+	w.stale = append(w.stale, said...)
 	bad, err := checkCommands(docs, src, spin, bin, home)
 	if err != nil {
 		return w, err

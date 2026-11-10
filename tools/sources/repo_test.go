@@ -24,6 +24,10 @@ func TestThisRepositoryPassesTheGate(t *testing.T) {
 			"src/data/shots.json",
 			"src/data/output/",
 			"src/content/docs/reference/",
+			// refgen's spinDocs: a document of spin's as a page, its links into spin's tree at
+			// the commit it was read at.
+			"src/content/docs/use/access.md",
+			"src/content/docs/admin/runners.md",
 		},
 		Reads: append([]*regexp.Regexp{regexp.MustCompile(`go run \./tools/sources(?: -bump)?((?: [a-z][a-z0-9-]*)+)`)}, gate.DefaultReads...),
 	}
