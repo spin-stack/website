@@ -103,6 +103,10 @@ that is not one task (`taskgate`).
   build points it at the row's area on the status page (`src/lib/feature-links.mjs`) and fails on
   a row the board does not have; `task reference:check` also fails on a row that is not built.
   The board is `src/data/features.json`, written by `task reference`.
+- **What Spinbox does and no page says** is `tools/refgen/unsaid.txt`: the built rows of the board
+  that no hand-written page links, one a line. It may shrink. `task reference:check` fails on a
+  built row that is neither linked nor listed - a feature spin ships reaches a page, or is written
+  down as owed - and on a line whose row is linked, gone or no longer built.
 - **Commands on the other pages** are held to the same checkouts: every `spin` command in a
   shell block must be one the CLI has, with flags its help lists, and every `task` one spin's
   Taskfile has (after a `cd` into another checkout, that one's). So is every `spin` command a

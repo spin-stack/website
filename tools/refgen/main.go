@@ -301,6 +301,7 @@ func spinHalf(spin, docs, src string, pages map[string][]byte, outputsDir, featu
 		func() ([]string, error) { return checkEnv(docs, spin) },
 		func() ([]string, error) { return checkFeatureLinks(docs, rows) },
 		func() ([]string, error) { return checkCardFeatures(docs, src, rows) },
+		func() ([]string, error) { return checkSaid(docs, src, unsaidList, rows) },
 	} {
 		b, err := c()
 		if err != nil {
