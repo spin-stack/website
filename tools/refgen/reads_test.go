@@ -111,3 +111,44 @@ func TestPinReleasesLeavesAReadsStamp(t *testing.T) {
 		t.Errorf("the stamp was rewritten:\n%s", raw)
 	}
 }
+
+// Every built row is said by a page or owed in the list, and the list owes nothing else.
+func TestCheckSaid(t *testing.T) {
+	rows := []feature{{Name: "Said", State: "built"}, {Name: "Owed", State: "built"}, {Name: "A limit", State: "limit"}}
+	for name, c := range map[string]struct {
+		page, list, want string
+	}{
+		"said and owed":                   {"[it](<feature:Said>)", "# why\nOwed\n", ""},
+		"said by a card":                  {`<Card feature="Said" />`, "Owed\n", ""},
+		"a built row nobody says or owes": {"[it](<feature:Said>)", "", `built "Owed" and no page says it`},
+		"an owed row a page says now":     {"[it](<feature:Said>) [and](<feature:Owed>)", "Owed\n", `"Owed" is said by a page now`},
+		"an owed row the board has not":   {"[it](<feature:Said>)", "Owed\nGone\n", `"Gone" is no built row`},
+		"an owed row that is not built":   {"[it](<feature:Said>)", "Owed\nA limit\n", `"A limit" is no built row`},
+	} {
+		t.Run(name, func(t *testing.T) {
+			docs, src := t.TempDir(), t.TempDir()
+			sealedPage(t, docs, "p.md", "")
+			if err := os.WriteFile(filepath.Join(docs, "q.md"), []byte(c.page+"\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.MkdirAll(filepath.Join(src, "lib"), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(filepath.Join(src, "lib", "story.ts"), nil, 0o644); err != nil {
+				t.Fatal(err)
+			}
+			list := filepath.Join(src, "unsaid.txt")
+			if err := os.WriteFile(list, []byte(c.list), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			bad, err := checkSaid(docs, src, list, rows)
+			if err != nil {
+				t.Fatal(err)
+			}
+			got := strings.Join(bad, "\n")
+			if (c.want == "") != (got == "") || !strings.Contains(got, c.want) {
+				t.Errorf("checkSaid said %q, want %q", got, c.want)
+			}
+		})
+	}
+}
