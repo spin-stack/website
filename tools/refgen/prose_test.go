@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -68,5 +69,19 @@ func TestAStateWithoutItsMeaningIsAnError(t *testing.T) {
 	docs, spin = sources(t, statesDoc, "## States\n\nNo table.\n\n## Stop\n\n| State | Meaning |\n")
 	if _, err := stateTable(docs, spin, false); err == nil {
 		t.Error("a page whose States section has no table: want an error, not a table under another section")
+	}
+}
+
+// A placeholder is a word: what follows it is still read, where a redirection's target is not.
+func TestShellCommandsKeepWhatFollowsAPlaceholder(t *testing.T) {
+	for line, want := range map[string][]string{
+		"spin login --endpoint https://app.<domain> --token <api-key>": {"spin", "login", "--endpoint", "https://app.<domain>", "--token", "<api-key>"},
+		"spin exec api -- cat build.log > local.log":                   {"spin", "exec", "api", "--", "cat", "build.log"},
+		"spin login --token-stdin < key.txt":                           {"spin", "login", "--token-stdin"},
+	} {
+		got := shellCommands(line)
+		if len(got) != 1 || !slices.Equal(got[0], want) {
+			t.Errorf("%s: %q, want %q", line, got, want)
+		}
 	}
 }
