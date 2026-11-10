@@ -31,7 +31,7 @@ for sessions into its workspaces. No connection is ever opened *to* a runner.
 
 **Database.** PostgreSQL 18, on the control plane's own machine. It holds users, teams,
 workspaces, snapshots, settings and the installation's secrets, sealed under a key the database
-does not hold. Every write reaches a bucket of its own within a minute: a base backup every hour
+does not hold. Every write reaches a bucket of its own within five minutes: a base backup every day
 and each WAL segment as it is written, sealed under the installation's key before it leaves the
 machine. A machine that replaces the control plane restores from there before it serves.
 
@@ -63,8 +63,8 @@ stays that way until you start it again.
 ## Where your work is stored
 
 A running workspace writes to the top layer of its disk on the runner. The runner seals that
-layer and uploads it to the bucket once about 32 MiB has been written, when you take a
-snapshot, and when the workspace stops. Each layer is compressed, encrypted with the volume's
+layer and uploads it to the bucket every five minutes by default (the installation's
+`volume_rpo_seconds`), when you take a snapshot, and when the workspace stops. Each layer is compressed, encrypted with the volume's
 own key, and uploaded before the pointer to it moves.
 
 This means a runner that disappears takes with it only what was written since its last

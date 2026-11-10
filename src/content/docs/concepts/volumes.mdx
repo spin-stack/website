@@ -61,7 +61,8 @@ deletion.
 
 ## Deleting
 
-Deleting a workspace deletes its volume. The bucket keeps every object under Object Lock, so
+Erasing a workspace deletes its volume: at once where the installation keeps no trash, and
+otherwise when its days in the trash are up. The bucket keeps every object under Object Lock, so
 deleted objects become delete markers, and their bytes go when the retention runs out (30 days
 by default). A layer that another workspace still reads through a clone is kept.
 

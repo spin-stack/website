@@ -6,6 +6,22 @@ description: Connect to a workspace with spin ssh, plain ssh, scp and rsync, VS 
 Every way into a workspace goes through the installation's relay. You never need network access
 to the runner or to the workspace, only to `https://app.<domain>`.
 
+## A key that logs in as you
+
+A workspace lets in its owner and the guests the owner let in, each with an SSH key that logs in
+as them, and a key logs in as you only once you add it with your passkey:
+
+```bash
+spin ssh-key add laptop ~/.ssh/id_ed25519.pub
+spin ssh-key list
+```
+
+`spin ssh-key add` opens the page where your passkey confirms the key, and waits until it has.
+Your first passkey is registered from the dashboard. A key is added once and stays until you
+delete it; a session, an API key or an agent cannot add one, so none of them gets a shell in
+your workspace. Everything below - `spin ssh`, plain `ssh`, `spin exec`, VS Code - logs in with
+a key added this way.
+
 ## `spin ssh`
 
 ```bash
@@ -31,9 +47,10 @@ any program that runs `ssh` reaches a workspace as the host `spin.<workspace>`. 
 gets a new certificate for your key that is valid for five minutes, so there is no long-lived
 credential to leak.
 
-It uses the key you name with `-i`, or the first of `~/.ssh/id_ed25519`, `id_rsa` and
-`id_ecdsa`. If you have none, the CLI makes a key of its own the first time. The key is never
-uploaded: the control plane signs a short certificate for its public half, per connection.
+It uses the key you name with `-i`, or the first key this machine holds that you have added:
+`~/.ssh`'s, a FIDO2 key's among them, then `ssh-agent`'s. If the machine has none, the CLI makes
+one of its own and says how to add it. The private half never leaves your machine: the control
+plane signs a short certificate for the public half, per connection.
 
 ## VS Code
 
@@ -42,14 +59,14 @@ spin code api
 spin code api /srv/app --start
 ```
 
-This opens VS Code with Remote-SSH at the path you name (`/root` by default). It needs the
-`code` command and the Remote-SSH extension.
+This opens VS Code with Remote-SSH at the path you name: by default the project's checkout,
+`/workspace/<repository>`, or `/workspace` in a workspace with no project. It needs the `code`
+command and the Remote-SSH extension; `--editor` names another editor's command.
 
 VS Code runs a server in the workspace, built for its own commit. An installation's servers
 reach a workspace on a read-only disk its host attaches, and `~/.vscode-server` on the
-workspace's disk holds only links into it, so nothing is downloaded when you connect. Every
-image carries one release's server, and an administrator can publish others from
-**Admin → Storage**.
+workspace's disk holds only links into it, so nothing is downloaded when you connect. No image
+carries a server: an administrator publishes them from **Admin → Storage**.
 
 Before VS Code connects, `spin code` asks the workspace whether it has the server for your
 VS Code. If it has not, and the installation has published that version, the running workspace
@@ -68,7 +85,7 @@ Any editor with a remote-over-SSH mode works the same way through `spin ssh-conf
 
 ## The dashboard's terminal
 
-A workspace's page in the dashboard has **Open Terminal**, a shell in the browser, over the
+A workspace's page in the dashboard has **Open terminal**, a shell in the browser, over the
 same relay.
 
 ## Running one command
@@ -83,13 +100,13 @@ spin exec api -- cat build.log > local.log
 yours, and exits with its exit status. It allocates a terminal only when both ends are one, so
 its output is safe to pipe.
 
-## SSH keys
+## Letting someone else in
 
 ```bash
-spin ssh-key add laptop ~/.ssh/id_ed25519.pub
-spin ssh-key list
+spin workspace guests add api ana@example.com
+spin workspace guests remove api ana@example.com
 ```
 
-None of the commands above need this. Keys you add are authorized in your workspaces, for a
-client that connects without the CLI's certificate. Each workspace also has a key pair of its own;
-`spin ssh-key get api` downloads its private key, for tools that cannot use the CLI.
+Adding a guest is confirmed with your passkey. A guest logs in with a key of their own, sees the
+workspace and opens its ports as private, and cannot start, stop, snapshot or delete it. Inside
+the machine a guest is `root`, as you are: share a workspace with somebody you trust with it.

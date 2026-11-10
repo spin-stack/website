@@ -43,9 +43,9 @@ wrote. A snapshot's memory has a key of its own (above), destroyed at once.
 |---|---|---|
 | The KEK | The database | The installation's encryption key, with its own name as context |
 | The first administrator's password, the object store credential | The database | The same |
-| SSH keys, identity providers' client secrets | The database | AES-256-GCM, bound to the row's id, in a versioned key ring |
+| Each workspace's SSH certificate authority, identity providers' client secrets | The database | AES-256-GCM, bound to the row's id, in a versioned key ring |
 | Sessions, API keys, runner tokens | The database | Stored only as a hash |
-| The encryption key itself | SSM Parameter Store | The account's key; readable by the control plane's role alone |
+| The encryption key itself | Nowhere | Derived at every start from a KMS key, which answers only a control plane that proves the image it booted |
 
 The database alone opens none of them. The encryption key and the first password are written by
 the install through write-only attributes, and never reach OpenTofu's state. The CA's key is in the
@@ -73,7 +73,7 @@ layers are also protected by fs-verity on the runner's disk. See
 
 - The control plane, through its role, which cannot lift Object Lock, bypass a retention or
   rewrite the bucket's policy.
-- Each runner, with credentials the control plane mints for one hour and narrows to the volumes
+- Each runner, with credentials the control plane mints for fifteen minutes and narrows to the volumes
   placed on it and what they descend from.
 - Object requests are refused from anywhere but the VPC's gateway endpoint, so a runner's
   credentials copied off the machine open nothing.

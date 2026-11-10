@@ -56,6 +56,7 @@ reach the control plane over vsock, through the runner.
 
 ## Where it depends on the kernel
 
-Two of these protections need the runner's kernel to support them: vsock namespaces and core
-scheduling. On a kernel without them, the runner says so once in its log and starts machines
-anyway. See [Known gaps](/reference/security/known-gaps/).
+Three of these protections need the runner's kernel to support them: vsock namespaces, core
+scheduling and Landlock. A runner says what its kernel keeps when it registers, and a
+production installation places no workspace on one that lacks any; only a development
+installation starts machines anyway. See [Known gaps](/reference/security/known-gaps/).

@@ -24,8 +24,8 @@ Sessions last seven days by default.
 
 | Mode | Who can create an account |
 |---|---|
-| `closed` | Nobody. The default. |
-| `whitelist` | The addresses and domains listed |
+| `closed` | Nobody |
+| `whitelist` | The addresses and domains listed. The default, with nobody on the list. |
 | `open` | Anyone who can sign in with a provider |
 
 ## Administrators
@@ -35,14 +35,16 @@ commands. An administrator makes another user one, or disables a user, in **Admi
 
 ## Teams
 
-A team owns workspaces together. A workspace created with `--team` belongs to the team, and its
-members can use it.
+A team holds what its members' workspaces share: secrets, network policies, identity providers.
+A workspace created with `--team` is in the team for as long as its owner is a member. Being in
+a team lets nobody else in: only a workspace's owner logs in to it, and the guests the owner
+adds.
 
 | Role | Can |
 |---|---|
 | Owner | Everything, including deleting the team. One per team. |
 | Admin | Manage members and the team's settings |
-| Member | Use the team's workspaces |
+| Member | Have workspaces in the team |
 
 ```bash
 spin team create platform --description "Platform team"
@@ -61,7 +63,8 @@ connections they had open.
 ## API keys
 
 Users create API keys for scripts and agents, with scopes and an expiry of at most a year. A key
-can never create another key, approve a login, or administer the installation. See
+can never approve a login or administer the installation, and makes keys of its own only with
+the `keys:delegate` scope, each holding no more than it does. See
 [Agents and automation](/use/agents/). Administrators see and revoke every user's keys in
 **Admin → Users**.
 

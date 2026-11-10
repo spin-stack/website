@@ -64,7 +64,8 @@ minute.
 
 ## What is not there
 
-- **No alerts.** Nothing pages anyone.
+- **Nothing pages anyone.** Alert rules fire in the installation's Grafana, and no contact point
+  tells anyone.
 - The collector accepts OpenTelemetry from whatever its security group lets in: the proxy and the
   runners.
 - AWS keeps its own records outside the installation: the VPC flow log and every machine's boot

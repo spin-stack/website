@@ -9,9 +9,9 @@ own help, in the [CLI reference](/reference/cli/).
 
 ## Install
 
-Each release publishes `spin-linux-amd64` and `spin-darwin-arm64`. Download the one for your
-machine, make it executable and put it on your `PATH` as `spin`. The Linux build is also in the
-release's public package:
+Each release publishes `spin-linux-amd64`, `spin-linux-arm64`, `spin-darwin-arm64` and
+`spin-darwin-amd64`. Download the one for your machine, make it executable and put it on your
+`PATH` as `spin`. Each is also in the release's public package, under a tag of its own:
 
 ```bash
 oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
@@ -32,10 +32,10 @@ keeps a session token in `~/.spin/config.yaml`. `spin whoami` shows who you are,
 `spin logout` forgets the token.
 
 For a machine with no browser, create an API key in the dashboard (Settings → API Keys) and use
-it instead:
+it instead, read from standard input and never an argument:
 
 ```bash
-spin login --endpoint https://app.<domain> --token <api-key>
+spin login --endpoint https://app.<domain> --token-stdin < key.txt
 ```
 
 ## Several installations
@@ -59,8 +59,10 @@ spin --profile work workspace list
 
 ## Output for scripts
 
-`-o json` prints one JSON document of what the API answered, and no prose. Errors still go to
-standard error, and the exit status says whether the command succeeded.
+`-o json` prints one JSON document of what the API answered, and no prose. A command that fails
+prints one too, in the answer's place: `{"error": {"code", "message", "action"}}`, where `code`
+is what a script decides on and `action` what a person would do next. The exit status says
+whether the command succeeded.
 
 ```bash
 spin -o json workspace get api | jq .
