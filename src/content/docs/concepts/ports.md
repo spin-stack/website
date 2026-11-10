@@ -49,7 +49,7 @@ spin port access api 3000 private
 A grant does nothing until the port's access is `whitelist`, so sharing a port with someone
 never quietly publishes it. Going back to `private` keeps the grants for next time.
 
-A `public` port goes back to `private` when the workspace stops or fails. Whether ports may be
+A `public` port goes back to `private` when the workspace stops, fails or is quarantined. Whether ports may be
 made public at all is the administrator's decision; it is off by default.
 
 For a workspace that belongs to a team, everyone let in must still be a member of the team.

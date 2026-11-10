@@ -25,8 +25,10 @@ spin workspace create --name retry --from-snapshot <snapshot-id> --wait
 - **Image.** Without `--image`, the installation's default: the base image of the machine the
   installation runs, which is Ubuntu. An administrator can limit which images may be used. See
   [Images](/concepts/images/).
-- **Team.** With `--team`, the workspace belongs to the team, and the team's members can use
-  it. Without it, it is yours.
+- **Team.** With `--team`, the workspace is in that team: it may be given the team's secrets and
+  run under its policies, for as long as you are a member. Without it, it is in your personal
+  team. Either way only you log in to it, and the guests you let in with
+  `spin workspace guests add`.
 - **Network.** `--network-tag` names the policies it runs under. See
   [Network and egress](/concepts/network/).
 
@@ -73,8 +75,9 @@ says why a workspace is not behaving, and `spin workspace console` shows what it
 - **Suspend** [keeps the running processes](<feature:Suspend with the processes where they are; a start resumes them>): the workspace's memory and disk are saved, and the
   next start resumes from that instant, on any runner that carries the same machine.
 - **Delete** puts the workspace in [the trash](<feature:A trash: a deleted workspace stays whole, for its owner to undelete, until its days are up>), with its disk. `spin workspace deleted` lists the
-  trash, and `spin workspace undelete` takes one out, stopped. Its snapshots are kept: delete them
-  on their own with `spin snapshot delete`.
+  trash, and `spin workspace undelete` takes one out, stopped. Its snapshots stay with it while it is
+  there, and go with it when its days are up; `spin workspace delete --permanently` erases it,
+  and them, at once.
 
 A workspace nobody uses is [suspended with its processes](<feature:Idle suspend, with a question before it that a keep answers>), and so is one that [has run longer than the installation allows](<feature:A workspace that ran as long as the installation allows is suspended>), used or not. An administrator sets both times in the installation's
 settings. Ten minutes before a suspension its owner is asked, on the workspace's page and in its

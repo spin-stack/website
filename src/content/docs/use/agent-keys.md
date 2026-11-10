@@ -68,7 +68,7 @@ spin settings set env.OPENAI_API_KEY spin
 ```
 
 That is the whole recipe. The CLI talks to `api.anthropic.com` by its real name, the guest's
-trust store holds the installation's egress root once the owner's word names it, and the
+trust store holds the installation's egress root, which its registration hands it, and the
 request leaves the host with the team's key on it. HTTP/1.1, HTTP/2 and WebSockets all go
 through: a WebSocket's handshake is a request like any other, and what follows its 101 is
 carried as bytes.
@@ -89,13 +89,9 @@ network_policies:
         inject: [{header: authorization, identity: https://gateway.internal.example, prefix: "Bearer "}]
 ```
 
-Two things name who may receive it. The installation lists the audiences a workspace's identity
-may be given for (`identity_audiences` in the config file), and the workspace's owner names the
-ones theirs may go to:
-
-```bash
-spin workspace audiences agent-1 --add https://gateway.internal.example
-```
+The installation names who may receive it: `identity_audiences` in the config file lists the
+audiences a workspace's identity may be given for, and an installation that leaves it out gives
+one for any. The service still decides which workspaces it admits.
 
 The service verifies the token against the installation's issuer, `https://id.<domain>`, whose
 discovery document and key set the installation publishes. The token's subject is

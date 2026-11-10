@@ -35,8 +35,16 @@ spin api-key create "review-bot" --scope workspace:read --scope workspace:write 
 
 Every scope, and what it allows, is in [`spin api-key`](/reference/cli/api-key/).
 
-A key can never create another key, approve a login, or administer the installation. It lasts
-at most a year. The secret is shown once.
+A key can never approve a login or administer the installation. It lasts at most a year. The
+secret is shown once.
+
+Two scopes are apart from the rest. `workspace:exec` runs commands and reads and writes files in
+your workspaces through the API, as root: a key that holds it is made with your passkey, in the
+dashboard, and every call it makes is in the audit log. `keys:delegate` lets a key make keys of
+its own, for the agents it starts: each holds no more than it does - its scopes, team, projects,
+end, and how many workspaces and cores all of them hold (`--max-workspaces`, `--max-cores`) -
+and goes when it is revoked. [`spin mcp`](/reference/cli/mcp/) serves an agent the API on such
+a key.
 
 Give it to the agent through the environment:
 
@@ -99,5 +107,6 @@ so it composes with the agent's own tools. It needs no network path to the works
 
 Everything the CLI does is a ConnectRPC call to the control plane, over HTTPS with the same key
 (`Authorization: Bearer <api-key>`). ConnectRPC speaks plain JSON over HTTP POST, so any language
-can call it. The services are `spin.v1.WorkspaceService`, `ShareService`, `SSHKeyService`,
-`TeamService`, `SettingsService` and `LogService`.
+can call it. Every service and what each call takes is in [the API reference](/reference/api/);
+`spin.v1.ExecService` is the one that runs a command and reads and writes files in a workspace,
+for a key that holds `workspace:exec`.

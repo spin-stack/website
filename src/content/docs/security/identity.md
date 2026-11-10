@@ -31,15 +31,29 @@ of the workspace's team, unless the port is public.
 
 ## API keys
 
-A key carries scopes, lasts at most a year, and can never create another key, approve a login, or
-administer the installation. Administrators can list and revoke every user's keys.
+A key carries scopes, lasts at most a year, and can never approve a login or administer the
+installation. Administrators can list and revoke every user's keys.
+
+- **A key that runs commands** in its person's workspaces holds `workspace:exec`, and is made
+  only with that person's passkey, in the dashboard. Every call it makes is in the audit log.
+- **A key that makes keys** holds `keys:delegate`. Each key it makes holds no more than it does -
+  its scopes, team, projects, end, and how many workspaces and cores all of them hold - and goes
+  when it is revoked.
+
+## Who logs in to a workspace
+
+Only a workspace's owner and the guests the owner let in log in to it, each with an SSH key the
+control plane certifies for five minutes at a time. A key logs in as a person only once that
+person adds it with their passkey; a browser's own key is added the same way, for twelve hours.
+A session, an API key or an agent cannot add a key or a guest. A person who lost every passkey
+is cleared by an administrator and registers again.
 
 ## Runners
 
 A runner in the installation's autoscaling group joins **by its AWS identity**. It signs an STS
 `GetCallerIdentity` request with its instance role, bound to this installation and to its own host
 id; the control plane sends it to AWS and checks the role in the answer. A signed request is good
-for an hour at most. Nothing is minted, stored or rotated.
+for fifteen minutes at most. Nothing is minted, stored or rotated.
 
 Once joined, a runner holds an access token that lasts an hour and is refreshed, over TLS under
 the installation's CA. A runner is trusted only for what is placed on it: it can report on and ask

@@ -13,8 +13,9 @@ it.
 
 ## 1. Get the CLI
 
-The CLI is a single binary, published with every release as `spin-linux-amd64` and
-`spin-darwin-arm64`. Put it on your `PATH` as `spin`:
+The CLI is a single binary, published with every release as `spin-linux-amd64`,
+`spin-linux-arm64`, `spin-darwin-arm64` and `spin-darwin-amd64`. Put the one for your machine on
+your `PATH` as `spin`:
 
 ```bash
 chmod +x spin-linux-amd64
@@ -22,7 +23,7 @@ sudo mv spin-linux-amd64 /usr/local/bin/spin
 spin version
 ```
 
-The Linux build is also in the release's public package:
+Each is also in the release's public package, under a tag of its own:
 
 ```bash
 oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
@@ -47,6 +48,13 @@ spin workspace create --name demo --wait
 The workspace starts from the installation's default image, with its default CPU, memory and
 disk. If no runner is up, it waits in *Waiting for a host* for the few minutes one takes to
 start; `--wait` waits for it.
+
+A workspace lets you in with an SSH key you added with your passkey. Add one once, from this
+machine: the command opens the page where your passkey confirms it, and waits.
+
+```bash
+spin ssh-key add laptop ~/.ssh/id_ed25519.pub
+```
 
 ```bash
 spin workspace list
@@ -128,6 +136,9 @@ It is at `https://8000-demo.ws.<domain>`, and only you can open it. See
 ```bash
 spin workspace delete demo
 ```
+
+Where the installation keeps a trash, the workspace goes there with its disk, and
+`spin workspace undelete demo` brings it back; `--permanently` erases it now.
 
 ## Next
 

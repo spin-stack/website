@@ -7,17 +7,18 @@ An installation's durable state is in three places:
 
 | State | Where | How it is protected |
 |---|---|---|
-| Users, teams, workspaces, snapshots, settings, secrets | PostgreSQL on the control plane's machine, archived to the database's bucket | A base backup every hour and each WAL segment within a minute, sealed under the installation's key; the bucket under Object Lock for [`database_lock_days`](/reference/terraform/controlplane/#database_lock_days) |
+| Users, teams, workspaces, snapshots, settings, secrets | PostgreSQL on the control plane's machine, archived to the database's bucket | A base backup every day and each WAL segment within five minutes, sealed under the installation's key; the bucket under Object Lock for [`database_lock_days`](/reference/terraform/controlplane/#database_lock_days) |
 | Every workspace's disk and snapshots | The volumes bucket | Versioning, and Object Lock for [`object_lock_days`](/reference/terraform/controlplane/#object_lock_days) |
-| The key that opens the installation's secrets | SSM Parameter Store | Written once by the install, never in the Terraform state |
+| The key that opens the installation's secrets | Nowhere: derived at every start from a KMS key | KMS answers only a control plane that proves the image it booted; never in the Terraform state |
 
 The control plane's and the proxy's machines hold nothing that cannot be rebuilt. The proxy's
 certificates are kept in a bucket of their own, and the metric store is backed up to the logs
 bucket.
 
-**The encryption key is the installation.** Without it, nothing in the database's archive or
-its secrets can be opened, and neither can any volume's key. Nothing in the module makes a new one, and the parameter
-refuses to be destroyed by a plan.
+**The encryption key is the installation**, and the KMS key it is derived from is the
+encryption key. Without it, nothing in the database's archive or its secrets can be opened, and
+neither can any volume's key. Nothing in the module makes a new one, and the KMS key refuses to
+be destroyed by a plan.
 
 ## Losing a runner
 
@@ -32,7 +33,7 @@ document, and takes over. Workspaces keep running.
 
 The control plane's machine carries the database, so the new machine restores it before it
 serves: the newest base backup in the archive, then every WAL segment after it. What the old
-machine wrote in its last minute and had not archived is lost with it. An archive that does not
+machine wrote in its last five minutes and had not archived is lost with it. An archive that does not
 open under the installation's key is refused, and the control plane does not start on it.
 
 A release replaces the machine the same way, without the loss: the old machine stops writing,
