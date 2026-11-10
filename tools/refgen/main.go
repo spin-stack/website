@@ -174,6 +174,7 @@ func run() error {
 		func() ([]string, error) { return checkDomains(*docs, *tf) },
 		func() ([]string, error) { return checkTofu(*docs, *tf) },
 		func() ([]string, error) { return checkReads(*docs, from) },
+		func() ([]string, error) { return checkFigures(*docs, figuresList, *spin) },
 	} {
 		b, err := c()
 		if err != nil {

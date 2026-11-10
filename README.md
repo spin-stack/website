@@ -128,6 +128,10 @@ that is not one task (`taskgate`).
 - **Figures the code decides** - a volume's commit size, how much older a runner may be, how long
   CloudWatch keeps the logs - are `src/data/constants.json`, read from spin's constants and the
   module's defaults by `task reference`, and a page shows one with `<Value name="…" />`.
+- **A figure said in prose has a line** in `tools/refgen/figures.txt`: every duration, size and
+  count a hand-written page says outside `<Value>`, with the constant of spin's that decides it
+  (`spin:<file>#<Constant> = 15m`), which `task reference:check` reads and holds the line to, or
+  why nothing holds it. A figure with no line fails, and so does a line its page no longer says.
 - **What a release is made of**, `reference/release.md`, is written from spin's `versions.yaml` at
   the release installations run (its spin-machine), images.json and the module's newest release.
 - **Diagrams** are the ones spin and spin-terraform-aws draw beside their sources (`.dot`, `.d2`):
