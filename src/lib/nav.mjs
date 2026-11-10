@@ -85,6 +85,7 @@ export const nav = [
 		items: [
 			['Security model', 'security'],
 			['Isolation', 'security/isolation'],
+			['NitroTPM and runner authorization', 'security/nitrotpm'],
 			['Data and encryption', 'security/data'],
 			['Identity and access', 'security/identity'],
 			['Supply chain', 'security/supply-chain'],
