@@ -9,7 +9,7 @@ reads:
 
 A workspace is a virtual machine that belongs to a person, or to a team. It has its own
 kernel, root access, a persistent disk and SSH. It runs on a runner, but it is not tied to one:
-its disk lives in the installation's bucket, and it can start again on any runner.
+its disk lives in the installation's bucket, and [it can start again on any runner](<feature:A workspace outlives its runner>).
 
 ## Creating one
 
@@ -38,7 +38,7 @@ spin workspace create --name retry --from-snapshot <snapshot-id> --wait
 
 ## Resources
 
-A workspace is sized by a **preset**: its cores, its memory and its free disk. An administrator
+A workspace is [sized by a **preset**](<feature:Resource presets>): its cores, its memory and its free disk. An administrator
 defines the presets (for example `small` and `large`) and marks one as the default. See
 [Installation settings](/admin/configuration/). An installation whose configuration names no
 presets is given one, `default`: 1 core and 512 MB, which grow to what its runner has, on 10 GB
@@ -46,8 +46,8 @@ of free disk.
 
 A preset is fixed, starting at its size and staying there, or it bursts: it starts at a floor
 and may grow up to its size, or up to whatever its runner has room for. A running workspace
-can **grow**: the runner lends it more CPU and memory, up to that ceiling, and takes them back.
-`spin workspace grant` gives it cores and memory of its own, kept until
+can **grow**: [the runner lends it more CPU and memory, up to that ceiling, and takes them back](<feature:Cores and memory lent while the host has them, and taken back>).
+[`spin workspace grant` gives it cores and memory of its own](<feature:A grant of cores and memory of its own, for a while>), kept until
 `spin workspace release` gives them back. The disk is the image's size plus the preset's free
 space.
 
@@ -68,10 +68,14 @@ space.
 | `QUARANTINED` | Held by an administrator with `spin workspace quarantine`: it cannot start until `spin workspace unquarantine` releases it, and its disk is kept as it was. |
 | `DEGRADED` | Its machine is up, and what was asked of it inside did not finish: its project's checkout, .spin.yaml or create tasks. Everything a running workspace allows is allowed; `spin workspace get` says what failed, and the next boot tries again. |
 
+An administrator [quarantines a workspace](<feature:Quarantine, by an administrator>): it cannot start until they release it.
 A runner tries a start three times before the workspace is `FAILED`. `spin workspace status`
-says why a workspace is not behaving, and `spin workspace console` shows what its machine printed.
+[says why a workspace is not behaving](<feature:Why a workspace is not behaving: status, console, history>), and `spin workspace console` shows what its machine printed.
 
 ## Stop, suspend, delete
+
+A workspace is [created, started, stopped and deleted](<feature:Create, start, stop and delete>) from the CLI, the dashboard and
+the API.
 
 - **Stop** shuts the machine down, uploads what the disk wrote since its last commit, and keeps
   the disk. The next start boots from it. Stopping does not take a snapshot.
@@ -107,7 +111,7 @@ person's identity from the disk: SSH keys, shell history and credentials.
 ## When a runner is lost
 
 If the runner a workspace was on disappears, the workspace keeps what reached the bucket and
-loses what did not. Nothing moves it without asking:
+loses what did not. [Nothing moves it without asking](<feature:Recover a workspace whose host is gone, at a cost its owner accepts>):
 
 ```bash
 spin workspace recover api                      # says what moving it would lose

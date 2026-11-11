@@ -133,14 +133,19 @@ func proseFigures(raw []byte) []proseFigure {
 		case fence:
 			continue
 		}
-		for _, m := range saidFigure.FindAll(codeSpan.ReplaceAll(line, nil), -1) {
+		// A link's target is a row's name or an address, which are not the page's words.
+		line = linkTarget.ReplaceAll(codeSpan.ReplaceAll(line, nil), []byte("]"))
+		for _, m := range saidFigure.FindAll(line, -1) {
 			out = append(out, proseFigure{i + 1, string(m)})
 		}
 	}
 	return out
 }
 
-var codeSpan = regexp.MustCompile("`[^`]*`")
+var (
+	codeSpan   = regexp.MustCompile("`[^`]*`")
+	linkTarget = regexp.MustCompile(`\]\((?:<[^>]*>|[^)\s]*)\)`)
+)
 
 // constantIs says how the constant name of spin's file differs from want - a count, or a
 // duration as time writes one - or "".

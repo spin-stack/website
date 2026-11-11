@@ -7,8 +7,8 @@ reads:
   - "spin:cmd/cli/cmd/share.go@v20261108.01"
 ---
 
-A service listening on a TCP port in a workspace can be reached through the installation's
-proxy, at its own HTTPS address:
+A service listening on a TCP port in a workspace [can be reached through the installation's
+proxy, at its own HTTPS address](<feature:Published ports at https://{port}-{workspace}.{domain}: private, whitelisted or public>):
 
 ```
 https://<port>-<workspace>.ws.<domain>

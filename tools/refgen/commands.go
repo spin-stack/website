@@ -275,7 +275,8 @@ func (c cliHelp) check(args []string) (string, error) {
 			}
 			continue
 		}
-		if len(h.subs) == 0 {
+		// A placeholder is an argument a reader fills in, never a command's name.
+		if len(h.subs) == 0 || placeholder.MatchString(a) {
 			continue
 		}
 		known := false

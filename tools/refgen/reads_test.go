@@ -114,16 +114,18 @@ func TestPinReleasesLeavesAReadsStamp(t *testing.T) {
 
 // Every built row is said by a page or owed in the list, and the list owes nothing else.
 func TestCheckSaid(t *testing.T) {
-	rows := []feature{{Name: "Said", State: "built"}, {Name: "Owed", State: "built"}, {Name: "A limit", State: "limit"}}
+	rows := []feature{{Name: "Said", State: "built"}, {Name: "Owed", State: "built"}, {Name: "A limit", State: "limit"}, {Name: "Open (by its URL)", State: "built"}}
 	for name, c := range map[string]struct {
 		page, list, want string
 	}{
-		"said and owed":                   {"[it](<feature:Said>)", "# why\nOwed\n", ""},
-		"said by a card":                  {`<Card feature="Said" />`, "Owed\n", ""},
-		"a built row nobody says or owes": {"[it](<feature:Said>)", "", `built "Owed" and no page says it`},
-		"an owed row a page says now":     {"[it](<feature:Said>) [and](<feature:Owed>)", "Owed\n", `"Owed" is said by a page now`},
-		"an owed row the board has not":   {"[it](<feature:Said>)", "Owed\nGone\n", `"Gone" is no built row`},
-		"an owed row that is not built":   {"[it](<feature:Said>)", "Owed\nA limit\n", `"A limit" is no built row`},
+		"said and owed":                   {"[it](<feature:Said>)", "# why\nOwed\nOpen (by its URL)\n", ""},
+		"a name written percent-encoded":  {"[it](<feature:Said>) [and](<feature:Open %28by its URL%29>)", "Owed\n", ""},
+		"a name with a parenthesis":       {"[it](<feature:Said>) [and](<feature:Open (by its URL)>)", "Owed\n", ""},
+		"said by a card":                  {`<Card feature="Said" />`, "Owed\nOpen (by its URL)\n", ""},
+		"a built row nobody says or owes": {"[it](<feature:Said>)", "Open (by its URL)\n", `built "Owed" and no page says it`},
+		"an owed row a page says now":     {"[it](<feature:Said>) [and](<feature:Owed>)", "Owed\nOpen (by its URL)\n", `"Owed" is said by a page now`},
+		"an owed row the board has not":   {"[it](<feature:Said>)", "Owed\nOpen (by its URL)\nGone\n", `"Gone" is no built row`},
+		"an owed row that is not built":   {"[it](<feature:Said>)", "Owed\nOpen (by its URL)\nA limit\n", `"A limit" is no built row`},
 	} {
 		t.Run(name, func(t *testing.T) {
 			docs, src := t.TempDir(), t.TempDir()

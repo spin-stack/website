@@ -9,8 +9,8 @@ reads:
 
 import Value from '../../../components/Value.astro';
 
-Runners are also called **hosts**. An administrator manages them in **Admin → Runners** or with
-`spin admin runner`. For how runners join, scale and go away, see
+Runners are also called **hosts**. [An administrator manages them in **Admin → Runners** or with
+`spin admin runner`](<feature:Runners: registration tokens, drain, activate, revoke, and a policy per host>). For how runners join, scale and go away, see
 [Runners and hosts](/concepts/runners/).
 
 ## Seeing them
@@ -20,7 +20,8 @@ spin admin runner list
 spin admin versions          # the control plane's release, and each runner's and its machine's
 ```
 
-A runner's page in the dashboard shows its state, its capacity and its workspaces.
+`spin admin versions` says [what is running where](<feature:What is running where: the control plane, each runner and its machine>). A runner's page in the dashboard shows its
+state, its capacity and its workspaces.
 
 ## Drain and activate
 

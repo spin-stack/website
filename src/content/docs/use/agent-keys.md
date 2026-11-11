@@ -8,7 +8,7 @@ reads:
 
 A coding agent needs a key to talk to its provider, and a key on a workspace's disk is in every
 snapshot of it and in every clone. Spinbox has what it takes for the key to never be there: the
-host's egress proxy can stand in for a host name and set a header from a secret the team holds.
+host's egress proxy can [stand in for a host name and set a header from a secret the team holds](<feature:Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role>).
 Nothing here knows what Anthropic or OpenAI is; it is four things Spinbox already does, in order.
 
 ## 1. The installation brokers the name
@@ -72,9 +72,9 @@ spin settings set env.OPENAI_API_KEY spin
 
 That is the whole recipe. The CLI talks to `api.anthropic.com` by its real name, the guest's
 trust store holds the installation's egress root, which its registration hands it, and the
-request leaves the host with the team's key on it. HTTP/1.1, HTTP/2 and WebSockets all go
-through: a WebSocket's handshake is a request like any other, and what follows its 101 is
-carried as bytes.
+request leaves the host with the team's key on it. [HTTP/1.1, HTTP/2 and WebSockets all go
+through](<feature:HTTP/2 to a brokered name, the proxy's ALPN the real host's: a rule's headers set stream by stream, gRPC's trailers both ways>): [a WebSocket's handshake is a request like any other, and what follows its 101 is
+carried as bytes](<feature:A WebSocket to a brokered name: its handshake under the rule's headers and scope, then bytes each way>).
 
 ## Your own services: an identity, not a key
 
@@ -110,7 +110,7 @@ spin workspace egress agent-1
 spin workspace status agent-1
 ```
 
-`egress` lists each request the proxy read to a brokered name, newest first, with the real
+`egress` [lists each request the proxy read to a brokered name](<feature:Each request to a brokered name as the proxy read it, served or refused and why; and whether each injection's secret is the team's to give>), newest first, with the real
 host's status or, for one the proxy refused, why: `credentials` is a secret the team does not
 hold, `scope` a method or path the rule does not allow. `status` says, per injection, whether
 the team holds what it is set from.

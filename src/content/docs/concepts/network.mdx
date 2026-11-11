@@ -63,7 +63,7 @@ allows them all.
 
 **DNS follows the policy.** A workspace's resolver is the runner's, so no policy needs to open
 port 53. A DNS question leaves from the runner, where no firewall rule sees it, and reaches whoever
-answers that name, so the resolver only takes up the ones a workspace's policy names:
+answers that name, so [the resolver only takes up the ones a workspace's policy names](<feature:A workspace's DNS goes upstream only for what its policy names, so a policy that closes egress closes the tunnel through names>):
 
 - A workspace with no tag, or with a rule that reaches every address (ports with no destination,
   or `0.0.0.0/0`), resolves anything. DNS gives it nothing it could not already do.
@@ -89,12 +89,13 @@ spin workspace policies                          # the policies you can choose f
 spin workspace retag api --network-tag web --network-tag agent
 ```
 
-The owner can choose among the policies the installation declares. Removing a policy from a
+The owner can choose among the policies the installation declares. A team declares
+[policies of its own](<feature:A team's own network policies, where the installation allows them>) where the installation allows it (`team_network_policies`). Removing a policy from a
 running workspace closes the connections it had open, not only new ones.
 
 Administrators declare policies in the [installation settings](/admin/configuration/) or in the
-dashboard (Admin → Network), which shows for each one whether every runner enforces the
-current version.
+dashboard (Admin → Network), [which shows for each one whether every runner enforces the
+current version](<feature:A policy changed reaches the host that runs the workspace>).
 
 ## Seeing what happened
 
@@ -102,7 +103,7 @@ current version.
 spin workspace egress api
 ```
 
-shows what the workspace reached in the last six hours, with the most traffic first, the names
+shows [what the workspace reached in the last six hours](<feature:What a workspace reached, what it looked up and what it was refused>), with the most traffic first, the names
 it looked up that failed, and what was refused in the last hour, with the name it was looked up
 by. The workspace's **Network** tab in the dashboard shows the same. When something does not
 work, the refused list tells you which policy is too narrow.
