@@ -102,3 +102,20 @@ func TestSpinDocBecomesAPage(t *testing.T) {
 		t.Errorf("shellFences:\n%s\nwant:\n%s", got, want)
 	}
 }
+
+// A flag is read from the help whether it takes a value, takes none, or is printed with the
+// values a flag that takes none may be given.
+func TestFlagsOfReadsEveryFormAFlagIsPrintedIn(t *testing.T) {
+	flags := flagsOf("Usage:\n  spin x [flags]\n\nFlags:\n" +
+		"  -h, --help[=true|false]      help for x\n" +
+		"      --name string            Workspace name\n" +
+		"      --wait[=true|false]      Return once it runs\n" +
+		"      --force                  Do not wait\n\nGlobal Flags:\n" +
+		"  -o, --output string        text or json\n")
+	for name, value := range map[string]bool{"help": false, "h": false, "name": true, "wait": false, "force": false, "output": true, "o": true} {
+		f, ok := flags[name]
+		if !ok || f.value != value {
+			t.Errorf("--%s: read %v, takes a value %v; want read, takes a value %v", name, ok, f.value, value)
+		}
+	}
+}
