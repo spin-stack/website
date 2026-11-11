@@ -39,11 +39,11 @@ Available Commands:
   home        The agent's homes: volumes that outlive their workspaces
 
 Flags:
-  -h, --help               help for agent
-  -i, --identity string    Identity file (private key)
-      --port int           The port on this computer the session forwards T3 Code to (default 3773)
-      --start              Start the workspace first if it is stopped
-      --timeout duration   How long to wait for the workspace to be running; by default, until the control plane gives up on it
+  -h, --help[=true|false]    help for agent
+  -i, --identity string      Identity file (private key)
+      --port int             The port on this computer the session forwards T3 Code to (default 3773)
+      --start[=true|false]   Start the workspace first if it is stopped
+      --timeout duration     How long to wait for the workspace to be running; by default, until the control plane gives up on it
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -71,7 +71,7 @@ Available Commands:
   list        Your agent homes, and which workspace mounts each
 
 Flags:
-  -h, --help   help for home
+  -h, --help[=true|false]   help for home
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -91,7 +91,7 @@ Usage:
   spin agent home delete <id> [flags]
 
 Flags:
-  -h, --help   help for delete
+  -h, --help[=true|false]   help for delete
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -109,7 +109,7 @@ Usage:
   spin agent home list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

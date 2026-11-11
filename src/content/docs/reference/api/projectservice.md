@@ -29,6 +29,7 @@ ProjectService is the installation's projects (spin#720): a repository and the s
 | `networkTags` | list of string |  |
 | `prebuildRefs` | list of string |  |
 | `prebuildRebaseEvery` | integer (int32) | Zero is the installation's default |
+| `prebuildKeep` | integer (int32) | Zero is one: the newest of each ref |
 
 **Response**
 
@@ -49,6 +50,25 @@ ProjectService is the installation's projects (spin#720): a repository and the s
 **Response**
 
 No fields: `{}`.
+
+## GetPrebuild
+
+`POST /spin.v1.ProjectService/GetPrebuild`
+
+One of them whole, with what its build's create tasks wrote, to whoever sees the project.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `projectId` | string |  |
+| `prebuildId` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `prebuild` | [Prebuild](/reference/api/types/#prebuild) |  |
 
 ## GetProject
 
@@ -84,6 +104,27 @@ A project's prebuilds, to whoever sees it; and a build of one of its refs now, b
 | Field | Type | What it is |
 |---|---|---|
 | `prebuilds` | list of [Prebuild](/reference/api/types/#prebuild) | Newest first. |
+| `storageMeasuredAt` | `Timestamp` | When storage-gc last read the store, which each stored_bytes is as of; unset before it has. |
+| `retireUnusedDays` | integer (int32) | The installation's prebuild_retire_unused_days: a ready prebuild nobody opened a workspace from in this many days is retired, its ref's newest included. Zero retires none for that. |
+| `refsNotFound` | list of [PrebuildRefNotFound](/reference/api/types/#prebuildrefnotfound) | The refs the project prebuilds that its forge says the repository has not - a branch deleted since it was named - as the prebuilds job last found them: nothing is built of one until the forge has it again or the project names it no longer. |
+
+## ListProjectWorkspaces
+
+`POST /spin.v1.ProjectService/ListProjectWorkspaces`
+
+Everybody's workspaces open on a project, to its admins and nobody else: a person it is only shared with is refused, and reads their own with ListWorkspaces.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `projectId` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaces` | list of [ProjectWorkspace](/reference/api/types/#projectworkspace) | Newest first, and at most 500. Not a prebuild's build, and not a deleted one. |
 
 ## ListProjects
 
@@ -157,6 +198,7 @@ Changed, shared and deleted by its admins. A project with a workspace open on it
 | `networkTags` | list of string |  |
 | `prebuildRefs` | list of string |  |
 | `prebuildRebaseEvery` | integer (int32) |  |
+| `prebuildKeep` | integer (int32) | Zero is one, as at create |
 
 **Response**
 

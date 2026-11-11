@@ -24,11 +24,11 @@ Usage:
   spin cp <from> <to> [flags]
 
 Flags:
-  -h, --help               help for cp
-  -i, --identity string    Identity file (private key)
-      --start              Start the workspace first if it is stopped
-      --timeout duration   How long to wait for the workspace to be running; by default, until the control plane gives up on it
-  -u, --user string        User to copy as (default "root")
+  -h, --help[=true|false]    help for cp
+  -i, --identity string      Identity file (private key)
+      --start[=true|false]   Start the workspace first if it is stopped
+      --timeout duration     How long to wait for the workspace to be running; by default, until the control plane gives up on it
+  -u, --user string          User to copy as (default "root")
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

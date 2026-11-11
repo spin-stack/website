@@ -19,20 +19,24 @@ runs), through whichever the editor has of Microsoft's Remote-SSH extension
 on Open VSX). --editor names the editor's command when it is not 'code'.
 
 With Remote-SSH, before VS Code connects, the workspace is asked whether it has the server for
-your VS Code. When it has not, it is given it while it runs - published first if this installation
-has not got that version, which takes minutes once and is said as it goes. Where that cannot
-be done, VS Code downloads its own server into the workspace (about 220 MB), which this says.
+your VS Code. When it has not, it is given it while it runs - prepared first if this installation
+has not got that version, once for the whole installation, which this waits for and says as it
+goes. Where that cannot be done - nobody accepted the server's terms in Admin → Extensions, or
+the publish failed - VS Code downloads its own server into the workspace's temporary directory
+(about 220 MB), which this says - or, where that directory has no room for it, refuses with what
+resolves it, rather than leave VS Code to fail the download and reconnect without end.
 
 With Open Remote - SSH, the editor downloads and runs its own server in the workspace, as that
 extension is set up to; spin writes the SSH config and opens the folder, and nothing more.
 
 Spin installs and configures neither extension. The server an installation
-publishes is Microsoft's, licensed for internal use only: one that sells workspaces to others
-leaves VS Code to download its own.
+publishes is Microsoft's, licensed for an organization's own use.
 
 An editor that runs spin itself - the Spinbox extension - names its own commit with
 --vscode-commit and --no-open: no local 'code' is looked for, the workspace is given that
-commit's server as above, the SSH config is written, and nothing is opened.
+commit's server as above, the SSH config is written, and nothing is opened. With -o json the
+answer is JSON Lines: a {"preparing": {...}} line for each step of a server being prepared, then
+the result, whose not_given says why the workspace was not given one.
 
 Examples:
   spin code my-workspace
@@ -44,10 +48,10 @@ Usage:
 
 Flags:
       --editor string           The editor's command, one with Remote-SSH or Open Remote - SSH installed (default "code")
-  -h, --help                    help for code
+  -h, --help[=true|false]       help for code
   -i, --identity string         Identity file (private key); default: the first key this machine holds that your keyring lists
-      --no-open                 Write the SSH config and give the workspace the server, and open nothing; needs --vscode-commit
-      --start                   Start the workspace first if it is stopped
+      --no-open[=true|false]    Write the SSH config and give the workspace the server, and open nothing; needs --vscode-commit
+      --start[=true|false]      Start the workspace first if it is stopped
       --timeout duration        How long to wait for the workspace to be running; by default, until the control plane gives up on it
       --vscode-commit string    The commit of the VS Code that will connect, instead of asking a local 'code'; needs --no-open
       --vscode-version string   The version of that VS Code, which is only said; needs --vscode-commit

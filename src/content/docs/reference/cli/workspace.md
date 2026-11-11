@@ -54,7 +54,7 @@ Available Commands:
   watch        Record where a workspace connects, into its logs
 
 Flags:
-  -h, --help   help for workspace
+  -h, --help[=true|false]   help for workspace
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -80,7 +80,7 @@ Usage:
   spin workspace bandwidth <id> <mbps> [flags]
 
 Flags:
-  -h, --help   help for bandwidth
+  -h, --help[=true|false]   help for bandwidth
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -105,10 +105,10 @@ Usage:
   spin workspace clone <workspace> [flags]
 
 Flags:
-  -h, --help               help for clone
-      --name string        The clone's name (generated if empty)
-      --timeout duration   How long --wait waits; by default, until the control plane gives up on it
-      --wait               Return once the clone is running
+  -h, --help[=true|false]   help for clone
+      --name string         The clone's name (generated if empty)
+      --timeout duration    How long --wait waits; by default, until the control plane gives up on it
+      --wait[=true|false]   Return once the clone is running
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -132,8 +132,8 @@ Usage:
   spin workspace console <workspace> [flags]
 
 Flags:
-  -h, --help          help for console
-      --lines int32   How many lines from the end (default 200)
+  -h, --help[=true|false]   help for console
+      --lines int32         How many lines from the end (default 200)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -155,8 +155,9 @@ You log in to it with a key you added ('spin ssh-key add'), and so does each gue
 What it applies of yours - dotfiles, shell, environment, editor settings, Taskfile, and this
 workspace's own --env over your environment - is your settings, as you saved them.
 
-A project (--project) is the workspace's shape - its image, preset and network policies - and
-the repository its guest clones into /workspace/<repository name>, at --ref or the project's own;
+A project (--project) is the workspace's shape - its image and network policies, and its preset
+unless --preset names another - and the repository its guest clones into
+/workspace/<repository name>, at --ref or the project's own;
 the workspace is made in --team, or your personal team. A project whose repository is on GitHub opens once you have
 connected your GitHub account (Settings → Git in the dashboard).
 
@@ -166,6 +167,7 @@ Examples:
   spin workspace create --name build --env GOPROXY=direct --network-tag registry-only
   spin workspace create --name copy --from-snapshot <snapshot-id>
   spin workspace create --team /engineering --project qboot --ref release/2
+  spin workspace create --project qboot --preset large
 
 Usage:
   spin workspace create [flags]
@@ -174,16 +176,16 @@ Flags:
       --agent-home string      An agent's home of yours to mount, by id (spin agent home list): the chats of a workspace since erased
       --env strings            Environment variables (KEY=VALUE)
       --from-snapshot string   Start from a snapshot instead of an image
-  -h, --help                   help for create
+  -h, --help[=true|false]      help for create
       --image string           the ref of the disk image to start from, with its version (default: the base image of the machine this installation runs)
       --name string            Workspace name (auto-generated if empty)
       --network-tag strings    Network policy to run under, by name (repeatable)
-      --preset string          The preset it is sized by, by name (default: the installation's)
+      --preset string          The preset it is sized by, by name (default: the project's, or the installation's)
       --project string         A project to open, by slug: its image, preset and policies, and its repository cloned
       --ref string             The branch or tag to open the project at (default: the project's)
       --team string            The team, by id, path or me (your personal team if empty)
       --timeout duration       How long --wait waits; by default, until the control plane gives up on it
-      --wait                   Return once the workspace is running
+      --wait[=true|false]      Return once the workspace is running
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -203,10 +205,10 @@ Usage:
   spin workspace delete <workspace> [flags]
 
 Flags:
-      --force         Delete it in a state a delete is otherwise refused in: one stuck starting or stopping
-  -h, --help          help for delete
-      --permanently   Erase it now instead of keeping it in the trash
-  -y, --yes           Skip confirmation
+      --force[=true|false]         Delete it in a state a delete is otherwise refused in: one stuck starting or stopping
+  -h, --help[=true|false]          help for delete
+      --permanently[=true|false]   Erase it now instead of keeping it in the trash
+  -y, --yes[=true|false]           Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -224,7 +226,7 @@ Usage:
   spin workspace deleted [flags]
 
 Flags:
-  -h, --help   help for deleted
+  -h, --help[=true|false]   help for deleted
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -244,8 +246,8 @@ Usage:
   spin workspace denials <id> [flags]
 
 Flags:
-  -h, --help          help for denials
-      --limit int32   How many of the newest to read (default 100)
+  -h, --help[=true|false]   help for denials
+      --limit int32         How many of the newest to read (default 100)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -269,7 +271,7 @@ Usage:
   spin workspace egress <workspace> [flags]
 
 Flags:
-  -h, --help   help for egress
+  -h, --help[=true|false]   help for egress
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -287,7 +289,7 @@ Usage:
   spin workspace get <workspace> [flags]
 
 Flags:
-  -h, --help   help for get
+  -h, --help[=true|false]   help for get
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -321,11 +323,11 @@ Usage:
   spin workspace grant <workspace> [flags]
 
 Flags:
-      --cpu int32      Cores it is to hold
-      --for duration   How long the grant lasts before it is given back on its own (default: until it is given back)
-  -h, --help           help for grant
-      --memory int32   Memory it is to hold, in MB
-      --move           Move it to a host with room when its own has none (it is paused while it moves)
+      --cpu int32           Cores it is to hold
+      --for duration        How long the grant lasts before it is given back on its own (default: until it is given back)
+  -h, --help[=true|false]   help for grant
+      --memory int32        Memory it is to hold, in MB
+      --move[=true|false]   Move it to a host with room when its own has none (it is paused while it moves)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -350,7 +352,7 @@ Available Commands:
   remove      Take a guest out
 
 Flags:
-  -h, --help   help for guests
+  -h, --help[=true|false]   help for guests
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -370,8 +372,8 @@ Usage:
   spin workspace guests add <workspace> <email> [flags]
 
 Flags:
-  -h, --help         help for add
-      --no-browser   print the page where your passkey confirms, instead of opening it
+  -h, --help[=true|false]         help for add
+      --no-browser[=true|false]   print the page where your passkey confirms, instead of opening it
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -389,7 +391,7 @@ Usage:
   spin workspace guests list <workspace> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -408,7 +410,7 @@ Usage:
   spin workspace guests remove <workspace> <email | user id> [flags]
 
 Flags:
-  -h, --help   help for remove
+  -h, --help[=true|false]   help for remove
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -426,8 +428,8 @@ Usage:
   spin workspace history <workspace> [flags]
 
 Flags:
-  -h, --help          help for history
-      --limit int32   Number of events to show (default 50)
+  -h, --help[=true|false]   help for history
+      --limit int32         Number of events to show (default 50)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -449,7 +451,7 @@ Usage:
   spin workspace keep <workspace> <duration> [flags]
 
 Flags:
-  -h, --help   help for keep
+  -h, --help[=true|false]   help for keep
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -467,8 +469,8 @@ Usage:
   spin workspace list [flags]
 
 Flags:
-  -h, --help           help for list
-      --state string   Filter by state (running, stopped, etc.)
+  -h, --help[=true|false]   help for list
+      --state string        Filter by state (running, stopped, etc.)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -494,9 +496,9 @@ Usage:
   spin workspace logs <workspace> [query] [flags]
 
 Flags:
-  -h, --help             help for logs
-      --limit int32      how many lines, newest first: 1 to 1000 (default 100)
-      --since duration   how far back to look, at most 744h (31 days) (default 1h0m0s)
+  -h, --help[=true|false]   help for logs
+      --limit int32         how many lines, newest first: 1 to 1000 (default 100)
+      --since duration      how far back to look, at most 744h (31 days) (default 1h0m0s)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -521,7 +523,7 @@ Usage:
   spin workspace move <workspace> [flags]
 
 Flags:
-  -h, --help   help for move
+  -h, --help[=true|false]   help for move
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -545,7 +547,7 @@ Usage:
   spin workspace policies [flags]
 
 Flags:
-  -h, --help   help for policies
+  -h, --help[=true|false]   help for policies
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -566,9 +568,9 @@ Usage:
   spin workspace quarantine <id> [flags]
 
 Flags:
-  -h, --help            help for quarantine
-      --reason string   Why it is held: kept on the audit entry for the act
-  -y, --yes             Skip confirmation
+  -h, --help[=true|false]   help for quarantine
+      --reason string       Why it is held: kept on the audit entry for the act
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -592,8 +594,8 @@ Usage:
   spin workspace recover <workspace> [flags]
 
 Flags:
-      --accept-data-loss   go ahead and give up the work the old host had not published
-  -h, --help               help for recover
+      --accept-data-loss[=true|false]   go ahead and give up the work the old host had not published
+  -h, --help[=true|false]               help for recover
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -613,7 +615,7 @@ Usage:
   spin workspace release <workspace> [flags]
 
 Flags:
-  -h, --help   help for release
+  -h, --help[=true|false]   help for release
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -636,10 +638,10 @@ Usage:
   spin workspace reset <workspace> [flags]
 
 Flags:
-  -h, --help               help for reset
-      --start              Start the workspace on the disk it was created from and wait until it is running
-      --timeout duration   How long --start waits; by default, until the control plane gives up on it
-  -y, --yes                Skip confirmation
+  -h, --help[=true|false]    help for reset
+      --start[=true|false]   Start the workspace on the disk it was created from and wait until it is running
+      --timeout duration     How long --start waits; by default, until the control plane gives up on it
+  -y, --yes[=true|false]     Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -665,10 +667,10 @@ Usage:
   spin workspace restore <workspace> [snapshot-id] [flags]
 
 Flags:
-  -h, --help               help for restore
-      --start              Start the workspace on the restored disk and wait until it is running
-      --timeout duration   How long --start waits; by default, until the control plane gives up on it
-      --with-memory        Resume the snapshot's processes too; the workspace may be running
+  -h, --help[=true|false]          help for restore
+      --start[=true|false]         Start the workspace on the restored disk and wait until it is running
+      --timeout duration           How long --start waits; by default, until the control plane gives up on it
+      --with-memory[=true|false]   Resume the snapshot's processes too; the workspace may be running
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -700,7 +702,7 @@ Usage:
   spin workspace retag <workspace> [flags]
 
 Flags:
-  -h, --help                  help for retag
+  -h, --help[=true|false]     help for retag
       --network-tag strings   Network policy to run under, by name (repeatable); the whole set, not an addition
 
 Global Flags:
@@ -723,10 +725,10 @@ Usage:
   spin workspace start <workspace> [flags]
 
 Flags:
-      --from-disk          boot a suspended workspace from its disk, dropping the memory it was suspended with
-  -h, --help               help for start
-      --timeout duration   How long --wait waits; by default, until the control plane gives up on it
-      --wait               Return once the workspace is running
+      --from-disk[=true|false]   boot a suspended workspace from its disk, dropping the memory it was suspended with
+  -h, --help[=true|false]        help for start
+      --timeout duration         How long --wait waits; by default, until the control plane gives up on it
+      --wait[=true|false]        Return once the workspace is running
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -749,7 +751,7 @@ Usage:
   spin workspace status <workspace> [flags]
 
 Flags:
-  -h, --help   help for status
+  -h, --help[=true|false]   help for status
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -770,10 +772,10 @@ Usage:
   spin workspace stop <workspace> [flags]
 
 Flags:
-      --force              Stop the machine without waiting for the guest; also ends a stop that did not finish
-  -h, --help               help for stop
-      --timeout duration   How long --wait waits; by default, until the control plane gives up on it
-      --wait               Return once the workspace is stopped
+      --force[=true|false]   Stop the machine without waiting for the guest; also ends a stop that did not finish
+  -h, --help[=true|false]    help for stop
+      --timeout duration     How long --wait waits; by default, until the control plane gives up on it
+      --wait[=true|false]    Return once the workspace is stopped
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -800,7 +802,7 @@ Usage:
   spin workspace suspend <workspace> [flags]
 
 Flags:
-  -h, --help   help for suspend
+  -h, --help[=true|false]   help for suspend
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -820,7 +822,7 @@ Usage:
   spin workspace threads <workspace> [flags]
 
 Flags:
-  -h, --help   help for threads
+  -h, --help[=true|false]   help for threads
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -840,7 +842,7 @@ Usage:
   spin workspace undelete <id> [flags]
 
 Flags:
-  -h, --help   help for undelete
+  -h, --help[=true|false]   help for undelete
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -861,8 +863,8 @@ Usage:
   spin workspace unquarantine <id> [flags]
 
 Flags:
-  -h, --help   help for unquarantine
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for unquarantine
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -888,10 +890,10 @@ Usage:
   spin workspace update <workspace> [flags]
 
 Flags:
-      --env strings      Environment variables (KEY=VALUE)
-  -h, --help             help for update
-      --name string      New workspace name
-      --wake-on-access   Resume it, when suspended, for a signed-in visitor of one of its ports (never an anonymous one)
+      --env strings                   Environment variables (KEY=VALUE)
+  -h, --help[=true|false]             help for update
+      --name string                   New workspace name
+      --wake-on-access[=true|false]   Resume it, when suspended, for a signed-in visitor of one of its ports (never an anonymous one)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -915,8 +917,8 @@ Usage:
   spin workspace watch <workspace> [flags]
 
 Flags:
-  -h, --help   help for watch
-      --off    Stop recording where the workspace connects
+  -h, --help[=true|false]   help for watch
+      --off[=true|false]    Stop recording where the workspace connects
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

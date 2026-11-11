@@ -16,7 +16,7 @@ Usage:
   spin version [flags]
 
 Flags:
-  -h, --help   help for version
+  -h, --help[=true|false]   help for version
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

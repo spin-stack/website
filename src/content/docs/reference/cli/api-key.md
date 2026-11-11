@@ -26,7 +26,7 @@ Available Commands:
   revoke      Revoke an API key
 
 Flags:
-  -h, --help   help for api-key
+  -h, --help[=true|false]   help for api-key
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -70,7 +70,7 @@ Usage:
 
 Flags:
       --expires string         How long the key lasts, at most a year: a whole number of d, w or y (30d, 2w, 1y), or a duration like 36h (default "90d")
-  -h, --help                   help for create
+  -h, --help[=true|false]      help for create
       --max-cores int32        How many cores their workspaces may hold at once
       --max-workspaces int32   How many workspaces the key and the keys it delegates may hold at once
       --project strings        A project whose workspaces the key reaches, by id (can be repeated; default: any)
@@ -93,7 +93,7 @@ Usage:
   spin api-key list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -111,8 +111,8 @@ Usage:
   spin api-key revoke <key-id> [flags]
 
 Flags:
-  -h, --help   help for revoke
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for revoke
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

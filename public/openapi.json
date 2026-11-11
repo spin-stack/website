@@ -6,6 +6,68 @@
     "version": "v1"
   },
   "paths": {
+    "/spin.v1.AdminService/AcceptThirdPartyTerms": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "AcceptThirdPartyTerms",
+        "description": "Accept the terms, as the version shown, for the items named: this installation then\n downloads them - the releases this control plane pins at once, and the newest daily.",
+        "operationId": "spin.v1.AdminService.AcceptThirdPartyTerms",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.AcceptThirdPartyTermsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.AcceptThirdPartyTermsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/AddAllowedEmail": {
       "post": {
         "tags": [
@@ -747,6 +809,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/GetEmailSettings": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "GetEmailSettings",
+        "description": "The SMTP server the installation tells people through. The password is never read back.",
+        "operationId": "spin.v1.AdminService.GetEmailSettings",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetEmailSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetEmailSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/GetFleetVersions": {
       "post": {
         "tags": [
@@ -1119,6 +1243,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/GetRunbook": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "GetRunbook",
+        "description": "One runbook, its markdown and where its file is at the pinned commit. NOT_FOUND for an id\n this release's runbooks do not have.",
+        "operationId": "spin.v1.AdminService.GetRunbook",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetRunbookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetRunbookResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/GetSecuritySettings": {
       "post": {
         "tags": [
@@ -1367,6 +1553,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/GetThirdPartyTerms": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "GetThirdPartyTerms",
+        "description": "The software this installation downloads from its makers, the terms it is used under, and\n which of it an administrator accepted the terms for: who, when, and which text. Nothing is\n downloaded of an item whose terms are not accepted (internal/controlplane/thirdparty).",
+        "operationId": "spin.v1.AdminService.GetThirdPartyTerms",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetThirdPartyTermsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetThirdPartyTermsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/GetVSCodeServers": {
       "post": {
         "tags": [
@@ -1422,6 +1670,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.GetVSCodeServersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/GetWorkspaceNames": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "GetWorkspaceNames",
+        "description": "The names of the workspaces ids are, whoever owns them and whatever state they are in, a\n deleted one among them: a record of the platform's logs names a workspace by its id, and\n ListWorkspaces is the caller's own. An id the installation no longer holds a row for is\n left out of the answer.",
+        "operationId": "spin.v1.AdminService.GetWorkspaceNames",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetWorkspaceNamesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetWorkspaceNamesResponse"
                 }
               }
             }
@@ -1924,6 +2234,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/ListRunbooks": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListRunbooks",
+        "description": "What an operator does when an alert fires, a job fails or an owner is told something went\n wrong: spin-stack/runbooks at the commit this release pins, served so it is read in the app.",
+        "operationId": "spin.v1.AdminService.ListRunbooks",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListRunbooksRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListRunbooksResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/ListUserAPIKeys": {
       "post": {
         "tags": [
@@ -2358,6 +2730,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/RevokeThirdPartyTerms": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "RevokeThirdPartyTerms",
+        "description": "Take the acceptance back for the items named: nothing more of them is downloaded. What was\n downloaded already stays until an administrator removes it.",
+        "operationId": "spin.v1.AdminService.RevokeThirdPartyTerms",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.RevokeThirdPartyTermsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.RevokeThirdPartyTermsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/RevokeUserAPIKey": {
       "post": {
         "tags": [
@@ -2599,6 +3033,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.UntagImageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/UpdateEmailSettings": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "UpdateEmailSettings",
+        "description": "Set the SMTP server, checked against it - connected to and signed in to - before it is\n written. An empty host turns email off.",
+        "operationId": "spin.v1.AdminService.UpdateEmailSettings",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.UpdateEmailSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.UpdateEmailSettingsResponse"
                 }
               }
             }
@@ -5326,6 +5822,68 @@
         }
       }
     },
+    "/spin.v1.HostService/RemoveHost": {
+      "post": {
+        "tags": [
+          "HostService"
+        ],
+        "summary": "RemoveHost",
+        "description": "Takes a machine of an autoscaling group out of the fleet (admin only), as Host.removal says:\n given back to its group (GIVE_BACK), or forgotten (FORGET). A host whose removal is REVOKE is\n refused: RevokeRunner is its removal.",
+        "operationId": "spin.v1.HostService.RemoveHost",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.RemoveHostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.RemoveHostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.HostService/SetHostPolicy": {
       "post": {
         "tags": [
@@ -6872,6 +7430,68 @@
         }
       }
     },
+    "/spin.v1.ProjectService/GetPrebuild": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "GetPrebuild",
+        "description": "One of them whole, with what its build's create tasks wrote, to whoever sees the project.",
+        "operationId": "spin.v1.ProjectService.GetPrebuild",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetPrebuildRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetPrebuildResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.ProjectService/GetProject": {
       "post": {
         "tags": [
@@ -6988,6 +7608,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListPrebuildsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.ProjectService/ListProjectWorkspaces": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "ListProjectWorkspaces",
+        "description": "Everybody's workspaces open on a project, to its admins and nobody else: a person it is only\n shared with is refused, and reads their own with ListWorkspaces.",
+        "operationId": "spin.v1.ProjectService.ListProjectWorkspaces",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListProjectWorkspacesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListProjectWorkspacesResponse"
                 }
               }
             }
@@ -7674,6 +8356,68 @@
         }
       }
     },
+    "/spin.v1.SettingsService/GetNotificationPreferences": {
+      "post": {
+        "tags": [
+          "SettingsService"
+        ],
+        "summary": "GetNotificationPreferences",
+        "description": "Which of those the caller is emailed about.",
+        "operationId": "spin.v1.SettingsService.GetNotificationPreferences",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetNotificationPreferencesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetNotificationPreferencesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.SettingsService/GetUserSettings": {
       "post": {
         "tags": [
@@ -7729,6 +8473,129 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.GetUserSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.SettingsService/ListNotifications": {
+      "post": {
+        "tags": [
+          "SettingsService"
+        ],
+        "summary": "ListNotifications",
+        "description": "What happened to the caller's workspaces that they are told of, newest first, with whether\n each was sent and how. Recorded whether or not the installation can send email.",
+        "operationId": "spin.v1.SettingsService.ListNotifications",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListNotificationsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListNotificationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.SettingsService/UpdateNotificationPreferences": {
+      "post": {
+        "tags": [
+          "SettingsService"
+        ],
+        "summary": "UpdateNotificationPreferences",
+        "operationId": "spin.v1.SettingsService.UpdateNotificationPreferences",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.UpdateNotificationPreferencesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.UpdateNotificationPreferencesResponse"
                 }
               }
             }
@@ -9778,7 +10645,7 @@
           "WorkspaceService"
         ],
         "summary": "AttachVSCodeServer",
-        "description": "Give a running workspace the VS Code server of a client's commit, while it runs: published\n first when this installation has not got it and fetches servers on its own\n (InstallationSettings.vscode_fetch), refused as FAILED_PRECONDITION when it does not. Asked\n again until it answers attached.",
+        "description": "Give a running workspace the VS Code server of a client's commit, while it runs: published\n first when this installation has not got it and an administrator accepted the VS Code\n server's terms (AdminService.AcceptThirdPartyTerms), refused as FAILED_PRECONDITION, saying\n so, when nobody did. Asked again until it answers attached.",
         "operationId": "spin.v1.WorkspaceService.AttachVSCodeServer",
         "parameters": [
           {
@@ -13235,6 +14102,30 @@
         "title": "APIKey",
         "additionalProperties": false
       },
+      "spin.v1.AcceptThirdPartyTermsRequest": {
+        "type": "object",
+        "properties": {
+          "termsVersion": {
+            "type": "string",
+            "title": "terms_version",
+            "description": "The version of the text the administrator was shown: one that is not the current one is\n refused, so nobody accepts a text they did not read."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ThirdPartyItem"
+            },
+            "title": "items"
+          }
+        },
+        "title": "AcceptThirdPartyTermsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.AcceptThirdPartyTermsResponse": {
+        "type": "object",
+        "title": "AcceptThirdPartyTermsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ActivateHostRequest": {
         "type": "object",
         "properties": {
@@ -13737,6 +14628,11 @@
             "type": "boolean",
             "title": "removable",
             "description": "No disk was cloned from it and it is not the one given: RemoveStoredVolume untags it on the\n way and removes it."
+          },
+          "keptBecause": {
+            "type": "string",
+            "title": "kept_because",
+            "description": "Why it stays, in words, where it may not go."
           }
         },
         "title": "BaseImage",
@@ -14697,6 +15593,12 @@
             "title": "prebuild_rebase_every",
             "format": "int32",
             "description": "Zero is the installation's default"
+          },
+          "prebuildKeep": {
+            "type": "integer",
+            "title": "prebuild_keep",
+            "format": "int32",
+            "description": "Zero is one: the newest of each ref"
           }
         },
         "title": "CreateProjectRequest",
@@ -15053,7 +15955,7 @@
           "preset": {
             "type": "string",
             "title": "preset",
-            "description": "The preset it is sized by, by name (AdminService.ListResourcePresets): its cores, memory,\n disk and how it grows. Empty is the installation's default preset, or with none marked\n 1 core, 512 MB and 10 GB free. A disabled preset is refused."
+            "description": "The preset it is sized by, by name (AdminService.ListResourcePresets): its cores, memory,\n disk and how it grows. Empty is the project's preset when project_id names one, otherwise\n the installation's default preset, or with none marked 1 core, 512 MB and 10 GB free. A\n disabled preset is refused."
           },
           "env": {
             "type": "object",
@@ -15080,7 +15982,7 @@
           "projectId": {
             "type": "string",
             "title": "project_id",
-            "description": "A project the caller sees: the workspace is the project's - its image, preset and tags, which\n the request then names none of - in team_id, the caller's personal team when empty, and its\n guest clones the project's repository at ref, the project's own when empty. Refused while the\n repository is on a forge the installation connects to (ForgeService) and the caller has not\n connected their account there."
+            "description": "A project the caller sees: the workspace is the project's - its image and tags, which the\n request then names neither of, and its preset unless preset names another - in team_id, the\n caller's personal team when empty, and its\n guest clones the project's repository at ref, the project's own when empty. Refused while the\n repository is on a forge the installation connects to (ForgeService) and the caller has not\n connected their account there."
           },
           "ref": {
             "type": "string",
@@ -15623,6 +16525,37 @@
         "title": "DrainHostResponse",
         "additionalProperties": false
       },
+      "spin.v1.EmailSettings": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "title": "host"
+          },
+          "port": {
+            "type": "integer",
+            "title": "port",
+            "format": "int32",
+            "description": "465 is TLS from the first byte; any other port is upgraded with STARTTLS where the server\n offers it, and a username is refused over a connection that is not encrypted."
+          },
+          "username": {
+            "type": "string",
+            "title": "username"
+          },
+          "passwordSet": {
+            "type": "boolean",
+            "title": "password_set"
+          },
+          "from": {
+            "type": "string",
+            "title": "from",
+            "description": "The address mail is sent from, as the server allows this account to send."
+          }
+        },
+        "title": "EmailSettings",
+        "additionalProperties": false,
+        "description": "EmailSettings is the SMTP server the installation sends its notifications through. No host is\n email off: what would have been sent is still recorded, and shown on each person's page."
+      },
       "spin.v1.EnableDevModeRequest": {
         "type": "object",
         "title": "EnableDevModeRequest",
@@ -15893,6 +16826,21 @@
             "type": "boolean",
             "title": "newest",
             "description": "Whether a start is given this one."
+          },
+          "volumeId": {
+            "type": "string",
+            "title": "volume_id",
+            "description": "Its volume in the store, which RemoveStoredVolume takes when removable."
+          },
+          "removable": {
+            "type": "boolean",
+            "title": "removable",
+            "description": "Not the newest and nothing runs it: RemoveStoredVolume removes it, and so does the\n collect-releases job on its own."
+          },
+          "keptBecause": {
+            "type": "string",
+            "title": "kept_because",
+            "description": "Why it stays, in words, where it may not go."
           }
         },
         "title": "ExtensionRelease",
@@ -16118,7 +17066,7 @@
             "type": "integer",
             "title": "busy",
             "format": "int32",
-            "description": "Workspaces of the class keeping its group up."
+            "description": "Workspaces of the class, and hosts a root shell holds, keeping its group up."
           },
           "launchFailure": {
             "type": "string",
@@ -16132,6 +17080,19 @@
               }
             ],
             "title": "launch_failed_at"
+          },
+          "giveBackRefused": {
+            "type": "string",
+            "title": "give_back_refused",
+            "description": "A machine of the group the cloud would not take back, in its own words - a role or a policy\n somebody has to change - and when; it is asked again every quarter hour until it is taken.\n Empty while none is refused."
+          },
+          "giveBackRefusedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "give_back_refused_at"
           }
         },
         "title": "FleetClass",
@@ -16489,6 +17450,26 @@
         "title": "GetCurrentUserResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetEmailSettingsRequest": {
+        "type": "object",
+        "title": "GetEmailSettingsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetEmailSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.EmailSettings"
+              }
+            ],
+            "title": "settings"
+          }
+        },
+        "title": "GetEmailSettingsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.GetFleetRequest": {
         "type": "object",
         "title": "GetFleetRequest",
@@ -16721,6 +17702,34 @@
               }
             ],
             "title": "settings"
+          },
+          "reaches": {
+            "type": "object",
+            "title": "reaches",
+            "additionalProperties": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/spin.v1.SettingReach"
+                }
+              ],
+              "title": "value"
+            },
+            "description": "What each setting touches when saved, by its update_mask path: every path\n UpdateInstallationSettings accepts, and no other."
+          },
+          "runningWorkspaces": {
+            "type": "integer",
+            "title": "running_workspaces",
+            "format": "int32",
+            "description": "How many workspaces are running now: what a RUNNING_WORKSPACES setting reaches, and what a\n NEW_WORKSPACES one leaves as it is."
+          },
+          "connectedRunners": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "connected_runners",
+            "format": "int32",
+            "description": "How many runners hold their stream to this control plane now: what a NEXT_HEARTBEAT setting\n reaches. Unset where this control plane cannot tell."
           }
         },
         "title": "GetInstallationSettingsResponse",
@@ -16745,6 +17754,30 @@
           }
         },
         "title": "GetMonitoringResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetNotificationPreferencesRequest": {
+        "type": "object",
+        "title": "GetNotificationPreferencesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetNotificationPreferencesResponse": {
+        "type": "object",
+        "properties": {
+          "preferences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.NotificationPreference"
+            },
+            "title": "preferences",
+            "description": "One per event a person may be told of, in the order they are shown."
+          },
+          "emailConfigured": {
+            "type": "boolean",
+            "title": "email_configured"
+          }
+        },
+        "title": "GetNotificationPreferencesResponse",
         "additionalProperties": false
       },
       "spin.v1.GetPlatformImagesRequest": {
@@ -16789,6 +17822,37 @@
           }
         },
         "title": "GetPlatformImagesResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetPrebuildRequest": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "title": "project_id"
+          },
+          "prebuildId": {
+            "type": "string",
+            "title": "prebuild_id"
+          }
+        },
+        "title": "GetPrebuildRequest",
+        "additionalProperties": false,
+        "description": "A prebuild by its id, of the project it names: one of another project is not found."
+      },
+      "spin.v1.GetPrebuildResponse": {
+        "type": "object",
+        "properties": {
+          "prebuild": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Prebuild"
+              }
+            ],
+            "title": "prebuild"
+          }
+        },
+        "title": "GetPrebuildResponse",
         "additionalProperties": false
       },
       "spin.v1.GetProjectRequest": {
@@ -16840,6 +17904,42 @@
           }
         },
         "title": "GetRegistrationModeResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetRunbookRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "GetRunbookRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetRunbookResponse": {
+        "type": "object",
+        "properties": {
+          "runbook": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Runbook"
+              }
+            ],
+            "title": "runbook"
+          },
+          "markdown": {
+            "type": "string",
+            "title": "markdown",
+            "description": "Its body, markdown without the front matter: the app renders it and nothing else (no raw HTML)."
+          },
+          "sourceUrl": {
+            "type": "string",
+            "title": "source_url",
+            "description": "The file at the commit this release pins, to propose a change from."
+          }
+        },
+        "title": "GetRunbookResponse",
         "additionalProperties": false
       },
       "spin.v1.GetSecuritySettingsRequest": {
@@ -16923,6 +18023,11 @@
             "type": "boolean",
             "title": "development",
             "description": "True for a development installation, where the mock identity provider may be enabled."
+          },
+          "thirdPartyAccepted": {
+            "type": "boolean",
+            "title": "third_party_accepted",
+            "description": "True where an administrator accepted the terms of any third-party software, as the current\n text: the wizard asks until one has, or until it is told to go on without."
           }
         },
         "title": "GetSetupStatusResponse",
@@ -17078,6 +18183,38 @@
           }
         },
         "title": "GetTelemetryStatusResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetThirdPartyTermsRequest": {
+        "type": "object",
+        "title": "GetThirdPartyTermsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetThirdPartyTermsResponse": {
+        "type": "object",
+        "properties": {
+          "termsVersion": {
+            "type": "string",
+            "title": "terms_version",
+            "description": "The version of the text below, which an acceptance names."
+          },
+          "text": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "text",
+            "description": "The terms, a paragraph each."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ThirdPartyTermsItem"
+            },
+            "title": "items"
+          }
+        },
+        "title": "GetThirdPartyTermsResponse",
         "additionalProperties": false
       },
       "spin.v1.GetTraceRequest": {
@@ -17333,6 +18470,37 @@
           }
         },
         "title": "GetWorkspaceIdentityResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceNamesRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "ids",
+            "description": "At most 500: the ids a page of records names."
+          }
+        },
+        "title": "GetWorkspaceNamesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceNamesResponse": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "type": "object",
+            "title": "names",
+            "additionalProperties": {
+              "type": "string",
+              "title": "value"
+            },
+            "description": "Each id asked for that the installation holds a row for, to its workspace's name."
+          }
+        },
+        "title": "GetWorkspaceNamesResponse",
         "additionalProperties": false
       },
       "spin.v1.GetWorkspaceRequest": {
@@ -18099,6 +19267,20 @@
             "type": "string",
             "title": "hostname",
             "description": "hostname is the name the host's machine goes by, as it last registered it: how a person tells\n one host from another where its id says nothing. Empty for a host that has not registered\n since it was made."
+          },
+          "removal": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostRemoval"
+              }
+            ],
+            "title": "removal",
+            "description": "removal is how this host leaves the fleet, decided by where it came from: the only removal\n the API takes for it, so the dashboard offers that one and no other."
+          },
+          "removalRefused": {
+            "type": "string",
+            "title": "removal_refused",
+            "description": "removal_refused is why that removal cannot run now - a workspace whose disk is there - in\n words an administrator acts on; empty while it can."
           }
         },
         "title": "Host",
@@ -18338,6 +19520,23 @@
         "title": "HostPolicy",
         "additionalProperties": false,
         "description": "HostPolicy is what an installation decides about one host. An unset field is the\n installation saying nothing about that setting, which leaves the host on its own default -\n not the same as setting it to nothing."
+      },
+      "spin.v1.HostRemoval": {
+        "type": "string",
+        "title": "HostRemoval",
+        "enum": [
+          "HOST_REMOVAL_UNSPECIFIED",
+          "HOST_REMOVAL_REVOKE",
+          "HOST_REMOVAL_GIVE_BACK",
+          "HOST_REMOVAL_FORGET"
+        ],
+        "description": "HostRemoval is how a host leaves the fleet.\n\n- `HOST_REMOVAL_REVOKE`: A host registered with a token, or a machine of a cloud no group of this installation sizes:\n  RevokeRunner. Nothing else can take its machine away.\n- `HOST_REMOVAL_GIVE_BACK`: A machine of an autoscaling group, connected: RemoveHost gives it back to its group, which\n  terminates it and is asked for one less. Revoking it would leave the machine running and\n  paid for, in a group that counts it.\n- `HOST_REMOVAL_FORGET`: A machine of an autoscaling group, not connected: RemoveHost gives back a machine the group\n  still has, and forgets the host now rather than once it has been silent for\n  host_forget_after_hours.",
+        "x-enum-descriptions": [
+          "",
+          "A host registered with a token, or a machine of a cloud no group of this installation sizes:\n RevokeRunner. Nothing else can take its machine away.",
+          "A machine of an autoscaling group, connected: RemoveHost gives it back to its group, which\n terminates it and is asked for one less. Revoking it would leave the machine running and\n paid for, in a group that counts it.",
+          "A machine of an autoscaling group, not connected: RemoveHost gives back a machine the group\n still has, and forgets the host now rather than once it has been silent for\n host_forget_after_hours."
+        ]
       },
       "spin.v1.HostShell": {
         "type": "object",
@@ -18662,11 +19861,6 @@
             "title": "telemetry_per_volume_histograms",
             "description": "Read only: the metrics that cost most to keep, a histogram per volume, which a surface may\n offer to drop as one."
           },
-          "vscodeFetch": {
-            "type": "boolean",
-            "title": "vscode_fetch",
-            "description": "Whether the control plane fetches VS Code servers from Microsoft on its own: the release it\n pins, at start, the newest stable release, looked for daily, and the server of a client's\n commit the installation has not released. False, it fetches none, and a workspace is given\n a server an administrator published; no image carries one."
-          },
           "workspaceTrashDays": {
             "type": "integer",
             "title": "workspace_trash_days",
@@ -18720,11 +19914,6 @@
             "type": "string",
             "title": "team_secrets_role",
             "description": "The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a\n session tagged spin-team-id with the team: its policy lets that session read only what carries\n the same tag. Empty, no secret is kept as a reference."
-          },
-          "agentsFetch": {
-            "type": "boolean",
-            "title": "agents_fetch",
-            "description": "Whether the control plane fetches the agents' programs - Claude Code, Codex and T3 Code -\n from their publishers on its own: the triple it pins, at start, and the newest release of\n each, looked for daily. False, it fetches none, and a workspace is given a triple an operator\n published; no image carries one."
           },
           "projectCreation": {
             "type": "string",
@@ -18813,6 +20002,24 @@
               }
             ],
             "title": "last_succeeded_at"
+          },
+          "title": {
+            "type": "string",
+            "title": "title",
+            "description": "The job as a person names it: \"Storage collection\" for storage-gc."
+          },
+          "purpose": {
+            "type": "string",
+            "title": "purpose",
+            "description": "One sentence of what it does and what stays undone while it fails."
+          },
+          "recentRuns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.JobRun"
+            },
+            "title": "recent_runs",
+            "description": "Its newest runs, newest first, at most twenty: what a list of jobs shows each one's recent\n outcomes and durations from, without asking for every job's runs. Each has its id, start,\n end and outcome only; ListJobRuns has the rest."
           }
         },
         "title": "Job",
@@ -19502,6 +20709,30 @@
         "title": "ListNetworkPoliciesResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListNotificationsRequest": {
+        "type": "object",
+        "title": "ListNotificationsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListNotificationsResponse": {
+        "type": "object",
+        "properties": {
+          "notifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Notification"
+            },
+            "title": "notifications"
+          },
+          "emailConfigured": {
+            "type": "boolean",
+            "title": "email_configured",
+            "description": "Whether the installation can send email at all."
+          }
+        },
+        "title": "ListNotificationsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListPasskeysRequest": {
         "type": "object",
         "title": "ListPasskeysRequest",
@@ -19542,9 +20773,58 @@
             },
             "title": "prebuilds",
             "description": "Newest first."
+          },
+          "storageMeasuredAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "storage_measured_at",
+            "description": "When storage-gc last read the store, which each stored_bytes is as of; unset before it has."
+          },
+          "retireUnusedDays": {
+            "type": "integer",
+            "title": "retire_unused_days",
+            "format": "int32",
+            "description": "The installation's prebuild_retire_unused_days: a ready prebuild nobody opened a workspace\n from in this many days is retired, its ref's newest included. Zero retires none for that."
+          },
+          "refsNotFound": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.PrebuildRefNotFound"
+            },
+            "title": "refs_not_found",
+            "description": "The refs the project prebuilds that its forge says the repository has not - a branch deleted\n since it was named - as the prebuilds job last found them: nothing is built of one until the\n forge has it again or the project names it no longer."
           }
         },
         "title": "ListPrebuildsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListProjectWorkspacesRequest": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "title": "project_id"
+          }
+        },
+        "title": "ListProjectWorkspacesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListProjectWorkspacesResponse": {
+        "type": "object",
+        "properties": {
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ProjectWorkspace"
+            },
+            "title": "workspaces",
+            "description": "Newest first, and at most 500. Not a prebuild's build, and not a deleted one."
+          }
+        },
+        "title": "ListProjectWorkspacesResponse",
         "additionalProperties": false
       },
       "spin.v1.ListProjectsRequest": {
@@ -19667,6 +20947,25 @@
           }
         },
         "title": "ListResourcePresetsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListRunbooksRequest": {
+        "type": "object",
+        "title": "ListRunbooksRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListRunbooksResponse": {
+        "type": "object",
+        "properties": {
+          "runbooks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Runbook"
+            },
+            "title": "runbooks"
+          }
+        },
+        "title": "ListRunbooksResponse",
         "additionalProperties": false
       },
       "spin.v1.ListSSHKeysRequest": {
@@ -20104,6 +21403,15 @@
               "title": "value"
             },
             "description": "What each listed user still holds, by user id: what an administrator asks before taking\n access away. Kept off User, which other calls return without it."
+          },
+          "refusedRemovals": {
+            "type": "object",
+            "title": "refused_removals",
+            "additionalProperties": {
+              "type": "string",
+              "title": "value"
+            },
+            "description": "Why removing a listed user as an administrator, or disabling them, would be refused, by user\n id; absent where it would not be. The refusal is the database's (lockout), so a client that\n never reads this is refused the same."
           }
         },
         "title": "ListUsersResponse",
@@ -20631,6 +21939,152 @@
         "title": "NetworkUsagePoint",
         "additionalProperties": false,
         "description": "NetworkUsagePoint is what the machine's network carried over a step."
+      },
+      "spin.v1.Notification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id",
+            "description": "The workspace event's id."
+          },
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "workspaceName": {
+            "type": "string",
+            "title": "workspace_name"
+          },
+          "event": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceEventType"
+              }
+            ],
+            "title": "event"
+          },
+          "createdAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "created_at"
+          },
+          "subject": {
+            "type": "string",
+            "title": "subject",
+            "description": "One line saying what happened."
+          },
+          "body": {
+            "type": "string",
+            "title": "body",
+            "description": "What happened, in full."
+          },
+          "command": {
+            "type": "string",
+            "title": "command",
+            "description": "The command that does what the owner can do about it; empty where nothing is to be done."
+          },
+          "deliveries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.NotificationDelivery"
+            },
+            "title": "deliveries",
+            "description": "Empty where it was never sent: email off, or this kind turned off."
+          }
+        },
+        "title": "Notification",
+        "additionalProperties": false,
+        "description": "Notification is one event of a workspace's timeline its owner is told of: what happened, and\n what they can do about it."
+      },
+      "spin.v1.NotificationChannel": {
+        "type": "string",
+        "title": "NotificationChannel",
+        "enum": [
+          "NOTIFICATION_CHANNEL_UNSPECIFIED",
+          "NOTIFICATION_CHANNEL_EMAIL"
+        ],
+        "description": "How a notification leaves the installation."
+      },
+      "spin.v1.NotificationDelivery": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.NotificationChannel"
+              }
+            ],
+            "title": "channel"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.NotificationDeliveryState"
+              }
+            ],
+            "title": "state"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "attempts",
+            "format": "int32"
+          },
+          "lastError": {
+            "type": "string",
+            "title": "last_error",
+            "description": "What the last attempt that failed was told; empty once one succeeded."
+          },
+          "sentAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "sent_at"
+          }
+        },
+        "title": "NotificationDelivery",
+        "additionalProperties": false
+      },
+      "spin.v1.NotificationDeliveryState": {
+        "type": "string",
+        "title": "NotificationDeliveryState",
+        "enum": [
+          "NOTIFICATION_DELIVERY_STATE_UNSPECIFIED",
+          "NOTIFICATION_DELIVERY_STATE_PENDING",
+          "NOTIFICATION_DELIVERY_STATE_SENT",
+          "NOTIFICATION_DELIVERY_STATE_FAILED"
+        ],
+        "description": "Where one notification's delivery on one channel is.\n\n- `NOTIFICATION_DELIVERY_STATE_PENDING`: Not sent yet, or tried and to be tried again\n- `NOTIFICATION_DELIVERY_STATE_SENT`: The channel accepted it\n- `NOTIFICATION_DELIVERY_STATE_FAILED`: Every attempt failed; it is not tried again",
+        "x-enum-descriptions": [
+          "",
+          "Not sent yet, or tried and to be tried again",
+          "The channel accepted it",
+          "Every attempt failed; it is not tried again"
+        ]
+      },
+      "spin.v1.NotificationPreference": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceEventType"
+              }
+            ],
+            "title": "event"
+          },
+          "email": {
+            "type": "boolean",
+            "title": "email"
+          }
+        },
+        "title": "NotificationPreference",
+        "additionalProperties": false
       },
       "spin.v1.ObservedDestination": {
         "type": "object",
@@ -21191,7 +22645,7 @@
           "log": {
             "type": "string",
             "title": "log",
-            "description": "The tail of what its build said, and why it failed."
+            "description": "The tail of what its build's create tasks wrote (GetPrebuild only), and why it failed."
           },
           "error": {
             "type": "string",
@@ -21218,11 +22672,55 @@
             "title": "workspace_count",
             "format": "int32",
             "description": "In ListPrebuilds: the workspaces opened from it that are not deleted, whoever's they are."
+          },
+          "reportedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "reported_at",
+            "description": "When its build's guest said the checkout and create tasks were done; unset before it did."
+          },
+          "spinYaml": {
+            "type": "boolean",
+            "title": "spin_yaml",
+            "description": "Whether the checkout had a .spin.yaml at its root, as the guest reported: without one the\n build is the clone alone, with no create tasks run. Read only with reported_at."
+          },
+          "storedBytes": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "stored_bytes",
+            "format": "int64",
+            "description": "What it keeps in the object store, as storage-gc last read it; unset before a reading\n counted it."
           }
         },
         "title": "Prebuild",
         "additionalProperties": false,
         "description": "A prebuild: one build of a project's ref at a commit, and the snapshot it left."
+      },
+      "spin.v1.PrebuildRefNotFound": {
+        "type": "object",
+        "properties": {
+          "ref": {
+            "type": "string",
+            "title": "ref"
+          },
+          "since": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "since",
+            "description": "The job's first look that found it missing."
+          }
+        },
+        "title": "PrebuildRefNotFound",
+        "additionalProperties": false,
+        "description": "A prebuild ref the project's forge has not."
       },
       "spin.v1.PrebuildState": {
         "type": "string",
@@ -21379,11 +22877,102 @@
             "title": "ready_prebuild_count",
             "format": "int32",
             "description": "In ListProjects: how many of its prebuilds are ready to open from."
+          },
+          "prebuildKeep": {
+            "type": "integer",
+            "title": "prebuild_keep",
+            "format": "int32",
+            "description": "How many of each ref's newest ready prebuilds are kept when no workspace was opened from them."
+          },
+          "timeToReady": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ProjectTimeToReady"
+              }
+            ],
+            "title": "time_to_ready",
+            "description": "In GetProject: how long its workspaces took to be ready. Unset where none has been."
           }
         },
         "title": "Project",
         "additionalProperties": false,
         "description": "A project: a repository and the shape of the workspace that opens it."
+      },
+      "spin.v1.ProjectTimeToReady": {
+        "type": "object",
+        "properties": {
+          "workspaces": {
+            "type": "integer",
+            "title": "workspaces",
+            "format": "int32",
+            "description": "How many workspaces the times are over: 1 to 20."
+          },
+          "median": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Duration"
+              }
+            ],
+            "title": "median"
+          },
+          "slowest": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Duration"
+              }
+            ],
+            "title": "slowest"
+          }
+        },
+        "title": "ProjectTimeToReady",
+        "additionalProperties": false,
+        "description": "How long a project's workspaces took from their create to their project being ready in them -\n the repository checked out and its create tasks done, as each one's guest first said it, the\n wait for a host and the boot included - over the last 20 that got there. One that never did -\n it failed, or was deleted first - is not counted, and neither is one opened from a prebuild:\n this is what opening without one costs. A workspace whose first boots failed its project counts\n from its create to the boot that went."
+      },
+      "spin.v1.ProjectWorkspace": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "ownerId": {
+            "type": "string",
+            "title": "owner_id"
+          },
+          "ownerName": {
+            "type": "string",
+            "title": "owner_name"
+          },
+          "ownerEmail": {
+            "type": "string",
+            "title": "owner_email"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state",
+            "description": "As Workspace.state, DEGRADED included."
+          },
+          "since": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "since",
+            "description": "Since when it has been in that state: when its guest answered for a running one, and when\n its row last changed for any other."
+          }
+        },
+        "title": "ProjectWorkspace",
+        "additionalProperties": false,
+        "description": "A workspace open on a project, as the project's admins read it: whose it is and how it is, and\n nothing that lets them into it."
       },
       "spin.v1.PublishVSCodeServersRequest": {
         "type": "object",
@@ -21878,6 +23467,43 @@
         "title": "RemoveAllowedEmailResponse",
         "additionalProperties": false
       },
+      "spin.v1.RemoveHostRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          }
+        },
+        "title": "RemoveHostRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.RemoveHostResponse": {
+        "type": "object",
+        "properties": {
+          "removal": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostRemoval"
+              }
+            ],
+            "title": "removal",
+            "description": "removal is what was done: GIVE_BACK or FORGET."
+          },
+          "givenBack": {
+            "type": "boolean",
+            "title": "given_back",
+            "description": "given_back is the machine terminated and its group asked for one less; false where the\n group no longer had it."
+          },
+          "forgotten": {
+            "type": "boolean",
+            "title": "forgotten",
+            "description": "forgotten is the host's row gone. A host given back while connected is not: it drains under\n its termination hook, and its row goes when its stream ends."
+          }
+        },
+        "title": "RemoveHostResponse",
+        "additionalProperties": false
+      },
       "spin.v1.RemoveStoredVolumeRequest": {
         "type": "object",
         "properties": {
@@ -22109,6 +23735,11 @@
             "title": "agent_min_memory_mb",
             "format": "int32",
             "description": "What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset."
+          },
+          "fromConfig": {
+            "type": "boolean",
+            "title": "from_config",
+            "description": "Seeded or applied from the installation's config file (the release's presets where it names\n none); false is one an administrator added. An edit since does not change it."
           }
         },
         "title": "ResourcePreset",
@@ -22296,6 +23927,25 @@
         "title": "RevokeRunnerResponse",
         "additionalProperties": false
       },
+      "spin.v1.RevokeThirdPartyTermsRequest": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ThirdPartyItem"
+            },
+            "title": "items"
+          }
+        },
+        "title": "RevokeThirdPartyTermsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.RevokeThirdPartyTermsResponse": {
+        "type": "object",
+        "title": "RevokeThirdPartyTermsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.RevokeUserAPIKeyRequest": {
         "type": "object",
         "properties": {
@@ -22363,6 +24013,85 @@
         },
         "title": "RunPrebuildResponse",
         "additionalProperties": false
+      },
+      "spin.v1.Runbook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id",
+            "description": "Stable: alert rules and pages link /admin/runbooks/\u003cid\u003e."
+          },
+          "title": {
+            "type": "string",
+            "title": "title"
+          },
+          "severity": {
+            "type": "string",
+            "title": "severity",
+            "description": "critical, warning or info."
+          },
+          "owner": {
+            "type": "string",
+            "title": "owner",
+            "description": "The role that keeps it true: operator, security."
+          },
+          "lastReviewed": {
+            "type": "string",
+            "title": "last_reviewed",
+            "description": "YYYY-MM-DD: when it was last held to the release it describes."
+          },
+          "appliesTo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.RunbookAppliesTo"
+              }
+            ],
+            "title": "applies_to"
+          }
+        },
+        "title": "Runbook",
+        "additionalProperties": false
+      },
+      "spin.v1.RunbookAppliesTo": {
+        "type": "object",
+        "properties": {
+          "alerts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "alerts",
+            "description": "Grafana alert rule uids."
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "jobs",
+            "description": "Control plane job names (Job.name)."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "events",
+            "description": "The notices a workspace's owner gets, by WorkspaceEventType without its prefix: HELD."
+          },
+          "dashboards": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "dashboards",
+            "description": "Grafana dashboard uids."
+          }
+        },
+        "title": "RunbookAppliesTo",
+        "additionalProperties": false,
+        "description": "What sends an operator to a runbook, each as the installation names it."
       },
       "spin.v1.SSHKey": {
         "type": "object",
@@ -23261,6 +24990,27 @@
         },
         "title": "SetWorkspaceNetworkWatchResponse",
         "additionalProperties": false
+      },
+      "spin.v1.SettingReach": {
+        "type": "string",
+        "title": "SettingReach",
+        "enum": [
+          "SETTING_REACH_UNSPECIFIED",
+          "SETTING_REACH_RUNNING_WORKSPACES",
+          "SETTING_REACH_NEW_WORKSPACES",
+          "SETTING_REACH_NEXT_HEARTBEAT",
+          "SETTING_REACH_NEXT_REQUEST",
+          "SETTING_REACH_NEXT_PASS"
+        ],
+        "description": "SettingReach is what a saved installation setting touches, and when: each setting declares one\n beside its key (internal/controlplane/settings), so the screen that edits it can say so before\n the save.\n\n- `SETTING_REACH_RUNNING_WORKSPACES`: The workspaces running now, at the control plane's next look at them.\n- `SETTING_REACH_NEW_WORKSPACES`: Workspaces created from now on; those that exist keep what they were made with.\n- `SETTING_REACH_NEXT_HEARTBEAT`: Each runner at its next heartbeat, and the workspaces running on it.\n- `SETTING_REACH_NEXT_REQUEST`: What is asked from now on - a project made, a shell opened, a workspace deleted; what was\n  done before keeps the terms it was done under.\n- `SETTING_REACH_NEXT_PASS`: The next pass of the job that applies it: the autoscaler, the prebuilds' retirement, the\n  collector's read of its policy, the daily look for a release.",
+        "x-enum-descriptions": [
+          "",
+          "The workspaces running now, at the control plane's next look at them.",
+          "Workspaces created from now on; those that exist keep what they were made with.",
+          "Each runner at its next heartbeat, and the workspaces running on it.",
+          "What is asked from now on - a project made, a shell opened, a workspace deleted; what was\n done before keeps the terms it was done under.",
+          "The next pass of the job that applies it: the autoscaler, the prebuilds' retirement, the\n collector's read of its policy, the daily look for a release."
+        ]
       },
       "spin.v1.ShareProjectRequest": {
         "type": "object",
@@ -24249,6 +25999,11 @@
               }
             ],
             "title": "created_at"
+          },
+          "refusedRemoval": {
+            "type": "string",
+            "title": "refused_removal",
+            "description": "Why disabling or deleting it would be refused; empty where it would not be. An installation\n provider that the only administrators who can sign in sign in through (lockout)."
           }
         },
         "title": "TeamIdentityProvider",
@@ -24392,6 +26147,117 @@
         "title": "TestHostWritebackResponse",
         "additionalProperties": false
       },
+      "spin.v1.ThirdPartyAcceptance": {
+        "type": "object",
+        "properties": {
+          "termsVersion": {
+            "type": "string",
+            "title": "terms_version",
+            "description": "The version of the text that was accepted; an older one than the response's counts as none."
+          },
+          "acceptedBy": {
+            "type": "string",
+            "title": "accepted_by",
+            "description": "Who accepted, by email: kept as it was when they did."
+          },
+          "acceptedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "accepted_at"
+          }
+        },
+        "title": "ThirdPartyAcceptance",
+        "additionalProperties": false,
+        "description": "ThirdPartyAcceptance is an administrator's acceptance of an item's terms."
+      },
+      "spin.v1.ThirdPartyItem": {
+        "type": "string",
+        "title": "ThirdPartyItem",
+        "enum": [
+          "THIRD_PARTY_ITEM_UNSPECIFIED",
+          "THIRD_PARTY_ITEM_VSCODE_SERVER",
+          "THIRD_PARTY_ITEM_AGENT_CLIS"
+        ],
+        "description": "ThirdPartyItem is what an administrator accepts the terms of, one download at a time: the\n software the control plane fetches together, as one extension.\n\n- `THIRD_PARTY_ITEM_VSCODE_SERVER`: Microsoft's VS Code server and its CLI: the vsc-\u003ccommit\u003e extensions.\n- `THIRD_PARTY_ITEM_AGENT_CLIS`: Claude Code, Codex, T3 Code and the libatomic T3 Code's server is linked against: the agents\n  extension.",
+        "x-enum-descriptions": [
+          "",
+          "Microsoft's VS Code server and its CLI: the vsc-\u003ccommit\u003e extensions.",
+          "Claude Code, Codex, T3 Code and the libatomic T3 Code's server is linked against: the agents\n extension."
+        ]
+      },
+      "spin.v1.ThirdPartyPart": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "maker": {
+            "type": "string",
+            "title": "maker",
+            "description": "Who makes it and serves the download."
+          },
+          "license": {
+            "type": "string",
+            "title": "license"
+          },
+          "licenseUrl": {
+            "type": "string",
+            "title": "license_url"
+          }
+        },
+        "title": "ThirdPartyPart",
+        "additionalProperties": false,
+        "description": "ThirdPartyPart is one program an item downloads, and the license it comes under."
+      },
+      "spin.v1.ThirdPartyTermsItem": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ThirdPartyItem"
+              }
+            ],
+            "title": "item"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "purpose",
+            "description": "What a workspace gets from it."
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ThirdPartyPart"
+            },
+            "title": "parts"
+          },
+          "acceptance": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ThirdPartyAcceptance"
+              }
+            ],
+            "title": "acceptance",
+            "description": "Unset where nobody accepted the terms for it."
+          },
+          "accepted": {
+            "type": "boolean",
+            "title": "accepted",
+            "description": "Whether this installation downloads it: accepted, as the current text."
+          }
+        },
+        "title": "ThirdPartyTermsItem",
+        "additionalProperties": false
+      },
       "spin.v1.UndeleteWorkspaceRequest": {
         "type": "object",
         "properties": {
@@ -24474,6 +26340,53 @@
       "spin.v1.UntagImageResponse": {
         "type": "object",
         "title": "UntagImageResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.UpdateEmailSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "title": "host"
+          },
+          "port": {
+            "type": "integer",
+            "title": "port",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string",
+            "title": "username"
+          },
+          "password": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "password",
+            "description": "Absent keeps the password there is."
+          },
+          "from": {
+            "type": "string",
+            "title": "from"
+          }
+        },
+        "title": "UpdateEmailSettingsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.UpdateEmailSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "settings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.EmailSettings"
+              }
+            ],
+            "title": "settings"
+          }
+        },
+        "title": "UpdateEmailSettingsResponse",
         "additionalProperties": false
       },
       "spin.v1.UpdateHostClassRequest": {
@@ -24567,6 +26480,35 @@
         "title": "UpdateNetworkPolicyResponse",
         "additionalProperties": false
       },
+      "spin.v1.UpdateNotificationPreferencesRequest": {
+        "type": "object",
+        "properties": {
+          "preferences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.NotificationPreference"
+            },
+            "title": "preferences",
+            "description": "Each event named is set; one not named keeps what it was."
+          }
+        },
+        "title": "UpdateNotificationPreferencesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.UpdateNotificationPreferencesResponse": {
+        "type": "object",
+        "properties": {
+          "preferences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.NotificationPreference"
+            },
+            "title": "preferences"
+          }
+        },
+        "title": "UpdateNotificationPreferencesResponse",
+        "additionalProperties": false
+      },
       "spin.v1.UpdateProjectRequest": {
         "type": "object",
         "properties": {
@@ -24620,6 +26562,12 @@
             "type": "integer",
             "title": "prebuild_rebase_every",
             "format": "int32"
+          },
+          "prebuildKeep": {
+            "type": "integer",
+            "title": "prebuild_keep",
+            "format": "int32",
+            "description": "Zero is one, as at create"
           }
         },
         "title": "UpdateProjectRequest",
@@ -25759,6 +27707,11 @@
             "type": "string",
             "title": "host_name",
             "description": "host_name is the name host_id's machine registered, for a person to tell hosts apart; empty\n with no host, or one that registered none. Answered by GetWorkspace and ListWorkspaces, so a\n list row says where each runs without a status read per row; never placed or trusted by."
+          },
+          "withoutPrebuild": {
+            "type": "string",
+            "title": "without_prebuild",
+            "description": "without_prebuild is why a workspace opening a project at a ref it prebuilds started from none\n of its prebuilds, and cloned the repository at its first boot: none ready, the ready one of\n another image, its disk not cloneable yet. Empty with from_prebuild_id set, or for a project\n that prebuilds nothing."
           }
         },
         "title": "Workspace",
@@ -26002,9 +27955,11 @@
           "WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED",
           "WORKSPACE_EVENT_TYPE_SUSPENSION_DUE",
           "WORKSPACE_EVENT_TYPE_KEPT",
-          "WORKSPACE_EVENT_TYPE_UNRESPONSIVE"
+          "WORKSPACE_EVENT_TYPE_UNRESPONSIVE",
+          "WORKSPACE_EVENT_TYPE_REHOMED",
+          "WORKSPACE_EVENT_TYPE_HELD"
         ],
-        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back",
+        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner",
         "x-enum-descriptions": [
           "",
           "Workspace was created",
@@ -26028,7 +27983,9 @@
           "It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them",
           "A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it",
           "Somebody kept it awake until a time: no suspension before it",
-          "Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back"
+          "Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back",
+          "Its host stopped answering and it was moved to another on its own, giving up what that host had not published",
+          "Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner"
         ]
       },
       "spin.v1.WorkspaceFailure": {
@@ -26298,6 +28255,15 @@
               }
             ],
             "title": "deadline"
+          },
+          "typical": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Duration"
+              }
+            ],
+            "title": "typical",
+            "description": "typical is how long a start usually takes on the workspace's host class: the median, from\n the request to RUNNING (the same measure as since), of the newest starts that came up there.\n Unset for a transition that is not a start, and where too few have come up to say. Per step\n it is not: what a host says of its phases is kept only while one is under way."
           }
         },
         "title": "WorkspaceProgress",
@@ -26620,14 +28586,14 @@
       "name": "RunnerTokenService"
     },
     {
+      "name": "WorkspaceService"
+    },
+    {
       "name": "SettingsService"
     },
     {
       "name": "SetupService",
       "description": "SetupService handles initial platform setup and admin bootstrap.\n Most endpoints require admin authentication, except GetSetupStatus and PasswordLogin."
-    },
-    {
-      "name": "WorkspaceService"
     },
     {
       "name": "ShareService",
