@@ -29,16 +29,16 @@ stops, so a machine replaced by an update takes nothing with it.
 | Traces | 7 days |
 | Metrics | 30 days |
 
-Retention and whether workspaces' console output is collected are
+Retention and [whether workspaces' console output is collected](<feature:A workspace's journal and console are collected as the installation's policy says>) are
 [installation settings](/admin/configuration/).
 
 ## Reading them
 
 | Where | What |
 |---|---|
-| **Admin → Logs** | Search the control plane's, the proxy's and the runners' logs |
+| **Admin → Logs** | [Search the control plane's, the proxy's and the runners' logs](<feature:Platform logs, workspace logs and traces, searched in the product>) |
 | **Admin → Traces** | Find a trace, such as one workspace's start from the request to the guest (`span_name:workspace.start`) |
-| **Admin → Metrics** | Grafana, over the metric store, inside the dashboard |
+| **Admin → Metrics** | [Grafana, over the metric store, inside the dashboard](<feature:Metrics, with Grafana on the control plane>) |
 | A workspace's **Logs** tab | What its machine printed |
 | `spin admin logs` | The same search as Admin → Logs, from the CLI |
 | `spin workspace logs <name>` | A workspace's console, from the CLI |

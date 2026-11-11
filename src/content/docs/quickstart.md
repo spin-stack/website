@@ -41,7 +41,7 @@ spin login --endpoint https://app.<domain>
 ```
 
 The CLI opens the dashboard in your browser and shows a code. Approve the code there, and the
-CLI is signed in. `spin whoami` shows who you are, and `spin smoke` checks the installation does
+CLI is signed in. `spin whoami` shows who you are, and [`spin smoke` checks the installation does](<feature:A smoke test of what an installation's API promises, with a workspace of its own>)
 what this page expects, with a workspace of its own that it erases.
 
 ## 3. Create a workspace

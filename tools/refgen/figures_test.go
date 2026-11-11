@@ -14,17 +14,18 @@ func TestCheckFigures(t *testing.T) {
 	for name, c := range map[string]struct {
 		page, list, source, want string
 	}{
-		"held by a duration":               {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", ttl, ""},
-		"held by a count":                  {"Tried three times.", "p.md | three times | spin:p/p.go#Tries = 3\n", ttl, ""},
-		"listed with why nothing holds it": {"About 220 MB.", "# sizes\np.md | 220 MB | not held: the size of Microsoft's server\n", ttl, ""},
-		"a flag's own value is the CLI's":  {"Pass `--expires 30 days`.\n\n```bash\nsleep 5 minutes\n```", "", ttl, ""},
-		"a figure with no line":            {"Lasts an hour.", "", ttl, `says "an hour", which nothing holds`},
-		"the constant moved":               {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", strings.Replace(ttl, "15", "10", 1), "TTL is now 10m0s, not 15m"},
-		"the count moved":                  {"Tried three times.", "p.md | three times | spin:p/p.go#Tries = 3\n", strings.Replace(ttl, "= 3", "= 5", 1), "Tries is now 5, not 3"},
-		"the constant is gone":             {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#Life = 15m\n", ttl, "no longer declares Life"},
-		"the file is gone":                 {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:q/q.go#TTL = 15m\n", ttl, "spin no longer has q/q.go"},
-		"a line the page no longer says":   {"Lasts.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", ttl, `p.md does not say "fifteen minutes"`},
-		"a line with no third place":       {"Lasts.", "p.md | fifteen minutes\n", ttl, "a line is <page>"},
+		"held by a duration":                {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", ttl, ""},
+		"held by a count":                   {"Tried three times.", "p.md | three times | spin:p/p.go#Tries = 3\n", ttl, ""},
+		"listed with why nothing holds it":  {"About 220 MB.", "# sizes\np.md | 220 MB | not held: the size of Microsoft's server\n", ttl, ""},
+		"a link's target is not the page's": {"[It stops](<feature:Stopped after half an hour>) and [reads](/a/30-days/).", "", ttl, ""},
+		"a flag's own value is the CLI's":   {"Pass `--expires 30 days`.\n\n```bash\nsleep 5 minutes\n```", "", ttl, ""},
+		"a figure with no line":             {"Lasts an hour.", "", ttl, `says "an hour", which nothing holds`},
+		"the constant moved":                {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", strings.Replace(ttl, "15", "10", 1), "TTL is now 10m0s, not 15m"},
+		"the count moved":                   {"Tried three times.", "p.md | three times | spin:p/p.go#Tries = 3\n", strings.Replace(ttl, "= 3", "= 5", 1), "Tries is now 5, not 3"},
+		"the constant is gone":              {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#Life = 15m\n", ttl, "no longer declares Life"},
+		"the file is gone":                  {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:q/q.go#TTL = 15m\n", ttl, "spin no longer has q/q.go"},
+		"a line the page no longer says":    {"Lasts.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", ttl, `p.md does not say "fifteen minutes"`},
+		"a line with no third place":        {"Lasts.", "p.md | fifteen minutes\n", ttl, "a line is <page>"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			docs, spin := t.TempDir(), t.TempDir()

@@ -3,77 +3,14 @@
 # leaves by being linked from the page that says it - [words](<feature:the row's name>) - and
 # task reference:check fails on a line whose row is said, gone or no longer built, and on a built
 # row that is neither said nor here.
-Create, start, stop and delete
 A process inside holds its workspace awake while it lives
-Cores and memory lent while the host has them, and taken back
-A grant of cores and memory of its own, for a while
-An administrator changes a running workspace's bandwidth, its connections open
 Clone a workspace: its disk, team, project, size, policies and environment, in one
-Open a repository, branch, commit or pull request from its URL, in the dashboard (/launch) and from the terminal
-A workspace opened at a commit or a pull request, checked out as pr-<n>
-Recover a workspace whose host is gone, at a cost its owner accepts
-A workspace outlives its runner
-Quarantine, by an administrator
-Why a workspace is not behaving: status, console, history
-The owner's shell, environment, editor settings, Taskfile and dotfiles reach the guest as they save them
-Share a snapshot with a person or make it public, and create a workspace from it
-What looks like a credential is found before a share, and the share refused unless acknowledged
 A long chain is compacted while the workspace runs
-A workspace's DNS goes upstream only for what its policy names, so a policy that closes egress closes the tunnel through names
-A policy changed reaches the host that runs the workspace
-Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role
-What a workspace reached, what it looked up and what it was refused
-Each request to a brokered name as the proxy read it, served or refused and why; and whether each injection's secret is the team's to give
 The egress proxy is a process of its own, holding no key of the host's, started again by the runner when it ends
-A WebSocket to a brokered name: its handshake under the rule's headers and scope, then bytes each way
-HTTP/2 to a brokered name, the proxy's ALPN the real host's: a rule's headers set stream by stream, gRPC's trailers both ways
 Watch where a workspace connects, into its logs
-An agent the supervisor starts is marked, and reaches only brokered names
-Published ports at https://{port}-{workspace}.{domain}: private, whitelisted or public
-Sign in with GitHub or an OIDC provider
-Device login for a terminal
-SSH keys, and plain ssh to spin.<workspace>
-A key logs in only once its person adds it with a passkey: their own for good, a browser's for twelve hours
-Guests of a workspace, let in by its owner with a passkey
 A workspace's identity, signed by its host, for the audiences its owner allows
-VS Code over SSH, with the server the installation publishes and nothing downloaded
-An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the workspace's Agent tab in the dashboard, which frames the client and carries it over a passkey's session
-Claude Code and Codex signed in from the agent's page: each CLI's own login, run by the supervisor as the agent's user, its credentials kept in the agent's home and never passing through the page
-A person signs Claude Code and Codex in once: every workspace of theirs, plain or a project's, is handed the same credentials and hands back each refresh and logout, and a workspace that names a guest holds none
-The supervisor runs the agent for its owner while it is used: started, paired and listed over the owner's own session on a socket only root opens, and stopped once nobody has used it for half an hour and no chat is at work
-The agent's chats listed on the workspace - titles, paths and times, never a message - reported by its supervisor
-The agent's home is a volume of its own: the chats and sessions outlive the workspace, kept in the installation's store as every disk is, and a new workspace mounts them at its creation
-Run a command in a workspace, copy files to and from it
-A program runs a command and reads and writes files in a workspace through the API, with a key that holds workspace:exec, every call recorded with the key it came on
-An agent works in workspaces through `spin mcp` on a key delegated to it: never more than the key it came from - scopes, team, projects, end, how many workspaces and cores its tree holds - and revoked with it
-An agent in a workspace drives others with spin, on a key it gets for the workspace's own SPIFFE identity - a child of the key that made the workspace, through its host, whatever the workspace's network
-Teams, with owner, admin and member
-A team's own identity providers
-Your GitHub account, connected once: private repositories cloned and pushed with nothing on the disk
-Your GitHub account connected from the CLI, with a code entered on GitHub's page
-A repository picked from the ones your account reaches
-A team's own network policies, where the installation allows them
-Projects of the installation: a repository and the shape of the workspace that opens it, shared with everyone or some
-Prebuilds of a project's refs, as the floor of the workspaces that open them
 A team's workspaces run on the installation's hosts
-Installation settings seeded from a file; a change in the file is a proposal to apply or dismiss
-Resource presets
 Registration: open, by allowlist, or closed
-An audit log
-The control plane's jobs, and running one now
-The month's bill, its forecast, and what each workspace cost
-The store: every volume, whose it is, and taking out what nothing needs
-Re-key a workspace's disk
-Runners: registration tokens, drain, activate, revoke, and a policy per host
-Runners start when a workspace waits for one and stop when nothing runs
-A root shell on a runner, for a while and with a reason: the runner emptied first, every session recorded under Object Lock, the runner retired after
 A host that reboots brings its workspaces back
-A cloud's reclaim warning empties the host before the machine goes
-A writeback bound per host, measured on that host before it is taken
-What is running where: the control plane, each runner and its machine
-Platform logs, workspace logs and traces, searched in the product
-Metrics, with Grafana on the control plane
-A workspace's journal and console are collected as the installation's policy says
 A workspace's last hour of CPU, memory and network against what it holds, for its owner
-A smoke test of what an installation's API promises, with a workspace of its own
 A host serves only the releases it carries

@@ -9,19 +9,19 @@ reads:
 
 ## Signing in
 
-A user signs in to the dashboard with:
+[A user signs in to the dashboard with](<feature:Sign in with GitHub or an OIDC provider>):
 
 - **GitHub**, or
 - **any OIDC provider**: your company's identity provider, Google, Microsoft Entra ID, Okta and
   others that speak OpenID Connect.
 
-Providers are configured in **Admin → Security**. A provider can be the installation's, or a
-team's own. Spinbox has no multi-factor authentication of its own: require it in your provider.
+Providers are configured in **Admin → Security**. [A provider can be the installation's, or a
+team's own](<feature:A team's own identity providers>). Spinbox has no multi-factor authentication of its own: require it in your provider.
 
 The first administrator signs in with a password, from the one-time password the install wrote.
 Once a provider works, password sign-in can be turned off.
 
-The CLI signs in through the dashboard, with a code the user approves (see [The CLI](/use/cli/)).
+The CLI signs in through the dashboard, [with a code the user approves](<feature:Device login for a terminal>) (see [The CLI](/use/cli/)).
 Sessions last seven days by default.
 
 ## Who may register
@@ -46,7 +46,7 @@ adds.
 
 | Role | Can |
 |---|---|
-| Owner | Everything, including deleting the team. One per team. |
+| [Owner](<feature:Teams, with owner, admin and member>) | Everything, including deleting the team. One per team. |
 | Admin | Manage members and the team's settings |
 | Member | Have workspaces in the team |
 
@@ -74,6 +74,6 @@ the `keys:delegate` scope, each holding no more than it does. See
 
 ## The audit log
 
-**Admin → Audit** lists who did what: sign-ins and failed sign-ins, sessions revoked, workspaces
+**Admin → Audit** [lists who did what](<feature:An audit log>): sign-ins and failed sign-ins, sessions revoked, workspaces
 created, started, stopped, recovered and deleted, changes to teams, to settings and to users, and
 runners registered. Nothing in the API can change or delete an entry.

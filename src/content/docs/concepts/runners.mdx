@@ -51,7 +51,7 @@ runners of that class. An installation the module's current release makes has on
 
 ## Scaling from zero
 
-On AWS the control plane sizes the runners' group itself. It knows what nothing else does: that
+On AWS [the control plane sizes the runners' group itself](<feature:Runners start when a workspace waits for one and stop when nothing runs>). It knows what nothing else does: that
 a workspace is waiting, and when the last one stopped.
 
 - With no runner up, the first workspace to start waits in *Waiting for a host* while the control
@@ -70,7 +70,7 @@ A runner that is going away empties itself first. It suspends each of its worksp
 memory, to the bucket, and each one resumes on another runner from where it was. This happens
 when:
 
-- AWS reclaims a spot runner (about two minutes' notice),
+- [AWS reclaims a spot runner](<feature:A cloud's reclaim warning empties the host before the machine goes>) (about two minutes' notice),
 - the autoscaling group removes a runner (the group holds it for `drain_seconds`),
 - a release is rolled out and runners are replaced.
 

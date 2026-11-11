@@ -20,8 +20,8 @@ module "spin" {
 }
 ```
 
-When the control plane starts, it creates each item of the file that the installation does not
-have yet: a setting, a preset, a network policy. From then on, the dashboard is where they change.
+When the control plane starts, [it creates each item of the file that the installation does not
+have yet](<feature:Installation settings seeded from a file; a change in the file is a proposal to apply or dismiss>): a setting, a preset, a network policy. From then on, the dashboard is where they change.
 
 When the file later says something different about an item, the control plane does **not** write
 over what an administrator decided. It records the difference as a **proposal**, and the dashboard

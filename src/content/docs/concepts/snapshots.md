@@ -82,7 +82,7 @@ This is how you run the same starting state many times, for an agent's attempts 
 
 ## Sharing
 
-A snapshot can be shared with another user, or made public:
+[A snapshot can be shared with another user, or made public](<feature:Share a snapshot with a person or make it public, and create a workspace from it>):
 
 ```bash
 spin share add <snapshot-id> alice@example.com
@@ -92,7 +92,7 @@ spin share browse            # snapshots shared with you
 
 Sharing hands over the **whole disk**, including anything left on it, such as
 `/root/.ssh/authorized_keys` or a token in a dotfile. Before a snapshot is shared, Spinbox scans it
-for credentials, and refuses the share until you acknowledge what it found
+for credentials, and [refuses the share until you acknowledge what it found](<feature:What looks like a credential is found before a share, and the share refused unless acknowledged>)
 (`--acknowledge-findings`). **Memory is never shared**: a shared snapshot gives the disk alone.
 
 When someone creates a workspace from a snapshot you shared, the first boot removes your

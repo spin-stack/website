@@ -29,6 +29,7 @@ export const nav = [
 		topic: 'docs',
 		items: [
 			['Workspaces', 'concepts/workspaces'],
+			['Projects and repositories', 'concepts/projects'],
 			['Snapshots and rollback', 'concepts/snapshots'],
 			['Images', 'concepts/images'],
 			['Disks and storage', 'concepts/volumes'],
@@ -43,8 +44,10 @@ export const nav = [
 		items: [
 			['The CLI', 'use/cli'],
 			['Who gets in', 'use/access'],
+			['Your settings', 'use/settings'],
 			['Editors and SSH', 'use/editors'],
 			['Agents and automation', 'use/agents'],
+			['The agent in a workspace', 'use/agent'],
 			['An agent without keys', 'use/agent-keys'],
 			['The dashboard', 'use/dashboard'],
 		],
@@ -71,6 +74,7 @@ export const nav = [
 			['Users and teams', 'admin/users'],
 			['Operating hosts', 'admin/hosts'],
 			['Taking a runner out', 'admin/runners'],
+			['Jobs, the bill and the store', 'admin/operations'],
 			['Observability', 'admin/observability'],
 			['Backups and recovery', 'admin/recovery'],
 		],

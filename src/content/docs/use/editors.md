@@ -13,8 +13,8 @@ to the runner or to the workspace, only to `https://app.<domain>`.
 
 ## A key that logs in as you
 
-Everything below - `spin ssh`, plain `ssh`, `spin exec`, VS Code - logs in with an SSH key you
-added once, with your passkey:
+Everything below - `spin ssh`, plain `ssh`, `spin exec`, VS Code - [logs in with an SSH key you
+added once, with your passkey](<feature:A key logs in only once its person adds it with a passkey: their own for good, a browser's for twelve hours>):
 
 ```bash
 spin ssh-key add laptop ~/.ssh/id_ed25519.pub
@@ -44,7 +44,7 @@ rsync -a ./src/ spin.api:/root/src/
 ```
 
 `spin ssh-config` writes `~/.spin/ssh/config` and includes it from `~/.ssh/config`. From then on,
-any program that runs `ssh` reaches a workspace as the host `spin.<workspace>`. Each connection
+[any program that runs `ssh` reaches a workspace as the host `spin.<workspace>`](<feature:SSH keys, and plain ssh to spin.%3Cworkspace%3E>). Each connection
 gets a new certificate for your key that is valid for five minutes, so there is no long-lived
 credential to leak.
 
@@ -60,7 +60,7 @@ spin code api
 spin code api /srv/app --start
 ```
 
-This opens VS Code with Remote-SSH at the path you name: by default the project's checkout,
+[This opens VS Code with Remote-SSH](<feature:VS Code over SSH, with the server the installation publishes and nothing downloaded>) at the path you name: by default the project's checkout,
 `/workspace/<repository>`, or `/workspace` in a workspace with no project. It needs the `code`
 command and the Remote-SSH extension; `--editor` names another editor's command.
 
@@ -97,11 +97,11 @@ spin exec api -w /srv/app -- git status
 spin exec api -- cat build.log > local.log
 ```
 
-`spin exec` runs a command in the workspace, connects its standard input, output and error to
+[`spin exec` runs a command in the workspace](<feature:Run a command in a workspace, copy files to and from it>), connects its standard input, output and error to
 yours, and exits with its exit status. It allocates a terminal only when both ends are one, so
 its output is safe to pipe.
 
 ## Letting someone else in
 
-`spin workspace guests add` lets a person into a workspace of yours, with a key of their own:
+`spin workspace guests add` [lets a person into a workspace of yours, with a key of their own](<feature:Guests of a workspace, let in by its owner with a passkey>):
 see [Sharing a workspace](/use/access/#sharing-a-workspace).

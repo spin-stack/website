@@ -126,7 +126,9 @@ export function toMarkdown(d: Doc, base: string): string {
 	// MDX nests components with tabs; left in, Markdown reads the text inside them as code.
 	body = body.replace(/^\t+/gm, '');
 	// A claim's link to the feature board is a link to the row's area on the status page.
-	body = body.replace(/\]\(<?feature:([^>)]+)>?\)/g, (_, name: string) => `](${featureHref(name).href})`);
+	// The target is in angle brackets, so a row's name may hold a parenthesis; a < or > of the name is
+	// written percent-encoded, as in any link.
+	body = body.replace(/\]\(<feature:([^>]+)>\)/g, (_, name: string) => `](${featureHref(decodeURIComponent(name)).href})`);
 	body = links(body, base);
 	body = body.replace(/\n{3,}/g, '\n\n');
 	untranslated(d, body);
