@@ -2,8 +2,8 @@
 title: Data and encryption
 description: How disks, memory snapshots and the installation's secrets are encrypted, where each key lives, and what each kind of delete destroys.
 reads:
-  - "spin:docs/security/README.md@v20261108.01"
-  - "spin:docs/storage/README.md@v20261108.01"
+  - "spin:docs/security/README.md@v20261110.01"
+  - "spin:docs/storage/README.md@v20261110.01"
   - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261027.02"
 ---
 

@@ -55,8 +55,9 @@ The open items of the security model are listed in [Known gaps](/reference/secur
 
 ## Operations
 
-- **Nothing pages anyone.** Metrics, logs and traces are kept inside the installation. Alert
-  rules fire in its Grafana, and no contact point tells anyone.
+- **Nothing pages the operator.** Metrics, logs and traces are kept inside the installation.
+  Alert rules fire in its Grafana, and no contact point tells anyone. A workspace's owner is
+  emailed when it waits for them.
 - **An update is one way.** A release older than the one that last started the database
   refuses to start on it. Going back past a schema change is a point-in-time restore of the
   database.

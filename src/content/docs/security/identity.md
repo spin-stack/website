@@ -2,8 +2,8 @@
 title: Identity and access
 description: How users, API keys, runners and machines prove who they are, how every request is authorized, and what limits each machine's cloud role.
 reads:
-  - "spin:docs/security/README.md@v20261108.01"
-  - "spin:internal/controlplane/server/middleware/scopes.go@v20261108.01"
+  - "spin:docs/security/README.md@v20261110.01"
+  - "spin:internal/controlplane/server/middleware/scopes.go@v20261110.01"
   - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
 ---
 

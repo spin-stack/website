@@ -2,8 +2,8 @@
 title: Installation settings
 description: "How an installation is configured: the file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal."
 reads:
-  - "spin:configs/spin-example.yaml@v20261108.01"
-  - "spin:internal/controlplane/installconfig/apply.go@v20261108.01"
+  - "spin:configs/spin-example.yaml@v20261110.01"
+  - "spin:internal/controlplane/installconfig/apply.go@v20261110.01"
 ---
 
 An installation's settings live in its database, and an administrator edits all of them in the

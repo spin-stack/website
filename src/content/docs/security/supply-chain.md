@@ -2,8 +2,8 @@
 title: Supply chain
 description: How a release is built, signed and verified, how Spin OS makes every machine run exactly what the release signed, and what each image is made of.
 reads:
-  - "spin:docs/releases.md@v20261108.01"
-  - "spin:docs/machine.md@v20261108.01"
+  - "spin:docs/releases.md@v20261110.01"
+  - "spin:docs/machine.md@v20261110.01"
 ---
 
 ## Releases are signed

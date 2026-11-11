@@ -2,9 +2,9 @@
 title: Snapshots and rollback
 description: Disk and memory snapshots, restoring and resetting a workspace, diffing two snapshots, cloning, and sharing a snapshot with others.
 reads:
-  - "spin:cmd/cli/cmd/snapshot.go@v20261108.01"
-  - "spin:cmd/cli/cmd/share.go@v20261108.01"
-  - "spin:docs/storage/README.md@v20261108.01"
+  - "spin:cmd/cli/cmd/snapshot.go@v20261110.01"
+  - "spin:cmd/cli/cmd/share.go@v20261110.01"
+  - "spin:docs/storage/README.md@v20261110.01"
 ---
 
 A snapshot is a point in a workspace's life that you can come back to. It is read-only and

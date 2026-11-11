@@ -2,10 +2,10 @@
 title: The CLI
 description: Install the spin CLI, sign in, use profiles for several installations, and get JSON output for scripts.
 reads:
-  - "spin:cmd/cli/cmd/root.go@v20261108.01"
-  - "spin:cmd/cli/cmd/auth.go@v20261108.01"
-  - "spin:cmd/cli/cmd/errcode.go@v20261108.01"
-  - "spin:taskfiles/release.yml@v20261108.01"
+  - "spin:cmd/cli/cmd/root.go@v20261110.01"
+  - "spin:cmd/cli/cmd/auth.go@v20261110.01"
+  - "spin:cmd/cli/cmd/errcode.go@v20261110.01"
+  - "spin:taskfiles/release.yml@v20261110.01"
 ---
 
 `spin` is one binary. It does everything the dashboard does for a user, and the

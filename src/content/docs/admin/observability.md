@@ -68,8 +68,8 @@ minute.
 
 ## What is not there
 
-- **Nothing pages anyone.** Alert rules fire in the installation's Grafana, and no contact point
-  tells anyone.
+- **Nothing pages the operator.** Alert rules fire in the installation's Grafana, and no contact
+  point tells anyone. A workspace's owner is emailed when it waits for them.
 - The collector accepts OpenTelemetry from whatever its security group lets in: the proxy and the
   runners.
 - AWS keeps its own records outside the installation: the VPC flow log and every machine's boot

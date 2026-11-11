@@ -2,9 +2,9 @@
 title: Runners and hosts
 description: What a runner is, how it joins, how workspaces are placed on it, how runners scale from zero, and what happens when one is lost.
 reads:
-  - "spin:docs/runners.md@v20261108.01"
-  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261108.01"
-  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261108.01"
+  - "spin:docs/runners.md@v20261110.01"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261110.01"
+  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261110.01"
   - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
 ---
 
@@ -97,6 +97,10 @@ had not yet uploaded.
   lost and waits for `--accept-data-loss`.
 - An administrator can let the control plane move workspaces on its own, after a runner has
   been silent for `rehome_after_seconds`, when no more than `rehome_max_unpublished_bytes` would
-  be lost. This is off by default.
+  be lost: [the workspace is moved, and its owner is told when it waits for them instead](<feature:A workspace whose host never comes back is moved when little would be lost, and its owner is told when it waits for them>).
+  This is off by default.
 
-Nothing tells an owner that a workspace is stranded yet.
+[The owner is told by email](<feature:A workspace's owner is told by email when it waits for them or something happened to it, each event switchable>):
+when a workspace is held after its host was lost, when a stop could not be taken, when it was
+stopped for not responding, and when it was moved off a lost host. Each event can be switched
+off.

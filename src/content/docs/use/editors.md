@@ -2,10 +2,10 @@
 title: Editors and SSH
 description: Connect to a workspace with spin ssh, plain ssh, scp and rsync, VS Code Remote-SSH, or the terminal in the dashboard.
 reads:
-  - "spin:cmd/cli/cmd/ssh.go@v20261108.01"
-  - "spin:cmd/cli/cmd/sshconfig.go@v20261108.01"
-  - "spin:cmd/cli/cmd/code.go@v20261108.01"
-  - "spin:cmd/cli/cmd/exec.go@v20261108.01"
+  - "spin:cmd/cli/cmd/ssh.go@v20261110.01"
+  - "spin:cmd/cli/cmd/sshconfig.go@v20261110.01"
+  - "spin:cmd/cli/cmd/code.go@v20261110.01"
+  - "spin:cmd/cli/cmd/exec.go@v20261110.01"
 ---
 
 Every way into a workspace goes through the installation's relay. You never need network access
@@ -71,11 +71,11 @@ carries a server: an administrator publishes them from **Admin → Storage**.
 
 Before VS Code connects, `spin code` asks the workspace whether it has the server for your
 VS Code. If it has not, and the installation has published that version, the running workspace
-is given it. If the installation has not, it is published first only when the installation
-fetches servers from Microsoft on its own (`vscode_fetch` in the
-[configuration file](/reference/configuration/file/), off by default), which takes minutes the
-first time. Otherwise VS Code downloads its own server into the workspace, about 220 MB, and
-`spin code` says so before connecting.
+is given it. If the installation has not, it prepares that version first, once for the whole
+installation, where an administrator has accepted the server's terms (**Admin → Extensions**).
+Otherwise VS Code downloads its own server into the workspace, about 220 MB, and `spin code`
+says so before connecting; where the workspace has no room for that download, it refuses and
+says what would free it.
 
 The server is Microsoft's, and its [licence](https://code.visualstudio.com/license/server)
 allows it for an organization's own internal use only. An installation that offers workspaces
