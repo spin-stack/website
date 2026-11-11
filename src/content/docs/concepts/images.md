@@ -2,8 +2,8 @@
 title: Images
 description: What an image is in Spinbox, the default image, how an administrator publishes and retires images, and how to build your own starting point from a snapshot.
 reads:
-  - "spin:docs/storage/README.md@v20261108.01"
-  - "spin:cmd/cli/cmd/admin_storage.go@v20261108.01"
+  - "spin:docs/storage/README.md@v20261110.01"
+  - "spin:cmd/cli/cmd/admin_storage.go@v20261110.01"
 ---
 
 An image is a disk a workspace can start from. In Spinbox an image **is** a published snapshot

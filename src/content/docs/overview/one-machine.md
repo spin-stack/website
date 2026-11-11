@@ -2,8 +2,8 @@
 title: Try it on one machine
 description: The development stack on a single Linux host with KVM - from git clone to a running workspace and a command in it. Not an installation.
 reads:
-  - "spin:taskfiles/e2e.yml@v20261108.01"
-  - "spin:hack/kvm-runner-check.sh@v20261108.01"
+  - "spin:taskfiles/e2e.yml@v20261110.01"
+  - "spin:hack/kvm-runner-check.sh@v20261110.01"
 ---
 
 This is the **development stack**: the control plane, the proxy and the stores in containers,
