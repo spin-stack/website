@@ -107,7 +107,8 @@ var (
 	fence     = regexp.MustCompile("^```(bash|sh|shell|console)\\s*$")
 	// A cobra flag line: "  -o, --output string   text" or "      --wait   text". The type,
 	// when there is one, is a single word before the description's run of spaces.
-	flagLine = regexp.MustCompile(`^\s+(?:-(\w), )?--([\w-]+)(?: (\w+))?(?:\s{2,}|$)`)
+	// A flag that takes no value is printed with the values it may be given, --wait[=true|false].
+	flagLine = regexp.MustCompile(`^\s+(?:-(\w), )?--([\w-]+)(?:\[=[^\]\s]*\])?(?: (\w+))?(?:\s{2,}|$)`)
 )
 
 type shellLine struct {
