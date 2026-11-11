@@ -4,26 +4,27 @@
 #   <page> | <the words on the page> | spin:<file>#<Constant> = <its value>
 #
 # where a constant of spin's decides the figure - task reference:check reads it and fails when it
-# is another value, naming the page - or, in the third place, why nothing holds it. A figure a
+# is another value, naming the page; or `<repo>:<file> has "<text>"`, where the text that decides
+# it is held to still being in the file; or, in the third place, why nothing holds it. A figure a
 # page says that has no line fails, and so does a line whose words its page no longer says. A
 # "not held" line is a debt: the figure is true only while somebody remembers it.
-admin/configuration.md | seven days | not held: struct field default SessionDurationHours: 168 in DefaultSecurity() of internal/controlplane/settings/security.go, overridden by the session_duration_hours setting
+admin/configuration.md | seven days | spin:internal/controlplane/settings/security.go has "SessionDurationHours: 168,"
 admin/hosts.mdx | 24 hours | spin:internal/controlplane/server/runnertokenserver/runnertoken.go#registrationTokenExpiry = 24h
 admin/hosts.mdx | 30 days | spin:internal/controlplane/server/runnertokenserver/runnertoken.go#maxRegistrationTokenExpiry = 720h
-admin/observability.md | fifteen minutes | not held: systemd timer OnUnitActiveSec=15min in internal/installation/install/units/spin-vmbackup.timer
-admin/observability.md | 30 days | not held: var DefaultRetention (PlatformLogs: 30) in internal/logstore/logstore.go, overridden by the logs_platform_retention_days setting
-admin/observability.md | 7 days | not held: var DefaultRetention (WorkspaceLogs: 7) in internal/logstore/logstore.go, overridden by the logs_workspace_retention_days setting
-admin/observability.md | 7 days | not held: var DefaultRetention (Traces: 7) in internal/logstore/logstore.go, overridden by the traces_retention_days setting
+admin/observability.md | fifteen minutes | spin:internal/installation/install/units/spin-vmbackup.timer has "OnUnitActiveSec=15min"
+admin/observability.md | 30 days | spin:internal/logstore/logstore.go has "PlatformLogs: 30,"
+admin/observability.md | 7 days | spin:internal/logstore/logstore.go has "WorkspaceLogs: 7,"
+admin/observability.md | 7 days | spin:internal/logstore/logstore.go has "Traces: 7}"
 admin/observability.md | 30 days | spin:internal/metricstore/metricstore.go#RetentionDays = 30
-admin/observability.md | thirty seconds | not held: poll_frequency = "30s" in the Alloy template internal/installation/boot/files/alloy.alloy.tmpl
+admin/observability.md | thirty seconds | spin:internal/installation/boot/files/alloy.alloy.tmpl has "poll_frequency = "30s""
 admin/recovery.md | five minutes | spin:internal/pgserver/server.go#ArchiveTimeoutSeconds = 300
 admin/recovery.md | five minutes | spin:internal/pgserver/server.go#ArchiveTimeoutSeconds = 300
-admin/users.md | seven days | not held: struct field default SessionDurationHours: 168 in DefaultSecurity() of internal/controlplane/settings/security.go, overridden by the session_duration_hours setting
+admin/users.md | seven days | spin:internal/controlplane/settings/security.go has "SessionDurationHours: 168,"
 admin/users.md | a year | spin:internal/controlplane/server/authserver/apikeys.go#maxAPIKeyLifetime = 8784h
 aws/cost.mdx | Three months | not a figure: a heading naming the period the cost table prices
 aws/cost.mdx | a month | not a figure: the unit of S3's price per GB a month
 aws/cost.mdx | a month | not a figure: the unit of Route 53's price per hosted zone
-aws/network.mdx | ten-second | not held: Terraform local internal_record_ttl = 10 in modules/controlplane/dns.tf of spin-terraform-aws
+aws/network.mdx | ten-second | spin-terraform-aws:modules/controlplane/dns.tf has "internal_record_ttl = 10"
 aws/setup.md | a few minutes | not a figure: an estimate of how long Let's Encrypt issuance takes
 aws/setup.md | ten minutes | not a figure: an estimate ("About") of the first bring-up time
 aws/setup.md | a few minutes | not a figure: an estimate of how long a first runner takes to come up
@@ -39,16 +40,16 @@ concepts/workspaces.md | 512 MB | spin:internal/controlplane/server/workspaceser
 concepts/workspaces.md | 10 GB | spin:internal/controlplane/server/workspaceserver/workspace.go#DefaultDiskGB = 10
 concepts/workspaces.md | three times | spin:internal/lifecycle/budget.go#GenerationAttempts = 3
 concepts/workspaces.md | Ten minutes | spin:internal/controlplane/server/workspaceserver/idle.go#WarnMinutes = 10
-overview/evaluate.md | 30 GB | not held: flag default -free-gb 30 in hack/lanes/cmd/lanes/ci.go (the CI run's preflight); nothing checks it for the development stack
+overview/evaluate.md | 30 GB | spin:hack/lanes/cmd/lanes/ci.go has "fs.Int("free-gb", 30,"
 overview/how-it-works.mdx | five minutes | spin:internal/pgserver/server.go#ArchiveTimeoutSeconds = 300
 overview/how-it-works.mdx | a minute | spin:internal/controlplane/domain/reconcile/reconcile.go#Every = 1m
 overview/how-it-works.mdx | three times | spin:internal/lifecycle/budget.go#GenerationAttempts = 3
 overview/how-it-works.mdx | five minutes | spin:internal/controlplane/settings/settings.go#DefaultVolumeRPOSeconds = 300
-overview/one-machine.md | 30 GB | not held: flag default -free-gb 30 in hack/lanes/cmd/lanes/ci.go (the CI run's preflight); nothing checks it for the development stack
+overview/one-machine.md | 30 GB | spin:hack/lanes/cmd/lanes/ci.go has "fs.Int("free-gb", 30,"
 quickstart.md | few minutes | not a figure: an estimate of how long a runner takes to come up
 security/data.md | 64 KiB | spin:internal/storage/crypto/layer.go#LayerFrameBytes = 65536
 security/data.md | fifteen minutes | spin:internal/controlplane/server/volumeserver/storagecreds.go#StorageCredentialTTL = 15m
-security/identity.md | seven days | not held: struct field default SessionDurationHours: 168 in DefaultSecurity() of internal/controlplane/settings/security.go, overridden by the session_duration_hours setting
+security/identity.md | seven days | spin:internal/controlplane/settings/security.go has "SessionDurationHours: 168,"
 security/identity.md | a year | spin:internal/controlplane/server/authserver/apikeys.go#maxAPIKeyLifetime = 8784h
 security/identity.md | fifteen minutes | spin:internal/installation/provider/aws/stsjoin/stsjoin.go#maxExpiry = 15m
 security/identity.md | an hour | spin:internal/controlplane/server/runnertokenserver/runnertoken.go#runnerTokenExpiry = 1h

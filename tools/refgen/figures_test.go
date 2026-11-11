@@ -19,6 +19,9 @@ func TestCheckFigures(t *testing.T) {
 		"listed with why nothing holds it":  {"About 220 MB.", "# sizes\np.md | 220 MB | not held: the size of Microsoft's server\n", ttl, ""},
 		"a link's target is not the page's": {"[It stops](<feature:Stopped after half an hour>) and [reads](/a/30-days/).", "", ttl, ""},
 		"a flag's own value is the CLI's":   {"Pass `--expires 30 days`.\n\n```bash\nsleep 5 minutes\n```", "", ttl, ""},
+		"held by a file's text":             {"Lasts seven days.", "p.md | seven days | spin:p/p.go has \"Tries =  3\"\n", ttl, ""},
+		"the text is gone":                  {"Lasts seven days.", "p.md | seven days | spin:p/p.go has \"Tries = 4\"\n", ttl, `no longer says "Tries = 4"`},
+		"the text's file is gone":           {"Lasts seven days.", "p.md | seven days | spin:q/q.go has \"Tries = 3\"\n", ttl, "spin no longer has q/q.go"},
 		"a figure with no line":             {"Lasts an hour.", "", ttl, `says "an hour", which nothing holds`},
 		"the constant moved":                {"Lasts fifteen minutes.", "p.md | fifteen minutes | spin:p/p.go#TTL = 15m\n", strings.Replace(ttl, "15", "10", 1), "TTL is now 10m0s, not 15m"},
 		"the count moved":                   {"Tried three times.", "p.md | three times | spin:p/p.go#Tries = 3\n", strings.Replace(ttl, "= 3", "= 5", 1), "Tries is now 5, not 3"},
@@ -42,7 +45,7 @@ func TestCheckFigures(t *testing.T) {
 			if err := os.WriteFile(list, []byte(c.list), 0o644); err != nil {
 				t.Fatal(err)
 			}
-			bad, err := checkFigures(docs, list, spin)
+			bad, err := checkFigures(docs, list, map[string]checkout{"spin": {root: spin}})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -64,7 +67,7 @@ func TestCheckFiguresWithoutSpin(t *testing.T) {
 	if err := os.WriteFile(list, []byte("p.md | fifteen minutes | spin:gone.go#TTL = 15m\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if bad, err := checkFigures(docs, list, ""); err != nil || len(bad) > 0 {
+	if bad, err := checkFigures(docs, list, nil); err != nil || len(bad) > 0 {
 		t.Errorf("checkFigures without spin: %v, %v", bad, err)
 	}
 }
