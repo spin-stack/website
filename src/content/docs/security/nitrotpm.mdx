@@ -10,7 +10,7 @@ reads:
   - "spin-terraform-aws:modules/controlplane/identity.tf@v20261027.02"
 ---
 
-import NitroTPMDiagram from '../../../components/NitroTPMDiagram.astro';
+import Figure from '../../../components/Figure.astro';
 
 A runner needs to prove two independent facts before the control plane trusts it:
 
@@ -24,7 +24,7 @@ Neither proof is enough by itself. STS does not say what the instance booted; a 
 not say that the machine belongs to this installation. The control plane checks that both describe
 the same EC2 instance.
 
-<NitroTPMDiagram />
+<Figure name="nitrotpm" caption="What a runner proves before it is trusted: its role to STS, what it booted to NitroTPM, and both as one instance to the control plane. KMS asks for the attestation again, of every key." />
 
 ## What OpenTofu deploys
 
