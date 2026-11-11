@@ -17,9 +17,14 @@ import (
 //
 //	<page> | <the words on the page> | spin:<file>#<Constant> = <its value>
 //
-// for a figure a constant of spin's decides, which refgen reads and compares - 15m, 12h, 300, 3 -
-// or, in the third place, why nothing holds it: a default of a file refgen cannot evaluate, or
-// words that are no figure of the code's. A page that showed a figure with <Value> has no line:
+// for a figure a constant of spin's decides, which refgen reads and compares - 15m, 12h, 300, 3;
+//
+//	<page> | <the words on the page> | spin:<file> has "<text>"
+//
+// for one decided where no constant is - a field's default, a timer's unit, a template's line, a
+// Terraform local - held by the text that decides it still being in the file, of spin or of
+// spin-terraform-aws, whatever its spacing; or, in the third place, why nothing holds it: another
+// party's fact, or words that are no figure of the code's. A page that showed a figure with <Value> has no line:
 // the component is the code's own number.
 //
 // Before it a page said "an hour" of a credential the code had made fifteen minutes, and "about
@@ -29,8 +34,12 @@ const figuresList = "tools/refgen/figures.txt"
 // saidFigure is a duration, a size or a count of tries, in digits or in words.
 var saidFigure = regexp.MustCompile(`(?i)\b(?:(?:\d+(?:[.,]\d+)?|an?|one|two|three|four|five|six|seven|eight|nine|ten|twelve|fourteen|fifteen|twenty|thirty|sixty|ninety|half an?|a quarter of an|a few|few)[ -](?:(?:second|minute|hour|day|week|month|year)s?|times|attempts)|\d+(?:\.\d+)? ?[KMGT]i?B)\b`)
 
-// held is a figure's third place when a constant decides it.
-var held = regexp.MustCompile(`^spin:(\S+)#(\w+) = (\S+)$`)
+// held is a figure's third place when a constant decides it, and has when a file's text does.
+var (
+	held = regexp.MustCompile(`^spin:(\S+)#(\w+) = (\S+)$`)
+	has  = regexp.MustCompile(`^([\w-]+):(\S+) has "(.+)"$`)
+	gaps = regexp.MustCompile(`\s+`)
+)
 
 type figureLine struct {
 	n                 int
@@ -38,10 +47,11 @@ type figureLine struct {
 }
 
 // checkFigures holds every figure in the prose of a hand-written page to a line of list, every
-// line to words its page still says, and every line that names a constant to that constant's
-// value in the checkout spin. spin is "" in a run without it, which leaves the constants to the
-// run that has it.
-func checkFigures(docs, list, spin string) ([]string, error) {
+// line to words its page still says, and every line that names a constant or a file's text to
+// the checkout that has it. from is the checkouts at hand: a line of a repository that is not
+// among them - spin's, in a run without spin - is left to the run that has it.
+func checkFigures(docs, list string, from map[string]checkout) ([]string, error) {
+	spin := from["spin"].root
 	raw, err := os.ReadFile(list)
 	if err != nil {
 		return nil, err
@@ -87,6 +97,20 @@ func checkFigures(docs, list, spin string) ([]string, error) {
 	for _, l := range lines {
 		if !said[l.page+"|"+l.words] {
 			bad = append(bad, fmt.Sprintf("%s:%d: %s does not say %q: take the line out", list, l.n, l.page, l.words))
+			continue
+		}
+		if m := has.FindStringSubmatch(l.what); m != nil {
+			c, ok := from[m[1]]
+			if !ok {
+				continue
+			}
+			raw, err := os.ReadFile(filepath.Join(c.root, m[2]))
+			switch {
+			case err != nil:
+				bad = append(bad, fmt.Sprintf("%s:%d: %s says %q, and %s no longer has %s: correct the page and the line", list, l.n, l.page, l.words, m[1], m[2]))
+			case !strings.Contains(gaps.ReplaceAllString(string(raw), " "), gaps.ReplaceAllString(m[3], " ")):
+				bad = append(bad, fmt.Sprintf("%s:%d: %s says %q, and %s's %s no longer says %q: correct the page and the line", list, l.n, l.page, l.words, m[1], m[2], m[3]))
+			}
 			continue
 		}
 		m := held.FindStringSubmatch(l.what)
