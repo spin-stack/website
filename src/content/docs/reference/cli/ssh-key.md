@@ -27,7 +27,7 @@ Available Commands:
   list        List the SSH keys you log in with
 
 Flags:
-  -h, --help   help for ssh-key
+  -h, --help[=true|false]   help for ssh-key
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -55,8 +55,8 @@ Usage:
   spin ssh-key add <name> <public-key-file> [flags]
 
 Flags:
-  -h, --help         help for add
-      --no-browser   print the page where your passkey confirms, instead of opening it
+  -h, --help[=true|false]         help for add
+      --no-browser[=true|false]   print the page where your passkey confirms, instead of opening it
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -74,8 +74,8 @@ Usage:
   spin ssh-key delete <key-id> [flags]
 
 Flags:
-  -h, --help   help for delete
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for delete
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -93,7 +93,7 @@ Usage:
   spin ssh-key list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

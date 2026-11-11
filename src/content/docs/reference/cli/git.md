@@ -29,7 +29,7 @@ Available Commands:
   repos       List the repositories your account reaches, or those whose name has query in it
 
 Flags:
-  -h, --help   help for git
+  -h, --help[=true|false]   help for git
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -54,9 +54,9 @@ Usage:
   spin git connect [flags]
 
 Flags:
-      --forge string   The forge (default "github")
-  -h, --help           help for connect
-      --no-browser     Do not open the forge's page in a browser
+      --forge string              The forge (default "github")
+  -h, --help[=true|false]         help for connect
+      --no-browser[=true|false]   Do not open the forge's page in a browser
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -75,8 +75,8 @@ Usage:
   spin git disconnect <forge> [flags]
 
 Flags:
-  -h, --help   help for disconnect
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for disconnect
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -94,7 +94,7 @@ Usage:
   spin git list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -112,8 +112,8 @@ Usage:
   spin git repos [query] [flags]
 
 Flags:
-      --forge string   The forge (default "github")
-  -h, --help           help for repos
+      --forge string        The forge (default "github")
+  -h, --help[=true|false]   help for repos
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

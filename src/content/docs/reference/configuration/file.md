@@ -56,16 +56,6 @@ settings:
   # named and only allowing - nothing brokered. Any team may then reach past what the policies
   # below allow, so it is off unless decided.
   team_network_policies: false
-  # Whether the control plane fetches VS Code servers from Microsoft on its own: the newest stable
-  # release, looked for daily, and the server of a client's commit the installation has not
-  # released, and at start the release this one pins. Off, it fetches none, and workspaces get
-  # the servers an administrator published; no image carries one.
-  vscode_fetch: false
-  # Whether the control plane fetches the agent CLIs - Claude Code and Codex - from their
-  # publishers on its own: the pair this release pins at start, and the newest of each, looked
-  # for daily. Off, it fetches none, and workspaces get the pair an operator published; no image
-  # carries one.
-  agents_fetch: false
   # The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a
   # session tagged spin-team-id with the team; it reads only a secret or a parameter tagged the
   # same. Unset, a team's secrets are sealed in the database and none is a reference.
@@ -138,7 +128,9 @@ registration:
     - acme.com
     - contractor@example.com
 
-# What a person may choose when creating a workspace. One preset may be the default.
+# What a person may choose when creating a workspace. One preset may be the default. Left out,
+# the installation is given the release's: one, "default", 1 core and 512 MB that grow to what its
+# host has, on 10 GB. `presets: []` gives it none.
 # burst says how a workspace of it grows: fixed (the default) runs at its size; to_preset
 # starts at the floor (burst_floor_cpu, burst_floor_memory_mb; 1 and 1024 if left out) and
 # grows to its size; to_host starts at the floor and grows to what its host has.

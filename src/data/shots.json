@@ -1,6 +1,6 @@
 {
-	"release": "v20261108.01",
-	"commit": "dafe286161a95bb1dd1dba3a99f722946ad65961",
+	"release": "v20261110.01",
+	"commit": "b7ba5206f12ba93a829a48e354be7fce6bc65db4",
 	"shots": [
 		{
 			"name": "workspaces",

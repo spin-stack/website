@@ -11,6 +11,23 @@ sidebar:
 
 AdminService manages installation-wide settings, user management, and resource presets. Only accessible to instance administrators.
 
+## AcceptThirdPartyTerms
+
+`POST /spin.v1.AdminService/AcceptThirdPartyTerms`
+
+Accept the terms, as the version shown, for the items named: this installation then downloads them - the releases this control plane pins at once, and the newest daily.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `termsVersion` | string | The version of the text the administrator was shown: one that is not the current one is refused, so nobody accepts a text they did not read. |
+| `items` | list of [ThirdPartyItem](/reference/api/types/#thirdpartyitem) |  |
+
+**Response**
+
+No fields: `{}`.
+
 ## AddAllowedEmail
 
 `POST /spin.v1.AdminService/AddAllowedEmail`
@@ -243,6 +260,22 @@ A month of the bill shared out to the workspaces that caused it: the runners' by
 | `unstoredMicros` | string (int64) | What the volumes' bucket cost for bytes no workspace keeps: the images, what nothing references any more. |
 | `platform` | list of [ServiceCost](/reference/api/types/#servicecost) | Every other cost - the control plane, the proxy, keys, logs - by service, costliest first. |
 
+## GetEmailSettings
+
+`POST /spin.v1.AdminService/GetEmailSettings`
+
+The SMTP server the installation tells people through. The password is never read back.
+
+**Request**
+
+No fields: `{}`.
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `settings` | [EmailSettings](/reference/api/types/#emailsettings) |  |
+
 ## GetFleetVersions
 
 `POST /spin.v1.AdminService/GetFleetVersions`
@@ -294,6 +327,9 @@ No fields: `{}`.
 | Field | Type | What it is |
 |---|---|---|
 | `settings` | [InstallationSettings](/reference/api/types/#installationsettings) |  |
+| `reaches` | map of string to [SettingReach](/reference/api/types/#settingreach) | What each setting touches when saved, by its update_mask path: every path UpdateInstallationSettings accepts, and no other. |
+| `runningWorkspaces` | integer (int32) | How many workspaces are running now: what a RUNNING_WORKSPACES setting reaches, and what a NEW_WORKSPACES one leaves as it is. |
+| `connectedRunners` | integer or null (int32) | How many runners hold their stream to this control plane now: what a NEXT_HEARTBEAT setting reaches. Unset where this control plane cannot tell. |
 
 ## GetMonitoring
 
@@ -345,6 +381,26 @@ No fields: `{}`.
 | Field | Type | What it is |
 |---|---|---|
 | `mode` | [RegistrationMode](/reference/api/types/#registrationmode) |  |
+
+## GetRunbook
+
+`POST /spin.v1.AdminService/GetRunbook`
+
+One runbook, its markdown and where its file is at the pinned commit. NOT_FOUND for an id this release's runbooks do not have.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `runbook` | [Runbook](/reference/api/types/#runbook) |  |
+| `markdown` | string | Its body, markdown without the front matter: the app renders it and nothing else (no raw HTML). |
+| `sourceUrl` | string | The file at the commit this release pins, to propose a change from. |
 
 ## GetSecuritySettings
 
@@ -417,6 +473,24 @@ No fields: `{}`.
 | `spans` | [TelemetryFlow](/reference/api/types/#telemetryflow) | Into the installation's store, after the traces policy chose which to keep. |
 | `samples` | [TelemetryFlow](/reference/api/types/#telemetryflow) | Into the installation's store of metrics. |
 
+## GetThirdPartyTerms
+
+`POST /spin.v1.AdminService/GetThirdPartyTerms`
+
+The software this installation downloads from its makers, the terms it is used under, and which of it an administrator accepted the terms for: who, when, and which text. Nothing is downloaded of an item whose terms are not accepted (internal/controlplane/thirdparty).
+
+**Request**
+
+No fields: `{}`.
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `termsVersion` | string | The version of the text below, which an acceptance names. |
+| `text` | list of string | The terms, a paragraph each. |
+| `items` | list of [ThirdPartyTermsItem](/reference/api/types/#thirdpartytermsitem) |  |
+
 ## GetVSCodeServers
 
 `POST /spin.v1.AdminService/GetVSCodeServers`
@@ -434,6 +508,24 @@ No fields: `{}`.
 | `releases` | list of [ExtensionRelease](/reference/api/types/#extensionrelease) | Newest first. |
 | `publish` | [VSCodeServerPublish](/reference/api/types/#vscodeserverpublish) |  |
 | `unavailable` | string | Why this control plane cannot publish - no object store, or a build with no machine tools to make the image with - and empty when it can. |
+
+## GetWorkspaceNames
+
+`POST /spin.v1.AdminService/GetWorkspaceNames`
+
+The names of the workspaces ids are, whoever owns them and whatever state they are in, a deleted one among them: a record of the platform's logs names a workspace by its id, and ListWorkspaces is the caller's own. An id the installation no longer holds a row for is left out of the answer.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `ids` | list of string | At most 500: the ids a page of records names. |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `names` | map of string to string | Each id asked for that the installation holds a row for, to its workspace's name. |
 
 ## ListAllowedEmails
 
@@ -582,6 +674,22 @@ List resource presets
 | `presets` | list of [ResourcePreset](/reference/api/types/#resourcepreset) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
 
+## ListRunbooks
+
+`POST /spin.v1.AdminService/ListRunbooks`
+
+What an operator does when an alert fires, a job fails or an owner is told something went wrong: spin-stack/runbooks at the commit this release pins, served so it is read in the app.
+
+**Request**
+
+No fields: `{}`.
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `runbooks` | list of [Runbook](/reference/api/types/#runbook) |  |
+
 ## ListUserAPIKeys
 
 `POST /spin.v1.AdminService/ListUserAPIKeys`
@@ -623,6 +731,7 @@ List all users
 | `users` | list of [User](/reference/api/types/#user) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
 | `holdings` | map of string to [UserHoldings](/reference/api/types/#userholdings) | What each listed user still holds, by user id: what an administrator asks before taking access away. Kept off User, which other calls return without it. |
+| `refusedRemovals` | map of string to string | Why removing a listed user as an administrator, or disabling them, would be refused, by user id; absent where it would not be. The refusal is the database's (lockout), so a client that never reads this is refused the same. |
 
 ## PublishVSCodeServers
 
@@ -705,6 +814,22 @@ No fields: `{}`.
 
 No fields: `{}`.
 
+## RevokeThirdPartyTerms
+
+`POST /spin.v1.AdminService/RevokeThirdPartyTerms`
+
+Take the acceptance back for the items named: nothing more of them is downloaded. What was downloaded already stays until an administrator removes it.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `items` | list of [ThirdPartyItem](/reference/api/types/#thirdpartyitem) |  |
+
+**Response**
+
+No fields: `{}`.
+
 ## RevokeUserAPIKey
 
 `POST /spin.v1.AdminService/RevokeUserAPIKey`
@@ -771,6 +896,28 @@ Take a ref off what it names: no new workspace gets those bytes by it, the disks
 **Response**
 
 No fields: `{}`.
+
+## UpdateEmailSettings
+
+`POST /spin.v1.AdminService/UpdateEmailSettings`
+
+Set the SMTP server, checked against it - connected to and signed in to - before it is written. An empty host turns email off.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `host` | string |  |
+| `port` | integer (int32) |  |
+| `username` | string |  |
+| `password` | string or null | Absent keeps the password there is. |
+| `from` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `settings` | [EmailSettings](/reference/api/types/#emailsettings) |  |
 
 ## UpdateHostClass
 

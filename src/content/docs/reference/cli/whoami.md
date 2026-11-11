@@ -16,7 +16,7 @@ Usage:
   spin whoami [flags]
 
 Flags:
-  -h, --help   help for whoami
+  -h, --help[=true|false]   help for whoami
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

@@ -23,11 +23,11 @@ Usage:
   spin ssh <workspace> [ssh-argument...] [flags]
 
 Flags:
-  -h, --help               help for ssh
-  -i, --identity string    Identity file (private key)
-      --start              Start the workspace first if it is stopped
-      --timeout duration   How long to wait for the workspace to be running; by default, until the control plane gives up on it
-  -u, --user string        SSH username (certificates are issued for root today) (default "root")
+  -h, --help[=true|false]    help for ssh
+  -i, --identity string      Identity file (private key)
+      --start[=true|false]   Start the workspace first if it is stopped
+      --timeout duration     How long to wait for the workspace to be running; by default, until the control plane gives up on it
+  -u, --user string          SSH username (certificates are issued for root today) (default "root")
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

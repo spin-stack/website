@@ -101,6 +101,7 @@ BaseImage is the base image of one machine release, as published.
 | `pinned` | boolean | The one this control plane's release pins; given once it is published. |
 | `volumeId` | string | Its volume in the store, which RemoveStoredVolume takes when removable. |
 | `removable` | boolean | No disk was cloned from it and it is not the one given: RemoveStoredVolume untags it on the way and removes it. |
+| `keptBecause` | string | Why it stays, in words, where it may not go. |
 
 ## BillDay
 
@@ -197,6 +198,18 @@ One of: `DEVICE_LOGIN_STATUS_UNSPECIFIED`, `DEVICE_LOGIN_STATUS_PENDING`, `DEVIC
 | `branch` | string | Branch to clone (default: main) |
 | `installCommand` | string | Command to run after clone (default: ./install.sh) |
 
+## EmailSettings
+
+EmailSettings is the SMTP server the installation sends its notifications through. No host is email off: what would have been sent is still recorded, and shown on each person's page.
+
+| Field | Type | What it is |
+|---|---|---|
+| `host` | string |  |
+| `port` | integer (int32) | 465 is TLS from the first byte; any other port is upgraded with STARTTLS where the server offers it, and a username is refused over a connection that is not encrypted. |
+| `username` | string |  |
+| `passwordSet` | boolean |  |
+| `from` | string | The address mail is sent from, as the server allows this account to send. |
+
 ## ExposedPort
 
 | Field | Type | What it is |
@@ -221,6 +234,9 @@ ExtensionRelease is one release of an extension: the supervisor, or the VS Code 
 | `releasedAt` | `Timestamp` |  |
 | `workspaces` | string (int64) | How many workspaces run it; one that nothing runs and is not the newest is collectable. |
 | `newest` | boolean | Whether a start is given this one. |
+| `volumeId` | string | Its volume in the store, which RemoveStoredVolume takes when removable. |
+| `removable` | boolean | Not the newest and nothing runs it: RemoveStoredVolume removes it, and so does the collect-releases job on its own. |
+| `keptBecause` | string | Why it stays, in words, where it may not go. |
 
 ## ExtensionVersion
 
@@ -289,9 +305,11 @@ One host class's group, as the control plane last saw it.
 | `most` | integer (int32) |  |
 | `waiting` | integer (int32) | Workspaces of the class that have nowhere to run yet, and when the first of them started waiting: this is what makes the control plane ask for a machine. |
 | `oldestWaiting` | `Timestamp` |  |
-| `busy` | integer (int32) | Workspaces of the class keeping its group up. |
+| `busy` | integer (int32) | Workspaces of the class, and hosts a root shell holds, keeping its group up. |
 | `launchFailure` | string | Why the group has fewer machines running than it was asked for, in its cloud's own words - "AWS could not start a runner: &lt;message>" - and when the cloud said it. Empty while it has as many, or while the cloud said nothing that explains it. |
 | `launchFailedAt` | `Timestamp` |  |
+| `giveBackRefused` | string | A machine of the group the cloud would not take back, in its own words - a role or a policy somebody has to change - and when; it is asked again every quarter hour until it is taken. Empty while none is refused. |
+| `giveBackRefusedAt` | `Timestamp` |  |
 
 ## FleetHostVersion
 
@@ -438,6 +456,8 @@ One of: `HEALTH_STATUS_UNSPECIFIED`, `HEALTH_STATUS_OK`, `HEALTH_STATUS_DEGRADED
 | `streamEnd` | [HostStreamEnd](/reference/api/types/#hoststreamend) | Why the host's last command stream ended, while it is not connected; UNSPECIFIED while it is connected, and where this control plane has not seen one end. stream_end_detail is the error the stream ended with, in its own words. |
 | `streamEndDetail` | string |  |
 | `hostname` | string | hostname is the name the host's machine goes by, as it last registered it: how a person tells one host from another where its id says nothing. Empty for a host that has not registered since it was made. |
+| `removal` | [HostRemoval](/reference/api/types/#hostremoval) | removal is how this host leaves the fleet, decided by where it came from: the only removal the API takes for it, so the dashboard offers that one and no other. |
+| `removalRefused` | string | removal_refused is why that removal cannot run now - a workspace whose disk is there - in words an administrator acts on; empty while it can. |
 
 ## HostCheck
 
@@ -494,6 +514,12 @@ HostPolicy is what an installation decides about one host. An unset field is the
 | `runningRevision` | string | running_revision is what the host last said, empty where it has not said or is not connected. Different from revision is a policy still on its way, which is normal for the seconds after a write and a fault after that. |
 | `maxWorkspaceIoMbPerSecond` | integer or null (int32) | What one machine may read and write per second here, in MiB and in operations, for the machines it starts afterwards. Unset is no bound. |
 | `maxWorkspaceIoOpsPerSecond` | integer or null (int32) |  |
+
+## HostRemoval
+
+HostRemoval is how a host leaves the fleet. - `HOST_REMOVAL_REVOKE`: A host registered with a token, or a machine of a cloud no group of this installation sizes: RevokeRunner. Nothing else can take its machine away. - `HOST_REMOVAL_GIVE_BACK`: A machine of an autoscaling group, connected: RemoveHost gives it back to its group, which terminates it and is asked for one less. Revoking it would leave the machine running and paid for, in a group that counts it. - `HOST_REMOVAL_FORGET`: A machine of an autoscaling group, not connected: RemoveHost gives back a machine the group still has, and forgets the host now rather than once it has been silent for host_forget_after_hours.
+
+One of: `HOST_REMOVAL_UNSPECIFIED`, `HOST_REMOVAL_REVOKE`, `HOST_REMOVAL_GIVE_BACK`, `HOST_REMOVAL_FORGET`.
 
 ## HostShell
 
@@ -584,7 +610,6 @@ InstallationSettings contains global settings for the Spin installation
 | `telemetryTracesSlowMs` | integer (int32) |  |
 | `telemetryMetricsDrop` | list of string | The metrics that are not kept, by name; a pattern may begin or end with \*. |
 | `telemetryPerVolumeHistograms` | list of string | Read only: the metrics that cost most to keep, a histogram per volume, which a surface may offer to drop as one. |
-| `vscodeFetch` | boolean | Whether the control plane fetches VS Code servers from Microsoft on its own: the release it pins, at start, the newest stable release, looked for daily, and the server of a client's commit the installation has not released. False, it fetches none, and a workspace is given a server an administrator published; no image carries one. |
 | `workspaceTrashDays` | integer (int32) | How many days a deleted workspace stays in the trash, whole, for its owner to undelete before it is erased: 0 is no trash, and 7 is what an installation that says nothing keeps. |
 | `identityAudiences` | list of string | Who a workspace's identity token may be for; empty is anybody. What the installation's issuer gives, not who trusts it: a relying party still decides which subjects it admits. |
 | `volumeRpoSeconds` | integer (int32) | How far behind the object store a workspace's volume may fall, in seconds, where its preset does not say: what it commits on (v6 §11). 0 is none - it commits on its size and its snapshots alone - and 300 is what an installation that says nothing keeps. |
@@ -594,7 +619,6 @@ InstallationSettings contains global settings for the Spin installation
 | `workspaceMaxRunningMinutes` | integer (int32) | How many minutes a workspace may run at a stretch, used or not, before it is suspended the same way: a process that keeps its cores busy is use to the rule above, and this is what ends it. Counted from its machine's start, which a resume is too. 0 caps none; 720 is what an installation that says nothing keeps, and a week is the most. |
 | `workspaceLeaseMaxMinutes` | integer (int32) | How many minutes a process may keep its workspace awake at a stretch (a lease: `spin-supervisor keep -- &lt;cmd>`, a .spin.yaml task with keep_awake). While a lease is held and within this of its start, nobody is asked, nothing idle is suspended, and the running cap waits for the lease's end. 0 honours no lease; 480 is what an installation that says nothing keeps, and a week is the most. |
 | `teamSecretsRole` | string | The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a session tagged spin-team-id with the team: its policy lets that session read only what carries the same tag. Empty, no secret is kept as a reference. |
-| `agentsFetch` | boolean | Whether the control plane fetches the agents' programs - Claude Code, Codex and T3 Code - from their publishers on its own: the triple it pins, at start, and the newest release of each, looked for daily. False, it fetches none, and a workspace is given a triple an operator published; no image carries one. |
 | `projectCreation` | string | Who makes projects (ProjectService.CreateProject): "everyone" signed in, or only the instance's "admins". Empty is everyone. |
 | `autoscalingIdleMinutes` | integer (int32) | How the runner fleet is sized (GetFleet): the minutes it may be idle before it is emptied, above zero; the quiet hours, HH:MM-HH:MM in the IANA time zone, when it is emptied at once, empty for none; and the most hosts it is asked for, under the group's own maximum - zero is that maximum. Each takes effect at the autoscaler's next pass. |
 | `autoscalingQuietHours` | string |  |
@@ -614,6 +638,9 @@ InstallationSettings contains global settings for the Spin installation
 | `nextRunAt` | `Timestamp` | When the schedule next starts it. |
 | `lastRun` | [JobRun](/reference/api/types/#jobrun) | Unset until it has run on this installation. |
 | `lastSucceededAt` | `Timestamp` |  |
+| `title` | string | The job as a person names it: "Storage collection" for storage-gc. |
+| `purpose` | string | One sentence of what it does and what stays undone while it fails. |
+| `recentRuns` | list of [JobRun](/reference/api/types/#jobrun) | Its newest runs, newest first, at most twenty: what a list of jobs shows each one's recent outcomes and durations from, without asking for every job's runs. Each has its id, start, end and outcome only; ListJobRuns has the rest. |
 
 ## JobRun
 
@@ -747,6 +774,51 @@ NetworkUsagePoint is what the machine's network carried over a step.
 | `sentBytes` | string (int64) |  |
 | `receivedBytes` | string (int64) |  |
 
+## Notification
+
+Notification is one event of a workspace's timeline its owner is told of: what happened, and what they can do about it.
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string | The workspace event's id. |
+| `workspaceId` | string |  |
+| `workspaceName` | string |  |
+| `event` | [WorkspaceEventType](/reference/api/types/#workspaceeventtype) |  |
+| `createdAt` | `Timestamp` |  |
+| `subject` | string | One line saying what happened. |
+| `body` | string | What happened, in full. |
+| `command` | string | The command that does what the owner can do about it; empty where nothing is to be done. |
+| `deliveries` | list of [NotificationDelivery](/reference/api/types/#notificationdelivery) | Empty where it was never sent: email off, or this kind turned off. |
+
+## NotificationChannel
+
+How a notification leaves the installation.
+
+One of: `NOTIFICATION_CHANNEL_UNSPECIFIED`, `NOTIFICATION_CHANNEL_EMAIL`.
+
+## NotificationDelivery
+
+| Field | Type | What it is |
+|---|---|---|
+| `channel` | [NotificationChannel](/reference/api/types/#notificationchannel) |  |
+| `state` | [NotificationDeliveryState](/reference/api/types/#notificationdeliverystate) |  |
+| `attempts` | integer (int32) |  |
+| `lastError` | string | What the last attempt that failed was told; empty once one succeeded. |
+| `sentAt` | `Timestamp` |  |
+
+## NotificationDeliveryState
+
+Where one notification's delivery on one channel is. - `NOTIFICATION_DELIVERY_STATE_PENDING`: Not sent yet, or tried and to be tried again - `NOTIFICATION_DELIVERY_STATE_SENT`: The channel accepted it - `NOTIFICATION_DELIVERY_STATE_FAILED`: Every attempt failed; it is not tried again
+
+One of: `NOTIFICATION_DELIVERY_STATE_UNSPECIFIED`, `NOTIFICATION_DELIVERY_STATE_PENDING`, `NOTIFICATION_DELIVERY_STATE_SENT`, `NOTIFICATION_DELIVERY_STATE_FAILED`.
+
+## NotificationPreference
+
+| Field | Type | What it is |
+|---|---|---|
+| `event` | [WorkspaceEventType](/reference/api/types/#workspaceeventtype) |  |
+| `email` | boolean |  |
+
 ## ObservedDestination
 
 ObservedDestination is one address the workspace was allowed to reach, with what the host's ruleset counted and the name its resolver answered with that address, where it holds one.
@@ -865,11 +937,23 @@ A prebuild: one build of a project's ref at a commit, and the snapshot it left.
 | `parentId` | string | The prebuild it was built on, and how many builds it is from the image (0: built from it). |
 | `depth` | integer (int32) |  |
 | `image` | string |  |
-| `log` | string | The tail of what its build said, and why it failed. |
+| `log` | string | The tail of what its build's create tasks wrote (GetPrebuild only), and why it failed. |
 | `error` | string |  |
 | `createdAt` | `Timestamp` |  |
 | `builtAt` | `Timestamp` |  |
 | `workspaceCount` | integer (int32) | In ListPrebuilds: the workspaces opened from it that are not deleted, whoever's they are. |
+| `reportedAt` | `Timestamp` | When its build's guest said the checkout and create tasks were done; unset before it did. |
+| `spinYaml` | boolean | Whether the checkout had a .spin.yaml at its root, as the guest reported: without one the build is the clone alone, with no create tasks run. Read only with reported_at. |
+| `storedBytes` | string or null (int64) | What it keeps in the object store, as storage-gc last read it; unset before a reading counted it. |
+
+## PrebuildRefNotFound
+
+A prebuild ref the project's forge has not.
+
+| Field | Type | What it is |
+|---|---|---|
+| `ref` | string |  |
+| `since` | `Timestamp` | The job's first look that found it missing. |
 
 ## PrebuildState
 
@@ -910,6 +994,32 @@ A project: a repository and the shape of the workspace that opens it.
 | `sharedUserIds` | list of string |  |
 | `sharedTeamIds` | list of string |  |
 | `readyPrebuildCount` | integer (int32) | In ListProjects: how many of its prebuilds are ready to open from. |
+| `prebuildKeep` | integer (int32) | How many of each ref's newest ready prebuilds are kept when no workspace was opened from them. |
+| `timeToReady` | [ProjectTimeToReady](/reference/api/types/#projecttimetoready) | In GetProject: how long its workspaces took to be ready. Unset where none has been. |
+
+## ProjectTimeToReady
+
+How long a project's workspaces took from their create to their project being ready in them - the repository checked out and its create tasks done, as each one's guest first said it, the wait for a host and the boot included - over the last 20 that got there. One that never did - it failed, or was deleted first - is not counted, and neither is one opened from a prebuild: this is what opening without one costs. A workspace whose first boots failed its project counts from its create to the boot that went.
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaces` | integer (int32) | How many workspaces the times are over: 1 to 20. |
+| `median` | `Duration` |  |
+| `slowest` | `Duration` |  |
+
+## ProjectWorkspace
+
+A workspace open on a project, as the project's admins read it: whose it is and how it is, and nothing that lets them into it.
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string |  |
+| `name` | string |  |
+| `ownerId` | string |  |
+| `ownerName` | string |  |
+| `ownerEmail` | string |  |
+| `state` | [WorkspaceState](/reference/api/types/#workspacestate) | As Workspace.state, DEGRADED included. |
+| `since` | `Timestamp` | Since when it has been in that state: when its guest answered for a running one, and when its row last changed for any other. |
 
 ## QuarantineDenial
 
@@ -1001,6 +1111,7 @@ ResourcePreset is a class of workspace: its size, and how a workspace of it may 
 | `rpoSeconds` | integer (int32) | How far behind the object store a workspace of it may fall, in seconds; 0 is the installation's (InstallationSettings.volume_rpo_seconds). |
 | `hostClass` | string | The host class its workspaces run on (HostClass). |
 | `agentMinMemoryMb` | integer (int32) | What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset. |
+| `fromConfig` | boolean | Seeded or applied from the installation's config file (the release's presets where it names none); false is one an administrator added. An edit since does not change it. |
 
 ## Resources
 
@@ -1014,6 +1125,28 @@ Resource allocation for workspaces. Initial values (cpu_cores, memory_mb) are us
 | `maxCpuCores` | integer (int32) | Max CPU cores (0 = unlimited) |
 | `maxMemoryMb` | integer (int32) | Max memory in MB (0 = unlimited) |
 | `bandwidthMbps` | integer (int32) | What a workspace's network carries each way, in megabits a second (0 = unshaped): its preset's, held on its host by a token bucket on each way out of its machine's namespace. Its vsock - ssh, the editor, forwarded ports - is not shaped. |
+
+## Runbook
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string | Stable: alert rules and pages link /admin/runbooks/&lt;id>. |
+| `title` | string |  |
+| `severity` | string | critical, warning or info. |
+| `owner` | string | The role that keeps it true: operator, security. |
+| `lastReviewed` | string | YYYY-MM-DD: when it was last held to the release it describes. |
+| `appliesTo` | [RunbookAppliesTo](/reference/api/types/#runbookappliesto) |  |
+
+## RunbookAppliesTo
+
+What sends an operator to a runbook, each as the installation names it.
+
+| Field | Type | What it is |
+|---|---|---|
+| `alerts` | list of string | Grafana alert rule uids. |
+| `jobs` | list of string | Control plane job names (Job.name). |
+| `events` | list of string | The notices a workspace's owner gets, by WorkspaceEventType without its prefix: HELD. |
+| `dashboards` | list of string | Grafana dashboard uids. |
 
 ## SSHKey
 
@@ -1070,6 +1203,12 @@ ServiceHealth is one service over a window: the traces begun in it - what it was
 | `start` | `Timestamp` |  |
 | `traces` | string (int64) |  |
 | `failedTraces` | string (int64) |  |
+
+## SettingReach
+
+SettingReach is what a saved installation setting touches, and when: each setting declares one beside its key (internal/controlplane/settings), so the screen that edits it can say so before the save. - `SETTING_REACH_RUNNING_WORKSPACES`: The workspaces running now, at the control plane's next look at them. - `SETTING_REACH_NEW_WORKSPACES`: Workspaces created from now on; those that exist keep what they were made with. - `SETTING_REACH_NEXT_HEARTBEAT`: Each runner at its next heartbeat, and the workspaces running on it. - `SETTING_REACH_NEXT_REQUEST`: What is asked from now on - a project made, a shell opened, a workspace deleted; what was done before keeps the terms it was done under. - `SETTING_REACH_NEXT_PASS`: The next pass of the job that applies it: the autoscaler, the prebuilds' retirement, the collector's read of its policy, the daily look for a release.
+
+One of: `SETTING_REACH_UNSPECIFIED`, `SETTING_REACH_RUNNING_WORKSPACES`, `SETTING_REACH_NEW_WORKSPACES`, `SETTING_REACH_NEXT_HEARTBEAT`, `SETTING_REACH_NEXT_REQUEST`, `SETTING_REACH_NEXT_PASS`.
 
 ## Snapshot
 
@@ -1241,6 +1380,7 @@ What the supervisor inside the guest last reported. Absent (`connected` false wi
 | `roleCelExpression` | string | CEL expression for role assignment |
 | `enabled` | boolean |  |
 | `createdAt` | `Timestamp` |  |
+| `refusedRemoval` | string | Why disabling or deleting it would be refused; empty where it would not be. An installation provider that the only administrators who can sign in sign in through (lockout). |
 
 ## TeamMember
 
@@ -1275,6 +1415,44 @@ TelemetryFlow is what one exporter of the collector did over the last window.
 |---|---|---|
 | `sent` | string (int64) |  |
 | `failed` | string (int64) |  |
+
+## ThirdPartyAcceptance
+
+ThirdPartyAcceptance is an administrator's acceptance of an item's terms.
+
+| Field | Type | What it is |
+|---|---|---|
+| `termsVersion` | string | The version of the text that was accepted; an older one than the response's counts as none. |
+| `acceptedBy` | string | Who accepted, by email: kept as it was when they did. |
+| `acceptedAt` | `Timestamp` |  |
+
+## ThirdPartyItem
+
+ThirdPartyItem is what an administrator accepts the terms of, one download at a time: the software the control plane fetches together, as one extension. - `THIRD_PARTY_ITEM_VSCODE_SERVER`: Microsoft's VS Code server and its CLI: the vsc-&lt;commit> extensions. - `THIRD_PARTY_ITEM_AGENT_CLIS`: Claude Code, Codex, T3 Code and the libatomic T3 Code's server is linked against: the agents extension.
+
+One of: `THIRD_PARTY_ITEM_UNSPECIFIED`, `THIRD_PARTY_ITEM_VSCODE_SERVER`, `THIRD_PARTY_ITEM_AGENT_CLIS`.
+
+## ThirdPartyPart
+
+ThirdPartyPart is one program an item downloads, and the license it comes under.
+
+| Field | Type | What it is |
+|---|---|---|
+| `name` | string |  |
+| `maker` | string | Who makes it and serves the download. |
+| `license` | string |  |
+| `licenseUrl` | string |  |
+
+## ThirdPartyTermsItem
+
+| Field | Type | What it is |
+|---|---|---|
+| `item` | [ThirdPartyItem](/reference/api/types/#thirdpartyitem) |  |
+| `name` | string |  |
+| `purpose` | string | What a workspace gets from it. |
+| `parts` | list of [ThirdPartyPart](/reference/api/types/#thirdpartypart) |  |
+| `acceptance` | [ThirdPartyAcceptance](/reference/api/types/#thirdpartyacceptance) | Unset where nobody accepted the terms for it. |
+| `accepted` | boolean | Whether this installation downloads it: accepted, as the current text. |
 
 ## User
 
@@ -1394,6 +1572,7 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `projectReportedAt` | `Timestamp` | project_reported_at is when its guest said how its project went in this run, unset until it has: an empty project_error before then is a clone still going, not one that went. project_head is the commit it checked out, as the guest said it; empty when it did not say one. |
 | `projectHead` | string |  |
 | `hostName` | string | host_name is the name host_id's machine registered, for a person to tell hosts apart; empty with no host, or one that registered none. Answered by GetWorkspace and ListWorkspaces, so a list row says where each runs without a status read per row; never placed or trusted by. |
+| `withoutPrebuild` | string | without_prebuild is why a workspace opening a project at a ref it prebuilds started from none of its prebuilds, and cloned the repository at its first boot: none ready, the ready one of another image, its disk not cloneable yet. Empty with from_prebuild_id set, or for a project that prebuilds nothing. |
 
 ## WorkspaceAction
 
@@ -1458,9 +1637,9 @@ Timeline event for workspace state changes
 
 ## WorkspaceEventType
 
-- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back
+- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back - `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published - `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner
 
-One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`.
+One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`, `WORKSPACE_EVENT_TYPE_REHOMED`, `WORKSPACE_EVENT_TYPE_HELD`.
 
 ## WorkspaceFailure
 
@@ -1518,6 +1697,7 @@ WorkspaceProgress is a transition under way.
 | `phase` | [WorkspacePhase](/reference/api/types/#workspacephase) | phase is what the host is doing now; UNSPECIFIED when it has not said. |
 | `since` | `Timestamp` | since is when the transition began, and deadline when the control plane gives up on it - a wait for a host, or a start or a stop the host does not finish - and fails the workspace. |
 | `deadline` | `Timestamp` |  |
+| `typical` | `Duration` | typical is how long a start usually takes on the workspace's host class: the median, from the request to RUNNING (the same measure as since), of the newest starts that came up there. Unset for a transition that is not a start, and where too few have come up to say. Per step it is not: what a host says of its phases is kept only while one is under way. |
 
 ## WorkspaceProxyStatus
 

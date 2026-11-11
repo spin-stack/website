@@ -20,7 +20,7 @@ Available Commands:
   install     Install the Spinbox extension that carries this CLI's release into VS Code
 
 Flags:
-  -h, --help   help for vscode
+  -h, --help[=true|false]   help for vscode
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -55,8 +55,8 @@ Usage:
   spin vscode install [flags]
 
 Flags:
-      --editor string   The editor's command: code, code-insiders, codium, cursor (default "code")
-  -h, --help            help for install
+      --editor string       The editor's command: code, code-insiders, codium, cursor (default "code")
+  -h, --help[=true|false]   help for install
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

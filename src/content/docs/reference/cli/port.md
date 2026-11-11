@@ -25,7 +25,7 @@ Available Commands:
   unexpose    Unexpose a port from a workspace
 
 Flags:
-  -h, --help   help for port
+  -h, --help[=true|false]   help for port
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -52,7 +52,7 @@ Usage:
   spin port access <workspace> <port> <private|whitelist|public> [flags]
 
 Flags:
-  -h, --help   help for access
+  -h, --help[=true|false]   help for access
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -89,8 +89,8 @@ Usage:
 Flags:
       --access string        who may reach it: private (the default), whitelist or public
       --description string   Description of the exposed port
-  -h, --help                 help for expose
-      --https                The port speaks TLS; the proxy does not verify its certificate, and its URL is {port}s-
+  -h, --help[=true|false]    help for expose
+      --https[=true|false]   The port speaks TLS; the proxy does not verify its certificate, and its URL is {port}s-
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -114,7 +114,7 @@ Usage:
   spin port grant <workspace> <port> <user-id> [flags]
 
 Flags:
-  -h, --help   help for grant
+  -h, --help[=true|false]   help for grant
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -137,7 +137,7 @@ Usage:
   spin port list <workspace> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -158,7 +158,7 @@ Usage:
   spin port revoke <workspace> <port> <user-id> [flags]
 
 Flags:
-  -h, --help   help for revoke
+  -h, --help[=true|false]   help for revoke
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -182,7 +182,7 @@ Usage:
   spin port unexpose <workspace> <port> [flags]
 
 Flags:
-  -h, --help   help for unexpose
+  -h, --help[=true|false]   help for unexpose
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

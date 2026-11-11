@@ -26,7 +26,7 @@ Available Commands:
   list        List a workspace's snapshots, including those of disks it was restored away from
 
 Flags:
-  -h, --help   help for snapshot
+  -h, --help[=true|false]   help for snapshot
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -48,11 +48,11 @@ Usage:
   spin snapshot create <workspace> [flags]
 
 Flags:
-      --description string   What the snapshot is of
-  -h, --help                 help for create
-      --timeout duration     How long --wait waits (default 5m0s)
-      --wait                 Return once the snapshot is published
-      --with-memory          Keep the running processes too, so a restore resumes them
+      --description string         What the snapshot is of
+  -h, --help[=true|false]          help for create
+      --timeout duration           How long --wait waits (default 5m0s)
+      --wait[=true|false]          Return once the snapshot is published
+      --with-memory[=true|false]   Keep the running processes too, so a restore resumes them
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -70,8 +70,8 @@ Usage:
   spin snapshot delete <workspace> <snapshot-id> [flags]
 
 Flags:
-  -h, --help   help for delete
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for delete
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -97,9 +97,9 @@ Usage:
   spin snapshot diff <workspace> <snapshot-id> [flags]
 
 Flags:
-      --from string    The earlier snapshot (default: what the workspace was created from)
-  -h, --help           help for diff
-      --under string   Compare only this path of the filesystem, from its root (default: all of it)
+      --from string         The earlier snapshot (default: what the workspace was created from)
+  -h, --help[=true|false]   help for diff
+      --under string        Compare only this path of the filesystem, from its root (default: all of it)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -117,7 +117,7 @@ Usage:
   spin snapshot list <workspace> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

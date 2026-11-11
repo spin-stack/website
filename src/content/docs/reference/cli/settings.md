@@ -26,7 +26,7 @@ Available Commands:
   taskfile    Configure startup Taskfile
 
 Flags:
-  -h, --help   help for settings
+  -h, --help[=true|false]   help for settings
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -51,11 +51,11 @@ Usage:
   spin settings dotfiles [flags]
 
 Flags:
-      --branch string    Branch to clone (default "main")
-      --clear            Clear dotfiles configuration
-  -h, --help             help for dotfiles
-      --install string   Install command (default "./install.sh")
-      --repo string      Git repository URL
+      --branch string        Branch to clone (default "main")
+      --clear[=true|false]   Clear dotfiles configuration
+  -h, --help[=true|false]    help for dotfiles
+      --install string       Install command (default "./install.sh")
+      --repo string          Git repository URL
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -73,7 +73,7 @@ Usage:
   spin settings get [flags]
 
 Flags:
-  -h, --help   help for get
+  -h, --help[=true|false]   help for get
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -101,7 +101,7 @@ Usage:
   spin settings set <key> <value> [flags]
 
 Flags:
-  -h, --help   help for set
+  -h, --help[=true|false]   help for set
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -124,10 +124,10 @@ Usage:
   spin settings taskfile [flags]
 
 Flags:
-      --clear             Clear Taskfile configuration
-      --file string       Taskfile to upload
-  -h, --help              help for taskfile
-      --validate string   Validate a Taskfile without saving
+      --clear[=true|false]   Clear Taskfile configuration
+      --file string          Taskfile to upload
+  -h, --help[=true|false]    help for taskfile
+      --validate string      Validate a Taskfile without saving
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

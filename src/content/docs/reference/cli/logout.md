@@ -16,7 +16,7 @@ Usage:
   spin logout [flags]
 
 Flags:
-  -h, --help   help for logout
+  -h, --help[=true|false]   help for logout
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

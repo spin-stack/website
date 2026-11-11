@@ -34,7 +34,7 @@ Available Commands:
   update      Save a project whole: every flag is what it becomes
 
 Flags:
-  -h, --help   help for project
+  -h, --help[=true|false]   help for project
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -60,10 +60,11 @@ Usage:
 
 Flags:
       --description string            A line about it
-  -h, --help                          help for create
+  -h, --help[=true|false]             help for create
       --image string                  The image a workspace of it starts from (default: the installation's)
       --name string                   What the project is called
       --network-tag strings           A network policy a workspace of it runs under, by name (repeatable)
+      --prebuild-keep int32           How many of each ref's newest prebuilds are kept when no workspace was opened from them (default: 1)
       --prebuild-rebase-every int32   Every how many builds of a ref one is built from the image again (default: 10)
       --prebuild-ref stringArray      A ref it prebuilds: built as it moves, and what opening the project at it is cloned from (repeatable; the builds run as you)
       --preset string                 The preset a workspace of it is sized by (default: the installation's)
@@ -87,8 +88,8 @@ Usage:
   spin project delete <slug> [flags]
 
 Flags:
-  -h, --help   help for delete
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for delete
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -106,7 +107,7 @@ Usage:
   spin project list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -126,7 +127,7 @@ Usage:
   spin project prebuild <slug> <ref> [flags]
 
 Flags:
-  -h, --help   help for prebuild
+  -h, --help[=true|false]   help for prebuild
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -147,7 +148,7 @@ Usage:
   spin project prebuilds <slug> [flags]
 
 Flags:
-  -h, --help   help for prebuilds
+  -h, --help[=true|false]   help for prebuilds
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -170,11 +171,11 @@ Usage:
   spin project share <slug> [flags]
 
 Flags:
-      --admin stringArray   A person who administers it, by id (repeatable; at least one)
-      --everyone            Everybody signed in sees it
-  -h, --help                help for share
-      --team stringArray    A team whose members see it, by id, path or me (repeatable)
-      --user stringArray    A person who sees it, by id (repeatable)
+      --admin stringArray       A person who administers it, by id (repeatable; at least one)
+      --everyone[=true|false]   Everybody signed in sees it
+  -h, --help[=true|false]       help for share
+      --team stringArray        A team whose members see it, by id, path or me (repeatable)
+      --user stringArray        A person who sees it, by id (repeatable)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -195,10 +196,11 @@ Usage:
 
 Flags:
       --description string            A line about it
-  -h, --help                          help for update
+  -h, --help[=true|false]             help for update
       --image string                  The image a workspace of it starts from (default: the installation's)
       --name string                   What the project is called
       --network-tag strings           A network policy a workspace of it runs under, by name (repeatable)
+      --prebuild-keep int32           How many of each ref's newest prebuilds are kept when no workspace was opened from them (default: 1)
       --prebuild-rebase-every int32   Every how many builds of a ref one is built from the image again (default: 10)
       --prebuild-ref stringArray      A ref it prebuilds: built as it moves, and what opening the project at it is cloned from (repeatable; the builds run as you)
       --preset string                 The preset a workspace of it is sized by (default: the installation's)

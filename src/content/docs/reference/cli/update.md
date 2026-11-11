@@ -21,7 +21,7 @@ Usage:
   spin update [flags]
 
 Flags:
-  -h, --help   help for update
+  -h, --help[=true|false]   help for update
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

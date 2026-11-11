@@ -516,7 +516,7 @@
 		"name": "Claude Code, Codex and T3 Code on every workspace's PATH, at the versions the release pins, with their own defaults",
 		"state": "built",
 		"proof": "e2e:TestTheAgentCLIsAreOnPathWithThePinnedVersions",
-		"note": "Where the installation fetches them (agents_fetch) or an operator publishes them: no image carries Claude Code, which only Anthropic may distribute.",
+		"note": "Where an administrator accepted their terms (Admin → Extensions) or an operator publishes them: no image carries Claude Code, which only Anthropic may distribute.",
 		"endToEnd": [
 			"go:internal/e2e.TestTheAgentCLIsAreOnPathWithThePinnedVersions"
 		]
@@ -859,10 +859,19 @@
 	},
 	{
 		"area": "Administration",
-		"name": "A workspace whose host never comes back is moved only when little would be lost",
-		"state": "not",
-		"proof": "",
-		"note": ""
+		"name": "A workspace whose host never comes back is moved when little would be lost, and its owner is told when it waits for them",
+		"state": "built",
+		"proof": "rpc:spin.v1.WorkspaceService/RecoverWorkspace",
+		"note": "",
+		"endToEndGap": "the move without asking and the wait it records are tested against the database (workspaceserver's autorehome tests); the hosts lane recovers by hand, and no lane has an SMTP server to receive the owner's email"
+	},
+	{
+		"area": "Observability",
+		"name": "A workspace's owner is told by email when it waits for them or something happened to it, each event switchable",
+		"state": "built",
+		"proof": "rpc:spin.v1.SettingsService/UpdateNotificationPreferences",
+		"note": "Held after its host was lost, a stop that could not be taken, stopped for not responding, moved off a lost host. A disk almost full is not an event yet.",
+		"endToEndGap": "no lane has an SMTP server: delivery is tested against a generated mail server, with every attempt and retry recorded (internal/controlplane/notify)"
 	},
 	{
 		"area": "Observability",
@@ -1034,10 +1043,10 @@
 	},
 	{
 		"area": "Observability",
-		"name": "Nothing pages anyone",
+		"name": "Nothing pages the operator",
 		"state": "limit",
 		"proof": "",
-		"note": "Metrics, logs and traces stay inside the installation; alert rules fire in its Grafana and no contact point tells anyone."
+		"note": "Metrics, logs and traces stay inside the installation; alert rules fire in its Grafana and no contact point tells anyone. A workspace's owner is emailed when it waits for them."
 	},
 	{
 		"area": "Administration",

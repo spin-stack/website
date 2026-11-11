@@ -29,7 +29,7 @@ Available Commands:
   remove      Remove a user's access to a snapshot
 
 Flags:
-  -h, --help   help for share
+  -h, --help[=true|false]   help for share
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -49,8 +49,8 @@ Usage:
   spin share add <snapshot-id> <email> [flags]
 
 Flags:
-      --acknowledge-findings   Give the snapshot away although its files hold what looks like credentials
-  -h, --help                   help for add
+      --acknowledge-findings[=true|false]   Give the snapshot away although its files hold what looks like credentials
+  -h, --help[=true|false]                   help for add
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -68,8 +68,8 @@ Usage:
   spin share browse [flags]
 
 Flags:
-  -h, --help     help for browse
-      --public   Include public snapshots (default true)
+  -h, --help[=true|false]     help for browse
+      --public[=true|false]   Include public snapshots (default true)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -87,7 +87,7 @@ Usage:
   spin share list <snapshot-id> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -105,7 +105,7 @@ Usage:
   spin share private <snapshot-id> [flags]
 
 Flags:
-  -h, --help   help for private
+  -h, --help[=true|false]   help for private
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -123,8 +123,8 @@ Usage:
   spin share public <snapshot-id> [flags]
 
 Flags:
-      --acknowledge-findings   Give the snapshot away although its files hold what looks like credentials
-  -h, --help                   help for public
+      --acknowledge-findings[=true|false]   Give the snapshot away although its files hold what looks like credentials
+  -h, --help[=true|false]                   help for public
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -142,7 +142,7 @@ Usage:
   spin share remove <snapshot-id> <user-id> [flags]
 
 Flags:
-  -h, --help   help for remove
+  -h, --help[=true|false]   help for remove
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

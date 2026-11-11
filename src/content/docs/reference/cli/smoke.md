@@ -29,7 +29,7 @@ Usage:
   spin smoke [flags]
 
 Flags:
-  -h, --help                  help for smoke
+  -h, --help[=true|false]     help for smoke
       --image string          The image to start from (default: the installation's)
       --network-tag strings   Network policy to run under, by name (repeatable)
       --preset string         The preset it is sized by (default: the installation's)

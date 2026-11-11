@@ -37,16 +37,16 @@ Usage:
   spin exec <workspace> -- <command> [args...] [flags]
 
 Flags:
-      --attach string      Print a detached run's output until it ends, and exit with its status
-  -d, --detach             Start the command, print its run id and leave it running
-  -h, --help               help for exec
-  -i, --identity string    Identity file (private key)
-      --no-tty             Do not allocate a terminal
-      --start              Start the workspace first if it is stopped
-      --timeout duration   How long to wait for the workspace to be running; by default, until the control plane gives up on it
-  -t, --tty                Allocate a terminal even if this one is not
-  -u, --user string        User to run the command as (default "root")
-  -w, --workdir string     Directory to run the command in
+      --attach string         Print a detached run's output until it ends, and exit with its status
+  -d, --detach[=true|false]   Start the command, print its run id and leave it running
+  -h, --help[=true|false]     help for exec
+  -i, --identity string       Identity file (private key)
+      --no-tty[=true|false]   Do not allocate a terminal
+      --start[=true|false]    Start the workspace first if it is stopped
+      --timeout duration      How long to wait for the workspace to be running; by default, until the control plane gives up on it
+  -t, --tty[=true|false]      Allocate a terminal even if this one is not
+  -u, --user string           User to run the command as (default "root")
+  -w, --workdir string        Directory to run the command in
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

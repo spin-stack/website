@@ -29,7 +29,7 @@ Available Commands:
   secret      Manage the secrets the egress proxy adds for a team's workspaces
 
 Flags:
-  -h, --help   help for team
+  -h, --help[=true|false]   help for team
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -55,7 +55,7 @@ Usage:
 
 Flags:
       --description string   Team description
-  -h, --help                 help for create
+  -h, --help[=true|false]    help for create
       --parent string        Parent team ID or path
       --slug string          URL-friendly slug (auto-generated if empty)
 
@@ -76,9 +76,9 @@ Usage:
   spin team delete <team> [flags]
 
 Flags:
-  -h, --help        help for delete
-      --recursive   Delete children too (dangerous!)
-  -y, --yes         Skip confirmation
+  -h, --help[=true|false]        help for delete
+      --recursive[=true|false]   Delete children too (dangerous!)
+  -y, --yes[=true|false]         Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -96,7 +96,7 @@ Usage:
   spin team get <team> [flags]
 
 Flags:
-  -h, --help   help for get
+  -h, --help[=true|false]   help for get
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -114,9 +114,9 @@ Usage:
   spin team list [flags]
 
 Flags:
-      --all             Include all descendant teams
-  -h, --help            help for list
-      --parent string   Filter by parent team
+      --all[=true|false]    Include all descendant teams
+  -h, --help[=true|false]   help for list
+      --parent string       Filter by parent team
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -141,7 +141,7 @@ Available Commands:
   role        Update a member's role
 
 Flags:
-  -h, --help   help for member
+  -h, --help[=true|false]   help for member
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -161,8 +161,8 @@ Usage:
   spin team member add <team> <email> [flags]
 
 Flags:
-  -h, --help          help for add
-      --role string   Role: owner, admin, member (default "member")
+  -h, --help[=true|false]   help for add
+      --role string         Role: owner, admin, member (default "member")
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -180,7 +180,7 @@ Usage:
   spin team member list <team> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -198,7 +198,7 @@ Usage:
   spin team member remove <team> <user-id> [flags]
 
 Flags:
-  -h, --help   help for remove
+  -h, --help[=true|false]   help for remove
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -216,7 +216,7 @@ Usage:
   spin team member role <team> <user-id> <role> [flags]
 
 Flags:
-  -h, --help   help for role
+  -h, --help[=true|false]   help for role
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -243,7 +243,7 @@ Available Commands:
   set         Make a team's policy, or replace what it allows
 
 Flags:
-  -h, --help   help for policy
+  -h, --help[=true|false]   help for policy
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -263,8 +263,8 @@ Usage:
   spin team policy delete <team> <name> [flags]
 
 Flags:
-  -h, --help   help for delete
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for delete
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -282,7 +282,7 @@ Usage:
   spin team policy list <team> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -306,8 +306,8 @@ Usage:
   spin team policy set <team> <name> [flags]
 
 Flags:
-  -h, --help               help for set
-      --rule stringArray   Destinations and ports, as dest,dest:port,port (repeatable)
+  -h, --help[=true|false]   help for set
+      --rule stringArray    Destinations and ports, as dest,dest:port,port (repeatable)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -335,7 +335,7 @@ Available Commands:
   set         Set a team's secret, read from standard input or kept in Secrets Manager or Parameter Store
 
 Flags:
-  -h, --help   help for secret
+  -h, --help[=true|false]   help for secret
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -355,8 +355,8 @@ Usage:
   spin team secret delete <team> <name> [flags]
 
 Flags:
-  -h, --help   help for delete
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for delete
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -374,7 +374,7 @@ Usage:
   spin team secret list <team> [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -404,9 +404,9 @@ Usage:
   spin team secret set <team> <name> [flags]
 
 Flags:
-  -h, --help               help for set
-      --host stringArray   A host the secret may be sent to, named exactly (repeatable)
-      --ref string         The ARN of the Secrets Manager secret or the Parameter Store parameter the team keeps the value in
+  -h, --help[=true|false]   help for set
+      --host stringArray    A host the secret may be sent to, named exactly (repeatable)
+      --ref string          The ARN of the Secrets Manager secret or the Parameter Store parameter the team keeps the value in
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

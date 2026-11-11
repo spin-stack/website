@@ -40,10 +40,10 @@ Usage:
   spin login [flags]
 
 Flags:
-      --endpoint string   API endpoint URL (default: SPIN_ENDPOINT, the profile's, or https://app.spinbox.dev)
-  -h, --help              help for login
-      --no-browser        do not open the code's page in a browser; with -o json, write the code as a first line of JSON
-      --token-stdin       read an API key (Settings > API Keys) from standard input instead of signing in with a code
+      --endpoint string            API endpoint URL (default: SPIN_ENDPOINT, the profile's, or https://app.spinbox.dev)
+  -h, --help[=true|false]          help for login
+      --no-browser[=true|false]    do not open the code's page in a browser; with -o json, write the code as a first line of JSON
+      --token-stdin[=true|false]   read an API key (Settings > API Keys) from standard input instead of signing in with a code
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

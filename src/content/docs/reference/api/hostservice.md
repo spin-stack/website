@@ -129,6 +129,26 @@ List all hosts (admin only)
 | `hosts` | list of [Host](/reference/api/types/#host) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
 
+## RemoveHost
+
+`POST /spin.v1.HostService/RemoveHost`
+
+Takes a machine of an autoscaling group out of the fleet (admin only), as Host.removal says: given back to its group (GIVE_BACK), or forgotten (FORGET). A host whose removal is REVOKE is refused: RevokeRunner is its removal.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `removal` | [HostRemoval](/reference/api/types/#hostremoval) | removal is what was done: GIVE_BACK or FORGET. |
+| `givenBack` | boolean | given_back is the machine terminated and its group asked for one less; false where the group no longer had it. |
+| `forgotten` | boolean | forgotten is the host's row gone. A host given back while connected is not: it drains under its termination hook, and its row goes when its stream ends. |
+
 ## SetHostPolicy
 
 `POST /spin.v1.HostService/SetHostPolicy`

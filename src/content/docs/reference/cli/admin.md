@@ -31,7 +31,7 @@ Available Commands:
   volume      Re-key a workspace's disk
 
 Flags:
-  -h, --help   help for admin
+  -h, --help[=true|false]   help for admin
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -57,8 +57,8 @@ Available Commands:
   by          What each workspace, team or owner cost this month, and what nobody did
 
 Flags:
-  -h, --help           help for costs
-      --month string   the month, as 2026-10 (default: this month)
+  -h, --help[=true|false]   help for costs
+      --month string        the month, as 2026-10 (default: this month)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -81,8 +81,8 @@ Usage:
   spin admin costs by <workspace|team|owner> [flags]
 
 Flags:
-  -h, --help           help for by
-      --month string   the month, as 2026-10 (default: this month)
+  -h, --help[=true|false]   help for by
+      --month string        the month, as 2026-10 (default: this month)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -103,7 +103,7 @@ Usage:
   spin admin health [flags]
 
 Flags:
-  -h, --help   help for health
+  -h, --help[=true|false]   help for health
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -126,7 +126,7 @@ Available Commands:
   run         Run a job now rather than when it is next due
 
 Flags:
-  -h, --help   help for jobs
+  -h, --help[=true|false]   help for jobs
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -146,7 +146,7 @@ Usage:
   spin admin jobs list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -165,7 +165,7 @@ Usage:
   spin admin jobs run <job> [flags]
 
 Flags:
-  -h, --help   help for run
+  -h, --help[=true|false]   help for run
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -190,9 +190,9 @@ Usage:
   spin admin logs [query] [flags]
 
 Flags:
-  -h, --help             help for logs
-      --limit int32      how many records, newest first: 1 to 1000 (default 100)
-      --since duration   how far back to look, at most 744h (31 days) (default 1h0m0s)
+  -h, --help[=true|false]   help for logs
+      --limit int32         how many records, newest first: 1 to 1000 (default 100)
+      --since duration      how far back to look, at most 744h (31 days) (default 1h0m0s)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -215,10 +215,11 @@ Available Commands:
   drain       Stop a runner taking new workspaces, until it is activated
   list        List all runners
   policy      What a runner may do, as against what it is
+  remove      Take a runner of an autoscaling group out of the fleet: give it back to its group, or forget it
   revoke      Revoke a runner's access, for a machine that should never connect again
 
 Flags:
-  -h, --help   help for runner
+  -h, --help[=true|false]   help for runner
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -240,7 +241,7 @@ Usage:
   spin admin runner activate <runner-id> [flags]
 
 Flags:
-  -h, --help   help for activate
+  -h, --help[=true|false]   help for activate
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -266,9 +267,9 @@ Usage:
   spin admin runner drain <runner-id> [flags]
 
 Flags:
-  -h, --help            help for drain
-      --leave-stopped   With --suspend: leave them stopped until their owners start them (a drain that shrinks the fleet)
-      --suspend         Suspend the runner's running workspaces so they resume elsewhere
+  -h, --help[=true|false]            help for drain
+      --leave-stopped[=true|false]   With --suspend: leave them stopped until their owners start them (a drain that shrinks the fleet)
+      --suspend[=true|false]         Suspend the runner's running workspaces so they resume elsewhere
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -286,7 +287,7 @@ Usage:
   spin admin runner list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -315,18 +316,46 @@ Usage:
 Flags:
       --cpu-cores int32                         cores this runner advertises; unset advertises what it has
       --disk-gb int32                           disk this runner advertises; unset advertises what it has
-  -h, --help                                    help for policy
+  -h, --help[=true|false]                       help for policy
       --max-workspace-cpu-cores int32           the cores one workspace may grow to there
       --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
       --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
       --max-workspace-memory-mb int32           the memory one workspace may grow to there
       --memory-mb int32                         memory this runner advertises; unset advertises what it has
-      --preemptible                             a stop on this runner is the machine being taken away, not a restart
+      --preemptible[=true|false]                a stop on this runner is the machine being taken away, not a restart
       --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
       --shutdown-grace duration                 how long this runner stays up after a stop signal so its workspaces can be moved off it
       --writeback-background-bytes int          dirty page cache at which this runner starts writing back (vm.dirty_background_bytes), below the limit
       --writeback-limit-bytes int               dirty page cache this runner holds before a writer waits (vm.dirty_bytes); unset is what it booted with
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+#### spin admin runner remove
+
+```
+Take a runner that is a machine of an autoscaling group out of the fleet.
+
+A connected one is cordoned and given back to its group, which terminates the machine and is
+asked for one less; it drains as it goes, and its row goes when it has. One that is not connected
+is given back if its group still has its machine, and forgotten now, without waiting out
+host_forget_after_hours.
+
+A runner that is the only home of a workspace's disk is refused, naming them: stop them, which
+publishes each disk, or move them first. A runner registered with a token is revoked instead
+(spin admin runner revoke).
+
+Usage:
+  spin admin runner remove <runner-id> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for remove
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -353,9 +382,9 @@ Usage:
   spin admin runner revoke <runner-id> [flags]
 
 Flags:
-  -h, --help               help for revoke
-      --leave-workspaces   revoke although workspaces are on this host; each runs again only once recovered elsewhere
-  -y, --yes                Skip confirmation
+  -h, --help[=true|false]               help for revoke
+      --leave-workspaces[=true|false]   revoke although workspaces are on this host; each runs again only once recovered elsewhere
+  -y, --yes[=true|false]                Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -389,7 +418,7 @@ Available Commands:
   recording   What a root shell's sessions recorded, asciicast v2, each session's in turn
 
 Flags:
-  -h, --help   help for shell
+  -h, --help[=true|false]   help for shell
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -409,7 +438,7 @@ Usage:
   spin admin shell approve <shell-id> [flags]
 
 Flags:
-  -h, --help   help for approve
+  -h, --help[=true|false]   help for approve
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -427,7 +456,7 @@ Usage:
   spin admin shell close <shell-id> [flags]
 
 Flags:
-  -h, --help   help for close
+  -h, --help[=true|false]   help for close
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -445,7 +474,7 @@ Usage:
   spin admin shell list [runner-id] [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -470,10 +499,10 @@ Usage:
   spin admin shell open <runner-id> [flags]
 
 Flags:
-  -h, --help            help for open
-      --incident        Open on the runner as it is, its workspaces running, without emptying it first
-      --minutes int32   How long the shell is open once it opens, up to the installation's host_shell_max_minutes (default 30)
-      --reason string   Why: said to whoever approves it, and kept
+  -h, --help[=true|false]       help for open
+      --incident[=true|false]   Open on the runner as it is, its workspaces running, without emptying it first
+      --minutes int32           How long the shell is open once it opens, up to the installation's host_shell_max_minutes (default 30)
+      --reason string           Why: said to whoever approves it, and kept
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -493,7 +522,7 @@ Usage:
   spin admin shell recording <shell-id> [flags]
 
 Flags:
-  -h, --help   help for recording
+  -h, --help[=true|false]   help for recording
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -518,7 +547,7 @@ Available Commands:
   untag-image Take a ref off the image it names
 
 Flags:
-  -h, --help   help for storage
+  -h, --help[=true|false]   help for storage
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -540,7 +569,7 @@ Usage:
   spin admin storage explain <key> [flags]
 
 Flags:
-  -h, --help   help for explain
+  -h, --help[=true|false]   help for explain
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -559,7 +588,7 @@ Usage:
   spin admin storage list [flags]
 
 Flags:
-  -h, --help   help for list
+  -h, --help[=true|false]   help for list
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -581,8 +610,8 @@ Usage:
   spin admin storage remove <volume-id> [flags]
 
 Flags:
-  -h, --help   help for remove
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for remove
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -602,7 +631,7 @@ Usage:
   spin admin storage untag-image <ref> [flags]
 
 Flags:
-  -h, --help   help for untag-image
+  -h, --help[=true|false]   help for untag-image
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -626,7 +655,7 @@ Available Commands:
   revoke      Revoke a registration token
 
 Flags:
-  -h, --help   help for token
+  -h, --help[=true|false]   help for token
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -667,16 +696,16 @@ Flags:
       --description string                      Description for the token
       --disk-gb int32                           disk each host it registers advertises; unset advertises what it has
       --expires duration                        how long the token registers hosts; unset is the control plane's 24 hours, and at most 30 days
-  -h, --help                                    help for create
+  -h, --help[=true|false]                       help for create
       --max-workspace-cpu-cores int32           the cores one workspace may grow to there
       --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
       --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
       --max-workspace-memory-mb int32           the memory one workspace may grow to there
       --memory-mb int32                         memory each host it registers advertises; unset advertises what it has
-      --preemptible                             a stop on each host it registers is the machine being taken away, not a restart
+      --preemptible[=true|false]                a stop on each host it registers is the machine being taken away, not a restart
       --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
-      --reusable                                a pool's token: it registers every host that presents it until it expires
+      --reusable[=true|false]                   a pool's token: it registers every host that presents it until it expires
       --shutdown-grace duration                 how long each host it registers stays up after a stop signal so its workspaces can be moved off it
       --team string                             The team to scope the runner to, by id, path or me
       --writeback-background-bytes int          dirty page cache at which each host it registers starts writing back (vm.dirty_background_bytes), below the limit
@@ -698,8 +727,8 @@ Usage:
   spin admin token list [flags]
 
 Flags:
-  -h, --help           help for list
-      --include-used   Include already-used tokens
+  -h, --help[=true|false]           help for list
+      --include-used[=true|false]   Include already-used tokens
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -717,7 +746,7 @@ Usage:
   spin admin token revoke <token-id> [flags]
 
 Flags:
-  -h, --help   help for revoke
+  -h, --help[=true|false]   help for revoke
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -735,7 +764,7 @@ Usage:
   spin admin versions [flags]
 
 Flags:
-  -h, --help   help for versions
+  -h, --help[=true|false]   help for versions
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -758,7 +787,7 @@ Available Commands:
   rekeys      The disks being re-keyed, and the ones a revoked host's keys marked for it
 
 Flags:
-  -h, --help   help for volume
+  -h, --help[=true|false]   help for volume
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -776,14 +805,15 @@ Copy a workspace's disk, whole, under a key of its own, point the workspace at t
 delete the disk - which destroys the key it was under, and every snapshot of the disk with it: those
 are what that key opens. What to do when the key is assumed taken, by a host that held it.
 
-The workspace must be stopped or quarantined. A disk something was cloned from is refused.
+The workspace is anybody's, named by its id. It must be stopped or quarantined. A disk something
+was cloned from is refused.
 
 Usage:
-  spin admin volume rekey <workspace> [flags]
+  spin admin volume rekey <workspace-id> [flags]
 
 Flags:
-  -h, --help   help for rekey
-  -y, --yes    Skip confirmation
+  -h, --help[=true|false]   help for rekey
+  -y, --yes[=true|false]    Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -801,7 +831,7 @@ Usage:
   spin admin volume rekeys [flags]
 
 Flags:
-  -h, --help   help for rekeys
+  -h, --help[=true|false]   help for rekeys
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

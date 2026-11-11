@@ -25,8 +25,8 @@ Usage:
   spin ssh-config [flags]
 
 Flags:
-  -h, --help              help for ssh-config
-  -i, --identity string   Identity file (private key); default: the first key this machine holds that your keyring lists
+  -h, --help[=true|false]   help for ssh-config
+  -i, --identity string     Identity file (private key); default: the first key this machine holds that your keyring lists
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

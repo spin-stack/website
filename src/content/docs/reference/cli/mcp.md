@@ -24,7 +24,7 @@ Usage:
   spin mcp [flags]
 
 Flags:
-  -h, --help   help for mcp
+  -h, --help[=true|false]   help for mcp
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
