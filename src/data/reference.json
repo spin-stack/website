@@ -1,8 +1,8 @@
 {
 	"spin": {
 		"installs": "v20261027.01",
-		"commit": "b7ba5206f12ba93a829a48e354be7fce6bc65db4",
-		"tag": "v20261110.01",
+		"commit": "911f516bc89ae266c013681247d72c40990fe62c",
+		"tag": "v20261113.01",
 		"machine": "v20261026.01"
 	},
 	"terraform": {
@@ -13,12 +13,12 @@
 		"commit": "e5d547cff92ba84137e7d3af0eae5eee04c63cd8"
 	},
 	"counts": {
-		"built": 91,
+		"built": 96,
 		"partial": 0,
 		"notBuilt": 2,
 		"limits": 17,
 		"endToEnd": 83,
-		"gap": 8
+		"gap": 13
 	},
-	"openapiSha256": "df426012d8424746aed6a141797c96a4e0495082d4dad613dac78bad6b738929"
+	"openapiSha256": "bb8efbad5b1f1de3ae3301b78c9c50d62d65a987dd05dc12594bc1e7ad2cf0a9"
 }

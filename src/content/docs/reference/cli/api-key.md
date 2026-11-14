@@ -71,8 +71,8 @@ Usage:
 Flags:
       --expires string         How long the key lasts, at most a year: a whole number of d, w or y (30d, 2w, 1y), or a duration like 36h (default "90d")
   -h, --help[=true|false]      help for create
-      --max-cores int32        How many cores their workspaces may hold at once
-      --max-workspaces int32   How many workspaces the key and the keys it delegates may hold at once
+      --max-cores int32        How many cores their workspaces may hold on runners at once: a stopped one's do not count
+      --max-workspaces int32   How many workspaces the key and the keys it delegates may have on a runner at once: stopped ones do not count
       --project strings        A project whose workspaces the key reaches, by id (can be repeated; default: any)
       --scope strings          Scopes for the key (can be repeated)
       --team string            The one team whose workspaces the key reaches (default: every team you are in)
