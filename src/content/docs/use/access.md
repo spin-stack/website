@@ -16,7 +16,7 @@ the audit log. Give it `keys:delegate` and it makes keys of its own for the agen
 (`spin mcp` serves them the API): each holds no more than it does - its scopes, team, projects,
 end, and how many workspaces and cores all of them hold - and goes when you revoke it. Why, and
 what it trades, is
-[ADR-0031](https://github.com/spin-stack/spin/blob/b7ba5206f12ba93a829a48e354be7fce6bc65db4/docs/decisions/ADR-0031-a-passkey-buys-a-key-the-control-plane-certifies.md).
+[ADR-0031](https://github.com/spin-stack/spin/blob/911f516bc89ae266c013681247d72c40990fe62c/docs/decisions/ADR-0031-a-passkey-buys-a-key-the-control-plane-certifies.md).
 
 The control plane decides who logs in, at every session: it certifies a key of yours, for five
 minutes, into a workspace you own or are a guest of. It also holds what it needs to serve you: your

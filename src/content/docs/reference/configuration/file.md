@@ -25,8 +25,9 @@ The file an installation starts from - `installation_config` in Terraform. It se
 # Every block is optional.
 
 settings:
-  # What a workspace may be created from. Declared and empty is refused: it would allow
-  # nothing at all. Leave the key out for the installation's default.
+  # What a workspace may be created from. Empty, or left out, is the release's default image
+  # alone. Every key under settings is one of internal/controlplane/settings/registry.go, checked
+  # by the same definition the dashboard and `spin admin settings set` are.
   allowed_images:
     - ghcr.io/acme/sandbox:v1
   # Zero is no limit.
@@ -67,6 +68,10 @@ settings:
   # image. It is built again when its ref moves to another commit, or when an admin runs it.
   # Counted from its build for one never opened. 0 or unset retires none for this; at most 365.
   # prebuild_retire_unused_days: 30
+  # A root shell on a host: whether a second administrator approves each before its host is
+  # touched (off where unset), and the most minutes one may be open, 1 to 1440 (30 where unset).
+  # host_shell_needs_approval: true
+  # host_shell_max_minutes: 30
   # What a workspace created without a tag of its own runs under, by policy name - the
   # network_policies block below, or a host's own. Unset, it is "offline", the policy every
   # host has and which allows nothing: a workspace nobody chose a policy for reaches nothing
@@ -129,10 +134,11 @@ registration:
     - contractor@example.com
 
 # What a person may choose when creating a workspace. One preset may be the default. Left out,
-# the installation is given the release's: one, "default", 1 core and 512 MB that grow to what its
-# host has, on 10 GB. `presets: []` gives it none.
+# the installation is given the release's: one, "default", 1 core and 2048 MB that grow to what
+# its host has, on 10 GB. `presets: []` gives it none. A preset starts its workspaces at 2048 MB or
+# more, which an editor's server needs beside what runs in the workspace.
 # burst says how a workspace of it grows: fixed (the default) runs at its size; to_preset
-# starts at the floor (burst_floor_cpu, burst_floor_memory_mb; 1 and 1024 if left out) and
+# starts at the floor (burst_floor_cpu, burst_floor_memory_mb; 1 and 2048 if left out) and
 # grows to its size; to_host starts at the floor and grows to what its host has.
 # bandwidth_mbps is what its network carries each way (left out: 100; 0: unshaped, a bill with
 # no bound that has to be asked for); ssh, the editor and forwarded ports are not held to it.

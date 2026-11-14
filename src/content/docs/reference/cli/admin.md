@@ -24,11 +24,13 @@ Available Commands:
   jobs        The control plane's periodic work, and running a job now
   logs        Search what the installation's processes logged
   runner      Manage registered runners
+  settings    The installation's settings: read them, and change one
   shell       A root shell on a runner, for a while: asked for, recorded, and the runner retired after
   storage     What the object store holds, and taking out what nothing needs
   token       Manage runner registration tokens
   versions    What is running where: this control plane, each runner and its machine
-  volume      Re-key a workspace's disk
+  volume      Re-key a workspace's disk, and list the disks hosts refuse
+  workspace   Stop, recover or read the egress of a workspace that is somebody else's
 
 Flags:
   -h, --help[=true|false]   help for admin
@@ -75,7 +77,8 @@ Use "spin admin costs [command] --help" for more information about a command.
 A month of the bill shared out: the runners by what each workspace held of them - cores and
 memory, half each - and the volumes' bucket by what its volumes kept. What nobody caused is said
 apart and never spread: the runners' capacity nobody held (idle), the bucket's bytes no workspace
-keeps (images, unreferenced), and the platform's own cost by service.
+keeps (images, unreferenced), and the platform's own cost by role and service. First, the standby:
+what the installation costs a day with nobody working, estimated from the last billed day.
 
 Usage:
   spin admin costs by <workspace|team|owner> [flags]
@@ -350,12 +353,20 @@ A runner that is the only home of a workspace's disk is refused, naming them: st
 publishes each disk, or move them first. A runner registered with a token is revoked instead
 (spin admin runner revoke).
 
+--taken is for a machine that may be compromised: its credentials are deleted and it is cut off
+before its group is asked anything, and every team's disk whose key it was given is marked for
+re-keying (spin admin volume rekeys lists them), as a revoke does. Its machine is given back all
+the same. With --leave-workspaces it goes although workspaces' disks are only there: each runs
+again only once recovered onto another runner (spin workspace recover).
+
 Usage:
   spin admin runner remove <runner-id> [flags]
 
 Flags:
-  -h, --help[=true|false]   help for remove
-  -y, --yes[=true|false]    Skip confirmation
+  -h, --help[=true|false]               help for remove
+      --leave-workspaces[=true|false]   with --taken, remove although workspaces' disks are only on this runner; each runs again only once recovered elsewhere
+      --taken[=true|false]              the machine may be compromised: revoke its credentials and mark every disk whose key it was given for re-keying
+  -y, --yes[=true|false]                Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -385,6 +396,71 @@ Flags:
   -h, --help[=true|false]               help for revoke
       --leave-workspaces[=true|false]   revoke although workspaces are on this host; each runs again only once recovered elsewhere
   -y, --yes[=true|false]                Skip confirmation
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+### spin admin settings
+
+```
+The installation's settings: read them, and change one
+
+Usage:
+  spin admin settings [flags]
+  spin admin settings [command]
+
+Available Commands:
+  get         Every setting as it is in force, or one
+  set         Change one setting
+
+Flags:
+  -h, --help[=true|false]   help for settings
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+
+Use "spin admin settings [command] --help" for more information about a command.
+```
+
+#### spin admin settings get
+
+```
+Every setting as it is in force - what the installation says, or its default - with where it is
+changed and when a change reaches what it governs. With a key, that setting's value alone, as
+'spin admin settings set' takes it.
+
+Usage:
+  spin admin settings get [key] [flags]
+
+Flags:
+  -h, --help[=true|false]   help for get
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+#### spin admin settings set
+
+```
+Change one setting, checked as the dashboard's save is: a number within its bounds, true or
+false, one of its choices, a list as JSON (["a","b"]), a duration as 60s. The control plane
+refuses anything else, and writes nothing.
+
+Usage:
+  spin admin settings set <key> <value> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for set
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
@@ -776,13 +852,14 @@ Global Flags:
 ### spin admin volume
 
 ```
-Re-key a workspace's disk
+Re-key a workspace's disk, and list the disks hosts refuse
 
 Usage:
   spin admin volume [flags]
   spin admin volume [command]
 
 Available Commands:
+  refused     The disks a host refuses to serve, and whose workspace each is
   rekey       Copy a workspace's disk under a key of its own and destroy the old one
   rekeys      The disks being re-keyed, and the ones a revoked host's keys marked for it
 
@@ -796,6 +873,25 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 
 Use "spin admin volume [command] --help" for more information about a command.
+```
+
+#### spin admin volume refused
+
+```
+List every disk its host refuses to serve, with why, the workspace that cannot run for it
+and that workspace's owner. The listing is audited: it names workspaces that are not yours.
+
+Usage:
+  spin admin volume refused [flags]
+
+Flags:
+  -h, --help[=true|false]   help for refused
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
 #### spin admin volume rekey
@@ -832,6 +928,104 @@ Usage:
 
 Flags:
   -h, --help[=true|false]   help for rekeys
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+### spin admin workspace
+
+```
+Stop, recover or read the egress of a workspace that is somebody else's
+
+Usage:
+  spin admin workspace [flags]
+  spin admin workspace [command]
+
+Available Commands:
+  egress      What somebody else's workspace has reached beyond this installation
+  recover     Move somebody else's workspace off a host that is gone
+  stop        Stop somebody else's workspace
+
+Flags:
+  -h, --help[=true|false]   help for workspace
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+
+Use "spin admin workspace [command] --help" for more information about a command.
+```
+
+#### spin admin workspace egress
+
+```
+List every destination a running workspace that is not yours has been allowed to reach,
+as its owner's 'spin workspace egress' does: the host's counters by destination, and nothing of
+what was carried. The reading is audited, with the reason.
+
+Usage:
+  spin admin workspace egress <workspace-id> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for egress
+      --reason string       Why: kept on the audit entry for the reading
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+#### spin admin workspace recover
+
+```
+Move a workspace that is not yours to another host after the one it was on died, as its
+owner's 'spin workspace recover' does.
+
+The cost is the work the dead host had written and not yet published, and it is the owner's
+work. Run without --accept-data-loss to see that cost; nothing is changed until you pass it.
+--reason is required, and the server refuses a recover without one: it is kept on the audit
+entry, and the owner reads it, with who asked, on the workspace's history.
+
+Usage:
+  spin admin workspace recover <workspace-id> [flags]
+
+Flags:
+      --accept-data-loss[=true|false]   go ahead and give up, for its owner, the work the old host had not published
+  -h, --help[=true|false]               help for recover
+      --reason string                   Why (required): kept on the audit entry, and on the workspace's history for its owner
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+#### spin admin workspace stop
+
+```
+Stop a workspace that is not yours, as its owner's 'spin workspace stop' does: what to do
+with one whose stop could not publish its disk, which runs on and holds its host.
+
+--force gives up what only its host has rather than publish it first. The stop is audited with
+the reason, and the workspace's own history names you as who stopped it.
+
+Usage:
+  spin admin workspace stop <workspace-id> [flags]
+
+Flags:
+      --force[=true|false]   give up what only its host has rather than publish it first
+  -h, --help[=true|false]    help for stop
+      --reason string        Why: kept on the audit entry for the stop
+  -y, --yes[=true|false]     Skip confirmation
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

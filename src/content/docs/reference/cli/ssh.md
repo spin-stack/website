@@ -15,6 +15,10 @@ Connect to a workspace via SSH.
 The connection is tunneled through the platform using WebSocket,
 so no direct network access to the workspace is required.
 
+It runs your ssh, which has to be OpenSSH 9.9 or newer: a workspace accepts only the
+post-quantum key exchange mlkem768x25519-sha256, and an older ssh is refused before anything
+is asked of the workspace.
+
 Examples:
   spin ssh my-workspace
   spin ssh my-workspace -- -L 8080:localhost:80

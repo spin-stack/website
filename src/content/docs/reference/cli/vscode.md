@@ -17,7 +17,7 @@ Usage:
   spin vscode [command]
 
 Available Commands:
-  install     Install the Spinbox extension that carries this CLI's release into VS Code
+  install     Install the Spinbox extension that carries this CLI's release, and Spinbox Remote, into VS Code
 
 Flags:
   -h, --help[=true|false]   help for vscode
@@ -36,7 +36,13 @@ Use "spin vscode [command] --help" for more information about a command.
 ```
 Install the Spinbox extension (spin-stack.spinbox) into VS Code, from the release of
 spin-stack/vscode-spinbox whose VSIXs carry this CLI's release, pulled anonymously from its
-public package ghcr.io/spin-stack/vscode-spinbox-release (tag spin-<this release>).
+public package ghcr.io/spin-stack/vscode-spinbox-release (tag spin-<this release>), and beside
+it Spinbox Remote (spin-stack.spinbox-remote), which opens the spin+<workspace> remote it opens
+workspaces through.
+
+Spinbox Remote uses VS Code's proposed resolvers API, which the Marketplace refuses, so it is
+downloaded from the spin-stack/open-remote-ssh release this CLI's release pins, and held to the
+SHA-256 pinned with it. Both VSIXs are checked before either is given to the editor.
 
 The extension runs a spin CLI it carries, and an installation serves a CLI of its own release
 alone, so the extension installed is the one carrying this CLI's release - not the newest. Its
