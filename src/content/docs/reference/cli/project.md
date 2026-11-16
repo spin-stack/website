@@ -12,8 +12,8 @@ sidebar:
 ```
 A project is a repository and the shape of the workspace that opens it: the image, the preset
 and the network policies, and the ref it opens at. 'spin workspace create --project <slug>' makes a
-workspace of that shape, whose guest clones the repository into /workspace/<repository name> once
-you approve its settings, and runs the repository's own .spin.yaml tasks there.
+workspace of that shape, whose guest clones the repository into /workspace/<repository name> and
+runs the repository's own .spin.yaml tasks there.
 
 Projects are the installation's. Whoever makes one is its admin, and it is seen by everybody until
 its admins share it with only some people and teams ('spin project share'). A private repository
@@ -140,9 +140,7 @@ Global Flags:
 
 ```
 List a project's prebuilds: each build of one of its prebuild refs at a commit, what became of it,
-and the snapshot opening the project at that ref is cloned from once it is ready. A ready one is
-what its host signed it to be; spin shows that claim, and holds it to its own anchors, when a
-workspace opened from it asks you to approve its settings.
+and the snapshot opening the project at that ref is cloned from once it is ready.
 
 Usage:
   spin project prebuilds <slug> [flags]
