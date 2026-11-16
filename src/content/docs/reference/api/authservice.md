@@ -138,7 +138,7 @@ Create API key
 | `scopes` | list of string | e.g., ["workspace:read", "workspace:write"] |
 | `expiresAt` | `Timestamp` |  |
 | `stepUp` | [PasskeyAssertion](/reference/api/types/#passkeyassertion) | An assertion of a passkey of the caller's over a PASSKEY_PURPOSE_CREATE_EXEC_KEY challenge naming the key, asked for a key with workspace:exec alone: that key is a shell, which a session alone does not open. |
-| `teamId` | string | What it reaches and what its tree may hold: as APIKey's. Asked by a key holding keys:delegate, it is that key's child, and holds no more than it (delegation.Within). |
+| `teamId` | string | What it reaches and what its tree may have running at once: as APIKey's, where what is counted is said. Asked by a key holding keys:delegate, it is that key's child, and holds no more than it (delegation.Within). |
 | `projectIds` | list of string |  |
 | `maxWorkspaces` | integer or null (int32) |  |
 | `maxCores` | integer or null (int32) |  |

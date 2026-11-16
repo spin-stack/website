@@ -16,6 +16,10 @@ reaches a workspace as the host spin.<workspace>: ssh, scp, rsync, VS Code's Rem
 Each connection gets a fresh five-minute certificate for your key, and is carried through
 the platform like 'spin ssh'. A workspace has to be running: a start under way is waited for.
 
+The block asks for the one key exchange a workspace accepts, mlkem768x25519-sha256, which
+OpenSSH has from 9.9. An older ssh refuses the whole of ~/.ssh/config over it, for every host,
+so nothing is written for one.
+
 Examples:
   spin ssh-config
   ssh spin.my-workspace

@@ -34,10 +34,10 @@
 		"area": "Workspaces",
 		"name": "Idle suspend, with a question before it that a keep answers",
 		"state": "built",
-		"proof": "e2e:TestAWorkspaceIsAskedBeforeItsSuspensionAndAKeepAnswersIt",
+		"proof": "e2e:TestAWorkspaceNobodyUsesIsSuspendedUnlessKeptOrHeld",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestAWorkspaceIsAskedBeforeItsSuspensionAndAKeepAnswersIt"
+			"go:internal/e2e.TestAWorkspaceNobodyUsesIsSuspendedUnlessKeptOrHeld"
 		]
 	},
 	{
@@ -54,21 +54,21 @@
 		"area": "Workspaces",
 		"name": "A process inside holds its workspace awake while it lives",
 		"state": "built",
-		"proof": "e2e:TestAProcessHoldsItsWorkspaceAwakeWhileItLives",
+		"proof": "e2e:TestAWorkspaceNobodyUsesIsSuspendedUnlessKeptOrHeld",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestAProcessHoldsItsWorkspaceAwakeWhileItLives"
+			"go:internal/e2e.TestAWorkspaceNobodyUsesIsSuspendedUnlessKeptOrHeld"
 		]
 	},
 	{
 		"area": "Workspaces",
 		"name": "Suspend with the processes where they are; a start resumes them",
 		"state": "built",
-		"proof": "e2e:TestAWorkspaceNobodyUsesIsSuspendedAndAStartResumesIt",
+		"proof": "e2e:TestAWorkspaceNobodyUsesIsSuspendedUnlessKeptOrHeld",
 		"note": "",
 		"endToEnd": [
 			"go:cmd/cli.TestE2E_ASuspendedWorkspaceResumesWhereItWas",
-			"go:internal/e2e.TestAWorkspaceNobodyUsesIsSuspendedAndAStartResumesIt"
+			"go:internal/e2e.TestAWorkspaceNobodyUsesIsSuspendedUnlessKeptOrHeld"
 		]
 	},
 	{
@@ -79,7 +79,8 @@
 		"note": "A loan refused while the host is full has no test against the stack: the budget is the host's own cores and half its memory, which no lane's workspaces fill.",
 		"endToEnd": [
 			"go:internal/e2e.TestABusyWorkspaceIsLentCoresAndGivesThemBack",
-			"go:internal/e2e.TestABusyWorkspaceIsLentMemoryAndGivesItBack"
+			"go:internal/e2e.TestABusyWorkspaceIsLentMemoryAndGivesItBack",
+			"go:internal/e2e.TestAnEditorAtTheFloorIsNotKilledForMemory"
 		]
 	},
 	{
@@ -492,7 +493,7 @@
 	},
 	{
 		"area": "Access",
-		"name": "A workspace's identity, signed by its host, for the audiences its owner allows",
+		"name": "A workspace's identity, signed by its host, for the audiences its installation allows",
 		"state": "built",
 		"proof": "e2e:TestAWorkspacesIdentityIsTheHostsSignatureOfItsSet",
 		"note": "",
@@ -572,6 +573,14 @@
 		"endToEnd": [
 			"go:internal/e2e.TestTheAgentsThreadsAreListed"
 		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "Chat mode: the dashboard flips to the person's own chats across their workspaces, grouped by project, with the agent full height and a new chat that makes its workspace",
+		"state": "built",
+		"proof": "rpc:spin.v1.WorkspaceService/ListOwnAgentThreads",
+		"note": "",
+		"endToEndGap": "The RPC is held to the caller's own chats by its unit test, the mode by the dashboard's; no lane opens chat mode in a browser against an agent that has reported."
 	},
 	{
 		"area": "Workspaces",
@@ -719,6 +728,14 @@
 	},
 	{
 		"area": "Administration",
+		"name": "Every installation setting read and changed from the terminal, by the definitions the dashboard and the file use",
+		"state": "built",
+		"proof": "cli:admin settings set",
+		"note": "",
+		"endToEndGap": "the RPC's round trip of every definition is tested against a real database; no lane runs the command against a stack yet"
+	},
+	{
+		"area": "Administration",
 		"name": "Resource presets",
 		"state": "built",
 		"proof": "rpc:spin.v1.AdminService/CreateResourcePreset",
@@ -731,7 +748,7 @@
 		"area": "Administration",
 		"name": "Registration: open, by allowlist, or closed",
 		"state": "built",
-		"proof": "rpc:spin.v1.AdminService/SetRegistrationMode",
+		"proof": "rpc:spin.v1.AdminService/SetSettings",
 		"note": "",
 		"endToEnd": [
 			"pw:admin.spec.ts:closed, open and a domain on the allowlist decide who registers",
@@ -748,6 +765,14 @@
 			"go:cmd/cli.TestE2E_AnAdministratorsActionIsAuditedWithItsActorAndTarget",
 			"pw:admin.spec.ts:admin reads the log and can narrow it to one kind of event"
 		]
+	},
+	{
+		"area": "Administration",
+		"name": "A timeline: what happened to a workspace, a runner, a team, a project or the installation, by whom, in one read",
+		"state": "built",
+		"proof": "rpc:spin.v1.AdminService/ListTimeline",
+		"note": "",
+		"endToEndGap": "no lane reads it yet: its reading is held against a real database by internal/controlplane/domain/timeline's tests, and a host's loss and return by hostserver's over a real stream"
 	},
 	{
 		"area": "Administration",
@@ -769,6 +794,14 @@
 		"endToEndGap": "the cloud's real bill read: no lane has an AWS account, so the bill a test gives the reader stands in for it"
 	},
 	{
+		"area": "Observability",
+		"name": "A workspace's cost this month and its rate, as an estimate with its day, for its owner; a team's workspaces summed for its admins, and a project's with its prebuilds' storage for its admins",
+		"state": "built",
+		"proof": "rpc:spin.v1.WorkspaceService/GetWorkspaceCost",
+		"note": "A share of days already billed, never of this hour; nothing is said where the cloud sends no bill.",
+		"endToEndGap": "the cloud's real bill read: no lane has an AWS account, so the bill a test gives the reader stands in for it"
+	},
+	{
 		"area": "Administration",
 		"name": "The store: every volume, whose it is, and taking out what nothing needs",
 		"state": "built",
@@ -787,6 +820,14 @@
 		"endToEnd": [
 			"go:internal/e2e.TestARekeyedDiskBootsWithWhatItHeldUnderANewKey"
 		]
+	},
+	{
+		"area": "Administration",
+		"name": "An administrator stops a workspace that is not theirs, moves it off a lost host with a reason its owner reads on its history, reads where it sends, and lists the disks hosts refuse: each audited",
+		"state": "built",
+		"proof": "cli:admin workspace recover",
+		"note": "",
+		"endToEndGap": "no lane asks these as an administrator of a real runner: each runs what its owner's stop, recover and egress run, which the lanes cover, and who may ask, the audit entry and what the owner's history says are tested at the RPC against the database (workspaceserver's adminacts tests)"
 	},
 	{
 		"area": "Administration",
@@ -952,10 +993,10 @@
 	},
 	{
 		"area": "Platform",
-		"name": "The CLI runs on Linux x86-64 and macOS Apple silicon",
+		"name": "The CLI runs on Linux and macOS",
 		"state": "limit",
 		"proof": "",
-		"note": ""
+		"note": "x86-64 and Arm of each; there is no Windows build."
 	},
 	{
 		"area": "Platform",
@@ -969,7 +1010,7 @@
 		"name": "No GPUs",
 		"state": "limit",
 		"proof": "",
-		"note": "There is no way to ask for a runner of a particular kind."
+		"note": "A preset names the class of runner its workspaces run on, and no class hands a workspace a GPU."
 	},
 	{
 		"area": "Workspaces",

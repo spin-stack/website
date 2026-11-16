@@ -753,7 +753,7 @@
           "AdminService"
         ],
         "summary": "GetCosts",
-        "description": "A month of the bill shared out to the workspaces that caused it: the runners' by what each\n workspace held of them, the volumes' bucket by what its volumes kept. What nobody caused is\n said apart and never spread: the runners' capacity nobody held, the bucket's bytes no\n workspace keeps, and the platform's own cost by service (internal/controlplane/domain/finops).",
+        "description": "A month of the bill shared out to the workspaces that caused it: the runners' by what each\n workspace held of them, the volumes' bucket by what its volumes kept. What nobody caused is\n said apart and never spread: the runners' capacity nobody held, the bucket's bytes no\n workspace keeps, and the platform's own cost by role and service; and, from those, what the\n installation costs a day with nobody working (internal/controlplane/domain/finops).",
         "operationId": "spin.v1.AdminService.GetCosts",
         "parameters": [
           {
@@ -995,68 +995,6 @@
         }
       }
     },
-    "/spin.v1.AdminService/GetInstallationSettings": {
-      "post": {
-        "tags": [
-          "AdminService"
-        ],
-        "summary": "GetInstallationSettings",
-        "description": "Get installation settings",
-        "operationId": "spin.v1.AdminService.GetInstallationSettings",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.GetInstallationSettingsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.GetInstallationSettingsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.AdminService/GetMonitoring": {
       "post": {
         "tags": [
@@ -1181,68 +1119,6 @@
         }
       }
     },
-    "/spin.v1.AdminService/GetRegistrationMode": {
-      "post": {
-        "tags": [
-          "AdminService"
-        ],
-        "summary": "GetRegistrationMode",
-        "description": "Get registration mode (open, whitelist, closed)",
-        "operationId": "spin.v1.AdminService.GetRegistrationMode",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.GetRegistrationModeRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.GetRegistrationModeResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.AdminService/GetRunbook": {
       "post": {
         "tags": [
@@ -1305,14 +1181,14 @@
         }
       }
     },
-    "/spin.v1.AdminService/GetSecuritySettings": {
+    "/spin.v1.AdminService/GetSettings": {
       "post": {
         "tags": [
           "AdminService"
         ],
-        "summary": "GetSecuritySettings",
-        "description": "Get security settings",
-        "operationId": "spin.v1.AdminService.GetSecuritySettings",
+        "summary": "GetSettings",
+        "description": "Every setting of the installation as it is in force, and what each is: its type, its\n default, its bounds, what it reaches when saved and who writes it\n (internal/controlplane/settings, the one registry the file, the dashboard and the CLI are\n made from).",
+        "operationId": "spin.v1.AdminService.GetSettings",
         "parameters": [
           {
             "name": "Connect-Protocol-Version",
@@ -1337,7 +1213,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/spin.v1.GetSecuritySettingsRequest"
+                "$ref": "#/components/schemas/spin.v1.GetSettingsRequest"
               }
             }
           },
@@ -1359,7 +1235,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/spin.v1.GetSecuritySettingsResponse"
+                  "$ref": "#/components/schemas/spin.v1.GetSettingsResponse"
                 }
               }
             }
@@ -1615,6 +1491,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/GetUserWorkspaceEgress": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "GetUserWorkspaceEgress",
+        "description": "Where a workspace sends, as its owner's GetWorkspaceEgress answers it: the host's counters by\n destination, nothing of what was carried. Audited, as a reading of somebody else's.",
+        "operationId": "spin.v1.AdminService.GetUserWorkspaceEgress",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetUserWorkspaceEgressRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetUserWorkspaceEgressResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/GetVSCodeServers": {
       "post": {
         "tags": [
@@ -1732,6 +1670,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.GetWorkspaceNamesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/ListAlerts": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListAlerts",
+        "description": "What the release's alert rules said in the installation's Grafana, newest first: each\n firing and each resolution the control plane heard, with its runbook and how many\n administrators it reached.",
+        "operationId": "spin.v1.AdminService.ListAlerts",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListAlertsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListAlertsResponse"
                 }
               }
             }
@@ -1986,6 +1986,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/ListHostProblems": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListHostProblems",
+        "description": "What is wrong with the fleet's hosts, one problem per host that is not connected or fails a\n check of its own: the same problems GetInstallationHealth's HOSTS part lists, for the pages\n that read one host or the fleet and nothing else of the installation.",
+        "operationId": "spin.v1.AdminService.ListHostProblems",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListHostProblemsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListHostProblemsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/ListJobRuns": {
       "post": {
         "tags": [
@@ -2103,6 +2165,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListJobsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/ListRefusedVolumes": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListRefusedVolumes",
+        "description": "The disks a host refuses to serve, each with the workspace it is the disk of and whose that\n is. Audited.",
+        "operationId": "spin.v1.AdminService.ListRefusedVolumes",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListRefusedVolumesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListRefusedVolumesResponse"
                 }
               }
             }
@@ -2296,6 +2420,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/ListTimeline": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListTimeline",
+        "description": "What happened, newest first, between two instants, to one workspace, host, team or project, or\n to the whole installation: read from the audit log, the workspaces' events, the jobs' failed\n runs and the projects' prebuilds as they are, never copied. Sign-ins and what is done inside a\n workspace (a session, a command) are the audit log's alone: they outnumber everything else.",
+        "operationId": "spin.v1.AdminService.ListTimeline",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListTimelineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListTimelineResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/ListUserAPIKeys": {
       "post": {
         "tags": [
@@ -2475,6 +2661,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.PublishVSCodeServersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/RecoverUserWorkspace": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "RecoverUserWorkspace",
+        "description": "Move a workspace off a host that is gone, as its owner's RecoverWorkspace does, and with the\n same question first: without accept_data_loss it answers what the move would give up and\n changes nothing. The work given up is its owner's, so a reason is required, kept on the audit\n entry, and written with who asked on the workspace's history, which its owner reads\n (WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN). Refused for a workspace held in quarantine.",
+        "operationId": "spin.v1.AdminService.RecoverUserWorkspace",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.RecoverUserWorkspaceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.RecoverUserWorkspaceResponse"
                 }
               }
             }
@@ -2916,14 +3164,14 @@
         }
       }
     },
-    "/spin.v1.AdminService/SetRegistrationMode": {
+    "/spin.v1.AdminService/SendTestAlert": {
       "post": {
         "tags": [
           "AdminService"
         ],
-        "summary": "SetRegistrationMode",
-        "description": "Set registration mode",
-        "operationId": "spin.v1.AdminService.SetRegistrationMode",
+        "summary": "SendTestAlert",
+        "description": "Has Grafana test its contact point, which sends a test alert the whole way an alert goes:\n Grafana, the control plane, an email to every administrator who has not opted out.\n FAILED_PRECONDITION where this control plane serves no Grafana, or Grafana could not\n reach the control plane.",
+        "operationId": "spin.v1.AdminService.SendTestAlert",
         "parameters": [
           {
             "name": "Connect-Protocol-Version",
@@ -2948,7 +3196,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/spin.v1.SetRegistrationModeRequest"
+                "$ref": "#/components/schemas/spin.v1.SendTestAlertRequest"
               }
             }
           },
@@ -2970,7 +3218,131 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/spin.v1.SetRegistrationModeResponse"
+                  "$ref": "#/components/schemas/spin.v1.SendTestAlertResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/SetSettings": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "SetSettings",
+        "description": "Writes the settings named, each checked by its definition and all of them together before\n any is written: a refused one writes nothing.",
+        "operationId": "spin.v1.AdminService.SetSettings",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.SetSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.SetSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/StopUserWorkspace": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "StopUserWorkspace",
+        "description": "Stop a workspace, as its owner's StopWorkspace does: one whose stop could not publish its\n disk runs on and holds its host until somebody stops it. Audited.",
+        "operationId": "spin.v1.AdminService.StopUserWorkspace",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.StopUserWorkspaceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.StopUserWorkspaceResponse"
                 }
               }
             }
@@ -3163,68 +3535,6 @@
         }
       }
     },
-    "/spin.v1.AdminService/UpdateInstallationSettings": {
-      "post": {
-        "tags": [
-          "AdminService"
-        ],
-        "summary": "UpdateInstallationSettings",
-        "description": "Update installation settings",
-        "operationId": "spin.v1.AdminService.UpdateInstallationSettings",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.UpdateInstallationSettingsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.UpdateInstallationSettingsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.AdminService/UpdateNetworkPolicy": {
       "post": {
         "tags": [
@@ -3341,68 +3651,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.UpdateResourcePresetResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/spin.v1.AdminService/UpdateSecuritySettings": {
-      "post": {
-        "tags": [
-          "AdminService"
-        ],
-        "summary": "UpdateSecuritySettings",
-        "description": "Update security settings",
-        "operationId": "spin.v1.AdminService.UpdateSecuritySettings",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.UpdateSecuritySettingsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.UpdateSecuritySettingsResponse"
                 }
               }
             }
@@ -5828,7 +6076,7 @@
           "HostService"
         ],
         "summary": "RemoveHost",
-        "description": "Takes a machine of an autoscaling group out of the fleet (admin only), as Host.removal says:\n given back to its group (GIVE_BACK), or forgotten (FORGET). A host whose removal is REVOKE is\n refused: RevokeRunner is its removal.",
+        "description": "Takes a machine of an autoscaling group out of the fleet (admin only), as Host.removal says:\n given back to its group (GIVE_BACK), or forgotten (FORGET). A host whose removal is REVOKE is\n refused: RevokeRunner is its removal. Asked with taken, the host leaves as one believed\n compromised: its credentials revoked and every team's disk whose key it was given marked for\n re-keying (ListRekeys), as RevokeRunner does, and its machine given back all the same.",
         "operationId": "spin.v1.HostService.RemoveHost",
         "parameters": [
           {
@@ -6558,6 +6806,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.HistogramWorkspaceLogsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.LogService/KeptTraces": {
+      "post": {
+        "tags": [
+          "LogService"
+        ],
+        "summary": "KeptTraces",
+        "description": "KeptTraces is which of the trace ids a page shows the store holds: those, and only those,\n are links. A trace id is written where its span began, before the collector decides whether\n to keep the trace, and it stays after the store's retention has deleted it.",
+        "operationId": "spin.v1.LogService.KeptTraces",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.KeptTracesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.KeptTracesResponse"
                 }
               }
             }
@@ -7553,6 +7863,68 @@
         }
       }
     },
+    "/spin.v1.ProjectService/GetProjectCosts": {
+      "post": {
+        "tags": [
+          "ProjectService"
+        ],
+        "summary": "GetProjectCosts",
+        "description": "What a project cost in the month in progress, to its admins and nobody else, as\n ListProjectWorkspaces: everybody's workspaces of it summed, its prebuilds' builds included,\n and a month of what its prebuilds keep. A sum, never by workspace: one workspace's cost says\n how much its owner works, which a project's admin who is not their team's is not told. Read\n from the bill as the installation last read it, never from the cloud.",
+        "operationId": "spin.v1.ProjectService.GetProjectCosts",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetProjectCostsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetProjectCostsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.ProjectService/ListPrebuilds": {
       "post": {
         "tags": [
@@ -8362,7 +8734,7 @@
           "SettingsService"
         ],
         "summary": "GetNotificationPreferences",
-        "description": "Which of those the caller is emailed about.",
+        "description": "Which of those the caller is emailed about, and for an administrator which of the\n installation's events besides.",
         "operationId": "spin.v1.SettingsService.GetNotificationPreferences",
         "parameters": [
           {
@@ -9961,6 +10333,68 @@
         }
       }
     },
+    "/spin.v1.TeamService/GetTeamCosts": {
+      "post": {
+        "tags": [
+          "TeamService"
+        ],
+        "summary": "GetTeamCosts",
+        "description": "What the team's workspaces cost in the month in progress, each and summed, for the team's\n admins: a member reads their own workspace's (WorkspaceService.GetWorkspaceCost) and nobody\n else's. A workspace is the team's whose it was on the last day it cost anything; a team below\n this one is not counted in it.",
+        "operationId": "spin.v1.TeamService.GetTeamCosts",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetTeamCostsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetTeamCostsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.TeamService/ListIdentityProviders": {
       "post": {
         "tags": [
@@ -11445,6 +11879,130 @@
         }
       }
     },
+    "/spin.v1.WorkspaceService/GetWorkspaceCost": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "GetWorkspaceCost",
+        "description": "What the workspace cost in the month in progress and what it costs while it runs, for whoever\n reads the workspace itself: its owner, and a guest its owner let in. Nobody else is answered -\n one workspace's cost says how much another person works. Read from the bill as the\n installation last read it, never from the cloud.",
+        "operationId": "spin.v1.WorkspaceService.GetWorkspaceCost",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetWorkspaceCostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetWorkspaceCostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/GetWorkspaceDeletion": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "GetWorkspaceDeletion",
+        "description": "What deleting a workspace would do, asked before it is done: what goes to the trash and for\n how long, what is erased at once, and what outlives it. It changes nothing.",
+        "operationId": "spin.v1.WorkspaceService.GetWorkspaceDeletion",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetWorkspaceDeletionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetWorkspaceDeletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.WorkspaceService/GetWorkspaceEgress": {
       "post": {
         "tags": [
@@ -12311,6 +12869,68 @@
         }
       }
     },
+    "/spin.v1.WorkspaceService/ListOwnAgentThreads": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "ListOwnAgentThreads",
+        "description": "The caller's own chats across every workspace of theirs, each workspace's as its supervisor\n last reported them: what the dashboard's chat mode lists in one rail. Selected by the caller's\n id, never one from the request, and a key bound to a team or projects lists theirs alone.",
+        "operationId": "spin.v1.WorkspaceService.ListOwnAgentThreads",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListOwnAgentThreadsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListOwnAgentThreadsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.WorkspaceService/ListSnapshots": {
       "post": {
         "tags": [
@@ -12490,6 +13110,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListWorkspaceQuarantineDenialsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/ListWorkspaceTimeline": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "ListWorkspaceTimeline",
+        "description": "What happened to a workspace, newest first, between two instants: its own events and what\n the audit log records of it and its snapshots, each with who did it - for its owner, read as\n GetWorkspaceHistory is. AdminService.ListTimeline is the same reading of any workspace, a host,\n a team, a project or the whole installation.",
+        "operationId": "spin.v1.WorkspaceService.ListWorkspaceTimeline",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListWorkspaceTimelineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListWorkspaceTimelineResponse"
                 }
               }
             }
@@ -13950,10 +14632,6 @@
         "format": "duration",
         "description": "A signed duration in seconds, with up to nine fractional digits and an `s` suffix (for example, `3s` or `-0.001s`)."
       },
-      "google.protobuf.FieldMask": {
-        "type": "string",
-        "description": "Comma-separated field paths in lowerCamelCase (for example, `user.displayName,photo`)."
-      },
       "google.protobuf.ListValue": {
         "type": "array",
         "items": {
@@ -14088,7 +14766,7 @@
             ],
             "title": "max_workspaces",
             "format": "int32",
-            "description": "What the workspaces its tree made may hold at once; unset for no bound past its person's."
+            "description": "How many of the workspaces its tree made - this key and every key delegated from it - may be\n on a runner at once, and how many cores those may hold: bounds on what runs, unset for none\n past its person's. A workspace counts while it is being made or started, runs, is stopping or\n waits for a runner. One that is stopped, suspended or in the trash counts for nothing,\n whatever disk it keeps, and is counted again when it is started: a start past the bound is\n refused as a create is, naming the workspaces that hold it."
           },
           "maxCores": {
             "type": [
@@ -14305,6 +14983,29 @@
         "title": "AddWorkspaceGuestResponse",
         "additionalProperties": false
       },
+      "spin.v1.AffectedWorkspace": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state"
+          }
+        },
+        "title": "AffectedWorkspace",
+        "additionalProperties": false
+      },
       "spin.v1.AgentThread": {
         "type": "object",
         "properties": {
@@ -14376,6 +15077,102 @@
         "title": "AgentVolume",
         "additionalProperties": false,
         "description": "AgentVolume is one agent home of the caller's."
+      },
+      "spin.v1.Alert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id",
+            "description": "The installation event's id."
+          },
+          "event": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.InstallationEventType"
+              }
+            ],
+            "title": "event"
+          },
+          "name": {
+            "type": "string",
+            "title": "name",
+            "description": "The rule's title (Grafana's alertname)."
+          },
+          "summary": {
+            "type": "string",
+            "title": "summary",
+            "description": "The rule's summary, rendered for what fired; empty where it has none."
+          },
+          "description": {
+            "type": "string",
+            "title": "description"
+          },
+          "severity": {
+            "type": "string",
+            "title": "severity",
+            "description": "critical, warning; empty where the rule says none."
+          },
+          "runbookUrl": {
+            "type": "string",
+            "title": "runbook_url",
+            "description": "Where the dashboard's runbook for it is, as the rule names it: /admin/runbooks/\u003cid\u003e."
+          },
+          "labels": {
+            "type": "object",
+            "title": "labels",
+            "additionalProperties": {
+              "type": "string",
+              "title": "value"
+            },
+            "description": "What else the alert's series is labelled with: which host, which volume."
+          },
+          "startsAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "starts_at",
+            "description": "When it began firing, and for a resolution when it stopped."
+          },
+          "endsAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "ends_at"
+          },
+          "createdAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "created_at",
+            "description": "When the control plane heard it."
+          },
+          "sent": {
+            "type": "integer",
+            "title": "sent",
+            "format": "int32",
+            "description": "How many administrators it was emailed to, is waiting for, and failed every attempt for."
+          },
+          "pending": {
+            "type": "integer",
+            "title": "pending",
+            "format": "int32"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "failed",
+            "format": "int32"
+          }
+        },
+        "title": "Alert",
+        "additionalProperties": false,
+        "description": "Alert is one firing or one resolution of an alert rule, as Grafana sent it."
       },
       "spin.v1.AllowedEmail": {
         "type": "object",
@@ -15372,6 +16169,135 @@
         "additionalProperties": false,
         "description": "Empty on success"
       },
+      "spin.v1.CostEstimate": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "day",
+            "description": "The billed day the rate is from: its first instant, UTC."
+          },
+          "runningHourMicros": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "running_hour_micros",
+            "format": "int64",
+            "description": "An hour of its machine running, for the cores and memory it holds; unset where that day billed\n no runner."
+          },
+          "stoppedMonthMicros": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "stopped_month_micros",
+            "format": "int64",
+            "description": "A month of its disk kept while it is stopped, for the bytes it kept that day; unset where that\n day billed no volume, or the workspace was made since."
+          }
+        },
+        "title": "CostEstimate",
+        "additionalProperties": false,
+        "description": "What a workspace would cost at what the last billed day charged. An estimate: that day is over\n and the next may be charged otherwise, so it is never said without the day it is from."
+      },
+      "spin.v1.CostMonth": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "month",
+            "description": "Its first instant, UTC."
+          },
+          "readAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "read_at",
+            "description": "The reading its costs are from."
+          },
+          "currency": {
+            "type": "string",
+            "title": "currency",
+            "description": "ISO 4217."
+          },
+          "totalMicros": {
+            "type": "string",
+            "title": "total_micros",
+            "format": "int64",
+            "description": "Every cost of its days; idle and unstored are parts of it."
+          },
+          "idleMicros": {
+            "type": "string",
+            "title": "idle_micros",
+            "format": "int64",
+            "description": "What the runners cost that no workspace held."
+          },
+          "unstoredMicros": {
+            "type": "string",
+            "title": "unstored_micros",
+            "format": "int64",
+            "description": "What the volumes' bucket cost for bytes no workspace keeps."
+          },
+          "budgetLimitMicros": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "budget_limit_micros",
+            "format": "int64",
+            "description": "The installation's budget as the month's last reading in it said; unset where it had none."
+          }
+        },
+        "title": "CostMonth",
+        "additionalProperties": false,
+        "description": "One month of the trend on Admin → Costs, in millionths of the bill's currency. An estimate of\n what nobody caused, from the reading it names: a month's last days are revised by the cloud\n into the next, and read again until they settle."
+      },
+      "spin.v1.CostShare": {
+        "type": "object",
+        "properties": {
+          "computeMicros": {
+            "type": "string",
+            "title": "compute_micros",
+            "format": "int64",
+            "description": "Of the runners: what was held of them."
+          },
+          "storageMicros": {
+            "type": "string",
+            "title": "storage_micros",
+            "format": "int64",
+            "description": "Of the volumes' bucket: what the volumes kept."
+          },
+          "sentBytes": {
+            "type": "string",
+            "title": "sent_bytes",
+            "format": "int64",
+            "description": "What the traffic came to in the month: the machine's network out and back, and its sessions\n through the relay, both ways. Counted, not costed."
+          },
+          "receivedBytes": {
+            "type": "string",
+            "title": "received_bytes",
+            "format": "int64"
+          },
+          "forwardedBytes": {
+            "type": "string",
+            "title": "forwarded_bytes",
+            "format": "int64"
+          }
+        },
+        "title": "CostShare",
+        "additionalProperties": false,
+        "description": "What was caused in a month of the cloud's bill, as the installation shares it out\n (AdminService.GetCosts): by one workspace, or by several summed. In millionths of the bill's\n currency. A share is of days already billed, never of this hour: the bill is read from the\n cloud a few times a day."
+      },
       "spin.v1.CpuUsagePoint": {
         "type": "object",
         "properties": {
@@ -15443,7 +16369,7 @@
           "teamId": {
             "type": "string",
             "title": "team_id",
-            "description": "What it reaches and what its tree may hold: as APIKey's. Asked by a key holding keys:delegate,\n it is that key's child, and holds no more than it (delegation.Within)."
+            "description": "What it reaches and what its tree may have running at once: as APIKey's, where what is counted\n is said. Asked by a key holding keys:delegate, it is that key's child, and holds no more than it\n (delegation.Within)."
           },
           "projectIds": {
             "type": "array",
@@ -15955,7 +16881,7 @@
           "preset": {
             "type": "string",
             "title": "preset",
-            "description": "The preset it is sized by, by name (AdminService.ListResourcePresets): its cores, memory,\n disk and how it grows. Empty is the project's preset when project_id names one, otherwise\n the installation's default preset, or with none marked 1 core, 512 MB and 10 GB free. A\n disabled preset is refused."
+            "description": "The preset it is sized by, by name (AdminService.ListResourcePresets): its cores, memory,\n disk and how it grows. Empty is the project's preset when project_id names one, otherwise\n the installation's default preset, or with none marked 1 core, 2048 MB and 10 GB free. A\n disabled preset is refused."
           },
           "env": {
             "type": "object",
@@ -16361,6 +17287,70 @@
         "title": "DeletedWorkspace",
         "additionalProperties": false,
         "description": "DeletedWorkspace is a workspace in the trash."
+      },
+      "spin.v1.DeletionEffect": {
+        "type": "object",
+        "properties": {
+          "fate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.DeletionFate"
+              }
+            ],
+            "title": "fate"
+          },
+          "what": {
+            "type": "string",
+            "title": "what",
+            "description": "What it is: \"Its disk\", \"2 snapshots\"."
+          },
+          "detail": {
+            "type": "string",
+            "title": "detail",
+            "description": "What happens to it and what follows from that, one sentence."
+          }
+        },
+        "title": "DeletionEffect",
+        "additionalProperties": false,
+        "description": "DeletionEffect is one thing a workspace has and what a delete does to it, in words its owner\n reads before confirming."
+      },
+      "spin.v1.DeletionFate": {
+        "type": "string",
+        "title": "DeletionFate",
+        "enum": [
+          "DELETION_FATE_UNSPECIFIED",
+          "DELETION_FATE_ERASED",
+          "DELETION_FATE_TRASHED",
+          "DELETION_FATE_KEPT"
+        ],
+        "description": "DeletionFate is what a delete does to one thing a workspace has.\n\n- `DELETION_FATE_ERASED`: Gone when the delete is done, and not undeleted.\n- `DELETION_FATE_TRASHED`: In the trash for GetWorkspaceDeletionResponse.trash_days, restored by an undelete, erased\n  when they are up.\n- `DELETION_FATE_KEPT`: Outlives the workspace, the trash's days included.",
+        "x-enum-descriptions": [
+          "",
+          "Gone when the delete is done, and not undeleted.",
+          "In the trash for GetWorkspaceDeletionResponse.trash_days, restored by an undelete, erased\n when they are up.",
+          "Outlives the workspace, the trash's days included."
+        ]
+      },
+      "spin.v1.DepartureFate": {
+        "type": "string",
+        "title": "DepartureFate",
+        "enum": [
+          "DEPARTURE_FATE_UNSPECIFIED",
+          "DEPARTURE_FATE_MOVES",
+          "DEPARTURE_FATE_STAYS",
+          "DEPARTURE_FATE_LOSES_PLACE",
+          "DEPARTURE_FATE_HOLDS",
+          "DEPARTURE_FATE_STOPS"
+        ],
+        "description": "DepartureFate is what taking a host out does to one workspace on it.\n\n- `DEPARTURE_FATE_MOVES`: Suspended with its memory and resumed on another runner with room.\n- `DEPARTURE_FATE_STAYS`: Keeps its place on this runner: a drain moves only what runs.\n- `DEPARTURE_FATE_LOSES_PLACE`: Suspended at a published snapshot: its disk is let go of here, and its next start is on\n  another runner, from what it published.\n- `DEPARTURE_FATE_HOLDS`: It keeps the host: the removal is refused while it is here. A group's machine is held by a\n  disk only here, until it is stopped, which publishes it, or moved; a revoked host by any\n  workspace that names it.\n- `DEPARTURE_FATE_STOPS`: Its disk is only here and is left here: it runs again only once recovered onto another\n  runner, giving up what this one had not published.",
+        "x-enum-descriptions": [
+          "",
+          "Suspended with its memory and resumed on another runner with room.",
+          "Keeps its place on this runner: a drain moves only what runs.",
+          "Suspended at a published snapshot: its disk is let go of here, and its next start is on\n another runner, from what it published.",
+          "It keeps the host: the removal is refused while it is here. A group's machine is held by a\n disk only here, until it is stopped, which publishes it, or moved; a revoked host by any\n workspace that names it.",
+          "Its disk is only here and is left here: it runs again only once recovered onto another\n runner, giving up what this one had not published."
+        ]
       },
       "spin.v1.DeviceLoginStatus": {
         "type": "string",
@@ -16816,12 +17806,6 @@
             ],
             "title": "released_at"
           },
-          "workspaces": {
-            "type": "string",
-            "title": "workspaces",
-            "format": "int64",
-            "description": "How many workspaces run it; one that nothing runs and is not the newest is collectable."
-          },
           "newest": {
             "type": "boolean",
             "title": "newest",
@@ -16835,12 +17819,12 @@
           "removable": {
             "type": "boolean",
             "title": "removable",
-            "description": "Not the newest and nothing runs it: RemoveStoredVolume removes it, and so does the\n collect-releases job on its own."
+            "description": "Not the newest, and open in no machine and no suspended memory: RemoveStoredVolume removes\n it, and so does the collect-releases job on its own. A release only stopped workspaces last\n ran is removable, since their next start is given the newest."
           },
           "keptBecause": {
             "type": "string",
             "title": "kept_because",
-            "description": "Why it stays, in words, where it may not go."
+            "description": "Why it stays, in words, where it may not go: how many machines and suspended memories have\n it open, or that it is the newest."
           }
         },
         "title": "ExtensionRelease",
@@ -16861,7 +17845,8 @@
           "workspaces": {
             "type": "string",
             "title": "workspaces",
-            "format": "int64"
+            "format": "int64",
+            "description": "The machines that have it open and the suspended memories that do: a stopped workspace is\n given the newest at its next start, and is on none."
           },
           "newest": {
             "type": "boolean",
@@ -17093,6 +18078,20 @@
               }
             ],
             "title": "give_back_refused_at"
+          },
+          "capacityRefused": {
+            "type": "boolean",
+            "title": "capacity_refused",
+            "description": "launch_failure is the cloud having no machine of the kind the class asks for - no spot\n capacity, or the spot quota spent - which the class's spot setting, or its fallback, is what\n changes; false for any other failure, and while there is none."
+          },
+          "onDemandUntil": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "on_demand_until",
+            "description": "Set while a spot class's group starts on-demand machines because the cloud refused it spot\n (HostClass.fallback_on_demand): until this, and spot again after. Its class still says spot."
           }
         },
         "title": "FleetClass",
@@ -17416,10 +18415,36 @@
           "platform": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/spin.v1.ServiceCost"
+              "$ref": "#/components/schemas/spin.v1.PlatformCost"
             },
             "title": "platform",
-            "description": "Every other cost - the control plane, the proxy, keys, logs - by service, costliest first."
+            "description": "Every other cost - the control plane, the proxy, keys, logs - by role and service, costliest\n first."
+          },
+          "standby": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.StandbyCost"
+              }
+            ],
+            "title": "standby",
+            "description": "What the installation costs a day with nobody working; unset where no day before the\n reading billed anything."
+          },
+          "readAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "read_at",
+            "description": "When the month's bill was last read; unset where it never was, and then nothing is answered."
+          },
+          "trend": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.CostMonth"
+            },
+            "title": "trend",
+            "description": "The year up to this month, oldest first, this month last: each month the bill was read in,\n shared out as this one is. A month never read is not among them."
           }
         },
         "title": "GetCostsResponse",
@@ -17621,6 +18646,15 @@
               }
             ],
             "title": "host"
+          },
+          "departure": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostDeparture"
+              }
+            ],
+            "title": "departure",
+            "description": "What taking the host out would do to each workspace on it, as the server would do it: asked\n of one host, because it reads every workspace there."
           }
         },
         "title": "GetHostResponse",
@@ -17687,54 +18721,6 @@
         "title": "GetInstallationHealthResponse",
         "additionalProperties": false
       },
-      "spin.v1.GetInstallationSettingsRequest": {
-        "type": "object",
-        "title": "GetInstallationSettingsRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.GetInstallationSettingsResponse": {
-        "type": "object",
-        "properties": {
-          "settings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.InstallationSettings"
-              }
-            ],
-            "title": "settings"
-          },
-          "reaches": {
-            "type": "object",
-            "title": "reaches",
-            "additionalProperties": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/spin.v1.SettingReach"
-                }
-              ],
-              "title": "value"
-            },
-            "description": "What each setting touches when saved, by its update_mask path: every path\n UpdateInstallationSettings accepts, and no other."
-          },
-          "runningWorkspaces": {
-            "type": "integer",
-            "title": "running_workspaces",
-            "format": "int32",
-            "description": "How many workspaces are running now: what a RUNNING_WORKSPACES setting reaches, and what a\n NEW_WORKSPACES one leaves as it is."
-          },
-          "connectedRunners": {
-            "type": [
-              "integer",
-              "null"
-            ],
-            "title": "connected_runners",
-            "format": "int32",
-            "description": "How many runners hold their stream to this control plane now: what a NEXT_HEARTBEAT setting\n reaches. Unset where this control plane cannot tell."
-          }
-        },
-        "title": "GetInstallationSettingsResponse",
-        "additionalProperties": false
-      },
       "spin.v1.GetMonitoringRequest": {
         "type": "object",
         "title": "GetMonitoringRequest",
@@ -17770,7 +18756,7 @@
               "$ref": "#/components/schemas/spin.v1.NotificationPreference"
             },
             "title": "preferences",
-            "description": "One per event a person may be told of, in the order they are shown."
+            "description": "One per event a person may be told of, in the order they are shown: an administrator's\n include the installation's."
           },
           "emailConfigured": {
             "type": "boolean",
@@ -17855,6 +18841,64 @@
         "title": "GetPrebuildResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetProjectCostsRequest": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "title": "project_id"
+          }
+        },
+        "title": "GetProjectCostsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetProjectCostsResponse": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "month",
+            "description": "The month in progress: its first instant, UTC."
+          },
+          "readAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "read_at",
+            "description": "When the bill was last read; unset where it never was - an installation with no bill scope -\n and then nothing below is known and nothing is to be drawn."
+          },
+          "currency": {
+            "type": "string",
+            "title": "currency",
+            "description": "ISO 4217; every amount here is in millionths of it."
+          },
+          "workspaces": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.CostShare"
+              }
+            ],
+            "title": "workspaces",
+            "description": "Its workspaces' shares summed, deleted ones and its prebuilds' builds included: a workspace is\n the project's it opened, whoever's it was."
+          },
+          "prebuilds": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PrebuildsKept"
+              }
+            ],
+            "title": "prebuilds"
+          }
+        },
+        "title": "GetProjectCostsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.GetProjectRequest": {
         "type": "object",
         "properties": {
@@ -17884,26 +18928,6 @@
           }
         },
         "title": "GetProjectResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.GetRegistrationModeRequest": {
-        "type": "object",
-        "title": "GetRegistrationModeRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.GetRegistrationModeResponse": {
-        "type": "object",
-        "properties": {
-          "mode": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.RegistrationMode"
-              }
-            ],
-            "title": "mode"
-          }
-        },
-        "title": "GetRegistrationModeResponse",
         "additionalProperties": false
       },
       "spin.v1.GetRunbookRequest": {
@@ -17942,24 +18966,57 @@
         "title": "GetRunbookResponse",
         "additionalProperties": false
       },
-      "spin.v1.GetSecuritySettingsRequest": {
+      "spin.v1.GetSettingsRequest": {
         "type": "object",
-        "title": "GetSecuritySettingsRequest",
+        "title": "GetSettingsRequest",
         "additionalProperties": false
       },
-      "spin.v1.GetSecuritySettingsResponse": {
+      "spin.v1.GetSettingsResponse": {
         "type": "object",
         "properties": {
-          "settings": {
+          "values": {
+            "type": "object",
+            "title": "values",
+            "additionalProperties": {
+              "type": "string",
+              "title": "value"
+            },
+            "description": "Every definition's value in force, by key, as text of its type: what the installation says,\n or the default where it says nothing. The control plane's own are left out."
+          },
+          "definitions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.SettingDefinition"
+            },
+            "title": "definitions",
+            "description": "Every setting an administrator is shown, in the registry's order."
+          },
+          "runningWorkspaces": {
+            "type": "integer",
+            "title": "running_workspaces",
+            "format": "int32",
+            "description": "How many workspaces are running now: what a RUNNING_WORKSPACES setting reaches, and what a\n NEW_WORKSPACES one leaves as it is."
+          },
+          "connectedRunners": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "connected_runners",
+            "format": "int32",
+            "description": "How many runners hold their stream to this control plane now: what a NEXT_HEARTBEAT setting\n reaches. Unset where this control plane cannot tell."
+          },
+          "place": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.SecuritySettings"
+                "$ref": "#/components/schemas/spin.v1.InstallationPlace"
               }
             ],
-            "title": "settings"
+            "title": "place",
+            "description": "Where the installation runs and what it runs, read-only."
           }
         },
-        "title": "GetSecuritySettingsResponse",
+        "title": "GetSettingsResponse",
         "additionalProperties": false
       },
       "spin.v1.GetSetupStatusRequest": {
@@ -18104,6 +19161,64 @@
         "title": "GetStorageUsageResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetTeamCostsRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "title": "team_id"
+          }
+        },
+        "title": "GetTeamCostsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetTeamCostsResponse": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "month",
+            "description": "The month in progress: its first instant, UTC."
+          },
+          "readAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "read_at",
+            "description": "When the bill was last read; unset where it never was - an installation with no bill scope -\n and then nothing below is known and nothing is to be drawn."
+          },
+          "currency": {
+            "type": "string",
+            "title": "currency",
+            "description": "ISO 4217; every amount here is in millionths of it."
+          },
+          "total": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.CostShare"
+              }
+            ],
+            "title": "total",
+            "description": "Its workspaces, summed."
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.TeamWorkspaceCost"
+            },
+            "title": "workspaces",
+            "description": "Costliest first."
+          }
+        },
+        "title": "GetTeamCostsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.GetTeamRequest": {
         "type": "object",
         "properties": {
@@ -18180,6 +19295,14 @@
             ],
             "title": "samples",
             "description": "Into the installation's store of metrics."
+          },
+          "perVolumeHistograms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "per_volume_histograms",
+            "description": "The metrics that cost most to keep, a histogram per volume, which a surface may offer to\n drop as one (the setting telemetry_metrics_drop)."
           }
         },
         "title": "GetTelemetryStatusResponse",
@@ -18264,6 +19387,38 @@
         "title": "GetUserSettingsResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetUserWorkspaceEgressRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id",
+            "description": "The workspace's id."
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason",
+            "description": "Why, kept on the audit entry."
+          }
+        },
+        "title": "GetUserWorkspaceEgressRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetUserWorkspaceEgressResponse": {
+        "type": "object",
+        "properties": {
+          "egress": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.GetWorkspaceEgressResponse"
+              }
+            ],
+            "title": "egress"
+          }
+        },
+        "title": "GetUserWorkspaceEgressResponse",
+        "additionalProperties": false
+      },
       "spin.v1.GetVSCodeServersRequest": {
         "type": "object",
         "title": "GetVSCodeServersRequest",
@@ -18337,6 +19492,102 @@
           }
         },
         "title": "GetWorkspaceConsoleResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceCostRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          }
+        },
+        "title": "GetWorkspaceCostRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceCostResponse": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "month",
+            "description": "The month in progress: its first instant, UTC."
+          },
+          "readAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "read_at",
+            "description": "When the bill was last read; unset where it never was - an installation with no bill scope, a\n cloud that sends none - and then nothing below is known and nothing is to be drawn."
+          },
+          "currency": {
+            "type": "string",
+            "title": "currency",
+            "description": "ISO 4217; every amount here is in millionths of it."
+          },
+          "share": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.CostShare"
+              }
+            ],
+            "title": "share",
+            "description": "The month so far."
+          },
+          "estimate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.CostEstimate"
+              }
+            ],
+            "title": "estimate",
+            "description": "Unset where no day before the reading was billed, or none says anything of this workspace."
+          }
+        },
+        "title": "GetWorkspaceCostResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceDeletionRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "permanently": {
+            "type": "boolean",
+            "title": "permanently",
+            "description": "What DeleteWorkspaceRequest.permanently would do: an erase, whatever the trash keeps."
+          }
+        },
+        "title": "GetWorkspaceDeletionRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetWorkspaceDeletionResponse": {
+        "type": "object",
+        "properties": {
+          "trashDays": {
+            "type": "integer",
+            "title": "trash_days",
+            "format": "int32",
+            "description": "How many days the delete keeps the workspace in the trash; 0 is an erase now - the\n installation keeps no trash, or permanently was asked."
+          },
+          "effects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.DeletionEffect"
+            },
+            "title": "effects",
+            "description": "Everything the delete does to what the workspace has, ordered erased, trashed, kept. Only\n what this workspace has: one with no snapshot is told nothing of snapshots."
+          }
+        },
+        "title": "GetWorkspaceDeletionResponse",
         "additionalProperties": false
       },
       "spin.v1.GetWorkspaceEgressRequest": {
@@ -18616,6 +19867,14 @@
             },
             "title": "injections",
             "description": "Each header a brokered rule of the workspace's policies sets, and whether what it is set\n from is there to set: a request to a brokered name is refused when it is not, and this is\n where that is seen from outside the machine."
+          },
+          "network": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.WorkspaceNetworkStatus"
+            },
+            "title": "network",
+            "description": "The policies the workspace's network is under (Workspace.network_tags), in their order, and\n whether each is declared and installed on its host. Empty for a workspace with no tag, which\n reaches anything beyond its host's own networks."
           }
         },
         "title": "GetWorkspaceStatusResponse",
@@ -18929,6 +20188,19 @@
             ],
             "title": "known_at",
             "description": "known_at is when what decided the status was so: the moment it was asked for a part asked\n now, the collector's last report, the last WAL file archived or failed, a failed job's run."
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Problem"
+            },
+            "title": "problems",
+            "description": "What is wrong in this part, each on its own: one per host, one per job, one for a part that is\n a single thing. Empty while the part is OK. At most 20 are listed, the worst first;\n problem_count is how many there are."
+          },
+          "problemCount": {
+            "type": "integer",
+            "title": "problem_count",
+            "format": "int32"
           }
         },
         "title": "HealthCheck",
@@ -18973,7 +20245,7 @@
           "HEALTH_PART_HOSTS",
           "HEALTH_PART_WAITING_WORKSPACES"
         ],
-        "description": "HealthPart is which part of the installation a check is of.\n\n- `HEALTH_PART_DATABASE`: The control plane's database answers a query.\n- `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base\n  backups are taken by a timer outside the control plane, which records nothing it can read.\n- `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready.\n- `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store\n  (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n  plane is not one of the metric store's readers.\n- `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs).\n- `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet, against those whose command stream is up.\n- `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet.",
+        "description": "HealthPart is which part of the installation a check is of.\n\n- `HEALTH_PART_DATABASE`: The control plane's database answers a query.\n- `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base\n  backups are taken by a timer outside the control plane, which records nothing it can read.\n- `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready.\n- `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store\n  (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n  plane is not one of the metric store's readers.\n- `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs).\n- `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet: those whose command stream is not up,\n  and those that answer and fail a check of their own (HostCheck).\n- `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet.",
         "x-enum-descriptions": [
           "",
           "The control plane's database answers a query.",
@@ -18981,7 +20253,7 @@
           "The log store (Quickwit) beside the control plane answers that it is ready.",
           "The collector sends what it is given: spans to the trace store, samples to the metric store\n (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n plane is not one of the metric store's readers.",
           "The control plane's periodic work: a job whose last run failed (ListJobs).",
-          "The hosts registered and not taken out of the fleet, against those whose command stream is up.",
+          "The hosts registered and not taken out of the fleet: those whose command stream is not up,\n and those that answer and fail a check of their own (HostCheck).",
           "Workspaces waiting for a runner, across the whole fleet."
         ]
       },
@@ -19281,6 +20553,50 @@
             "type": "string",
             "title": "removal_refused",
             "description": "removal_refused is why that removal cannot run now - a workspace whose disk is there - in\n words an administrator acts on; empty while it can."
+          },
+          "keysGiven": {
+            "type": "integer",
+            "title": "keys_given",
+            "format": "int32",
+            "description": "keys_given is how many teams' disks this host was given the key of: what revoking it, or\n removing it as taken, marks for re-keying."
+          },
+          "machineId": {
+            "type": "string",
+            "title": "machine_id",
+            "description": "Where the host's machine is, as its cloud said when the host joined - never as the host said\n of itself: the machine's id and type as that cloud names them, its zone and its region. Each\n empty for a host that joined with no cloud (a registration token: a development stack, a\n machine of one's own), and for what its cloud did not say."
+          },
+          "machineType": {
+            "type": "string",
+            "title": "machine_type"
+          },
+          "zone": {
+            "type": "string",
+            "title": "zone"
+          },
+          "region": {
+            "type": "string",
+            "title": "region"
+          },
+          "reclaimable": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "title": "reclaimable",
+            "description": "reclaimable is whether the cloud may take the machine back, as its cloud said of the instance\n when it joined - a spot machine is, whatever its class says: a group that fell back to\n on-demand, or one whose class was changed, starts machines its class does not describe. Unset\n where nothing says: a host that joined with no cloud, or one its cloud named nothing of."
+          },
+          "holders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.HostHolder"
+            },
+            "title": "holders",
+            "description": "holders is what keeps this host in the fleet, from the database: the workspaces whose disk is\n only here - whichever list of theirs leaves them out, a prebuild's build, a team's, another\n person's, a failed one - and the volumes still here that are no such workspace's disk, a\n trashed workspace's or an agent's home, each of which forgetting the host must detach first.\n At most 10; holder_count is how many there are."
+          },
+          "holderCount": {
+            "type": "integer",
+            "title": "holder_count",
+            "format": "int32"
           }
         },
         "title": "Host",
@@ -19361,12 +20677,124 @@
             "type": "integer",
             "title": "max_hosts",
             "format": "int32",
-            "description": "The most hosts of it; 0 is no limit of its own (InstallationSettings.autoscaling_max_hosts\n bounds them all)."
+            "description": "The most hosts of it; 0 is no limit of its own (the setting autoscaling_max_hosts\n bounds them all)."
+          },
+          "fallbackOnDemand": {
+            "type": "boolean",
+            "title": "fallback_on_demand",
+            "description": "A spot class whose group the cloud refuses spot machines for capacity starts on-demand ones\n for a while, and then spot again (FleetClass.on_demand_until); spot itself is not changed.\n Off, the class's workspaces wait until somebody changes spot. Only a spot class has it."
           }
         },
         "title": "HostClass",
         "additionalProperties": false,
         "description": "A kind of runner: the shape of the machines a group of the installation's cloud starts for it,\n which the control plane makes and sizes. What a machine boots is the installation's launch\n template, never this. \"default\" is the class a preset that names none runs on."
+      },
+      "spin.v1.HostDeparture": {
+        "type": "object",
+        "properties": {
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.WorkspaceDeparture"
+            },
+            "title": "workspaces",
+            "description": "At most 20, the running first; count is how many there are."
+          },
+          "count": {
+            "type": "integer",
+            "title": "count",
+            "format": "int32"
+          }
+        },
+        "title": "HostDeparture",
+        "additionalProperties": false,
+        "description": "HostDeparture is what draining the host, and removing it as Host.removal says, would do to each\n workspace that names it - the ones a drain moves, the ones that stay, the ones that lose their\n place on it and the ones that hold it - so the confirmation says it before it is done."
+      },
+      "spin.v1.HostHolder": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostHolderKind"
+              }
+            ],
+            "title": "kind"
+          },
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id",
+            "description": "The workspace it is or was the disk of; for an agent's home, the workspace that mounts it, or\n that last did by name alone (workspace_id empty)."
+          },
+          "workspaceName": {
+            "type": "string",
+            "title": "workspace_name"
+          },
+          "volumeId": {
+            "type": "string",
+            "title": "volume_id",
+            "description": "The volume, for a holder that is a volume (a trashed workspace's disk, an agent's home); empty\n for a workspace, whose disk the workspace names."
+          },
+          "ownerId": {
+            "type": "string",
+            "title": "owner_id",
+            "description": "Whose it is."
+          },
+          "ownerEmail": {
+            "type": "string",
+            "title": "owner_email"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state",
+            "description": "The workspace's state; UNSPECIFIED for an agent's home no workspace mounts."
+          },
+          "lastEvent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceEventType"
+              }
+            ],
+            "title": "last_event",
+            "description": "What last happened to the workspace, and when: its history's newest entry. UNSPECIFIED and\n unset where it has none."
+          },
+          "lastEventAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "last_event_at"
+          }
+        },
+        "title": "HostHolder",
+        "additionalProperties": false,
+        "description": "HostHolder is one thing a host holds that its removal would lose or has to wait for, with\n whose it is and what last happened to it."
+      },
+      "spin.v1.HostHolderKind": {
+        "type": "string",
+        "title": "HostHolderKind",
+        "enum": [
+          "HOST_HOLDER_KIND_UNSPECIFIED",
+          "HOST_HOLDER_KIND_WORKSPACE",
+          "HOST_HOLDER_KIND_TEAM_WORKSPACE",
+          "HOST_HOLDER_KIND_PREBUILD_BUILD",
+          "HOST_HOLDER_KIND_TRASHED_WORKSPACE",
+          "HOST_HOLDER_KIND_AGENT_HOME"
+        ],
+        "description": "HostHolderKind is what a holder is, which says which list of whose shows it.\n\n- `HOST_HOLDER_KIND_WORKSPACE`: A person's own workspace, in their workspaces list.\n- `HOST_HOLDER_KIND_TEAM_WORKSPACE`: A workspace of a team, in its members' lists.\n- `HOST_HOLDER_KIND_PREBUILD_BUILD`: A prebuild's build: kept stopped as its prebuild's anchor, and in nobody's list.\n- `HOST_HOLDER_KIND_TRASHED_WORKSPACE`: The disk of a workspace in its owner's trash.\n- `HOST_HOLDER_KIND_AGENT_HOME`: A person's agent's home (AgentVolume).",
+        "x-enum-descriptions": [
+          "",
+          "A person's own workspace, in their workspaces list.",
+          "A workspace of a team, in its members' lists.",
+          "A prebuild's build: kept stopped as its prebuild's anchor, and in nobody's list.",
+          "The disk of a workspace in its owner's trash.",
+          "A person's agent's home (AgentVolume)."
+        ]
       },
       "spin.v1.HostNetworkPolicy": {
         "type": "object",
@@ -19801,164 +21229,52 @@
         "additionalProperties": false,
         "description": "InjectionStatus is one header the egress proxy sets on the workspace's requests to a brokered\n name, and whether the workspace's team holds what it is set from."
       },
-      "spin.v1.InstallationSettings": {
+      "spin.v1.InstallationEventType": {
+        "type": "string",
+        "title": "InstallationEventType",
+        "enum": [
+          "INSTALLATION_EVENT_TYPE_UNSPECIFIED",
+          "INSTALLATION_EVENT_TYPE_ALERT_FIRING",
+          "INSTALLATION_EVENT_TYPE_ALERT_RESOLVED"
+        ],
+        "description": "What happened to the installation itself, which its administrators are told of: an event of no\n workspace, recorded where the control plane hears it.\n\n- `INSTALLATION_EVENT_TYPE_ALERT_FIRING`: One of the release's alert rules fired in the installation's Grafana\n- `INSTALLATION_EVENT_TYPE_ALERT_RESOLVED`: A rule that fired is no longer past its threshold",
+        "x-enum-descriptions": [
+          "",
+          "One of the release's alert rules fired in the installation's Grafana",
+          "A rule that fired is no longer past its threshold"
+        ]
+      },
+      "spin.v1.InstallationPlace": {
         "type": "object",
         "properties": {
-          "allowedImages": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "allowed_images",
-            "description": "Whitelist of allowed images (empty = all allowed)"
-          },
-          "maxWorkspacesPerUser": {
-            "type": "integer",
-            "title": "max_workspaces_per_user",
-            "format": "int32",
-            "description": "Maximum workspaces per user (0 = unlimited)"
-          },
-          "defaultNetworkTags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "default_network_tags",
-            "description": "What a workspace created without a network tag of its own runs under, by policy name.\n Empty means \"offline\", the policy every host has and which allows nothing: no value of\n this field means open. An installation that wants such a workspace out declares a policy\n saying what it may reach and names it here."
-          },
-          "updatedAt": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.Timestamp"
-              }
-            ],
-            "title": "updated_at"
-          },
-          "telemetryTracesKeepPercent": {
-            "type": "integer",
-            "title": "telemetry_traces_keep_percent",
-            "format": "int32",
-            "description": "What the installation's collector keeps, decided at the collector\n (internal/controlplane/domain/telemetrypolicy). A trace with an error in any span is always kept, and so\n is one slower than telemetry_traces_slow_ms (0: none is kept for being slow); of the rest,\n telemetry_traces_keep_percent, 0 to 100 and 100 until an admin says otherwise."
-          },
-          "telemetryTracesSlowMs": {
-            "type": "integer",
-            "title": "telemetry_traces_slow_ms",
-            "format": "int32"
-          },
-          "telemetryMetricsDrop": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "telemetry_metrics_drop",
-            "description": "The metrics that are not kept, by name; a pattern may begin or end with *."
-          },
-          "telemetryPerVolumeHistograms": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "telemetry_per_volume_histograms",
-            "description": "Read only: the metrics that cost most to keep, a histogram per volume, which a surface may\n offer to drop as one."
-          },
-          "workspaceTrashDays": {
-            "type": "integer",
-            "title": "workspace_trash_days",
-            "format": "int32",
-            "description": "How many days a deleted workspace stays in the trash, whole, for its owner to undelete\n before it is erased: 0 is no trash, and 7 is what an installation that says nothing keeps."
-          },
-          "identityAudiences": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "title": "identity_audiences",
-            "description": "Who a workspace's identity token may be for; empty is anybody. What the installation's\n issuer gives, not who trusts it: a relying party still decides which subjects it admits."
-          },
-          "volumeRpoSeconds": {
-            "type": "integer",
-            "title": "volume_rpo_seconds",
-            "format": "int32",
-            "description": "How far behind the object store a workspace's volume may fall, in seconds, where its preset\n does not say: what it commits on (v6 §11). 0 is none - it commits on its size and its\n snapshots alone - and 300 is what an installation that says nothing keeps."
-          },
-          "diskReservePercent": {
-            "type": "integer",
-            "title": "disk_reserve_percent",
-            "format": "int32",
-            "description": "How a host's disk is lent to workspaces. A volume holds what it wrote, not its size: a host\n is charged, per volume, the larger of disk_reserve_percent of its size and what it wrote,\n and takes new ones up to 80% of its device; disk_commit_max_percent bounds the sizes\n summed - every volume filling at once. 50 and 200 are what an installation that says\n nothing lends; 100 and 100 lends nothing past what the device holds."
-          },
-          "diskCommitMaxPercent": {
-            "type": "integer",
-            "title": "disk_commit_max_percent",
-            "format": "int32"
-          },
-          "workspaceIdleSuspendMinutes": {
-            "type": "integer",
-            "title": "workspace_idle_suspend_minutes",
-            "format": "int32",
-            "description": "How many minutes a running workspace may go unused - nobody working over its ssh, editor or\n forwarded ports, and its cores all but still - before it is suspended with its processes,\n which its next start resumes. 0 suspends none; 60 is what an installation that says nothing\n keeps, and a week is the most."
-          },
-          "workspaceMaxRunningMinutes": {
-            "type": "integer",
-            "title": "workspace_max_running_minutes",
-            "format": "int32",
-            "description": "How many minutes a workspace may run at a stretch, used or not, before it is suspended the\n same way: a process that keeps its cores busy is use to the rule above, and this is what\n ends it. Counted from its machine's start, which a resume is too. 0 caps none; 720 is what\n an installation that says nothing keeps, and a week is the most."
-          },
-          "workspaceLeaseMaxMinutes": {
-            "type": "integer",
-            "title": "workspace_lease_max_minutes",
-            "format": "int32",
-            "description": "How many minutes a process may keep its workspace awake at a stretch (a lease:\n `spin-supervisor keep -- \u003ccmd\u003e`, a .spin.yaml task with keep_awake). While a lease is held\n and within this of its start, nobody is asked, nothing idle is suspended, and the running\n cap waits for the lease's end. 0 honours no lease; 480 is what an installation that says\n nothing keeps, and a week is the most."
-          },
-          "teamSecretsRole": {
+          "provider": {
             "type": "string",
-            "title": "team_secrets_role",
-            "description": "The IAM role a team's secret kept in Secrets Manager or Parameter Store is read under, in a\n session tagged spin-team-id with the team: its policy lets that session read only what carries\n the same tag. Empty, no secret is kept as a reference."
+            "title": "provider",
+            "description": "The provider the installation was made on, as its document names it: \"aws\", \"self-hosted\"."
           },
-          "projectCreation": {
+          "account": {
             "type": "string",
-            "title": "project_creation",
-            "description": "Who makes projects (ProjectService.CreateProject): \"everyone\" signed in, or only the\n instance's \"admins\". Empty is everyone."
+            "title": "account",
+            "description": "The cloud account it runs in, as that cloud names it."
           },
-          "autoscalingIdleMinutes": {
-            "type": "integer",
-            "title": "autoscaling_idle_minutes",
-            "format": "int32",
-            "description": "How the runner fleet is sized (GetFleet): the minutes it may be idle before it is emptied,\n above zero; the quiet hours, HH:MM-HH:MM in the IANA time zone, when it is emptied at once,\n empty for none; and the most hosts it is asked for, under the group's own maximum - zero is\n that maximum. Each takes effect at the autoscaler's next pass."
-          },
-          "autoscalingQuietHours": {
+          "region": {
             "type": "string",
-            "title": "autoscaling_quiet_hours"
+            "title": "region"
           },
-          "autoscalingTimeZone": {
+          "release": {
             "type": "string",
-            "title": "autoscaling_time_zone"
+            "title": "release",
+            "description": "The release the control plane runs, \"v20261112.01\"."
           },
-          "autoscalingMaxHosts": {
-            "type": "integer",
-            "title": "autoscaling_max_hosts",
-            "format": "int32"
-          },
-          "hostShellNeedsApproval": {
-            "type": "boolean",
-            "title": "host_shell_needs_approval",
-            "description": "A root shell on a host (HostShellService): whether a second administrator approves each one\n before its host is touched, and the most minutes one may be open, 30 where unset."
-          },
-          "hostShellMaxMinutes": {
-            "type": "integer",
-            "title": "host_shell_max_minutes",
-            "format": "int32"
-          },
-          "prebuildRetireUnusedDays": {
-            "type": "integer",
-            "title": "prebuild_retire_unused_days",
-            "format": "int32",
-            "description": "How many days a ready prebuild may go without a workspace opened from it before it is retired\n and its disk given back - the newest of its ref too, so a project nobody opens stops holding\n one, and its next open starts from the image. It is not built again until its ref moves to\n another commit, or an admin runs it. Counted from its build for one never opened. 0, what an\n installation that says nothing keeps, retires none for this; a year is the most."
+          "machineImage": {
+            "type": "string",
+            "title": "machine_image",
+            "description": "The machine image the control plane's machine booted, as its cloud names it."
           }
         },
-        "title": "InstallationSettings",
+        "title": "InstallationPlace",
         "additionalProperties": false,
-        "description": "InstallationSettings contains global settings for the Spin installation"
+        "description": "InstallationPlace is where the installation runs, as its control plane's machine read it once\n when it started - never asked of the cloud again per request - and the release it runs. What\n a cloud did not say, or an installation with no cloud (a development stack, a machine of one's\n own), is empty."
       },
       "spin.v1.Job": {
         "type": "object",
@@ -20008,10 +21324,15 @@
             "title": "title",
             "description": "The job as a person names it: \"Storage collection\" for storage-gc."
           },
-          "purpose": {
+          "does": {
             "type": "string",
-            "title": "purpose",
-            "description": "One sentence of what it does and what stays undone while it fails."
+            "title": "does",
+            "description": "A sentence of what it does."
+          },
+          "whileFailing": {
+            "type": "string",
+            "title": "while_failing",
+            "description": "What stays undone while it fails, said after \"While it fails, \": \"new workspaces start from\n an older prebuild\". What a failure's verdict says, so whoever reads it knows how soon it\n needs them."
           },
           "recentRuns": {
             "type": "array",
@@ -20079,7 +21400,7 @@
           "traceId": {
             "type": "string",
             "title": "trace_id",
-            "description": "The run's trace, empty when it was not recorded."
+            "description": "The run's trace id, which every record it logged carries; empty when it was not recorded.\n Whether the store kept the trace is LogService.KeptTraces's to say."
           },
           "askedBy": {
             "type": "string",
@@ -20134,6 +21455,36 @@
           }
         },
         "title": "KeepWorkspaceResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.KeptTracesRequest": {
+        "type": "object",
+        "properties": {
+          "traceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "trace_ids",
+            "description": "Hex, as a log record carries them: at most 1000, a page's."
+          }
+        },
+        "title": "KeptTracesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.KeptTracesResponse": {
+        "type": "object",
+        "properties": {
+          "traceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "trace_ids",
+            "description": "Those of the request's the store holds, each once."
+          }
+        },
+        "title": "KeptTracesResponse",
         "additionalProperties": false
       },
       "spin.v1.ListAPIKeysRequest": {
@@ -20230,6 +21581,25 @@
           }
         },
         "title": "ListAgentVolumesResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListAlertsRequest": {
+        "type": "object",
+        "title": "ListAlertsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListAlertsResponse": {
+        "type": "object",
+        "properties": {
+          "alerts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Alert"
+            },
+            "title": "alerts"
+          }
+        },
+        "title": "ListAlertsResponse",
         "additionalProperties": false
       },
       "spin.v1.ListAllowedEmailsRequest": {
@@ -20498,6 +21868,38 @@
         "title": "ListHostClassesResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListHostProblemsRequest": {
+        "type": "object",
+        "properties": {
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "The one host asked about; empty for every host of the fleet."
+          }
+        },
+        "title": "ListHostProblemsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListHostProblemsResponse": {
+        "type": "object",
+        "properties": {
+          "problems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Problem"
+            },
+            "title": "problems",
+            "description": "At most 20, hosts that are not connected first; problem_count is how many there are."
+          },
+          "problemCount": {
+            "type": "integer",
+            "title": "problem_count",
+            "format": "int32"
+          }
+        },
+        "title": "ListHostProblemsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListHostShellsRequest": {
         "type": "object",
         "properties": {
@@ -20733,6 +22135,26 @@
         "title": "ListNotificationsResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListOwnAgentThreadsRequest": {
+        "type": "object",
+        "title": "ListOwnAgentThreadsRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListOwnAgentThreadsResponse": {
+        "type": "object",
+        "properties": {
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.WorkspaceAgentThreads"
+            },
+            "title": "workspaces",
+            "description": "One per workspace of the caller's whose supervisor reported a chat, in project then workspace\n name order; a workspace in the trash is not here."
+          }
+        },
+        "title": "ListOwnAgentThreadsResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListPasskeysRequest": {
         "type": "object",
         "title": "ListPasskeysRequest",
@@ -20844,6 +22266,25 @@
           }
         },
         "title": "ListProjectsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListRefusedVolumesRequest": {
+        "type": "object",
+        "title": "ListRefusedVolumesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListRefusedVolumesResponse": {
+        "type": "object",
+        "properties": {
+          "volumes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.RefusedVolume"
+            },
+            "title": "volumes"
+          }
+        },
+        "title": "ListRefusedVolumesResponse",
         "additionalProperties": false
       },
       "spin.v1.ListRegistrationTokensRequest": {
@@ -21307,6 +22748,165 @@
         "title": "ListTeamsResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListTimelineRequest": {
+        "type": "object",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "hostId": {
+                "type": "string",
+                "title": "host_id"
+              }
+            },
+            "title": "host_id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "string",
+                "title": "project_id"
+              }
+            },
+            "title": "project_id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "teamId": {
+                "type": "string",
+                "title": "team_id"
+              }
+            },
+            "title": "team_id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "title": "workspace_id",
+                "description": "The one sample: a request names one of these at most."
+              }
+            },
+            "title": "workspace_id"
+          }
+        ],
+        "unevaluatedProperties": false,
+        "not": {
+          "allOf": [
+            {
+              "anyOf": [
+                {
+                  "required": [
+                    "hostId"
+                  ]
+                },
+                {
+                  "required": [
+                    "projectId"
+                  ]
+                },
+                {
+                  "required": [
+                    "teamId"
+                  ]
+                },
+                {
+                  "required": [
+                    "workspaceId"
+                  ]
+                }
+              ]
+            },
+            {
+              "not": {
+                "oneOf": [
+                  {
+                    "required": [
+                      "hostId"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "projectId"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "teamId"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "workspaceId"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "properties": {
+          "since": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "since",
+            "description": "Inclusive; unset reads from as far back as the records go."
+          },
+          "until": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "until",
+            "description": "Exclusive; unset is now."
+          },
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PageRequest"
+              }
+            ],
+            "title": "page",
+            "description": "page_size is at most 200, and zero is 50. total_count is not counted."
+          }
+        },
+        "title": "ListTimelineRequest"
+      },
+      "spin.v1.ListTimelineResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.TimelineEvent"
+            },
+            "title": "events"
+          },
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PageResponse"
+              }
+            ],
+            "title": "page"
+          },
+          "keptDays": {
+            "type": "integer",
+            "title": "kept_days",
+            "format": "int32",
+            "description": "kept_days is how long what the timeline reads is kept (ListWorkspaceTimelineResponse)."
+          }
+        },
+        "title": "ListTimelineResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListUserAPIKeysRequest": {
         "type": "object",
         "properties": {
@@ -21473,6 +23073,72 @@
           }
         },
         "title": "ListWorkspaceQuarantineDenialsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListWorkspaceTimelineRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "since": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "since",
+            "description": "Inclusive; unset reads from as far back as the records go."
+          },
+          "until": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "until",
+            "description": "Exclusive; unset is now."
+          },
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PageRequest"
+              }
+            ],
+            "title": "page",
+            "description": "page_size is at most 200, and zero is 50. total_count is not counted."
+          }
+        },
+        "title": "ListWorkspaceTimelineRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListWorkspaceTimelineResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.TimelineEvent"
+            },
+            "title": "events"
+          },
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PageResponse"
+              }
+            ],
+            "title": "page"
+          },
+          "keptDays": {
+            "type": "integer",
+            "title": "kept_days",
+            "format": "int32",
+            "description": "kept_days is how long what the timeline reads is kept: before it, an empty timeline is the\n records gone, not nothing having happened."
+          }
+        },
+        "title": "ListWorkspaceTimelineResponse",
         "additionalProperties": false
       },
       "spin.v1.ListWorkspacesRequest": {
@@ -22081,10 +23747,19 @@
           "email": {
             "type": "boolean",
             "title": "email"
+          },
+          "installationEvent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.InstallationEventType"
+              }
+            ],
+            "title": "installation_event"
           }
         },
         "title": "NotificationPreference",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "One kind of event and whether the caller is emailed about it: a workspace's event, or the\n installation's (an administrator's alone). Exactly one of event and installation_event is set."
       },
       "spin.v1.ObservedDestination": {
         "type": "object",
@@ -22384,6 +24059,28 @@
         },
         "title": "PasswordLoginResponse",
         "additionalProperties": false
+      },
+      "spin.v1.PlatformCost": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "role",
+            "description": "As the resources carry it (on AWS, their spin:role tag); empty where they carry none, which\n is said as untagged."
+          },
+          "service": {
+            "type": "string",
+            "title": "service"
+          },
+          "micros": {
+            "type": "string",
+            "title": "micros",
+            "format": "int64"
+          }
+        },
+        "title": "PlatformCost",
+        "additionalProperties": false,
+        "description": "What one role's resources of one of the cloud's services cost, in millionths of the bill's\n currency: the control plane, the proxy and the database are three roles of one EC2."
       },
       "spin.v1.PlatformImage": {
         "type": "object",
@@ -22695,6 +24392,15 @@
             "title": "stored_bytes",
             "format": "int64",
             "description": "What it keeps in the object store, as storage-gc last read it; unset before a reading\n counted it."
+          },
+          "buildWorkspaceId": {
+            "type": "string",
+            "title": "build_workspace_id",
+            "description": "The workspace that ran its build (workspaces.prebuild_id), while its row is kept, and whose it\n is: its events, logs and traces are its owner's to read, and no list of workspaces shows it."
+          },
+          "buildWorkspaceOwnerId": {
+            "type": "string",
+            "title": "build_workspace_owner_id"
           }
         },
         "title": "Prebuild",
@@ -22741,6 +24447,37 @@
           "Superseded and given back: its snapshot is being deleted."
         ]
       },
+      "spin.v1.PrebuildsKept": {
+        "type": "object",
+        "properties": {
+          "storedBytes": {
+            "type": "string",
+            "title": "stored_bytes",
+            "format": "int64",
+            "description": "As the store was last read (Admin's Storage, PREBUILD)."
+          },
+          "day": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "day",
+            "description": "The billed day the rate is from: its first instant, UTC. Unset, with month_micros, where no day\n before the reading billed the bucket, or the prebuilds keep nothing."
+          },
+          "monthMicros": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "month_micros",
+            "format": "int64"
+          }
+        },
+        "title": "PrebuildsKept",
+        "additionalProperties": false,
+        "description": "What a project's prebuilds keep in the volumes' bucket, and what that would cost a month at what\n the last billed day charged: an estimate, never said without the day it is from."
+      },
       "spin.v1.PreemptionSource": {
         "type": "string",
         "title": "PreemptionSource",
@@ -22751,6 +24488,237 @@
           "PREEMPTION_SOURCE_AZURE"
         ],
         "description": "PreemptionSource mirrors spin.agent.v1.PreemptionSource, which is what reaches the host."
+      },
+      "spin.v1.Problem": {
+        "type": "object",
+        "properties": {
+          "cause": {
+            "type": "string",
+            "title": "cause",
+            "description": "cause says in a line what was found."
+          },
+          "since": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "since",
+            "description": "since is when what decided it was so, as HealthCheck.known_at is: a host's command stream\n last heard, a check's last run, a job's failed run. Unset where nothing says."
+          },
+          "impact": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ProblemImpact"
+              }
+            ],
+            "title": "impact"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ProblemEvidence"
+            },
+            "title": "evidence",
+            "description": "What shows it, each a thing the console has a page for."
+          },
+          "runbookId": {
+            "type": "string",
+            "title": "runbook_id",
+            "description": "The runbook to follow (Runbook.id), of the runbooks this release serves: never empty."
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.ProblemAction"
+            },
+            "title": "actions",
+            "description": "What the console itself can do about it, each on the host or the job the problem is of."
+          },
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "The host the problem is of, and the name its machine goes by; empty for one that is not a\n host's."
+          },
+          "hostname": {
+            "type": "string",
+            "title": "hostname"
+          },
+          "job": {
+            "type": "string",
+            "title": "job",
+            "description": "The job (Job.name) the problem is of, and its title; empty for one that is not a job's."
+          },
+          "jobTitle": {
+            "type": "string",
+            "title": "job_title"
+          }
+        },
+        "title": "Problem",
+        "additionalProperties": false,
+        "description": "Problem is one thing wrong with the installation, said whole: why, what it takes down, what\n shows it and what to do. Nothing is kept of it - it is read off the installation as it is now,\n and is gone when what caused it is."
+      },
+      "spin.v1.ProblemAction": {
+        "type": "string",
+        "title": "ProblemAction",
+        "enum": [
+          "PROBLEM_ACTION_UNSPECIFIED",
+          "PROBLEM_ACTION_CORDON_HOST",
+          "PROBLEM_ACTION_DRAIN_HOST",
+          "PROBLEM_ACTION_RUN_JOB",
+          "PROBLEM_ACTION_RECOVER_WORKSPACE"
+        ],
+        "description": "ProblemAction is something the console can do about a problem, each an RPC it has.\n\n- `PROBLEM_ACTION_CORDON_HOST`: DrainHost without suspend: the host takes no new workspace and keeps what it runs.\n- `PROBLEM_ACTION_DRAIN_HOST`: DrainHost with suspend: its workspaces are moved to other hosts.\n- `PROBLEM_ACTION_RUN_JOB`: RunJobNow: the job is run again, now.\n- `PROBLEM_ACTION_RECOVER_WORKSPACE`: RecoverUserWorkspace, of each workspace the problem names: its disk is on a host that is gone,\n  and it runs again only once moved off it.",
+        "x-enum-descriptions": [
+          "",
+          "DrainHost without suspend: the host takes no new workspace and keeps what it runs.",
+          "DrainHost with suspend: its workspaces are moved to other hosts.",
+          "RunJobNow: the job is run again, now.",
+          "RecoverUserWorkspace, of each workspace the problem names: its disk is on a host that is gone,\n and it runs again only once moved off it."
+        ]
+      },
+      "spin.v1.ProblemEvidence": {
+        "type": "object",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "hostId": {
+                "type": "string",
+                "title": "host_id",
+                "description": "A host: its page under Admin → Runners."
+              }
+            },
+            "title": "host_id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "job": {
+                "type": "string",
+                "title": "job",
+                "description": "A job (Job.name): its runs under Admin → Jobs."
+              }
+            },
+            "title": "job"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "logQuery": {
+                "type": "string",
+                "title": "log_query",
+                "description": "A query of the log store, as SearchPlatformLogs takes it."
+              }
+            },
+            "title": "log_query"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "traceId": {
+                "type": "string",
+                "title": "trace_id",
+                "description": "A trace: a failed job run's."
+              }
+            },
+            "title": "trace_id"
+          }
+        ],
+        "unevaluatedProperties": false,
+        "not": {
+          "allOf": [
+            {
+              "anyOf": [
+                {
+                  "required": [
+                    "hostId"
+                  ]
+                },
+                {
+                  "required": [
+                    "job"
+                  ]
+                },
+                {
+                  "required": [
+                    "logQuery"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceId"
+                  ]
+                }
+              ]
+            },
+            {
+              "not": {
+                "oneOf": [
+                  {
+                    "required": [
+                      "hostId"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "job"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "logQuery"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "traceId"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "title": "ProblemEvidence",
+        "description": "ProblemEvidence names one thing that shows a problem. The console turns each into a link to\n its own page; none is a URL."
+      },
+      "spin.v1.ProblemImpact": {
+        "type": "object",
+        "properties": {
+          "stops": {
+            "type": "string",
+            "title": "stops",
+            "description": "What stops working, in a line: \"log lines are not kept\". Empty where the rows say it."
+          },
+          "runningWorkspaces": {
+            "type": "integer",
+            "title": "running_workspaces",
+            "format": "int32",
+            "description": "The workspaces it affects, counted whole: running on the host now, and at rest with their\n disk only there - stopped or failed, each one's next start is on that host. For workspaces\n waiting for a host, waiting_workspaces."
+          },
+          "restingWorkspaces": {
+            "type": "integer",
+            "title": "resting_workspaces",
+            "format": "int32"
+          },
+          "waitingWorkspaces": {
+            "type": "integer",
+            "title": "waiting_workspaces",
+            "format": "int32"
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.AffectedWorkspace"
+            },
+            "title": "workspaces",
+            "description": "At most 10 of them, the running first, then by name: the counts above are the whole."
+          }
+        },
+        "title": "ProblemImpact",
+        "additionalProperties": false,
+        "description": "ProblemImpact is what a problem takes down: the workspaces under it as rows of the database,\n or, for a part with nothing under it, what stops working."
       },
       "spin.v1.Project": {
         "type": "object",
@@ -23050,54 +25018,31 @@
       "spin.v1.QuarantineWorkspaceResponse": {
         "type": "object",
         "properties": {
-          "workspace": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.Workspace"
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
               }
             ],
-            "title": "workspace"
+            "title": "state"
+          },
+          "quarantineHeld": {
+            "type": "boolean",
+            "title": "quarantine_held",
+            "description": "Held, as Workspace.quarantine_held: a running workspace answers STOPPING, and this is what\n says the stop is the quarantine's."
           }
         },
         "title": "QuarantineWorkspaceResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.RateLimitSettings": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean",
-            "title": "enabled",
-            "description": "Enable rate limiting"
-          },
-          "authRequestsPerMinute": {
-            "type": "integer",
-            "title": "auth_requests_per_minute",
-            "format": "int32",
-            "description": "Auth endpoints (login, token exchange, etc.) Requests per minute for auth endpoints"
-          },
-          "authBurst": {
-            "type": "integer",
-            "title": "auth_burst",
-            "format": "int32",
-            "description": "Burst allowance for auth endpoints"
-          },
-          "apiRequestsPerMinute": {
-            "type": "integer",
-            "title": "api_requests_per_minute",
-            "format": "int32",
-            "description": "API endpoints (all other endpoints) Requests per minute for API endpoints"
-          },
-          "apiBurst": {
-            "type": "integer",
-            "title": "api_burst",
-            "format": "int32",
-            "description": "Burst allowance for API endpoints"
-          }
-        },
-        "title": "RateLimitSettings",
         "additionalProperties": false,
-        "description": "RateLimitSettings configures API rate limiting"
+        "description": "The workspace as the quarantine left it, and no more of it: an administrator acts on a\n workspace that need not be theirs, and the rest of its row - its env - is its owner's (I27)."
       },
       "spin.v1.ReadFileRequest": {
         "type": "object",
@@ -23125,6 +25070,43 @@
           }
         },
         "title": "ReadFileResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.RecoverUserWorkspaceRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id",
+            "description": "The workspace's id."
+          },
+          "acceptDataLoss": {
+            "type": "boolean",
+            "title": "accept_data_loss",
+            "description": "False asks what it would cost. True accepts that cost, for its owner, and does it."
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason",
+            "description": "Why: required, kept on the audit entry and on the workspace's history for its owner."
+          }
+        },
+        "title": "RecoverUserWorkspaceRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.RecoverUserWorkspaceResponse": {
+        "type": "object",
+        "properties": {
+          "recovery": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.RecoverWorkspaceResponse"
+              }
+            ],
+            "title": "recovery"
+          }
+        },
+        "title": "RecoverUserWorkspaceResponse",
         "additionalProperties": false
       },
       "spin.v1.RecoverWorkspaceRequest": {
@@ -23210,6 +25192,62 @@
         },
         "title": "RefusedDestination",
         "additionalProperties": false
+      },
+      "spin.v1.RefusedVolume": {
+        "type": "object",
+        "properties": {
+          "volumeId": {
+            "type": "string",
+            "title": "volume_id"
+          },
+          "refusal": {
+            "type": "string",
+            "title": "refusal",
+            "description": "The token an alert keys on, and the sentence the host sent with it (VolumeStatus)."
+          },
+          "refusalDetail": {
+            "type": "string",
+            "title": "refusal_detail"
+          },
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "The host refusing it; empty for a disk placed nowhere."
+          },
+          "hostName": {
+            "type": "string",
+            "title": "host_name"
+          },
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id",
+            "description": "The workspace it is the disk of; empty for a disk no workspace runs on."
+          },
+          "workspaceName": {
+            "type": "string",
+            "title": "workspace_name"
+          },
+          "workspaceState": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "workspace_state"
+          },
+          "ownerId": {
+            "type": "string",
+            "title": "owner_id",
+            "description": "Whose the workspace is."
+          },
+          "ownerEmail": {
+            "type": "string",
+            "title": "owner_email"
+          }
+        },
+        "title": "RefusedVolume",
+        "additionalProperties": false,
+        "description": "RefusedVolume is a disk its host is not serving, and the workspace that cannot run for it."
       },
       "spin.v1.RegisterPasskeyRequest": {
         "type": "object",
@@ -23413,17 +25451,30 @@
       "spin.v1.ReleaseWorkspaceQuarantineResponse": {
         "type": "object",
         "properties": {
-          "workspace": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.Workspace"
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
               }
             ],
-            "title": "workspace"
+            "title": "state"
+          },
+          "quarantineHeld": {
+            "type": "boolean",
+            "title": "quarantine_held"
           }
         },
         "title": "ReleaseWorkspaceQuarantineResponse",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The workspace as the release left it, and no more of it, as QuarantineWorkspaceResponse."
       },
       "spin.v1.ReleaseWorkspaceResourcesRequest": {
         "type": "object",
@@ -23473,6 +25524,16 @@
           "id": {
             "type": "string",
             "title": "id"
+          },
+          "taken": {
+            "type": "boolean",
+            "title": "taken",
+            "description": "The host is believed taken - compromised - rather than only no longer wanted. Its credentials\n are deleted and its stream cut before its group is asked anything, and every team's disk whose\n key it was given is marked for re-keying. A routine removal - a scale-in, a machine reclaimed -\n leaves it unset, and marks none."
+          },
+          "leaveWorkspaces": {
+            "type": "boolean",
+            "title": "leave_workspaces",
+            "description": "Remove a taken host although it is the only home of workspaces' disks. Refused without it,\n naming them; with it each runs again only once it is recovered onto another host\n (RecoverWorkspace), which gives up what this host had not published. Only with taken: a\n routine removal loses no disk."
           }
         },
         "title": "RemoveHostRequest",
@@ -23499,6 +25560,17 @@
             "type": "boolean",
             "title": "forgotten",
             "description": "forgotten is the host's row gone. A host given back while connected is not: it drains under\n its termination hook, and its row goes when its stream ends."
+          },
+          "markedForRekey": {
+            "type": "integer",
+            "title": "marked_for_rekey",
+            "format": "int32",
+            "description": "marked_for_rekey is how many teams' disks were marked for re-keying: those whose key a host\n removed as taken was given. Zero for a routine removal."
+          },
+          "kept": {
+            "type": "string",
+            "title": "kept",
+            "description": "kept is why the row was not forgotten, where it was not and should have been: the workspace\n whose disk is only there, or the volume that would not leave it and whose that is. Empty\n when forgotten, and for a host given back while connected."
           }
         },
         "title": "RemoveHostResponse",
@@ -23723,7 +25795,7 @@
             "type": "integer",
             "title": "rpo_seconds",
             "format": "int32",
-            "description": "How far behind the object store a workspace of it may fall, in seconds; 0 is the\n installation's (InstallationSettings.volume_rpo_seconds)."
+            "description": "How far behind the object store a workspace of it may fall, in seconds; 0 is the\n installation's (the setting volume_rpo_seconds)."
           },
           "hostClass": {
             "type": "string",
@@ -23740,6 +25812,12 @@
             "type": "boolean",
             "title": "from_config",
             "description": "Seeded or applied from the installation's config file (the release's presets where it names\n none); false is one an administrator added. An edit since does not change it."
+          },
+          "minMemoryMb": {
+            "type": "integer",
+            "title": "min_memory_mb",
+            "format": "int32",
+            "description": "The least any preset may start its workspaces at, in MB: memory_mb for a fixed one,\n burst_floor_memory_mb for a burst one. A create or update below it is refused; one written\n before it was asked keeps what it has until an administrator changes it."
           }
         },
         "title": "ResourcePreset",
@@ -23965,6 +26043,24 @@
         "type": "object",
         "title": "RevokeUserAPIKeyResponse",
         "additionalProperties": false
+      },
+      "spin.v1.RoleCost": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "role",
+            "description": "Empty where the resources carry none."
+          },
+          "micros": {
+            "type": "string",
+            "title": "micros",
+            "format": "int64"
+          }
+        },
+        "title": "RoleCost",
+        "additionalProperties": false,
+        "description": "What one role cost on one day, its services summed."
       },
       "spin.v1.RunJobNowRequest": {
         "type": "object",
@@ -24464,46 +26560,15 @@
         "additionalProperties": false,
         "description": "The spans found, each marked as about the workspace asked for, and how many the store holds."
       },
-      "spin.v1.SecuritySettings": {
+      "spin.v1.SendTestAlertRequest": {
         "type": "object",
-        "properties": {
-          "rateLimit": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.RateLimitSettings"
-              }
-            ],
-            "title": "rate_limit",
-            "description": "Rate limiting configuration"
-          },
-          "sessionDurationHours": {
-            "type": "integer",
-            "title": "session_duration_hours",
-            "format": "int32",
-            "description": "Session configuration Session token lifetime in hours (default: 168 = 7 days)"
-          },
-          "allowWorkspaceSharing": {
-            "type": "boolean",
-            "title": "allow_workspace_sharing",
-            "description": "Access control Allow users to share workspaces"
-          },
-          "allowPublicWorkspaces": {
-            "type": "boolean",
-            "title": "allow_public_workspaces",
-            "description": "Allow publicly accessible workspace URLs"
-          },
-          "updatedAt": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.Timestamp"
-              }
-            ],
-            "title": "updated_at"
-          }
-        },
-        "title": "SecuritySettings",
-        "additionalProperties": false,
-        "description": "SecuritySettings contains security-related configuration"
+        "title": "SendTestAlertRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.SendTestAlertResponse": {
+        "type": "object",
+        "title": "SendTestAlertResponse",
+        "additionalProperties": false
       },
       "spin.v1.ServiceCost": {
         "type": "object",
@@ -24760,34 +26825,36 @@
         "title": "SetPortAccessResponse",
         "additionalProperties": false
       },
-      "spin.v1.SetRegistrationModeRequest": {
+      "spin.v1.SetSettingsRequest": {
         "type": "object",
         "properties": {
-          "mode": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.RegistrationMode"
-              }
-            ],
-            "title": "mode"
+          "values": {
+            "type": "object",
+            "title": "values",
+            "additionalProperties": {
+              "type": "string",
+              "title": "value"
+            },
+            "description": "The settings to write, by key, as text of each one's type. Only ADMIN settings are taken."
           }
         },
-        "title": "SetRegistrationModeRequest",
+        "title": "SetSettingsRequest",
         "additionalProperties": false
       },
-      "spin.v1.SetRegistrationModeResponse": {
+      "spin.v1.SetSettingsResponse": {
         "type": "object",
         "properties": {
-          "mode": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.RegistrationMode"
-              }
-            ],
-            "title": "mode"
+          "values": {
+            "type": "object",
+            "title": "values",
+            "additionalProperties": {
+              "type": "string",
+              "title": "value"
+            },
+            "description": "Every value in force once written, as GetSettings answers them."
           }
         },
-        "title": "SetRegistrationModeResponse",
+        "title": "SetSettingsResponse",
         "additionalProperties": false
       },
       "spin.v1.SetSnapshotVisibilityRequest": {
@@ -24877,7 +26944,7 @@
           "ref": {
             "type": "string",
             "title": "ref",
-            "description": "In place of value: the ARN of a Secrets Manager secret or a Parameter Store parameter the team\n keeps it in, read as the team (InstallationSettings.team_secrets_role) now and whenever a host\n asks for it."
+            "description": "In place of value: the ARN of a Secrets Manager secret or a Parameter Store parameter the team\n keeps it in, read as the team (the setting team_secrets_role) now and whenever a host\n asks for it."
           }
         },
         "title": "SetTeamSecretRequest",
@@ -24908,18 +26975,32 @@
       "spin.v1.SetWorkspaceBandwidthResponse": {
         "type": "object",
         "properties": {
-          "workspace": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "state": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.Workspace"
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
               }
             ],
-            "title": "workspace"
+            "title": "state"
+          },
+          "bandwidthMbps": {
+            "type": "integer",
+            "title": "bandwidth_mbps",
+            "format": "int32",
+            "description": "Megabits a second each way now in force; zero is unshaped."
           }
         },
         "title": "SetWorkspaceBandwidthResponse",
         "additionalProperties": false,
-        "description": "SetWorkspaceBandwidthResponse is the workspace as recorded, which its host is then sent: a host\n that cannot take the value leaves the machine as it was and is asked again by the next set."
+        "description": "SetWorkspaceBandwidthResponse is the bandwidth as recorded, which its host is then sent: a host\n that cannot take the value leaves the machine as it was and is asked again by the next set. It\n names the workspace and no more of it: the rest of its row - its env - is its owner's (I27)."
       },
       "spin.v1.SetWorkspaceNetworkTagsRequest": {
         "type": "object",
@@ -24991,6 +27072,91 @@
         "title": "SetWorkspaceNetworkWatchResponse",
         "additionalProperties": false
       },
+      "spin.v1.SettingDefinition": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "key"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.SettingType"
+              }
+            ],
+            "title": "type"
+          },
+          "defaultValue": {
+            "type": "string",
+            "title": "default_value",
+            "description": "What is in force where the installation says nothing, as text of the type."
+          },
+          "min": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "min",
+            "format": "int64"
+          },
+          "max": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "title": "max",
+            "format": "int64"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "choices",
+            "description": "The values a STRING setting takes; empty is any."
+          },
+          "reach": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.SettingReach"
+              }
+            ],
+            "title": "reach",
+            "description": "What it touches once saved."
+          },
+          "restart": {
+            "type": "boolean",
+            "title": "restart",
+            "description": "It is read when the control plane starts: a change is in force after its next restart."
+          },
+          "section": {
+            "type": "string",
+            "title": "section",
+            "description": "Which page it is on: general, workspaces, fleet, network, security, registration,\n telemetry, logs, bill, email, storage, installation, control_plane."
+          },
+          "label": {
+            "type": "string",
+            "title": "label",
+            "description": "A few words that name it, and a sentence that says what it does and what its zero means."
+          },
+          "summary": {
+            "type": "string",
+            "title": "summary"
+          },
+          "writer": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.SettingWriter"
+              }
+            ],
+            "title": "writer"
+          }
+        },
+        "title": "SettingDefinition",
+        "additionalProperties": false,
+        "description": "SettingDefinition is one setting of the installation as the code defines it."
+      },
       "spin.v1.SettingReach": {
         "type": "string",
         "title": "SettingReach",
@@ -25002,7 +27168,7 @@
           "SETTING_REACH_NEXT_REQUEST",
           "SETTING_REACH_NEXT_PASS"
         ],
-        "description": "SettingReach is what a saved installation setting touches, and when: each setting declares one\n beside its key (internal/controlplane/settings), so the screen that edits it can say so before\n the save.\n\n- `SETTING_REACH_RUNNING_WORKSPACES`: The workspaces running now, at the control plane's next look at them.\n- `SETTING_REACH_NEW_WORKSPACES`: Workspaces created from now on; those that exist keep what they were made with.\n- `SETTING_REACH_NEXT_HEARTBEAT`: Each runner at its next heartbeat, and the workspaces running on it.\n- `SETTING_REACH_NEXT_REQUEST`: What is asked from now on - a project made, a shell opened, a workspace deleted; what was\n  done before keeps the terms it was done under.\n- `SETTING_REACH_NEXT_PASS`: The next pass of the job that applies it: the autoscaler, the prebuilds' retirement, the\n  collector's read of its policy, the daily look for a release.",
+        "description": "SettingReach is what a saved installation setting touches, and when: each setting's definition\n declares one (internal/controlplane/settings), so the screen that edits it can say so before\n the save.\n\n- `SETTING_REACH_RUNNING_WORKSPACES`: The workspaces running now, at the control plane's next look at them.\n- `SETTING_REACH_NEW_WORKSPACES`: Workspaces created from now on; those that exist keep what they were made with.\n- `SETTING_REACH_NEXT_HEARTBEAT`: Each runner at its next heartbeat, and the workspaces running on it.\n- `SETTING_REACH_NEXT_REQUEST`: What is asked from now on - a project made, a shell opened, a workspace deleted; what was\n  done before keeps the terms it was done under.\n- `SETTING_REACH_NEXT_PASS`: The next pass of the job that applies it: the autoscaler, the prebuilds' retirement, the\n  collector's read of its policy, the daily look for a release.",
         "x-enum-descriptions": [
           "",
           "The workspaces running now, at the control plane's next look at them.",
@@ -25010,6 +27176,48 @@
           "Each runner at its next heartbeat, and the workspaces running on it.",
           "What is asked from now on - a project made, a shell opened, a workspace deleted; what was\n done before keeps the terms it was done under.",
           "The next pass of the job that applies it: the autoscaler, the prebuilds' retirement, the\n collector's read of its policy, the daily look for a release."
+        ]
+      },
+      "spin.v1.SettingType": {
+        "type": "string",
+        "title": "SettingType",
+        "enum": [
+          "SETTING_TYPE_UNSPECIFIED",
+          "SETTING_TYPE_INT",
+          "SETTING_TYPE_BOOL",
+          "SETTING_TYPE_STRING",
+          "SETTING_TYPE_LIST",
+          "SETTING_TYPE_JSON",
+          "SETTING_TYPE_DURATION"
+        ],
+        "description": "SettingType is how a setting's value is written as text, which is how GetSettings answers it\n and SetSettings takes it.\n\n- `SETTING_TYPE_INT`: A whole number in decimal, within the definition's min and max.\n- `SETTING_TYPE_BOOL`: \"true\" or \"false\".\n- `SETTING_TYPE_STRING`: Text; a definition with choices takes only those.\n- `SETTING_TYPE_LIST`: A JSON array of strings.\n- `SETTING_TYPE_JSON`: A JSON document, as the code that reads it defines it.\n- `SETTING_TYPE_DURATION`: A Go duration (\"60s\"); min and max are seconds.",
+        "x-enum-descriptions": [
+          "",
+          "A whole number in decimal, within the definition's min and max.",
+          "\"true\" or \"false\".",
+          "Text; a definition with choices takes only those.",
+          "A JSON array of strings.",
+          "A JSON document, as the code that reads it defines it.",
+          "A Go duration (\"60s\"); min and max are seconds."
+        ]
+      },
+      "spin.v1.SettingWriter": {
+        "type": "string",
+        "title": "SettingWriter",
+        "enum": [
+          "SETTING_WRITER_UNSPECIFIED",
+          "SETTING_WRITER_ADMIN",
+          "SETTING_WRITER_FILE",
+          "SETTING_WRITER_STORE",
+          "SETTING_WRITER_CONTROL_PLANE"
+        ],
+        "description": "SettingWriter is who writes a setting, and so where an administrator changes it.\n\n- `SETTING_WRITER_ADMIN`: SetSettings, and the installation's file seeds it.\n- `SETTING_WRITER_FILE`: The installation's file alone: what whoever made the installation knows, and a change of\n  which the dashboard cannot make whole - the proxy holds the base domain too.\n- `SETTING_WRITER_STORE`: A page of its own, which checks it against the real thing before it is written: the object\n  store, the mail server.\n- `SETTING_WRITER_CONTROL_PLANE`: The control plane, for itself.",
+        "x-enum-descriptions": [
+          "",
+          "SetSettings, and the installation's file seeds it.",
+          "The installation's file alone: what whoever made the installation knows, and a change of\n which the dashboard cannot make whole - the proxy holds the base domain too.",
+          "A page of its own, which checks it against the real thing before it is written: the object\n store, the mail server.",
+          "The control plane, for itself."
         ]
       },
       "spin.v1.ShareProjectRequest": {
@@ -25302,6 +27510,41 @@
         "additionalProperties": false,
         "description": "Span is one operation of a trace, as OpenTelemetry names its parts."
       },
+      "spin.v1.StandbyCost": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "day",
+            "description": "The billed day it is from: its first instant, UTC."
+          },
+          "platform": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.RoleCost"
+            },
+            "title": "platform",
+            "description": "The platform by role, costliest first."
+          },
+          "idleMicros": {
+            "type": "string",
+            "title": "idle_micros",
+            "format": "int64"
+          },
+          "unstoredMicros": {
+            "type": "string",
+            "title": "unstored_micros",
+            "format": "int64"
+          }
+        },
+        "title": "StandbyCost",
+        "additionalProperties": false,
+        "description": "What the installation cost on its last billed day before the reading with nobody's work\n counted: the platform, the runners' capacity no workspace held, and the bucket's bytes no\n workspace keeps. An estimate of a day nobody works: that day is over, the next may be charged\n otherwise, and a day people worked held some of the runners - so it is never said without its\n day (finops.StandbyOf)."
+      },
       "spin.v1.StartAppCreationRequest": {
         "type": "object",
         "properties": {
@@ -25591,6 +27834,52 @@
           "The volume under the workspace is refusing to serve.",
           "The supervisor reports a failing health check."
         ]
+      },
+      "spin.v1.StopUserWorkspaceRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id",
+            "description": "The workspace's id: an administrator names no workspace of somebody else's by its name."
+          },
+          "force": {
+            "type": "boolean",
+            "title": "force",
+            "description": "Give up what only its host has rather than publish it first, as StopWorkspace's force does."
+          },
+          "reason": {
+            "type": "string",
+            "title": "reason",
+            "description": "Why, kept on the audit entry."
+          }
+        },
+        "title": "StopUserWorkspaceRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.StopUserWorkspaceResponse": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state"
+          }
+        },
+        "title": "StopUserWorkspaceResponse",
+        "additionalProperties": false,
+        "description": "The workspace as the stop left it, and no more of it: the rest of its row is its owner's."
       },
       "spin.v1.StopWorkspaceRequest": {
         "type": "object",
@@ -26092,6 +28381,30 @@
         "title": "TeamSecret",
         "additionalProperties": false
       },
+      "spin.v1.TeamWorkspaceCost": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "share": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.CostShare"
+              }
+            ],
+            "title": "share"
+          }
+        },
+        "title": "TeamWorkspaceCost",
+        "additionalProperties": false,
+        "description": "What one of a team's workspaces cost in the month."
+      },
       "spin.v1.TelemetryFlow": {
         "type": "object",
         "properties": {
@@ -26258,6 +28571,118 @@
         "title": "ThirdPartyTermsItem",
         "additionalProperties": false
       },
+      "spin.v1.TimelineActor": {
+        "type": "string",
+        "title": "TimelineActor",
+        "enum": [
+          "TIMELINE_ACTOR_UNSPECIFIED",
+          "TIMELINE_ACTOR_PERSON",
+          "TIMELINE_ACTOR_CONTROL_PLANE",
+          "TIMELINE_ACTOR_HOST"
+        ],
+        "description": "TimelineActor is who or what did what a TimelineEvent says.\n\n- `TIMELINE_ACTOR_PERSON`: A person signed in, named by actor_id.\n- `TIMELINE_ACTOR_CONTROL_PLANE`: The control plane, on its own: a reconciliation, a sweep, a job, a decision nobody asked for.\n- `TIMELINE_ACTOR_HOST`: A host, of itself: it joined, said it was going, lost its stream or came back.",
+        "x-enum-descriptions": [
+          "",
+          "A person signed in, named by actor_id.",
+          "The control plane, on its own: a reconciliation, a sweep, a job, a decision nobody asked for.",
+          "A host, of itself: it joined, said it was going, lost its stream or came back."
+        ]
+      },
+      "spin.v1.TimelineEvent": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.TimelineSource"
+              }
+            ],
+            "title": "source",
+            "description": "The record it is read from, and that record's id there: the evidence a reader opens."
+          },
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "at": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "at"
+          },
+          "actor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.TimelineActor"
+              }
+            ],
+            "title": "actor",
+            "description": "Who or what did it."
+          },
+          "actorId": {
+            "type": "string",
+            "title": "actor_id",
+            "description": "The person, when actor is PERSON: empty for one whose account has since been deleted, and\n the email is what their row says now."
+          },
+          "actorEmail": {
+            "type": "string",
+            "title": "actor_email"
+          },
+          "what": {
+            "type": "string",
+            "title": "what",
+            "description": "What happened, in its source's own words: an audit action (host_state_changed), a workspace\n event type without its prefix (FAILED), a failed job run's job (storage-gc), or for a\n prebuild prebuild_started, prebuild_built or prebuild_failed."
+          },
+          "resourceType": {
+            "type": "string",
+            "title": "resource_type",
+            "description": "What it happened to: an audit entry's resource_type and id (workspace, host, settings, job by\n its name), the workspace of a workspace event, the job of a run, the project of a prebuild."
+          },
+          "resourceId": {
+            "type": "string",
+            "title": "resource_id"
+          },
+          "resourceName": {
+            "type": "string",
+            "title": "resource_name",
+            "description": "The name a person knows it by, where the installation still has its row: a workspace's, a\n host's machine's, a team's, a project's. Empty otherwise."
+          },
+          "details": {
+            "type": "string",
+            "title": "details",
+            "description": "The JSON the record keeps, verbatim: an audit entry's details, a workspace event's, a failed\n run's counts and error, a prebuild's ref, commit and error."
+          },
+          "traceId": {
+            "type": "string",
+            "title": "trace_id",
+            "description": "The trace of the request or the run that did it; empty when none was sampled. Whether the\n store kept it is LogService.KeptTraces's to say."
+          }
+        },
+        "title": "TimelineEvent",
+        "additionalProperties": false,
+        "description": "TimelineEvent is one thing that happened, read from the record that keeps it - the audit log, a\n workspace's events, a job's runs, a project's prebuilds - and never a copy of it."
+      },
+      "spin.v1.TimelineSource": {
+        "type": "string",
+        "title": "TimelineSource",
+        "enum": [
+          "TIMELINE_SOURCE_UNSPECIFIED",
+          "TIMELINE_SOURCE_AUDIT",
+          "TIMELINE_SOURCE_WORKSPACE_EVENT",
+          "TIMELINE_SOURCE_JOB_RUN",
+          "TIMELINE_SOURCE_PREBUILD"
+        ],
+        "description": "TimelineSource is the record a TimelineEvent is read from.\n\n- `TIMELINE_SOURCE_AUDIT`: An audit entry (AuditEntry.id).\n- `TIMELINE_SOURCE_WORKSPACE_EVENT`: A workspace's event (WorkspaceEvent.id).\n- `TIMELINE_SOURCE_JOB_RUN`: A job's run that failed (JobRun.run_id).\n- `TIMELINE_SOURCE_PREBUILD`: A project's prebuild (Prebuild.id).",
+        "x-enum-descriptions": [
+          "",
+          "An audit entry (AuditEntry.id).",
+          "A workspace's event (WorkspaceEvent.id).",
+          "A job's run that failed (JobRun.run_id).",
+          "A project's prebuild (Prebuild.id)."
+        ]
+      },
       "spin.v1.UndeleteWorkspaceRequest": {
         "type": "object",
         "properties": {
@@ -26418,45 +28843,6 @@
           }
         },
         "title": "UpdateHostClassResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.UpdateInstallationSettingsRequest": {
-        "type": "object",
-        "properties": {
-          "settings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.InstallationSettings"
-              }
-            ],
-            "title": "settings"
-          },
-          "updateMask": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.FieldMask"
-              }
-            ],
-            "title": "update_mask",
-            "description": "Required: only the named fields of settings are written, so a form that edits one\n setting cannot reset the others to their zero values."
-          }
-        },
-        "title": "UpdateInstallationSettingsRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.UpdateInstallationSettingsResponse": {
-        "type": "object",
-        "properties": {
-          "settings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.InstallationSettings"
-              }
-            ],
-            "title": "settings"
-          }
-        },
-        "title": "UpdateInstallationSettingsResponse",
         "additionalProperties": false
       },
       "spin.v1.UpdateNetworkPolicyRequest": {
@@ -26702,36 +29088,6 @@
           }
         },
         "title": "UpdateResourcePresetResponse",
-        "additionalProperties": false
-      },
-      "spin.v1.UpdateSecuritySettingsRequest": {
-        "type": "object",
-        "properties": {
-          "settings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.SecuritySettings"
-              }
-            ],
-            "title": "settings"
-          }
-        },
-        "title": "UpdateSecuritySettingsRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.UpdateSecuritySettingsResponse": {
-        "type": "object",
-        "properties": {
-          "settings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.SecuritySettings"
-              }
-            ],
-            "title": "settings"
-          }
-        },
-        "title": "UpdateSecuritySettingsResponse",
         "additionalProperties": false
       },
       "spin.v1.UpdateStorageSettingsRequest": {
@@ -27742,6 +30098,52 @@
           "Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n offered when that memory's machine is run by no host (Workspace.memory_machine_gone)."
         ]
       },
+      "spin.v1.WorkspaceAgentThreads": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "workspaceName": {
+            "type": "string",
+            "title": "workspace_name"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state"
+          },
+          "projectId": {
+            "type": "string",
+            "title": "project_id",
+            "description": "Empty for a workspace that opened no project."
+          },
+          "projectName": {
+            "type": "string",
+            "title": "project_name"
+          },
+          "environmentId": {
+            "type": "string",
+            "title": "environment_id",
+            "description": "As ListAgentThreadsResponse.environment_id: the first part of a thread's page."
+          },
+          "threads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.AgentThread"
+            },
+            "title": "threads",
+            "description": "Newest first."
+          }
+        },
+        "title": "WorkspaceAgentThreads",
+        "additionalProperties": false,
+        "description": "WorkspaceAgentThreads is one workspace's chats with what a rail names it by: the workspace, its\n state, and the project it opened."
+      },
       "spin.v1.WorkspaceAttempt": {
         "type": "object",
         "properties": {
@@ -27839,6 +30241,61 @@
         "title": "WorkspaceCost",
         "additionalProperties": false,
         "description": "What one workspace cost in the month, in millionths of the bill's currency, and whose it was on\n the last day it cost anything."
+      },
+      "spin.v1.WorkspaceDeparture": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "workspaceName": {
+            "type": "string",
+            "title": "workspace_name"
+          },
+          "ownerEmail": {
+            "type": "string",
+            "title": "owner_email"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state"
+          },
+          "drain": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.DepartureFate"
+              }
+            ],
+            "title": "drain",
+            "description": "What a drain that moves the host's workspaces (DrainHostRequest.suspend) does to it: MOVES or\n STAYS."
+          },
+          "removal": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.DepartureFate"
+              }
+            ],
+            "title": "removal",
+            "description": "What Host.removal does to it: LOSES_PLACE or HOLDS. UNSPECIFIED where the host has no removal."
+          },
+          "taken": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.DepartureFate"
+              }
+            ],
+            "title": "taken",
+            "description": "What removing the host as taken (RemoveHostRequest.taken) does to it: LOSES_PLACE or STOPS.\n UNSPECIFIED for a host that is revoked, whose revoke already is that."
+          }
+        },
+        "title": "WorkspaceDeparture",
+        "additionalProperties": false,
+        "description": "WorkspaceDeparture is one workspace on a host and what each way of taking the host out does to it."
       },
       "spin.v1.WorkspaceDurability": {
         "type": "object",
@@ -27957,9 +30414,12 @@
           "WORKSPACE_EVENT_TYPE_KEPT",
           "WORKSPACE_EVENT_TYPE_UNRESPONSIVE",
           "WORKSPACE_EVENT_TYPE_REHOMED",
-          "WORKSPACE_EVENT_TYPE_HELD"
+          "WORKSPACE_EVENT_TYPE_HELD",
+          "WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN",
+          "WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY",
+          "WORKSPACE_EVENT_TYPE_OVERSIZED"
         ],
-        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner",
+        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller preset would fit what it used. Its details say what it used, what it\n  holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.",
         "x-enum-descriptions": [
           "",
           "Workspace was created",
@@ -27985,7 +30445,10 @@
           "Somebody kept it awake until a time: no suspension before it",
           "Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back",
           "Its host stopped answering and it was moved to another on its own, giving up what that host had not published",
-          "Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner"
+          "Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner",
+          "An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why",
+          "It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n ceiling. Said, never acted on: nothing resizes a workspace on its own.",
+          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller preset would fit what it used. Its details say what it used, what it\n holds, and that preset. Said, never acted on: nothing resizes a workspace on its own."
         ]
       },
       "spin.v1.WorkspaceFailure": {
@@ -28083,6 +30546,15 @@
           "hostClass": {
             "type": "string",
             "title": "host_class"
+          },
+          "machineType": {
+            "type": "string",
+            "title": "machine_type",
+            "description": "The host's machine as its cloud names it, said when the host joined (Host.machine_type,\n Host.zone): what kind of machine the workspace runs on, and where. Empty for a host that\n joined with no cloud. The machine's id and whether it may be taken back stay an\n administrator's."
+          },
+          "zone": {
+            "type": "string",
+            "title": "zone"
           }
         },
         "title": "WorkspaceHostStatus",
@@ -28177,6 +30649,28 @@
         },
         "title": "WorkspaceLogFieldValuesResponse",
         "additionalProperties": false
+      },
+      "spin.v1.WorkspaceNetworkStatus": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "type": "string",
+            "title": "policy"
+          },
+          "declared": {
+            "type": "boolean",
+            "title": "declared",
+            "description": "declared says a policy of this name exists: the installation's, or a team's."
+          },
+          "installed": {
+            "type": "boolean",
+            "title": "installed",
+            "description": "installed says the workspace's host last reported enforcing a policy of this name. False\n for a workspace on no host."
+          }
+        },
+        "title": "WorkspaceNetworkStatus",
+        "additionalProperties": false,
+        "description": "WorkspaceNetworkStatus is one policy a workspace runs under, and whether it holds there: the\n installation declares it, and the workspace's host reports having installed it. A tag no policy\n is declared for, or one its host has not installed, is what a start is refused over."
       },
       "spin.v1.WorkspacePhase": {
         "type": "string",
@@ -28556,6 +31050,12 @@
       "name": "AuthService"
     },
     {
+      "name": "WorkspaceService"
+    },
+    {
+      "name": "SettingsService"
+    },
+    {
       "name": "AdminService",
       "description": "AdminService manages installation-wide settings, user management, and resource presets\n Only accessible to instance administrators --- Installation Settings ---"
     },
@@ -28580,16 +31080,10 @@
     },
     {
       "name": "ProjectService",
-      "description": "ProjectService is the installation's projects (spin#720): a repository and the shape of the\n workspace that opens it (CreateWorkspaceRequest.project_id). Anybody signed in makes one where\n the installation lets everybody (InstallationSettings.project_creation), and is its first admin.\n A project is seen by everybody while it is shared with everyone, and otherwise by its admins and\n whom it is shared with; the instance's admins see and administer every one. Whoever sees one\n opens workspaces from it, in a team of theirs."
+      "description": "ProjectService is the installation's projects (spin#720): a repository and the shape of the\n workspace that opens it (CreateWorkspaceRequest.project_id). Anybody signed in makes one where\n the installation lets everybody (the setting project_creation), and is its first admin.\n A project is seen by everybody while it is shared with everyone, and otherwise by its admins and\n whom it is shared with; the instance's admins see and administer every one. Whoever sees one\n opens workspaces from it, in a team of theirs."
     },
     {
       "name": "RunnerTokenService"
-    },
-    {
-      "name": "WorkspaceService"
-    },
-    {
-      "name": "SettingsService"
     },
     {
       "name": "SetupService",

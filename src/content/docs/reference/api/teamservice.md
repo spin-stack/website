@@ -153,6 +153,28 @@ Get team by ID or path
 | `team` | [Team](/reference/api/types/#team) |  |
 | `currentUserRole` | [TeamRole](/reference/api/types/#teamrole) | Role of the requesting user in this team |
 
+## GetTeamCosts
+
+`POST /spin.v1.TeamService/GetTeamCosts`
+
+What the team's workspaces cost in the month in progress, each and summed, for the team's admins: a member reads their own workspace's (WorkspaceService.GetWorkspaceCost) and nobody else's. A workspace is the team's whose it was on the last day it cost anything; a team below this one is not counted in it.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `month` | `Timestamp` | The month in progress: its first instant, UTC. |
+| `readAt` | `Timestamp` | When the bill was last read; unset where it never was - an installation with no bill scope - and then nothing below is known and nothing is to be drawn. |
+| `currency` | string | ISO 4217; every amount here is in millionths of it. |
+| `total` | [CostShare](/reference/api/types/#costshare) | Its workspaces, summed. |
+| `workspaces` | list of [TeamWorkspaceCost](/reference/api/types/#teamworkspacecost) | Costliest first. |
+
 ## ListIdentityProviders
 
 `POST /spin.v1.TeamService/ListIdentityProviders`
@@ -278,7 +300,7 @@ A team's secrets: what a brokered network rule has the host's egress proxy add t
 | `name` | string | Lower-case letters, digits and dashes, starting with a letter; what a rule names it by. |
 | `value` | string | At most 8 KiB of visible ASCII. Replaces what the name held. |
 | `hosts` | list of string | The exact names the secret may be sent to, 1 to 16: a brokered rule that injects it and names any other host is refused it. |
-| `ref` | string | In place of value: the ARN of a Secrets Manager secret or a Parameter Store parameter the team keeps it in, read as the team (InstallationSettings.team_secrets_role) now and whenever a host asks for it. |
+| `ref` | string | In place of value: the ARN of a Secrets Manager secret or a Parameter Store parameter the team keeps it in, read as the team (the setting team_secrets_role) now and whenever a host asks for it. |
 
 **Response**
 

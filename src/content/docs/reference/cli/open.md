@@ -17,8 +17,8 @@ its repository among the projects you see; with more than one, --project says wh
 workspace is made in --team, or your personal team. A repository no project has is one to make a
 project of first ('spin project create').
 
-The workspace is the project's shape, sized by its preset unless --preset names another, and its first access is signed here with a key of your
-keyring. It ends in 'spin ssh' unless --no-connect.
+The workspace is the project's shape, sized by its preset unless --preset names another. It ends
+in 'spin ssh', which logs in with a key you added ('spin ssh-key add'), unless --no-connect.
 
 Examples:
   spin open https://github.com/spin-stack/qboot
