@@ -22,7 +22,10 @@ runner:
 **The control plane never sees a DEK.** It makes each one without its plaintext, and grants a
 runner the wrapped key with a session that decrypts only that volume's owner's keys, and only
 answered to a NitroTPM attestation document whose measurements are the runner's image's. No
-other role in the account decrypts them, the control plane's included.
+other role in the account decrypts them, the control plane's included. That holds against someone
+who reads the database or the bucket; a control plane running other code could still grant a key to
+a workspace of its own on an attested runner, as
+[What this does not protect](/reference/security/known-gaps/#what-this-does-not-protect) says.
 
 ## Memory snapshots
 
