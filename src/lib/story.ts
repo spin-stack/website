@@ -28,7 +28,7 @@ export const steps: Step[] = [
 	{
 		label: 'Break it',
 		title: 'Let anyone break anything',
-		claim: 'A person or an agent is root in a KVM machine with its own kernel: nothing they do reaches another workspace.',
+		claim: 'A person or an agent is root in a KVM machine with its own kernel, not in a container that shares the host\'s.',
 		feature: 'A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH',
 		commands: [
 			"spin exec demo -- sh -c 'echo hello > /etc/greeting; rm /etc/issue; echo \"# edited\" >> /etc/hosts'",
@@ -37,8 +37,8 @@ export const steps: Step[] = [
 	},
 	{
 		label: 'Diff',
-		title: 'See exactly what changed',
-		claim: 'Every file added, modified or removed between two snapshots, read by a separate machine.',
+		title: 'See what changed',
+		claim: 'The files added, modified or removed between two snapshots, read by a separate machine.',
 		feature: 'A diff of the files that changed between two snapshots',
 		commands: ['spin snapshot diff demo <after-id> --from <clean-id> --under /etc'],
 		output: 'diff.txt',

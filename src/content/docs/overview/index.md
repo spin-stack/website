@@ -16,11 +16,12 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 
 ## Who it is for
 
-- **Teams that run AI agents on real code.** An agent gets a whole machine it can install
-  packages on, run services in, and break. You take a snapshot before it starts, look at the
-  diff when it finishes, and roll back if you do not like the result.
 - **Developers who want a remote machine per task.** Open it in VS Code or over SSH. Stop it
   at the end of the day and its disk is still there the next morning.
+- **Teams that run AI agents on real code.** An agent gets the same whole machine a person
+  does: it can install packages, run services, and break things. You take a snapshot before it
+  starts, look at the diff when it finishes, and roll back if you do not like the result. The
+  pieces made only for agents are built and tested, and the least used of all so far.
 - **Platform and security teams** who need that work to happen in their own account, on their
   own network, with egress they decide and logs they keep.
 
@@ -36,7 +37,7 @@ download anything. Taking a snapshot seals the disk's current layer, so it is fa
 | Reach a service inside | `https://<port>-<workspace>.ws.<your domain>`, private to you until you share it |
 | Hand work to an agent | [API keys with scopes](<feature:API keys for scripts and agents>), and a CLI that prints JSON |
 
-Each is a built feature with the test that proves it on the status page:
+Each is a built feature, with what proves it on the status page:
 [workspaces](/reference/status/#workspaces), [snapshots](/reference/status/#snapshots) and
 [network](/reference/status/#network). See [Workspaces](/concepts/workspaces/) and
 [Snapshots and rollback](/concepts/snapshots/) for the details.
@@ -62,8 +63,8 @@ No. An installation is a handful of EC2 machines, buckets and roles that the mod
 
 ### What does it not do yet?
 
-[Status](/reference/status/) lists every feature with the test that proves it, and what is not
-built. [Limitations](/overview/limitations/) lists what Spinbox does not do by design.
+[Status](/reference/status/) lists every feature with what proves it, says where a test can't
+reach, and lists what is not built. [Limitations](/overview/limitations/) lists what Spinbox does not do by design.
 
 ### How do I report a security problem?
 
@@ -71,6 +72,9 @@ Privately, through a security advisory: see [Reporting a vulnerability](/securit
 
 ## Why it is built this way
 
+- **Parts that already exist.** The disk is QEMU's chain of qcow2 files, the network is Linux
+  namespaces and nftables, the boot is a signed kernel and a verified root. Spinbox's own code is
+  mostly what joins them, which leaves less of it to be wrong.
 - **A virtual machine, not a container.** A container shares the host's kernel with every other
   container. A workspace does not. Code that escapes a process still has to get out of a
   virtual machine, whose QEMU runs under its own user with almost nothing to reach. See
@@ -79,8 +83,8 @@ Privately, through a security advisory: see [Reporting a vulnerability](/securit
   top one, a clone points at the same layers, and a diff compares two of them. None of these
   copies a disk.
 - **Your account, your data.** The control plane, the database, the bucket that holds every
-  disk, the logs, the metrics and the traces all stay in your AWS account. Nothing is sent to a
-  service outside it.
+  disk, the logs, the metrics and the traces all stay in your AWS account. There is no hosted
+  part of Spinbox for any of it to be sent to.
 - **Machines you do not patch.** Every machine boots Spin OS, a read-only image with a
   verified root filesystem. An update replaces the machine with one built from the new
   release. See [Update](/aws/update/).

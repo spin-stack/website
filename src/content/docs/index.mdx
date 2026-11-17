@@ -3,8 +3,8 @@ title: Spinbox
 description: Workspaces in your own AWS account, each a virtual machine built from parts Linux and QEMU already have, with snapshots, rollback and a diff of what changed.
 template: splash
 hero:
-  title: A whole machine per workspace. The sandbox comes with it.
-  tagline: Spinbox gives every workspace, a person's or an agent's, a virtual machine of its own, built from parts Linux and QEMU already have. A snapshot before, with the memory of the running processes; a diff after; the network closed until you open it. All of it in your own AWS account.
+  title: Workspaces for people. A sandbox for agents, as a side effect.
+  tagline: 'Every workspace is a virtual machine of its own, in your own AWS account, built from parts Linux and QEMU already have. Be root and break anything: a snapshot brings it back, running processes and all, a diff shows what changed, and the network stays closed until you open it. Built for people to work in, which is what makes it a good place for an agent too.'
   actions:
     - text: Evaluate Spinbox
       link: overview/evaluate/
@@ -32,7 +32,7 @@ import Story from '../../components/Story.astro';
 Every workspace is a KVM virtual machine with its own kernel, root and a persistent disk. A person or an agent can install anything and break anything inside it. Around it, the QEMU process runs as a user of its own, opens nothing by name and has no network, and each machine sits in a network namespace of its own. What that boundary covers, and what it doesn't yet, is in the [security model](/security/).
 </BentoCard>
 <BentoCard size="wide" icon="diff" title="Inspect: snapshot, diff, roll back" feature="A diff of the files that changed between two snapshots">
-A snapshot before, with the memory of the running processes. Every file added, modified or removed between two snapshots, read by a separate machine. Restore, and the processes are running where they were.
+A snapshot before, with the memory of the running processes. The files added, modified or removed between two snapshots, read by a separate machine. Restore, and the processes are running where they were.
 </BentoCard>
 <BentoCard size="wide" icon="shield" title="Control: closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">
 Egress is closed by default, and policies name what a workspace may reach. A team's secret stays on the host's proxy and never enters the workspace. All of it in your AWS account, where the logs stay too.
@@ -50,7 +50,7 @@ Egress is closed by default, and policies name what a workspace may reach. A tea
 - **Reset in one command.** [A disk goes back to what it was created from](<feature:Reset a disk to what it was created from>), its snapshots kept.
 - **In your AWS account.** [One OpenTofu module installs it](/aws/overview/). There is no hosted version, so your code and your data stay in your account.
 
-## Proof, not promises
+## What's built, and what isn't
 
 <Stats />
 
