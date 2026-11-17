@@ -63,3 +63,10 @@ Three of these protections need the runner's kernel to support them: vsock names
 scheduling and Landlock. A runner says what its kernel keeps when it registers, and a
 production installation places no workspace on one that lacks any; only a development
 installation starts machines anyway. See [Known gaps](/reference/security/known-gaps/).
+
+## What this is, and isn't
+
+Each line above is a mechanism with code and a test behind it, not a promise that nothing gets
+through. A boundary is only as good as the last serious attempt to cross it, and the models that
+run in workspaces keep getting better at finding doors. The open items are on
+[Known gaps](/reference/security/known-gaps/).

@@ -37,7 +37,7 @@ Every machine of an installation boots **Spin OS**, built for one release:
   machine on one that does not match. Only `/var` and `/run` are writable, and nothing runs from `/var`.
 - **The release is inside the image.** It is laid in when the image is built, and each file is
   checked against its signature then. A machine downloads and installs nothing when it boots.
-- **A kernel built for it**, with every driver built in and module loading off once it is up.
+- **A kernel built for it**, with every driver built in and no support for loadable modules at all.
 - **No cloud-init and no SSH.** A machine's user data is two values, its role and where its
   configuration is, which systemd reads. Nothing in the user data runs.
 - **Pinned packages.** Every package is a [Wolfi](https://wolfi.dev) package, pinned by version

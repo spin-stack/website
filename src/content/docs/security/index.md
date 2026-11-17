@@ -7,7 +7,8 @@ reads:
 
 Spinbox runs code its operators do not fully trust, on machines in their own account. Its security
 model starts from that: **a workspace's tenant is root inside it, and may be hostile.** Everything
-else is built so that being root in a workspace gives nothing outside it.
+else is built to keep root in a workspace from reaching anything outside it. The pages below
+describe how, mechanism by mechanism; none of them is a guarantee.
 
 ## What it protects
 
@@ -43,5 +44,11 @@ Spinbox keeps its security rules in a table in its repository, `docs/security/RE
 names the code that keeps it and the test that fails the build when it is broken, and a rule no
 test keeps says so. The site prints that table, [Rules and their gates](/reference/security/rules/),
 and the README's open items, [Known gaps](/reference/security/known-gaps/), from spin itself.
+
+Those rules hold against a workspace, a stolen session or a copied credential. Against the control
+plane itself running someone else's code they mostly do not: it holds every key and decides who
+logs in, and the README says so in
+[What this does not protect](/reference/security/known-gaps/#what-this-does-not-protect). No
+way of doing that is known, and no outside test has looked for one yet.
 
 To report a problem, see [Reporting a vulnerability](/security/reporting/).

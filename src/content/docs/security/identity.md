@@ -83,8 +83,12 @@ policy of the module's own, not by AWS's managed policy, which would let any mac
 parameter in the account.
 
 The machines' metadata service requires **IMDSv2**. No machine runs SSH: a shell on the
-control plane or the proxy is Session Manager, decided by IAM and logged by AWS, and a runner
-takes none.
+control plane or the proxy is Session Manager, decided by IAM and logged by AWS. A runner takes no
+Session Manager session; the one way onto it is
+[a root shell the control plane opens, for a while and with a reason](<feature:A root shell on a runner, for a while and with a reason: the runner emptied first, every session recorded under Object Lock, the runner retired after>).
+Those conditions are the control plane's own code, so they do not hold against a control plane
+running other code: see
+[What this does not protect](/reference/security/known-gaps/#what-this-does-not-protect).
 
 ## What reaches the control plane
 
