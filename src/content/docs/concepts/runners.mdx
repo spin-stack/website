@@ -2,9 +2,9 @@
 title: Runners and hosts
 description: What a runner is, how it joins, how workspaces are placed on it, how runners scale from zero, and what happens when one is lost.
 reads:
-  - "spin:docs/runners.md@v20261110.01"
-  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261110.01"
-  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261110.01"
+  - "spin:docs/runners.md@v20261114.01"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261114.01"
+  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261114.01"
   - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
 ---
 
@@ -47,7 +47,9 @@ workspaces until it is back under 65%.
 
 A preset may name a **host class**, a kind of runner, and its workspaces are placed only on
 runners of that class. An installation the module's current release makes has one class,
-`default`, and every runner is of it.
+`default`, and every runner is of it. A spot class can be set to fall back: when AWS refuses spot
+capacity for its group, the control plane runs the group on demand for 30 minutes, then tries spot
+again.
 
 ## Scaling from zero
 
@@ -56,13 +58,14 @@ a workspace is waiting, and when the last one stopped.
 
 - With no runner up, the first workspace to start waits in *Waiting for a host* while the control
   plane asks for one. It is placed on the runner as soon as it registers.
-- If a workspace has waited longer than a runner takes to start, the control plane adds one.
+- If a workspace has waited ten minutes, and no runner was added in that time, the control plane
+  adds one.
 - When nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it scales the group back to
   none. During the installation's `quiet_hours`, it does so as soon as nothing is running.
 - It never asks for more than `max_runners`.
 
-It never chooses one runner of several to remove: it only goes from none to one, adds one, and
-goes back to none.
+While workspaces run and none waits, a runner that holds nothing only it has, for as long as
+`runner_idle_minutes`, is emptied and given back to the group, one at a time.
 
 ## When a runner goes away
 
