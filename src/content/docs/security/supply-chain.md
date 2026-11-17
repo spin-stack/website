@@ -2,8 +2,8 @@
 title: Supply chain
 description: How a release is built, signed and verified, how Spin OS makes every machine run exactly what the release signed, and what each image is made of.
 reads:
-  - "spin:docs/releases.md@v20261110.01"
-  - "spin:docs/machine.md@v20261110.01"
+  - "spin:docs/releases.md@v20261114.01"
+  - "spin:docs/machine.md@v20261114.01"
 ---
 
 ## Releases are signed
@@ -13,6 +13,8 @@ A release of Spinbox is built from a tag, in one workflow, from a cold cache:
 - **Every file is signed** with Sigstore, by a short-lived certificate that names the release
   workflow at that tag. There is no signing key to hold or leak.
 - **Every signature is verified** in the same run that made it.
+- **A release refuses a commit the tests on real KVM machines have not passed**: those run on
+  `main`'s head every hour, and a commit merged since is released once they pass on it.
 - **Tarballs are the same bytes for the same inputs**: names sorted, times and owners zeroed.
 - Every third-party GitHub Action is pinned by commit, and a lint fails the build otherwise.
 

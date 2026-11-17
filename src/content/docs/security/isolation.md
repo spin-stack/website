@@ -2,8 +2,8 @@
 title: Isolation
 description: "What keeps a workspace from the runner, other workspaces and the cloud: the virtual machine, its confined QEMU, and how disk bytes are parsed."
 reads:
-  - "spin:docs/security/README.md@v20261108.01"
-  - "spin:docs/network/README.md@v20261108.01"
+  - "spin:docs/security/README.md@v20261114.01"
+  - "spin:docs/network/README.md@v20261114.01"
 ---
 
 ## A virtual machine per workspace
@@ -22,7 +22,10 @@ If a workspace escapes into its QEMU process, that process reaches almost nothin
 - It starts in a **network namespace with nothing in it**. It cannot open a connection to the
   runner, another workspace or the network.
 - Its vsock is in `local` mode, so it cannot reach another machine's vsock. The guest answers
-  only on a reserved vsock port, which only the runner binds.
+  only on a reserved vsock port, which only the runner binds. A machine's vsock number names its
+  workspace only while that machine holds it, and a terminal or a port is opened only while the
+  number still names the same workspace, so a number handed to the next machine does not carry
+  the last one's sessions with it.
 - It is born in a **cgroup** with `memory.max` and `pids.max`, and refused if one cannot be made.
 - It has **a core-scheduling cookie of its own** for every thread, so its vCPUs never share a
   physical core's siblings with another machine's, where one could read what the other leaves in
