@@ -61,7 +61,7 @@ These are made for you, and each one has a reason:
 |---|---|
 | Every machine is replaced to update, never patched | Its root filesystem is read-only and verified; a machine runs exactly what the release signed. |
 | The proxy is the only machine the internet reaches | The control plane, the runners and the database take no connection from outside the VPC. |
-| No SSH on any machine | A shell on the control plane or the proxy is AWS Session Manager, decided by IAM and logged by AWS. A runner takes none. |
+| No SSH on any machine | A shell on the control plane or the proxy is AWS Session Manager, decided by IAM and logged by AWS. A runner takes no Session Manager shell; an administrator's root shell on one goes through the control plane, the runner emptied first and the session recorded ([Operations](/admin/operations/#a-root-shell-on-a-runner)). |
 | No NAT gateway | It would cost more than the machines that run all the time. |
 | Runners are spot and start from zero | They are the largest cost, and they only cost while a workspace runs. |
 | Runners join by their IAM role | There is no join token to create, store, rotate or leak. |
