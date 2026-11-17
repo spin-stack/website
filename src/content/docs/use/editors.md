@@ -2,10 +2,11 @@
 title: Editors and SSH
 description: Connect to a workspace with spin ssh, plain ssh, scp and rsync, VS Code Remote-SSH, or the terminal in the dashboard.
 reads:
-  - "spin:cmd/cli/cmd/ssh.go@v20261110.01"
-  - "spin:cmd/cli/cmd/sshconfig.go@v20261110.01"
-  - "spin:cmd/cli/cmd/code.go@v20261110.01"
-  - "spin:cmd/cli/cmd/exec.go@v20261110.01"
+  - "spin:cmd/cli/cmd/ssh.go@v20261114.01"
+  - "spin:cmd/cli/cmd/sshconfig.go@v20261114.01"
+  - "spin:cmd/cli/cmd/code.go@v20261114.01"
+  - "spin:cmd/cli/cmd/exec.go@v20261114.01"
+  - "spin:cmd/cli/remote/openssh.go@v20261114.01"
 ---
 
 Every way into a workspace goes through the installation's relay. You never need network access
@@ -34,6 +35,11 @@ spin ssh api -- -L 8080:localhost:80 # anything after -- goes to ssh
 You are `root`. The CLI carries the connection over a WebSocket to the relay, and SSH itself
 stays end to end between your client and the workspace's `sshd`.
 
+It runs your own `ssh`, which has to be OpenSSH 9.9 or newer: a workspace accepts only the
+post-quantum key exchange `mlkem768x25519-sha256`, so `spin ssh`, `spin ssh-config` and
+`spin code` check your `ssh` first and refuse an older one before asking anything of the
+workspace.
+
 ## Plain `ssh`, `scp` and `rsync`
 
 ```bash
@@ -43,7 +49,9 @@ scp ./notes.txt spin.api:/root/
 rsync -a ./src/ spin.api:/root/src/
 ```
 
-`spin ssh-config` writes `~/.spin/ssh/config` and includes it from `~/.ssh/config`. From then on,
+`spin ssh-config` writes `~/.spin/ssh/config`, with that key exchange in its block, and includes
+it from `~/.ssh/config`; for an older `ssh` it writes nothing, since one would refuse the whole
+file over that line. From then on,
 [any program that runs `ssh` reaches a workspace as the host `spin.<workspace>`](<feature:SSH keys, and plain ssh to spin.%3Cworkspace%3E>). Each connection
 gets a new certificate for your key that is valid for five minutes, so a certificate that leaks
 is useless minutes later; what lasts is the key itself, which stays on your machine.

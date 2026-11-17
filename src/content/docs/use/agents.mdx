@@ -2,10 +2,10 @@
 title: Agents and automation
 description: Give an agent or a CI job a key of its own and a whole machine to work in, and review and undo its work with snapshots, diffs and clones.
 reads:
-  - "spin:cmd/cli/cmd/apikey.go@v20261108.01"
-  - "spin:cmd/cli/cmd/exec.go@v20261108.01"
-  - "spin:cmd/cli/cmd/mcp.go@v20261108.01"
-  - "spin:docs/access.md@v20261108.01"
+  - "spin:cmd/cli/cmd/apikey.go@v20261114.01"
+  - "spin:cmd/cli/cmd/exec.go@v20261114.01"
+  - "spin:cmd/cli/cmd/mcp.go@v20261114.01"
+  - "spin:docs/access.md@v20261114.01"
 ---
 
 import Output from '../../../components/Output.astro';
@@ -49,7 +49,8 @@ Two scopes are apart from the rest. `workspace:exec` [runs commands and reads an
 your workspaces through the API](<feature:A program runs a command and reads and writes files in a workspace through the API, with a key that holds workspace:exec, every call recorded with the key it came on>), as root: a key that holds it is made with your passkey, in the
 dashboard, and every call it makes is in the audit log. `keys:delegate` lets a key make keys of
 its own, for the agents it starts: each holds no more than it does - its scopes, team, projects,
-end, and how many workspaces and cores all of them hold (`--max-workspaces`, `--max-cores`) -
+end, and how many workspaces and cores all of them have on runners at once (`--max-workspaces`,
+`--max-cores`; a stopped workspace counts for neither) -
 and goes when it is revoked. `spin mcp` [serves an agent the API on such a key](<feature:An agent works in workspaces through `spin mcp` on a key delegated to it: never more than the key it came from - scopes, team, projects, end, how many workspaces and cores its tree holds - and revoked with it>):
 see [its reference](/reference/cli/mcp/).
 

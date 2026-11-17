@@ -2,8 +2,8 @@
 title: Your settings
 description: What you set once with spin settings and every workspace of yours applies, and when a workspace is given none of it.
 reads:
-  - "spin:cmd/cli/cmd/settings.go@v20261108.01"
-  - "spin:docs/access.md@v20261108.01"
+  - "spin:cmd/cli/cmd/settings.go@v20261114.01"
+  - "spin:docs/access.md@v20261114.01"
 ---
 
 Your settings are yours, not a workspace's. You save them once, and
