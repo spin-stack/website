@@ -8,9 +8,10 @@ Clone a workspace: its disk, team, project, size, policies and environment, in o
 A long chain is compacted while the workspace runs
 The egress proxy is a process of its own, holding no key of the host's, started again by the runner when it ends
 Watch where a workspace connects, into its logs
-A workspace's identity, signed by its host, for the audiences its owner allows
+A workspace's identity, signed by its host, for the audiences its installation allows
 A team's workspaces run on the installation's hosts
 Registration: open, by allowlist, or closed
 A host that reboots brings its workspaces back
 A workspace's last hour of CPU, memory and network against what it holds, for its owner
 A host serves only the releases it carries
+Chat mode: the dashboard flips to the person's own chats across their workspaces, grouped by project, with the agent full height and a new chat that makes its workspace
