@@ -85,7 +85,9 @@ when a workspace is waiting and none is up, adds another if a workspace has wait
 a runner takes to start, and goes back to none when nothing has run for `runner_idle_minutes`.
 
 A runner joins by proving who it is: it signs an AWS request with its instance role, and the
-control plane asks AWS whose signature it is. No token is created, stored or rotated.
+control plane asks AWS whose signature it is. With it goes a NitroTPM document that says which
+build of Spin OS the machine booted, and the control plane admits only a build it allows (see
+[NitroTPM](/security/nitrotpm/)). No token is created, stored or rotated.
 
 When AWS takes a spot runner back, or the group removes one, the runner **drains**: it
 suspends each workspace, with its memory, to the bucket. Each resumes on another runner where

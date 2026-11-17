@@ -8,13 +8,13 @@ reads:
 ---
 
 Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code,
-installed in your own AWS account. It is built for work where the code that runs is not fully
-trusted - an AI agent on a real repository, a dependency nobody has read - or where you need to
-see what it changed and undo it. [What is Spinbox](/overview/) says what one is made of.
+installed in your own AWS account. It was built as a place to work, and the same machine is a
+good place for code you don't fully trust - an AI agent on a real repository, a dependency nobody
+has read - and for seeing what it changed and undoing it. [What is Spinbox](/overview/) says what one is made of.
 
 Each workspace is its own QEMU/KVM machine, with a kernel of its own, root, a persistent disk and
 SSH. A snapshot keeps a point to come back to, with the running processes if you ask; a diff
-between two snapshots lists every file added, modified or removed; a restore puts the disk, and
+between two snapshots lists the files added, modified or removed; a restore puts the disk, and
 the processes, back. A workspace's network is closed until a policy opens it.
 
 ## What it costs
