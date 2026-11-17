@@ -25,9 +25,11 @@ means the image and `spin_version` disagree: the images the module names are tho
 ## A shell on a machine
 
 No machine runs SSH. The control plane's and the proxy's machines take a shell with Session
-Manager, on the one in service. A runner takes none: its image carries no agent and its role
-grants none, so its serial console, its boot log and its metrics say what it does, and one that
-fails is replaced.
+Manager, on the one in service. A runner takes no Session Manager shell: its image carries no
+agent and its role grants none, so its serial console, its boot log and its metrics say what it
+does, and one that fails is replaced. When a runner has to be looked at from inside, an
+administrator opens [a recorded root shell on it](/admin/operations/#a-root-shell-on-a-runner)
+through the control plane.
 
 ```bash
 aws autoscaling describe-auto-scaling-groups \

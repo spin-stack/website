@@ -27,7 +27,7 @@ default declares a policy that says so, for example `allow: ["0.0.0.0/0"]`, and 
 
 ## Always blocked
 
-Whatever its policies say, a workspace never reaches:
+Whatever its policies say, the host drops a workspace's traffic to:
 
 - private, loopback, link-local and reserved addresses, including the cloud's instance
   metadata service,
