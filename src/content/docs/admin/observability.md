@@ -2,7 +2,7 @@
 title: Observability
 description: The logs, traces and metrics an installation keeps about itself and its workspaces, where they are kept, how long, and how administrators read them.
 reads:
-  - "spin:internal/metricstore/metricstore.go@v20261108.01"
+  - "spin:internal/metricstore/metricstore.go@v20261114.01"
   - "spin-terraform-aws:modules/controlplane/telemetry.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/logging.tf@v20261027.02"
 ---
@@ -68,8 +68,10 @@ minute.
 
 ## What is not there
 
-- **Nothing pages the operator.** Alert rules fire in the installation's Grafana, and no contact
-  point tells anyone. A workspace's owner is emailed when it waits for them.
+- **No pager.** Alert rules fire in the installation's Grafana, whose one contact point is the
+  control plane: it records each firing and resolution once, and emails every administrator who
+  has not turned that kind off, with the rule and its runbook. An alert is an email, nothing
+  louder. A workspace's owner is emailed when it waits for them.
 - The collector accepts OpenTelemetry from whatever its security group lets in: the proxy and the
   runners.
 - AWS keeps its own records outside the installation: the VPC flow log and every machine's boot

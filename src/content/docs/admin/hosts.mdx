@@ -2,8 +2,8 @@
 title: Operating hosts
 description: Drain, activate and revoke runners, see what runs where, replace a runner's machine, and add a runner outside the autoscaling group.
 reads:
-  - "spin:docs/runners.md@v20261110.01"
-  - "spin:cmd/cli/cmd/admin.go@v20261110.01"
+  - "spin:docs/runners.md@v20261114.01"
+  - "spin:cmd/cli/cmd/admin.go@v20261114.01"
   - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
 ---
 
@@ -56,7 +56,13 @@ disk is refused, naming them:
 
 ```bash
 spin admin runner remove <runner-id>
+spin admin runner remove <runner-id> --taken
 ```
+
+`--taken` is for a machine that may be compromised: its credentials are deleted and it is cut off
+before its group is asked anything, and every disk whose key it was given is marked for re-keying,
+as a revoke does. With `--leave-workspaces` as well, it goes even where workspaces' disks are only
+there; each of those runs again only once it is recovered onto another runner.
 
 After a revoke, or when a runner is wedged, terminate its instance without lowering the group's
 size. The group starts another, which joins by its role:

@@ -4,8 +4,8 @@ description: Where to look when an installation does not come up, a workspace wa
 reads:
   - "spin-terraform-aws:outputs.tf@v20261027.02"
   - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
-  - "spin:cmd/cli/cmd/status.go@v20261108.01"
-  - "spin:docs/runbook.md@v20261108.01"
+  - "spin:cmd/cli/cmd/status.go@v20261114.01"
+  - "spin:docs/runbook.md@v20261114.01"
 ---
 
 ## A machine does not come up
@@ -37,6 +37,17 @@ aws autoscaling describe-auto-scaling-groups \
   --output text
 aws ssm start-session --target <instance-id>
 ```
+
+On a runner, when its metrics, logs and console have not answered:
+
+```bash
+spin admin runner list
+spin admin shell open <runner-id> --reason "<why>" --incident
+```
+
+`--incident` opens the shell on the runner as it is, its workspaces still running; without it the
+runner is emptied first. Either way the session is recorded and the runner is retired once the
+shell ends, so it costs the runner.
 
 Spin OS has the tools to look with — `tcpdump`, `strace`, `ss`, `nft`, `conntrack`, `dig`,
 `bpftool`, `htop`, `iostat` — because nothing can be installed on a machine.

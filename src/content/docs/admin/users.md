@@ -2,9 +2,9 @@
 title: Users and teams
 description: How people sign in, who may register, administrators, teams and their roles, API keys, and the audit log.
 reads:
-  - "spin:internal/controlplane/settings/security.go@v20261108.01"
-  - "spin:cmd/cli/cmd/team.go@v20261108.01"
-  - "spin:cmd/cli/cmd/apikey.go@v20261108.01"
+  - "spin:internal/controlplane/settings/registry.go@v20261114.01"
+  - "spin:cmd/cli/cmd/team.go@v20261114.01"
+  - "spin:cmd/cli/cmd/apikey.go@v20261114.01"
 ---
 
 ## Signing in

@@ -2,8 +2,8 @@
 title: Installation settings
 description: "How an installation is configured: the file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal."
 reads:
-  - "spin:configs/spin-example.yaml@v20261110.01"
-  - "spin:internal/controlplane/installconfig/apply.go@v20261110.01"
+  - "spin:configs/spin-example.yaml@v20261114.01"
+  - "spin:internal/controlplane/installconfig/apply.go@v20261114.01"
 ---
 
 An installation's settings live in its database, and an administrator edits all of them in the
@@ -51,13 +51,28 @@ control plane's own test reads.
 On AWS the module adds what it knows itself: the domain, which machines join as runners, and the
 autoscaling settings.
 
-## Settings only the dashboard has
+## Changing a setting
 
-Some settings are not in the file. In **Admin → Security** and **Admin → Settings**:
+Every setting has one definition, and the file, the dashboard and the terminal all read it.
+[`spin admin settings get` lists every setting as it is in force, with where it is changed, and
+`spin admin settings set` changes one](<feature:Every installation setting read and changed from the terminal, by the definitions the dashboard and the file use>):
 
-- **Sign-in providers**: GitHub and OIDC. See [Users and teams](/admin/users/).
+```bash
+spin admin settings get
+spin admin settings set session_duration_hours 72
+```
+
+Most settings can be seeded by the file too. A few are the file's alone, such as the base domain,
+and a few have a page of their own that checks them before they are written, such as the object
+store and the mail server. Among the ones an administrator changes:
+
 - **Session length**: seven days by default, at most fourteen.
-- **Sharing**: whether snapshots may be shared (on by default), and whether ports and snapshots
+- **Sharing**: whether workspaces may be shared (on by default), and whether ports and snapshots
   may be made public (off by default).
 - **Rate limits** on sign-in and on the API.
 - **Telemetry**: which traces and metrics are kept. See [Observability](/admin/observability/).
+- **A root shell on a host**: whether another administrator approves each one, and how long it
+  may stay open. See [Operations](/admin/operations/).
+
+Sign-in providers, GitHub and OIDC, are not settings: they are in **Admin → Security**. See
+[Users and teams](/admin/users/).
