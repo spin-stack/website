@@ -1,6 +1,6 @@
 ---
 title: Agents and automation
-description: Give an agent or a CI job its own API key, let it create workspaces it cannot escape, and use snapshots, diffs and clones to review and undo its work.
+description: Give an agent or a CI job a key of its own and a whole machine to work in, and review and undo its work with snapshots, diffs and clones.
 reads:
   - "spin:cmd/cli/cmd/apikey.go@v20261108.01"
   - "spin:cmd/cli/cmd/exec.go@v20261108.01"
@@ -10,9 +10,11 @@ reads:
 
 import Output from '../../../components/Output.astro';
 
-Spinbox is built for code you do not fully trust, and an agent is the most common author of such
-code. This page shows how to give an agent a workspace, how to limit what it can reach, and how
-to review and undo what it did.
+A workspace is a whole machine made for a person to work in, which is also what makes it a place
+for code you don't fully trust, and an agent writes plenty of that. This page shows how to give an
+agent a workspace, how to limit what it can reach, and how to review and undo what it did. What
+follows is built and tested; it's also the part of Spinbox that has seen the least day-to-day use
+so far.
 
 ## In four calls
 
@@ -76,7 +78,7 @@ without keys](/use/agent-keys/).
 
 ## Review, then keep or undo
 
-The pattern that makes an agent's work safe to accept:
+The pattern for reviewing an agent's work before you accept it:
 
 ```bash
 spin workspace create --name task-142 --from-snapshot <base-snapshot> --wait
@@ -96,7 +98,8 @@ spin snapshot diff task-142 <after> --from <before> --under /srv/app
 
 Every workspace created from one snapshot is a clone of the same layers. Starting ten attempts
 from the same state costs the disk of one, plus what each attempt writes. Each is its own
-machine, with its own kernel, so no attempt sees another.
+machine, with its own kernel, writable layer and network namespace, so attempts share none of
+those.
 
 ## Running commands
 
