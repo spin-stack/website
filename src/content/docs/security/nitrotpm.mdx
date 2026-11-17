@@ -2,10 +2,10 @@
 title: NitroTPM and runner authorization
 description: How OpenTofu, NitroTPM, AWS STS and KMS make a runner prove both its AWS identity and the image it booted before it is trusted.
 reads:
-  - "spin:internal/installation/provider/aws/machine.go@v20261110.01"
-  - "spin:internal/installation/provider/aws/awscp/join.go@v20261110.01"
-  - "spin:internal/installation/provider/aws/attestedkey/attestedkey.go@v20261110.01"
-  - "spin:docs/security/README.md@v20261110.01"
+  - "spin:internal/installation/provider/aws/machine.go@v20261114.01"
+  - "spin:internal/installation/provider/aws/awscp/join.go@v20261114.01"
+  - "spin:internal/installation/provider/aws/attestedkey/attestedkey.go@v20261114.01"
+  - "spin:docs/security/README.md@v20261114.01"
   - "spin-terraform-aws:modules/controlplane/config.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/identity.tf@v20261027.02"
@@ -56,7 +56,9 @@ before issuing runner credentials:
 - The STS role is allowed by `host_join`, and the attested module id is the same EC2 instance that
   STS identified.
 
-The first join records the host as that instance and the build it booted. Every later boot is
+The first join records the host as that instance and the build it booted, and where it is (its
+machine type, zone, region, and whether AWS may reclaim it) as AWS describes the instance, never as
+the host's own registration says. Every later boot is
 admitted again only from the same instance, proving the same build: a machine that joined as
 another host, or proves another build, is not the host that joined. A revoked host stays out
 however it proves who it is.
@@ -74,7 +76,9 @@ to KMS. KMS encrypts its answer to that recipient only if the document's PCRs ma
 
 The same pattern protects the control plane's encryption key: at each start it derives the key from
 KMS using an attested recipient. The key is not stored in the database, in OpenTofu state or in a
-machine image. A control-plane IAM role on a machine that booted an untrusted image is not enough
+machine image. It has versions: a rotation asks the same KMS key for a new secret under a new
+label, so what a rotation retires is a derived key that may have left a machine, while the KMS
+key's private half never leaves KMS. A control-plane IAM role on a machine that booted an untrusted image is not enough
 to obtain it.
 
 ## What this protects against

@@ -2,7 +2,7 @@
 title: Security model
 description: "What Spinbox protects, from whom, and how: isolation, network, data, identity and supply chain, and where to read about each."
 reads:
-  - "spin:docs/security/README.md@v20261108.01"
+  - "spin:docs/security/README.md@v20261114.01"
 ---
 
 Spinbox runs code its operators do not fully trust, on machines in their own account. Its security
@@ -27,8 +27,9 @@ describe how, mechanism by mechanism; none of them is a guarantee.
   Its QEMU runs as its own user, in an empty network namespace and a bounded cgroup, and reaches
   nothing on the host but what it is handed.
 - **Network.** A workspace reaches nothing until a policy allows it, a DNS question for a name the
-  policy does not name included, never reaches the runner's own networks or the cloud's metadata
-  service, and cannot be reached from the network at all.
+  policy does not name included. Its traffic to the runner's own networks and the cloud's metadata
+  service is dropped before any policy is read, and nothing dials into it: what comes in is a
+  session through the proxy, opened from the runner's side.
   See [Network and egress](/concepts/network/) and [Network on AWS](/aws/network/).
 - **[Data and encryption](/security/data/).** Every layer of every disk is encrypted with its
   volume's key before it leaves the runner. Keys are wrapped under a key the database does not

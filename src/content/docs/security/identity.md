@@ -2,8 +2,8 @@
 title: Identity and access
 description: How users, API keys, runners and machines prove who they are, how every request is authorized, and what limits each machine's cloud role.
 reads:
-  - "spin:docs/security/README.md@v20261110.01"
-  - "spin:internal/controlplane/server/middleware/scopes.go@v20261110.01"
+  - "spin:docs/security/README.md@v20261114.01"
+  - "spin:internal/controlplane/server/middleware/scopes.go@v20261114.01"
   - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
 ---
 
@@ -14,7 +14,8 @@ reads:
 - A session lasts **seven days** by default, at most fourteen. The dashboard's session is a
   cookie, and a request that changes something or opens a socket must come from the dashboard's
   own origin.
-- The CLI signs in with a **device code** the user approves in the dashboard.
+- The CLI signs in with a **device code**: it prints a URL and a code, and the user signs in to
+  the dashboard and enters it.
 - Sessions, API keys and tokens are 32 random bytes, stored only as a hash.
 - Sign-in and the API are **rate-limited**.
 
@@ -32,6 +33,12 @@ new endpoint forgets it:
 
 A published port is decided the same way: the owner and the users granted it, each still a member
 of the workspace's team, unless the port is public.
+
+An administrator acts on a workspace that is not theirs only through the procedures that say so,
+each from a session and audited with whose workspace it was: holding it in quarantine, bounding its
+bandwidth, re-keying its disk, stopping it, moving it off a host that is gone (with a reason its
+owner reads on the workspace's history), and reading where it sends. Being an administrator opens
+no session or command in it, no snapshot of its disk and no say over who logs in.
 
 ## API keys
 
