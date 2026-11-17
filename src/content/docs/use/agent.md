@@ -2,10 +2,10 @@
 title: The agent in a workspace
 description: Open T3 Code in a workspace, sign Claude Code and Codex in once, and see what the agent reaches, where its chats live and how it drives other workspaces.
 reads:
-  - "spin:cmd/cli/cmd/agent.go@v20261108.01"
-  - "spin:cmd/cli/cmd/agent_home.go@v20261108.01"
-  - "spin:cmd/cli/cmd/workspace_threads.go@v20261108.01"
-  - "spin:cmd/cli/cmd/workload.go@v20261108.01"
+  - "spin:cmd/cli/cmd/agent.go@v20261114.01"
+  - "spin:cmd/cli/cmd/agent_home.go@v20261114.01"
+  - "spin:cmd/cli/cmd/workspace_threads.go@v20261114.01"
+  - "spin:cmd/cli/cmd/workload.go@v20261114.01"
 ---
 
 A workspace can run an agent UI of its own. [T3 Code runs in the workspace as its agent
