@@ -6,8 +6,9 @@ reads:
 ---
 
 Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code. You
-install it in your own AWS account. It is built for work where the code that runs is not fully
-trusted, or where you need to see what it changed and undo it.
+install it in your own AWS account. It was built as a place to work, and what makes it a good one
+(a whole machine, snapshots, a network closed until you open it) is what makes it a place to run code
+you don't fully trust, an agent's included, and to see what that code changed and undo it.
 
 Each workspace is its own QEMU/KVM machine. It has a kernel of its own, root access, a
 persistent disk and SSH. Its disk is cloned from an image, so creating a workspace does not

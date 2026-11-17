@@ -50,3 +50,23 @@ exist.** Everything below follows from that.
 Tasks run as `go tool task <name>`. spin is private: `task sources` reads it with `SOURCES_TOKEN`
 (`gh auth token` gives one) or git's own credentials. The build needs the Node the workflows
 install; an older one of the same major fails it, saying so.
+
+## Claims and tone
+
+The site and the blog (blog.spinbox.dev, where the reasons and the failures live) describe the same
+project, and hold it to the same rules. The site says what Spinbox is and how to use it; the blog
+says why it is built that way and what went wrong. Link to a post where a page would explain a
+reason, instead of restating it.
+
+- **What a workspace is comes first; the sandbox follows from it.** A workspace is a whole machine,
+  built from parts Linux and QEMU already have, made for a person to work in. That is what makes it
+  a place to run code you don't fully trust, an agent's included. Lead with the machine, not with
+  "sandbox".
+- **No absolute guarantees.** "Nothing reaches the host" is a promise a reader can test and find
+  wanting. Say what the mechanism is (its own user, nothing opened by name, a namespace of its own)
+  and link to the security model and its known gaps. A boundary is described, never vouched for.
+- **Built and tested is not used every day.** A feature with a test behind it is built; say "used
+  day to day" only of what is. The agent features are the least lived-in part today: present them
+  as ready and tested, not as proven in production.
+- **Plain words, no slogans.** Say the verdict, then the reason, in the plainest words that are
+  still exact. A number has a source (`<Value>`, `figures.txt`) like any other.
