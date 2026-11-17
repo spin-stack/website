@@ -2,10 +2,10 @@
 title: Quickstart
 description: Sign in to an installation, create a workspace, take a snapshot, change something, see the diff, and go back.
 reads:
-  - "spin:cmd/cli/cmd/auth.go@v20261108.01"
-  - "spin:cmd/cli/cmd/sshkey.go@v20261108.01"
-  - "spin:cmd/cli/cmd/snapshot.go@v20261108.01"
-  - "spin:cmd/cli/cmd/port.go@v20261108.01"
+  - "spin:cmd/cli/cmd/auth.go@v20261114.01"
+  - "spin:cmd/cli/cmd/sshkey.go@v20261114.01"
+  - "spin:cmd/cli/cmd/snapshot.go@v20261114.01"
+  - "spin:cmd/cli/cmd/port.go@v20261114.01"
 ---
 
 This page uses an installation that already exists. To make one, see
@@ -40,8 +40,8 @@ oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
 spin login --endpoint https://app.<domain>
 ```
 
-The CLI opens the dashboard in your browser and shows a code. Approve the code there, and the
-CLI is signed in. `spin whoami` shows who you are, and [`spin smoke` checks the installation does](<feature:A smoke test of what an installation's API promises, with a workspace of its own>)
+The CLI prints a page's address and a code, and opens the page in your browser where it can. Sign
+in there, from this machine or any other, enter the code, and the CLI is signed in. `spin whoami` shows who you are, and [`spin smoke` checks the installation does](<feature:A smoke test of what an installation's API promises, with a workspace of its own>)
 what this page expects, with a workspace of its own that it erases.
 
 ## 3. Create a workspace

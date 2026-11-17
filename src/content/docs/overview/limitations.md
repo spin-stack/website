@@ -14,14 +14,15 @@ Each bullet here is a limit row of that same list, and the build fails when the 
   install Spinbox. The platform itself is not tied to AWS, but nothing else is packaged or tested.
 - **x86-64 only.** Runners are x86-64 machines with nested virtualization. There are no Arm
   runners.
-- **The CLI runs on Linux x86-64 and macOS Apple silicon.**
+- **The CLI runs on Linux and macOS.** x86-64 and Arm of each; there is no Windows build.
 - **One region, one control plane.** An installation lives in one AWS region. The control plane
   and the proxy are each a single machine; an update replaces them without stopping workspaces,
   but a machine that fails is replaced in minutes, not seconds.
 
 ## Workspaces
 
-- **No GPUs.** There is no way to ask for a runner of a particular kind.
+- **No GPUs.** A preset names the class of runner its workspaces run on, and no class hands a
+  workspace a GPU.
 - **Linux guests only.** Booted with the kernel Spinbox provides.
 - **No IPv6 inside a workspace.** The resolver a workspace uses drops AAAA answers.
 - **TCP only for published ports.**

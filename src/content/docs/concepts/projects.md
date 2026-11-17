@@ -2,10 +2,10 @@
 title: Projects and repositories
 description: How a project ties a repository to the shape of its workspace, and how you open one from a URL, prebuild its refs and connect your GitHub account.
 reads:
-  - "spin:cmd/cli/cmd/project.go@v20261110.01"
-  - "spin:cmd/cli/cmd/project_prebuild.go@v20261110.01"
-  - "spin:cmd/cli/cmd/open.go@v20261110.01"
-  - "spin:cmd/cli/cmd/git.go@v20261110.01"
+  - "spin:cmd/cli/cmd/project.go@v20261114.01"
+  - "spin:cmd/cli/cmd/project_prebuild.go@v20261114.01"
+  - "spin:cmd/cli/cmd/open.go@v20261114.01"
+  - "spin:cmd/cli/cmd/git.go@v20261114.01"
 ---
 
 A project is [a repository and the shape of the workspace that opens it](<feature:Projects of the installation: a repository and the shape of the workspace that opens it, shared with everyone or some>).
@@ -56,8 +56,8 @@ A plain repository URL opens at the project's ref. A workspace can also be
 [opened at a commit or at a pull request, which is checked out as `pr-<n>`](<feature:A workspace opened at a commit or a pull request, checked out as pr-%3Cn%3E>).
 
 The workspace is made in `--team`, or in your personal team, and sized by the project's preset
-unless `--preset` names another. `spin open` ends in `spin ssh`,
-unless you pass `--no-connect`.
+unless `--preset` names another. `spin open` ends in `spin ssh`, which logs in with a key you
+added (`spin ssh-key add`), unless you pass `--no-connect`.
 
 To open a project by its slug instead of a URL:
 

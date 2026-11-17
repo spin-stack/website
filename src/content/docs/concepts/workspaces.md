@@ -2,9 +2,9 @@
 title: Workspaces
 description: What a workspace is, its states, its resources and disk, what runs inside it, and how it is started, stopped, suspended and recovered.
 reads:
-  - "spin:cmd/cli/cmd/workspace.go@v20261110.01"
-  - "spin:docs/reconciliation.md@v20261110.01"
-  - "spin:docs/workspace-filesystem.md@v20261110.01"
+  - "spin:cmd/cli/cmd/workspace.go@v20261114.01"
+  - "spin:docs/reconciliation.md@v20261114.01"
+  - "spin:docs/workspace-filesystem.md@v20261114.01"
 ---
 
 A workspace is a virtual machine that belongs to a person, or to a team. It has its own
@@ -41,8 +41,10 @@ spin workspace create --name retry --from-snapshot <snapshot-id> --wait
 A workspace is [sized by a **preset**](<feature:Resource presets>): its cores, its memory and its free disk. An administrator
 defines the presets (for example `small` and `large`) and marks one as the default. See
 [Installation settings](/admin/configuration/). An installation whose configuration names no
-presets is given one, `default`: 1 core and 512 MB, which grow to what its runner has, on 10 GB
-of free disk.
+presets is given one, `default`: 1 core and 2 GB, which grow to what its runner has, on 10 GB
+of free disk. A preset that starts its workspaces below 2 GB is refused: with less, the guest's own
+out-of-memory killer could take the supervisor with it, and an editor's server needs room beside
+what runs in the workspace.
 
 A preset is fixed, starting at its size and staying there, or it bursts: it starts at a floor
 and may grow up to its size, or up to whatever its runner has room for. A running workspace
