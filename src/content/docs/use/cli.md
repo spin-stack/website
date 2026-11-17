@@ -32,8 +32,10 @@ itself with that release and runs the command again; `spin update` does the same
 spin login --endpoint https://app.<domain>
 ```
 
-The CLI shows a code and opens your browser at the dashboard, where you approve it. It then
-keeps a session token in `~/.spin/config.yaml`. `spin whoami` shows who you are, and
+The CLI prints a URL and a code, and opens the URL in your browser when it can. Sign in there,
+from this machine or any other, and enter the code; the CLI waits until you have, then keeps the
+session in `~/.spin/config.yaml`. Nothing listens on your machine while it waits, and
+`--no-browser` leaves opening the URL to you. `spin whoami` shows who you are, and
 `spin logout` forgets the token.
 
 For a machine with no browser, create an API key in the dashboard (Settings → API Keys) and use

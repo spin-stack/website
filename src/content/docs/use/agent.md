@@ -11,7 +11,8 @@ reads:
 A workspace can run an agent UI of its own. [T3 Code runs in the workspace as its agent
 user](<feature:An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the workspace's Agent tab in the dashboard, which frames the client and carries it over a passkey's session>),
 `spin-agent-t3`, and drives Claude Code and Codex from a browser: threads, checkpoints, and
-switching between them.
+switching between them. It is built and tested, and it is also the part of Spinbox with the least
+day-to-day use so far.
 
 ## Open it
 

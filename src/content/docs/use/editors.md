@@ -45,8 +45,8 @@ rsync -a ./src/ spin.api:/root/src/
 
 `spin ssh-config` writes `~/.spin/ssh/config` and includes it from `~/.ssh/config`. From then on,
 [any program that runs `ssh` reaches a workspace as the host `spin.<workspace>`](<feature:SSH keys, and plain ssh to spin.%3Cworkspace%3E>). Each connection
-gets a new certificate for your key that is valid for five minutes, so there is no long-lived
-credential to leak.
+gets a new certificate for your key that is valid for five minutes, so a certificate that leaks
+is useless minutes later; what lasts is the key itself, which stays on your machine.
 
 It uses the key you name with `-i`, or the first key this machine holds that you have added:
 `~/.ssh`'s, a FIDO2 key's among them, then `ssh-agent`'s. If the machine has none, the CLI makes
