@@ -4,7 +4,7 @@ description: What the internet can reach in an installation, which machine talks
 reads:
   - "spin-terraform-aws:modules/controlplane/network.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/logging.tf@v20261027.02"
-  - "spin:docs/security/traffic.md@v20261108.01"
+  - "spin:docs/security/traffic.md@v20261114.01"
 ---
 
 import Figure from '../../../components/Figure.astro';
@@ -26,7 +26,7 @@ public address is only a way out. A runner has no inbound rule at all. No machin
 
 | From | To | Port | Who the other end is |
 |---|---|---|---|
-| Proxy | Control plane | 8080 | TLS under the installation's CA |
+| Proxy | Control plane | 8080 | TLS under the installation's CA; the request's own credential, and for the calls only a proxy makes, the proxy's token, which it proves again regularly |
 | Runners | Control plane | 8080 | TLS under the installation's CA, and the runner's token |
 | Runners | Proxy (relay) | 443 | The relay's certificate, and a one-time token per session |
 | Proxy, runners | Collector on the control plane | 4317 | Only the security group |

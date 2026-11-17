@@ -2,11 +2,11 @@
 title: Jobs, the bill and the store
 description: What an administrator runs and reads beyond runners, from the control plane's jobs and the month's bill to the store, disk keys and a root shell.
 reads:
-  - "spin:cmd/cli/cmd/admin_jobs.go@v20261110.01"
-  - "spin:cmd/cli/cmd/admin_costs.go@v20261110.01"
-  - "spin:cmd/cli/cmd/admin_storage.go@v20261110.01"
-  - "spin:cmd/cli/cmd/admin_volume.go@v20261110.01"
-  - "spin:cmd/cli/cmd/admin_shell.go@v20261110.01"
+  - "spin:cmd/cli/cmd/admin_jobs.go@v20261114.01"
+  - "spin:cmd/cli/cmd/admin_costs.go@v20261114.01"
+  - "spin:cmd/cli/cmd/admin_storage.go@v20261114.01"
+  - "spin:cmd/cli/cmd/admin_volume.go@v20261114.01"
+  - "spin:cmd/cli/cmd/admin_shell.go@v20261114.01"
 ---
 
 These are the `spin admin` commands that are not about a runner's state. For drain, activate and
@@ -38,15 +38,20 @@ spin admin costs by team
 spin admin costs by owner
 ```
 
-The first form is the cloud's bill by service, what the month is forecast to end at, and its
-budget. It is the bill as the control plane last read it, never the cloud itself. The control
-plane reads only the costs that `bill_scope` names in the
-[configuration file](/reference/configuration/file/): without a scope it reads none.
+The first form starts with the standby: the installation's daily cost with nobody working,
+estimated from the last billed day. Then the cloud's bill by service, what the month is forecast
+to end at, and its budget. It is the bill as the control plane last read it, never the cloud
+itself. The control plane reads only the costs that `bill_scope` names in the
+[configuration file](/reference/configuration/file/): without a scope it reads none, and says so.
 
 `by` shares the month out. The runners are shared by the cores and memory each workspace held,
 and the volumes' bucket by what its volumes kept. What nobody caused is said apart and never
 spread: runner capacity nobody held, bytes no workspace keeps, and the platform's own cost by
-service.
+role and service.
+
+The same estimate reaches the people it concerns:
+[a workspace's owner sees its cost this month and its rate on its page, a team's admins their
+workspaces summed, and a project's admins its workspaces with its prebuilds' storage](<feature:A workspace's cost this month and its rate, as an estimate with its day, for its owner; a team's workspaces summed for its admins, and a project's with its prebuilds' storage for its admins>).
 
 ## The store
 
@@ -81,6 +86,32 @@ spin admin volume rekeys
 the old disk. That destroys the old key, and every snapshot of the disk with it. The workspace
 is anybody's, named by its id, and must be stopped or quarantined. A disk something was cloned from is refused. `rekeys` lists the
 disks being re-keyed, and the ones a revoked host's keys marked for it.
+
+## A workspace that is not yours
+
+An administrator can
+[stop a workspace that is not theirs, move it off a host that is gone, read where it has sent, and
+list the disks hosts refuse](<feature:An administrator stops a workspace that is not theirs, moves it off a lost host with a reason its owner reads on its history, reads where it sends, and lists the disks hosts refuse: each audited>).
+Each is audited.
+
+```bash
+spin admin workspace stop <workspace-id> --reason "<why>"
+spin admin workspace recover <workspace-id> --reason "<why>"
+spin admin workspace egress <workspace-id> --reason "<why>"
+spin admin volume refused
+```
+
+`stop` does what its owner's stop does; `--force` gives up what only its host has rather than
+publish it first. `recover` needs a reason, which its owner reads, with who asked, on the
+workspace's history; run without `--accept-data-loss` it shows the work the old host had not
+published, and changes nothing. `refused` lists every disk its host refuses to serve, why, and
+whose workspace cannot run for it.
+
+## What happened
+
+[The timeline](<feature:A timeline: what happened to a workspace, a runner, a team, a project or the installation, by whom, in one read>),
+in **Admin → Timeline**, reads what happened to a workspace, a runner, a team, a project or the
+installation, and who did it, in one place.
 
 ## A root shell on a runner
 
