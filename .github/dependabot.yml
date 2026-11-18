@@ -4,7 +4,8 @@
 # moves: main's ruleset merges a branch only up to date with it, and "Update branch" or
 # `@dependabot rebase` brings one up when it is merged.
 #
-# The actions the workflow runs, each by its commit, and the site's packages, which pnpm locks.
+# The actions the workflow runs, each by its commit, the site's packages, which pnpm locks, and
+# go-tools, whose commands and versions format the site's tools are built on.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -40,3 +41,19 @@ updates:
         update-types: ["minor", "patch"]
     commit-message:
       prefix: deps
+
+  # go-tools only: the spin-stack Go tooling, moved the week a release of it is made - it is ours,
+  # so no cooldown waits on it. Each release is tagged v0.<YYYYMMDD>.<N>, a module version, which is
+  # what Dependabot reads. Taking the other modules is a change of its own, not this file's.
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: America/Argentina/Buenos_Aires
+    rebase-strategy: disabled
+    allow:
+      - dependency-name: github.com/spin-stack/go-tools
+    commit-message:
+      prefix: go
