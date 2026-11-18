@@ -90,11 +90,13 @@ settings:
   # lost power, or its network, and said nothing. Its workspaces stay where they are until
   # somebody runs `spin workspace recover --accept-data-loss`, which means noticing.
   #
-  # rehome_after_seconds is how long the silence has to last; unset or zero, nothing is ever
-  # moved and this whole thing is off, which is what an installation starts as. A move gives
-  # up whatever the host had not published, so it is not a default.
+  # rehome_after_seconds is how long the silence has to last, the workspace running, starting
+  # or stopping; unset, 300; zero turns this off and a workspace caught mid-start or mid-stop
+  # is failed by the stale sweep instead. Unset, a move happens only when it gives up nothing:
+  # whatever the host had not published is not given up without somebody choosing it.
   #
-  # rehome_max_unpublished_bytes is how much of that this installation gives up on its own.
+  # rehome_max_unpublished_bytes is how much of that this installation gives up on its own;
+  # unset, none.
   # The number is what the silent host last reported it had not sent to the object store -
   # for a host that is gone, what it never will. Over it, the workspace waits for a person.
   # A host that never reported at all also waits: nothing known is not the same as nothing
