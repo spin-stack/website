@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import { rehypeBaseLinks } from './src/lib/base-links.mjs';
 import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
+import { rehypePostLinks } from './src/lib/post-links.mjs';
 import starlightImageZoom from 'starlight-image-zoom';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 import { sidebarTopics } from './src/lib/nav.mjs';
@@ -16,7 +17,7 @@ export default defineConfig({
 	site,
 	base,
 	trailingSlash: 'always',
-	markdown: { rehypePlugins: [rehypeFeatureLinks, [rehypeBaseLinks, { base }]] },
+	markdown: { rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [
 		starlight({
 			title: 'Spinbox',

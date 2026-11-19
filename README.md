@@ -103,6 +103,12 @@ that is not one task (`taskgate`).
   build points it at the row's area on the status page (`src/lib/feature-links.mjs`) and fails on
   a row the board does not have; `task reference:check` also fails on a row that is not built.
   The board is `src/data/features.json`, written by `task reference`.
+- **Why it is built that way is the blog's**, and a page links the post that says it:
+  `[why](<post:the-slug>)`. The build points it at the post on blog.spinbox.dev
+  (`src/lib/post-links.mjs`) and fails on a slug the blog has not published:
+  `src/data/posts.json`, which `task posts` (`tools/posts`) writes from the blog's feed, and the
+  daily sync rewrites. A draft is private, so its slug goes nowhere here. The build reads the file,
+  not the feed; a feed that cannot be read keeps the file as it is.
 - **What Spinbox does and no page says** is `tools/refgen/unsaid.txt`: the built rows of the board
   that no hand-written page links, one a line. It may shrink. `task reference:check` fails on a
   built row that is neither linked nor listed - a feature spin ships reaches a page, or is written

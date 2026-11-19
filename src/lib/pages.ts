@@ -3,6 +3,7 @@ import { value } from './constants';
 import { experimentalMarkdown } from './experimental';
 import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
+import { postHref } from './post-links.mjs';
 import figures from '../data/figures.json';
 import { output } from './output';
 import { generated, published, scenariosMarkdown } from './pricing';
@@ -129,6 +130,8 @@ export function toMarkdown(d: Doc, base: string): string {
 	// The target is in angle brackets, so a row's name may hold a parenthesis; a < or > of the name is
 	// written percent-encoded, as in any link.
 	body = body.replace(/\]\(<feature:([^>]+)>\)/g, (_, name: string) => `](${featureHref(decodeURIComponent(name)).href})`);
+	// A reason's link to the blog is the post's address there.
+	body = body.replace(/\]\(<post:([^>]+)>\)/g, (_, slug: string) => `](${postHref(slug).href})`);
 	body = links(body, base);
 	body = body.replace(/\n{3,}/g, '\n\n');
 	untranslated(d, body);
