@@ -1,10 +1,16 @@
 ---
 title: Cost
-description: "What an installation costs on AWS: the small part that runs all the time, the runners that run only while workspaces do, and the settings that change it."
+description: "What an installation costs on AWS: the part that runs all the time, the runners while workspaces run, the bytes a stopped one keeps, and how to read the bill."
 reads:
   - "spin-terraform-aws:variables.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/variables.tf@v20261027.02"
   - "spin-terraform-aws:modules/runners/variables.tf@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/bucket.tf@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/budget.tf@v20261027.02"
+  - "spin-terraform-aws:bootstrap/cost.tf@v20261027.02"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261114.01"
+  - "spin:internal/controlplane/domain/finops/rate.go@v20261114.01"
+  - "spin:internal/controlplane/domain/bill/job.go@v20261114.01"
 ---
 
 import Scenarios from '../../../components/Scenarios.astro';
@@ -12,66 +18,162 @@ import Value from '../../../components/Value.astro';
 import { generated, published } from '../../../lib/pricing';
 
 An installation has two kinds of cost: a small one that runs all the time, and runners, which
-run only while workspaces do. Prices depend on your region and change; use the
-[AWS Pricing Calculator](https://calculator.aws/) with the sizes below.
+run only while workspaces do. A workspace that is stopped costs only what it keeps in the bucket.
+Prices depend on the region and change; every price here says where and when it was read, and
+the [AWS Pricing Calculator](https://calculator.aws/) has yours.
 
 ## Three months, priced
 
-The module's default machines, on demand, in the regions Spin OS has images in, at the prices
-the AWS pricing page listed on {published} (the record was written on {generated}, and the
-daily sync rewrites it):
+The module's default machines, on demand, in the regions Spin OS has images in. The machines are
+at the prices the AWS pricing page listed on {published} (the record was written on {generated},
+and the daily sync rewrites it); disks, addresses, keys and zones at AWS's price lists of
+2026-11-19:
 
 <Scenarios />
 
-Runners are spot by default, and a spot runner costs a fraction of the on-demand hour shown:
-the calculator has your region's spot price, and `aws ec2 describe-spot-price-history` today's.
-Not in the table: what the volumes bucket holds, at S3 Standard's price per GB a month, and
-what leaves the region, at EC2's price per GB - both depend on what your workspaces do, and the
-calculator has both.
+These are list-price estimates. Runners are spot by default, so a runner usually costs less than
+the on-demand hour these use ([Spot](#spot)). Not in the table: what the buckets hold, the
+logs, and what leaves the region, at EC2's price per GB; they depend on what your workspaces do.
 
-## All the time
+## With nobody working
 
-| Resource | Default size |
-|---|---|
-| Control plane | One machine, [`instance_type`](/reference/terraform/controlplane/#instance_type), which also runs the database |
-| Proxy | One machine, [`proxy_instance_type`](/reference/terraform/controlplane/#proxy_instance_type), and an elastic IP |
-| Route 53 | Two hosted zones, $0.50 a month each |
-| S3 | What the volumes, the database's archive, logs and metric backups hold |
-| CloudWatch | The flow log and the machines' boot logs, <Value name="logRetentionDays" /> |
+| What | Default | List price, us-east-1 and us-west-2 (2026-11-19) |
+|---|---|---|
+| Control plane | One machine, [`instance_type`](/reference/terraform/controlplane/#instance_type), which also runs the database | In the table above |
+| Proxy | One machine, [`proxy_instance_type`](/reference/terraform/controlplane/#proxy_instance_type) | In the table above |
+| Their disks | gp3: the control plane's [`root_volume_gb`](/reference/terraform/controlplane/#root_volume_gb) and the proxy's 20 GB | $0.08 per GB a month |
+| Public IPv4 addresses | Two: the control plane's, and the proxy's elastic IP | $0.005 an hour each |
+| KMS keys | Three: the installation's encryption, identity and volume keys | $1 a month per key version |
+| Route 53 | Two hosted zones | $0.50 a month each |
+| S3 | What the volumes, the database's archive, logs, documents and certificates hold | S3 Standard, $0.023 per GB a month |
+| CloudWatch | The flow log and the machines' boot logs, <Value name="logRetentionDays" /> | Cents a month at a few hosts |
 
-There is no NAT gateway, no load balancer and no interface endpoint.
+There is no NAT gateway, no load balancer and no interface endpoint: every machine has its own
+public address, and the bucket is reached through a gateway endpoint, which is free.
+
+At list price that is the table's first row, before the buckets and the logs. The one
+measurement so far is higher: on a day the module's own install test left an installation
+standing in us-east-1, the region's bill was $2.34 (2026-11-01), about $70 over a month. That day's
+bill may include the test itself, and it was not broken down: one data point, not a figure for
+your installation. Your own is on the [Costs page](#reading-the-bill),
+as the standby.
 
 ## While workspaces run
 
-Runners are large spot machines with local NVMe ([`instance_types`](/reference/terraform/runners/#instance_types)). They are the largest cost, and they
-cost only while they are up:
+Runners are the largest cost, and they cost only while they are up. By default a runner is a
+spot machine with local NVMe, of 32 to 48 vCPUs: a c8id, m8id or r8id 8xlarge or 12xlarge
+([`runner_instance_types`](/reference/terraform/root/#runner_instance_types),
+[`runner_vcpus`](/reference/terraform/root/#runner_vcpus)). Each also has a public IPv4 address
+and a gp3 root disk.
 
-- The control plane starts the first runner when a workspace needs one.
-- It adds another only when a workspace has waited longer than a runner takes to start.
-- It removes them all when nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), and at
-  once during `quiet_hours` when nothing is running.
+[The control plane sizes the runners' group](<feature:Runners start when a workspace waits for one and stop when nothing runs>):
 
-A runner holds many workspaces, so one runner is often enough for a team. `max_runners` caps
-how many can be up.
+- It starts the first runner when a workspace waits for one, and adds another only when a
+  workspace has waited longer than a runner takes to start, up to `max_runners`.
+- When no workspace has run, started or waited for
+  [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it empties the group,
+  and at once during `quiet_hours`.
+- While workspaces run on other runners, it gives back a runner that has held nothing only it
+  has for as long, one at a time.
 
-A workspace nobody uses is suspended, and so is one that runs past the installation's limit, so
-a forgotten workspace does not keep a runner up all night. See
-[Workspaces](/concepts/workspaces/).
+[Runners and hosts](/concepts/runners/#scaling-from-zero) has the details. A workspace nobody uses
+is suspended, and so is one that runs past the installation's limit, so a forgotten workspace
+does not keep a runner up all night ([Workspaces](/concepts/workspaces/)).
+
+How many workspaces fit on one runner is not measured yet. A workspace's share of a runner is
+what it held, not what it used: the control plane divides the runners' cost by the cores and
+memory each workspace held while it ran ([The bill](/admin/operations/#the-bill)). Runner
+capacity nobody held is shown apart, as idle.
+
+### Spot
+
+AWS prices spot by zone and hour. Over the 30 days to 2026-11-19, the default runner types were
+at these prices an hour, against the on-demand list:
+
+| Type | On demand | Spot, us-east-1: median (low to high) | Spot, us-west-2: median (low to high) |
+|---|---|---|---|
+| c8id.8xlarge | $1.77 | $0.53 ($0.34 to $1.06) | $0.61 ($0.47 to $0.89) |
+| c8id.12xlarge | $2.66 | $0.78 ($0.52 to $1.11) | $0.79 ($0.67 to $1.20) |
+| m8id.8xlarge | $2.09 | $0.72 ($0.47 to $1.32) | $0.75 ($0.62 to $1.05) |
+| r8id.8xlarge | $2.66 | $1.00 ($0.67 to $2.13) | $1.02 ($0.77 to $1.43) |
+
+The group asks for all six types the defaults match (the four above, and m8id and r8id 12xlarge), with the price-capacity-optimized strategy, in every
+zone the installation has a subnet in (up to
+[`availability_zones`](/reference/terraform/controlplane/#availability_zones)), and with Capacity
+Rebalancing on; a runner it takes away is held for
+[`drain_seconds`](/reference/terraform/runners/#drain_seconds) while it empties. On 2026-11-19,
+AWS's spot placement score for those six types together was 9 of 10 for one runner in both
+regions, and in 5 of the 9 zones asked one zone at a time. For more runners it held in us-west-2
+(9 at 10 and at 20 runners) and fell in us-east-1 (5 at 10, 2 at 20). AWS gives a low score to
+any request that names fewer than three types, so ask for the set. Scores change from day to day,
+and they say how likely AWS is to start spot capacity, not how long it keeps it.
+
+```bash
+aws ec2 describe-spot-price-history --region us-east-1 --product-descriptions Linux/UNIX \
+  --instance-types c8id.8xlarge c8id.12xlarge --start-time 2026-10-20T00:00:00Z
+aws ec2 get-spot-placement-scores --region us-east-1 --region-names us-east-1 --target-capacity 1 \
+  --instance-types c8id.8xlarge c8id.12xlarge m8id.8xlarge m8id.12xlarge r8id.8xlarge r8id.12xlarge
+```
+
+When AWS has no spot capacity, the group keeps asking for it. A host class can be set to fall
+back instead: the control plane starts the group's new runners on demand for 30 minutes, then asks for spot again;
+runners already started on demand stay until they are given back. It is off for the default
+class and on only where a class turns it on (Admin → Runners), and each switch is in the audit
+log.
+
+[A runner AWS reclaims suspends its workspaces to the bucket](<feature:A cloud's reclaim warning empties the host before the machine goes>)
+within the notice AWS gives, and they resume on another runner
+([When a runner goes away](/concepts/runners/#when-a-runner-goes-away)). Whether a full runner's
+memory fits in that notice is not measured yet.
+
+## A stopped workspace
+
+Once its runner is gone, a stopped or suspended workspace costs only what it keeps in the
+volumes bucket, at S3 Standard's price: $0.023 per GB a month for the first 50 TB, in us-east-1
+and us-west-2 (2026-11-18). A suspended one also keeps its memory checkpoint there, at most its
+whole RAM. Clones share their image's layers, so a hundred workspaces from one image store the
+image once. Its owner sees what keeping it stopped costs a month, on its page.
+
+The bucket keeps every object under Object Lock for
+[`object_lock_days`](/reference/terraform/controlplane/#object_lock_days) and removes it the day
+after. So a deleted workspace is paid for twice over: in the trash, a week by default, with its
+disk; then, once it is erased, its bytes, checkpoints included, for about 31 days more by
+default.
+
+## Reading the bill
+
+The control plane reads the installation's own bill: [the month's costs from Cost Explorer, its
+forecast, and its budget if it has one, every six hours](<feature:The month's bill, its forecast, and what each workspace cost>).
+A day's cost settles a day or two after it ends. `spin admin costs` shows it, starting with the
+standby: the installation's daily cost with nobody working, from the last billed day.
+
+```bash
+spin admin costs
+spin admin costs by workspace
+```
+
+The dashboard's Costs page (Admin) shows the same, and
+[each workspace's owner sees its cost and its rate](<feature:A workspace's cost this month and its rate, as an estimate with its day, for its owner; a team's workspaces summed for its admins, and a project's with its prebuilds' storage for its admins>).
+[Jobs, the bill and the store](/admin/operations/#the-bill) explains how the month is shared out.
+
+The bill is read by the installation's tags, and AWS shows a tag in the bill only once it is a
+cost allocation tag. That is the account's to switch on, once, and AWS refuses to before it has
+seen the tag on a resource: after the installation has run for a day, apply bootstrap with
+`cost_allocation_tags = true`, in one bootstrap per account. Until then the Costs page is empty.
+
+`monthly_budget_usd` makes an AWS Budget over everything the installation tags, and mails
+`budget_emails` at 80% and 100% of what it cost and at 100% of the forecast. Nothing is stopped
+when it is passed.
 
 ## Settings that change the cost
 
 | Setting | Effect |
 |---|---|
-| `runner_idle_minutes` | How long runners stay up after the last workspace stops |
+| `runner_idle_minutes` | How long runners stay up once nothing runs, and how long a spare one is kept |
 | `quiet_hours`, `time_zone` | A window, such as nights, when runners go as soon as nothing runs |
 | `max_runners` | The most runners at once |
 | `runner_spot = false` | On-demand runners: more expensive, never reclaimed |
-| `runner_instance_types` | Smaller or larger runners |
+| `runner_instance_types`, `runner_vcpus` | Smaller or larger runners |
 | `instance_type`, `proxy_instance_type` | The size of the control plane and the proxy |
 | `flow_logs`, `log_retention_days` | What is kept in CloudWatch. Variables of the control plane's module, which the root module leaves at their defaults. |
-
-## Storage
-
-The volumes bucket keeps every object under Object Lock for [`object_lock_days`](/reference/terraform/controlplane/#object_lock_days),
-so a deleted workspace's bytes are paid for until the retention runs out. Clones share their
-image's layers, so a hundred workspaces from one image store the image once.
+| `monthly_budget_usd` | A budget and its alerts; it stops nothing |

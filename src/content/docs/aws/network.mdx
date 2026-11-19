@@ -54,8 +54,9 @@ Port 80 stays open to everyone, for Let's Encrypt.
 ## Why there is no NAT gateway
 
 Every machine has a public address in a public subnet, and reaches S3 through the free gateway
-endpoint. A NAT gateway costs more per month than the machines that run all the time, plus a
-charge for every gigabyte, before any workspace runs. A public address is not an open door: the
+endpoint. A NAT gateway is billed by the hour in each zone that has one, plus a charge for every
+gigabyte, before any workspace runs: one alone costs most of what the two machines that run all
+the time do, and the subnets span several zones. A public address is not an open door: the
 security groups decide what reaches each machine, and for all but the proxy that is nothing from
 outside the VPC.
 

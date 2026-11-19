@@ -9,10 +9,18 @@ import pricing from '../data/pricing.json';
 const hours = 730;
 /** Working hours in a month: eight a day, twenty-two days. */
 const workingHours = 8 * 22;
-// What the installation's smaller parts are billed at, from AWS's pricing pages as of the
-// record's date: the public IPv4 address the proxy's elastic IP holds (an hour), and a Route 53
-// hosted zone (a month, and the installation has two).
+// What the installation's smaller parts are billed at, from AWS's price lists read on 2026-11-19,
+// the same in every region the record prices: a public IPv4 address (an hour; the control plane
+// has one and the proxy's elastic IP is the other), gp3 storage (a GB a month; the control plane's
+// disk is modules/controlplane's root_volume_gb, 40, and the proxy's is 20 in proxy.tf), a KMS key
+// (a key version a month; the installation makes three), and a Route 53 hosted zone (a month, and
+// the installation has two).
 const ipv4Hourly = 0.005;
+const addresses = 2;
+const gp3Monthly = 0.08;
+const diskGB = 40 + 20;
+const kmsKeyMonthly = 1;
+const kmsKeys = 3;
 const zoneMonthly = 0.5;
 const zones = 2;
 
@@ -40,12 +48,13 @@ export function scenarios(): Scenario[] {
 	// The cheapest type a runner may be: what the group's on-demand price is at the least.
 	const runner = pricing.runners[0];
 	const perRegion = (f: (region: string) => number) => Object.fromEntries(regions.map((r) => [r, f(r)]));
-	const idle = (r: string) => (price(r, controlPlane) + price(r, proxy) + ipv4Hourly) * hours + zones * zoneMonthly;
+	const idle = (r: string) =>
+		(price(r, controlPlane) + price(r, proxy) + addresses * ipv4Hourly) * hours + diskGB * gp3Monthly + kmsKeys * kmsKeyMonthly + zones * zoneMonthly;
 	const n = maxRunners;
 	return [
 		{
 			name: 'Nothing running',
-			what: `The control plane (${controlPlane}) and the proxy (${proxy}) all month, the proxy's public IPv4 address, and two Route 53 zones. No runner is up.`,
+			what: `The control plane (${controlPlane}) and the proxy (${proxy}) all month, their ${diskGB} GB of gp3, their two public IPv4 addresses, three KMS keys and two Route 53 zones. No runner is up, and the buckets and logs are left out.`,
 			monthly: perRegion(idle),
 		},
 		{

@@ -22,8 +22,16 @@ admin/recovery.md | five minutes | spin:internal/pgserver/server.go#ArchiveTimeo
 admin/users.md | seven days | spin:internal/controlplane/settings/registry.go has "Key: SessionDurationHours, Type: spinv1.SettingType_SETTING_TYPE_INT, Default: "168""
 admin/users.md | a year | spin:internal/controlplane/server/authserver/apikeys.go#maxAPIKeyLifetime = 8784h
 aws/cost.mdx | Three months | not a figure: a heading naming the period the cost table prices
-aws/cost.mdx | a month | not a figure: the unit of S3's price per GB a month
-aws/cost.mdx | a month | not a figure: the unit of Route 53's price per hosted zone
+aws/cost.mdx | a month | not a figure: the unit of a price (S3's per GB, gp3's per GB, a KMS key, a Route 53 zone) and of the month the estimates add up to
+aws/cost.mdx | an hour | not a figure: the unit of a price (a public IPv4 address, a spot or on-demand instance)
+aws/cost.mdx | 20 GB | spin-terraform-aws:modules/controlplane/proxy.tf has "volume_size = 20"
+aws/cost.mdx | a day | spin-terraform-aws:bootstrap/cost.tf has "an installation has run for a day"
+aws/cost.mdx | 30 days | not held: the window of AWS's spot price history the table was read over, on 2026-11-19
+aws/cost.mdx | 30 minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#OnDemandFor = 30m
+aws/cost.mdx | 50 TB | not held: an AWS fact, the first tier of S3 Standard's price
+aws/cost.mdx | a week | spin:internal/controlplane/settings/registry.go has "DefaultWorkspaceTrashDays = 7"
+aws/cost.mdx | 31 days | spin-terraform-aws:modules/controlplane/bucket.tf has "noncurrent_days = var.object_lock_days + 1"
+aws/cost.mdx | six hours | spin:internal/controlplane/domain/bill/job.go#Interval = 6h
 aws/network.mdx | ten-second | spin-terraform-aws:modules/controlplane/dns.tf has "internal_record_ttl = 10"
 aws/setup.md | a few minutes | not a figure: an estimate of how long Let's Encrypt issuance takes
 aws/setup.md | ten minutes | not a figure: an estimate ("About") of the first bring-up time
