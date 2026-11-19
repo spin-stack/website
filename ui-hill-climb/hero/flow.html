@@ -1,0 +1,350 @@
+<!doctype html>
+<!--
+  The hero as a live system diagram: one frame, no camera, the whole installation in view, and
+  only the data moving - a request, the list, the layers, the boot, the sessions - with names and
+  states the documentation publishes. ?at=<seconds> freezes it there.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+	color-scheme: dark;
+	--page: #0E1421; --card: #151d2c; --card2: #111827; --border: #2c3850; --border2: #3d4c69;
+	--text: #E6EBF2; --muted: #9AA5B8; --dim: #6f7c93; --label: #8FB3C6;
+	--cyan: #6CC6EE; --cyan-d: #27BFE8; --mint: #5FE3D6; --ok: #4CC38A; --no: #EE7BB0; --warn: #E3B04B;
+	--mono: 'IBM Plex Mono', ui-monospace, monospace; --sans: 'IBM Plex Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--page); color: var(--text); font-family: var(--sans); }
+.wrap { width: min(100%, 1600px); margin: 0 auto; padding: 16px; }
+.fit { position: relative; width: 100%; aspect-ratio: 16 / 9; }
+.stage { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; transform-origin: 0 0;
+	background: radial-gradient(60% 55% at 52% 52%, #182540 0%, transparent 70%), var(--page); overflow: hidden; }
+svg.wires { position: absolute; inset: 0; width: 1600px; height: 900px; pointer-events: none; }
+.wire { fill: none; stroke: #5d6f92; stroke-width: 1.3; stroke-dasharray: 3 4; opacity: .55; }
+.wire.live { stroke: var(--cyan); stroke-dasharray: none; opacity: .9; }
+.wire.relay.live { stroke: var(--mint); }
+.wire.hidden { opacity: 0; }
+
+.eyebrow { position: absolute; left: 64px; top: 62px; font: 500 13px/1 var(--mono); letter-spacing: .1em; color: var(--label); text-transform: uppercase; }
+h1 { position: absolute; left: 64px; top: 84px; margin: 0; font: 600 44px/1.15 var(--sans); letter-spacing: -.015em; }
+h1 span { color: var(--cyan); }
+.sub { position: absolute; left: 64px; top: 146px; color: var(--muted); font-size: 17px; }
+.col { position: absolute; font: 500 11.5px/1 var(--mono); letter-spacing: .08em; color: var(--dim); text-transform: uppercase; }
+
+.card { position: absolute; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; transition: border-color .3s, box-shadow .3s; }
+.card.hot { border-color: #5b8fb8; box-shadow: 0 0 0 1px #5b8fb855, 0 0 28px #27bfe81f; }
+.card .k { font: 500 11.5px/1 var(--mono); letter-spacing: .08em; color: var(--label); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+.card .t { font: 500 18px/1.3 var(--sans); margin-top: 8px; }
+.card .m { font: 400 12.5px/1.5 var(--mono); color: var(--muted); margin-top: 6px; }
+.card .m b { color: var(--text); font-weight: 500; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); display: inline-block; margin-right: 7px; vertical-align: 1px; }
+.state { font: 500 11.5px/1 var(--mono); color: var(--muted); }
+.state.on .dot { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.state.ok { color: var(--ok); } .state.ok .dot { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.screen { margin-top: 10px; background: #0A0C10; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font: 400 13px/1.55 var(--mono); color: #C9D1DE; min-height: 54px; }
+.screen .p { color: var(--dim); }
+.screen .root { color: var(--mint); font-weight: 600; }
+.btn { display: inline-block; font: 600 12px/1 var(--sans); color: #fff; background: #1B7DB4; border-radius: 5px; padding: 6px 9px; transition: background .15s, transform .15s; }
+.btn.press { background: #2fa3e0; transform: scale(.96); }
+
+.rows { margin-top: 10px; display: grid; gap: 6px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 8px; font: 400 12.5px/1.3 var(--mono); color: var(--muted); background: var(--card2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; transition: border-color .3s, color .3s, opacity .3s; }
+.row.on { color: var(--text); border-color: #4a6a8f; }
+.row .r { color: var(--dim); }
+.row.ok .r { color: var(--ok); }
+.row.hide { opacity: 0; }
+
+/* the runner: a large machine, with a workspace inside drawn as its jail */
+.jail { position: absolute; border: 1px dashed #4f6a8c; border-radius: 9px; background: #0f1726cc; padding: 12px 14px; transition: border-color .4s, box-shadow .4s, opacity .4s; }
+.jail.sealed { border: 1px solid var(--cyan); box-shadow: 0 0 0 1px #6cc6ee33, 0 0 30px #27bfe822; }
+.attrs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.attr { font: 500 11px/1 var(--mono); color: var(--cyan); border: 1px solid #3e6684; border-radius: 4px; padding: 5px 7px; opacity: 0; transform: translateY(3px); transition: opacity .3s, transform .3s; }
+.attr.on { opacity: 1; transform: none; }
+.disk { margin-top: 12px; display: grid; gap: 4px; }
+.layer { position: relative; height: 22px; border-radius: 5px; background: #1a2436; overflow: hidden; font: 500 11.5px/22px var(--mono); color: var(--muted); padding-left: 9px; }
+.layer i { position: absolute; inset: 0; width: 0; background: linear-gradient(90deg, #1d4f8f, #2F6BE3); opacity: .85; transition: width .5s cubic-bezier(.2,.7,.2,1); }
+.layer.c i { background: linear-gradient(90deg, #127fae, #27BFE8); }
+.layer.w i { background: linear-gradient(90deg, #2d8e86, #5FE3D6); }
+.layer span { position: relative; z-index: 1; }
+.layer.on span { color: #e9f6ff; }
+.console { margin-top: 10px; background: #0A0C10; border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; font: 400 11px/1.6 var(--mono); color: #C9D1DE; height: 100px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+.console div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.console .w { color: var(--cyan-d); }
+.mini { position: absolute; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; font: 400 11.5px/1.4 var(--mono); color: var(--muted); }
+.mini b { color: var(--text); font-weight: 500; display: block; }
+.gate { position: absolute; display: flex; align-items: center; gap: 12px; font-size: 11.5px !important; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font: 400 12px/1.35 var(--mono); color: var(--muted); }
+.gate .bars { display: flex; gap: 3px; }
+.gate .bars i { width: 3px; height: 22px; background: #6f7c93; border-radius: 2px; transition: background .25s, transform .25s; }
+.gate .bars i.no { background: var(--no); }
+.gate .bars i.open { background: var(--ok); transform: scaleY(.25) translateY(-30px); }
+.count { color: var(--text); }
+
+.pill { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); font: 600 11.5px/1 var(--mono); padding: 5px 7px; border-radius: 999px; background: #1d2a44; color: #cfe6ff; border: 1px solid #6CC6EE; box-shadow: 0 0 14px #27bfe855; white-space: nowrap; opacity: 0; pointer-events: none; }
+.pill.mint { border-color: var(--mint); color: #d6fffa; box-shadow: 0 0 14px #5fe3d655; }
+.pill.ok { border-color: var(--ok); color: #d5ffe9; box-shadow: 0 0 14px #4cc38a55; }
+.pill.no { border-color: var(--no); color: #ffd9ea; box-shadow: 0 0 14px #ee7bb055; }
+
+.legend { position: absolute; left: 64px; right: 64px; top: 792px; display: flex; gap: 28px; align-items: center; font: 400 13px/1.3 var(--sans); color: var(--muted); border-top: 1px solid var(--border); padding-top: 18px; }
+.legend .pill { position: static; transform: none; opacity: 1; display: inline-block; margin-right: 8px; box-shadow: none; }
+.legend .line { display: inline-block; width: 26px; border-top: 1.5px dashed #5d6f92; margin-right: 8px; vertical-align: 4px; }
+.legend .end { margin-left: auto; }
+.legend code { font-family: var(--mono); color: var(--text); font-size: 12.5px; }
+.progress { position: absolute; left: 64px; right: 64px; top: 852px; height: 2px; background: var(--border); }
+.progress i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--cyan); }
+.controls { display: flex; gap: 8px; margin-top: 10px; }
+.controls button { font: 500 12px/1 var(--mono); color: var(--text); background: #161E2F; border: 1px solid #34405A; border-radius: 6px; padding: 8px 10px; cursor: pointer; }
+.controls button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="fit" id="fit">
+		<div class="stage" id="stage" role="img" aria-label="An installation in your AWS account: the proxy, the control plane and a runner. A workspace is created, its layers come from the bucket, it boots in a jail of its own, and you open a terminal in it from the browser.">
+			<svg class="wires" viewBox="0 0 1600 900" id="wires"></svg>
+
+			<div class="eyebrow">Spinbox · one installation, in your AWS account</div>
+			<h1>One click, <span>a whole machine of your own</span></h1>
+			<div class="sub">The request, the layers, the boot and the shell: everything that moves between the machines of one installation.</div>
+
+			<div class="col" style="left:64px;top:206px">Who connects</div>
+			<div class="col" style="left:396px;top:206px">Two small machines</div>
+			<div class="col" style="left:730px;top:206px">A runner · a large machine of its own</div>
+			<div class="col" style="left:1350px;top:206px">The bucket · S3</div>
+
+			<!-- who connects -->
+			<div class="card" id="c-browser" style="left:64px;top:228px;width:290px;height:176px">
+				<div class="k"><span>You · the dashboard</span><span class="state" id="s-browser"><span class="dot"></span>idle</span></div>
+				<div class="t" id="browser-title">Create workspace</div>
+				<div class="screen" id="browser-screen"><span class="p">name</span> api &nbsp;<span class="p">preset</span> default<br><span class="btn" id="b-create">Create</span></div>
+			</div>
+			<div class="card" id="c-cli" style="left:64px;top:420px;width:290px;height:124px">
+				<div class="k"><span>An agent · the CLI</span><span class="state" id="s-cli"><span class="dot"></span>waiting</span></div>
+				<div class="screen" id="cli-screen"><span class="p">$</span> spin exec api -- make test</div>
+			</div>
+			<div class="card" id="c-ssh" style="left:64px;top:560px;width:290px;height:124px">
+				<div class="k"><span>Your editor · SSH</span><span class="state" id="s-ssh"><span class="dot"></span>waiting</span></div>
+				<div class="screen" id="ssh-screen"><span class="p">$</span> spin ssh api</div>
+			</div>
+
+			<!-- the two small machines -->
+			<div class="card" id="c-cp" style="left:396px;top:228px;width:290px;height:250px">
+				<div class="k"><span>Control plane</span><span class="state on"><span class="dot"></span>leader</span></div>
+				<div class="m">API · dashboard · <b>PostgreSQL</b></div>
+				<div class="m" style="margin-top:10px;color:var(--label)">WHAT SHOULD RUN</div>
+				<div class="rows">
+					<div class="row" id="r-api"><span>api → runner 1</span><span class="r" id="api-state">—</span></div>
+					<div class="row"><span>web → runner 1</span><span class="r" style="color:var(--ok)">RUNNING</span></div>
+					<div class="row"><span>build → runner 1</span><span class="r" style="color:var(--ok)">RUNNING</span></div>
+				</div>
+			</div>
+			<div class="card" id="c-proxy" style="left:396px;top:520px;width:290px;height:164px">
+				<div class="k"><span>Proxy · Caddy</span><span class="state on"><span class="dot"></span>:443</span></div>
+				<div class="m">The only machine the internet reaches</div>
+				<div class="rows" style="grid-template-columns:1fr 1fr 1fr">
+					<div class="row" style="grid-template-columns:1fr" id="r-dash">dashboard</div>
+					<div class="row" style="grid-template-columns:1fr">ports</div>
+					<div class="row" style="grid-template-columns:1fr" id="r-relay">relay</div>
+				</div>
+				<div class="m" id="relay-note" style="margin-top:8px">relay · <b id="relay-n">0</b> sessions</div>
+			</div>
+
+			<!-- the runner -->
+			<div class="card" id="c-runner" style="left:730px;top:228px;width:580px;height:532px">
+				<div class="k"><span>Runner 1</span><span class="state on"><span class="dot"></span>active</span></div>
+				<div class="m">runner process · opens every connection it has</div>
+				<div class="jail" id="jail" style="left:16px;top:66px;width:410px;height:388px;opacity:.25">
+					<div class="k"><span>Workspace · api · QEMU</span><span class="state" id="s-api"><span class="dot"></span>—</span></div>
+					<div class="attrs">
+						<span class="attr" id="a1">a user of its own</span>
+						<span class="attr" id="a2">nothing opened by name</span>
+						<span class="attr" id="a3">netns of its own · empty</span>
+					</div>
+					<div class="disk">
+						<div class="layer w" id="L4"><i></i><span>api · its own layer · writes</span></div>
+						<div class="layer c" id="L3"><i></i><span>image layer 3 · shared</span></div>
+						<div class="layer" id="L2"><i></i><span>image layer 2 · shared</span></div>
+						<div class="layer" id="L1"><i></i><span>image layer 1 · shared</span></div>
+					</div>
+					<div class="m" style="margin-top:8px">bytes copied <b id="copied">0</b> · writes land on its own layer</div>
+					<div class="console" id="console"></div>
+				</div>
+				<div class="mini" style="left:440px;top:66px;width:124px;height:84px"><b>web</b>a jail of its own<br><span style="color:var(--ok)">RUNNING</span></div>
+				<div class="mini" style="left:440px;top:160px;width:124px;height:84px"><b>build</b>a jail of its own<br><span style="color:var(--ok)">RUNNING</span></div>
+				<div class="gate" id="gate" style="left:16px;top:466px;width:548px">
+					<div class="bars" id="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+					<div><span style="color:var(--text)">host egress</span> · closed until a policy opens it<br>allowed <span class="count" id="allowed">0</span> · denied <span class="count" id="denied">0</span></div>
+				</div>
+			</div>
+
+			<!-- the bucket -->
+			<div class="card" id="c-bucket" style="left:1350px;top:228px;width:186px;height:360px">
+				<div class="k"><span>Bucket</span></div>
+				<div class="m">every disk, durable</div>
+				<div class="rows">
+					<div class="row" id="b1"><span>layer 1</span><span class="r">●</span></div>
+					<div class="row" id="b2"><span>layer 2</span><span class="r">●</span></div>
+					<div class="row" id="b3"><span>layer 3</span><span class="r">●</span></div>
+					<div class="row hide" id="b4"><span>api · sealed</span><span class="r">●</span></div>
+				</div>
+				<div class="m" style="margin-top:12px">a digest only the control plane writes</div>
+			</div>
+			<div class="mini" id="net" style="left:1350px;top:640px;width:186px;height:76px"><b>the internet</b>what a policy names</div>
+
+			<div class="legend">
+				<span><span class="pill">L2</span>a layer from the bucket, checked against its digest and decrypted</span>
+				<span><span class="pill mint">T</span>a session through the relay</span>
+				<span><span class="line"></span>a connection the runner opened</span>
+				<span class="end">No connection is ever opened <code>to</code> a runner.</span>
+			</div>
+			<div class="progress"><i id="prog"></i></div>
+		</div>
+	</div>
+	<div class="controls"><button id="play" type="button">Pause</button><button id="replay" type="button">Replay</button></div>
+</div>
+<script>
+// ---------- layout: the stage is 1600 x 900, scaled to fit ----------
+const fit = document.getElementById('fit'), stageEl = document.getElementById('stage');
+new ResizeObserver(() => { stageEl.style.transform = `scale(${fit.clientWidth / 1600})`; }).observe(fit);
+
+// ---------- wires: each a path in the stage's coordinates ----------
+const svg = document.getElementById('wires');
+const NS = 'http://www.w3.org/2000/svg';
+const W = {};
+function wire(id, d, cls = '') { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('class', 'wire ' + cls); svg.appendChild(p); W[id] = p; return p; }
+const curve = (x1, y1, x2, y2) => { const dx = (x2 - x1) * 0.5; return `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`; };
+wire('browser-proxy', curve(354, 330, 396, 580));
+wire('cli-proxy', curve(354, 482, 396, 602));
+wire('ssh-proxy', curve(354, 622, 396, 624));
+wire('proxy-cp', 'M541,520 L541,478');
+wire('runner-cp', curve(730, 300, 686, 300), 'hidden');
+wire('runner-proxy', curve(730, 640, 686, 640), 'relay hidden');
+wire('bucket-runner', curve(1350, 330, 1310, 350));
+wire('runner-net', curve(1310, 710, 1350, 680));
+wire('relay-jail', curve(730, 640, 762, 600));
+wire('api-bucket', curve(1310, 420, 1350, 470), 'hidden');
+
+// ---------- pills: a label that travels along a wire ----------
+const pills = [];
+function pill(text, cls, route, t0, t1, opts = {}) {
+	const el = document.createElement('div'); el.className = 'pill ' + (cls || ''); el.textContent = text; stageEl.appendChild(el);
+	pills.push({ el, route, t0, t1, ...opts });
+}
+// a route is a list of [wire id, reverse?]
+function at(route, p) {
+	const n = route.length, k = Math.min(n - 1, Math.floor(p * n)), f = p * n - k;
+	const [id, rev] = route[k], path = W[id], L = path.getTotalLength();
+	return path.getPointAtLength(L * (rev ? 1 - f : f));
+}
+
+// ---------- the film: events in seconds ----------
+const END = 24;
+const $ = (id) => document.getElementById(id);
+const cls = (id, c, on) => $(id).classList.toggle(c, on);
+const setState = (id, text, kind) => { const e = $(id); e.className = 'state' + (kind ? ' ' + kind : ''); e.innerHTML = `<span class="dot"></span>${text}`; };
+
+pill('create api', '', [['browser-proxy'], ['proxy-cp']], 0.9, 2.2);
+pill('list', '', [['runner-cp', true]], 3.5, 4.2);
+pill('L1', '', [['bucket-runner', true]], 4.6, 5.3);
+pill('L2', '', [['bucket-runner', true]], 5.5, 6.2);
+pill('L3', '', [['bucket-runner', true]], 6.4, 7.1);
+pill('✕ not in its policy', 'no', [['runner-net']], 14.0, 14.6, { bounce: true });
+pill('✓ allowed', 'ok', [['runner-net']], 14.6, 15.4);
+pill('T', 'mint', [['browser-proxy'], ['runner-proxy', true], ['relay-jail']], 17.0, 18.4);
+pill('E', 'mint', [['cli-proxy'], ['runner-proxy', true], ['relay-jail']], 18.0, 19.4);
+pill('S', 'mint', [['ssh-proxy'], ['runner-proxy', true], ['relay-jail']], 19.2, 20.6);
+pill('seal', '', [['api-bucket']], 21.6, 22.6);
+
+const CONSOLE = [
+	[9.8, '<span class="w">vminitd</span> ready'],
+	[10.4, '<span class="w">vminitd</span> handing off to its own init'],
+	[11.0, '<span class="w">spin-supervisor</span> config over vsock'],
+	[11.6, '<span class="w">spin-supervisor</span> connected to the control plane'],
+	[12.2, 'login:'],
+];
+
+function render(t) {
+	// 1. the click, through the proxy, to the control plane
+	cls('b-create', 'press', t > 0.7 && t < 1.0);
+	setState('s-browser', t < 0.9 ? 'idle' : t < 16.2 ? 'creating' : 'terminal', t >= 0.9 ? 'on' : '');
+	cls('c-proxy', 'hot', (t > 1.4 && t < 2.0) || (t > 17.3 && t < 17.9) || (t > 18.3 && t < 18.9) || (t > 19.5 && t < 20.1));
+	cls('r-dash', 'on', t > 1.4 && t < 2.2);
+	cls('c-cp', 'hot', t > 2.0 && t < 4.4);
+	const apiState = t < 2.2 ? '—' : t < 4.2 ? 'CREATING' : t < 12.4 ? 'STARTING' : 'RUNNING';
+	$('api-state').textContent = apiState; $('api-state').style.color = apiState === 'RUNNING' ? 'var(--ok)' : apiState === '—' ? '' : 'var(--cyan)';
+	cls('r-api', 'on', t > 2.2);
+	// 2. the runner connects to the control plane, and gets the whole list
+	W['runner-cp'].setAttribute('class', 'wire ' + (t < 2.8 ? 'hidden' : t < 3.5 ? '' : 'live'));
+	cls('jail', 'sealed', t > 8.6);
+	$('jail').style.opacity = t < 4.2 ? 0.25 : 1;
+	setState('s-api', apiState === '—' ? '—' : apiState, apiState === 'RUNNING' ? 'ok' : apiState === '—' ? '' : 'on');
+	// 3. the layers, from the bucket
+	[[1, 5.3], [2, 6.2], [3, 7.1]].forEach(([k, tk]) => {
+		const on = t >= tk; $('L' + k).querySelector('i').style.width = on ? '100%' : '0'; cls('L' + k, 'on', on);
+		cls('b' + k, 'on', t > tk - 0.7 && t < tk + 0.2); cls('b' + k, 'ok', on);
+		$('b' + k).querySelector('.r').textContent = on ? '✓' : '●';
+	});
+	cls('c-bucket', 'hot', t > 4.5 && t < 7.2);
+	// 4. the clone: its own layer, nothing copied
+	const w = t < 7.6 ? 0 : t < 21.0 ? 18 : Math.min(62, 18 + (t - 21) * 60);
+	$('L4').querySelector('i').style.width = w + '%'; cls('L4', 'on', t > 7.6);
+	// 5. the jail
+	['a1', 'a2', 'a3'].forEach((id, k) => cls(id, 'on', t > 8.6 + k * 0.35));
+	// 6. the boot
+	$('console').innerHTML = CONSOLE.filter(([tk]) => t >= tk).map(([, l]) => `<div>${l}</div>`).join('');
+	// 7. the egress
+	const bars = [...$('bars').children];
+	bars.forEach((b, k) => { b.classList.toggle('no', k < 6 && t > 14.25 && t < 14.6); b.classList.toggle('open', (k === 6 || k === 7) && t > 14.7 && t < 15.4); });
+	$('denied').textContent = t > 14.35 ? 1 : 0; $('allowed').textContent = t > 15.3 ? 1 : 0;
+	// 8. the relay: opened by the runner
+	W['runner-proxy'].setAttribute('class', 'wire relay ' + (t < 15.6 ? 'hidden' : t < 16.2 ? '' : 'live'));
+	cls('r-relay', 'on', t > 16.2);
+	$('relay-n').textContent = t < 18.4 ? 0 : t < 19.4 ? 1 : t < 20.6 ? 2 : 3;
+	// 9. the sessions
+	if (t < 16.2) { $('browser-title').textContent = 'Create workspace'; $('browser-screen').innerHTML = '<span class="p">name</span> api &nbsp;<span class="p">preset</span> default<br><span class="btn" id="b-create">Create</span>'; }
+	else if (t < 18.4) { $('browser-title').innerHTML = 'api · <span style="color:var(--ok);font-size:14px;font-family:var(--mono)">RUNNING</span>'; $('browser-screen').innerHTML = `<span class="btn${t > 16.6 && t < 16.9 ? ' press' : ''}">Open terminal</span><br><span class="p">${t > 17 ? 'through the relay…' : ''}</span>`; }
+	else { $('browser-title').innerHTML = 'api · terminal'; $('browser-screen').innerHTML = `<span class="p">#</span> whoami<br>${t > 18.9 ? '<span class="root">root</span>' : ''}`; }
+	setState('s-cli', t < 18 ? 'waiting' : t < 19.6 ? 'running' : 'exit 0', t < 18 ? '' : t < 19.6 ? 'on' : 'ok');
+	$('cli-screen').innerHTML = '<span class="p">$</span> spin exec api -- make test' + (t > 19.6 ? '<br><span style="color:var(--ok)">ok</span>' : '');
+	setState('s-ssh', t < 19.2 ? 'waiting' : t < 20.7 ? 'connecting' : 'connected', t < 19.2 ? '' : t < 20.7 ? 'on' : 'ok');
+	$('ssh-screen').innerHTML = '<span class="p">$</span> spin ssh api' + (t > 20.7 ? '<br><span class="p">#</span> <span style="background:var(--cyan-d);display:inline-block;width:8px;height:14px;vertical-align:-2px"></span>' : '');
+	// 10. its layer, sealed and uploaded
+	W['api-bucket'].setAttribute('class', 'wire ' + (t < 21.4 ? 'hidden' : ''));
+	cls('b4', 'hide', t < 22.6); cls('b4', 'ok', t >= 22.6); $('b4').querySelector('.r').textContent = t >= 22.6 ? '✓' : '●';
+	cls('c-runner', 'hot', (t > 3.5 && t < 4.3) || (t > 9.6 && t < 12.4));
+	// pills
+	for (const p of pills) {
+		const u = (t - p.t0) / (p.t1 - p.t0);
+		if (u <= 0 || u >= 1) { p.el.style.opacity = 0; continue; }
+		const q = p.bounce ? (u < 0.6 ? u / 0.6 * 0.55 : 0.55 - (u - 0.6) / 0.4 * 0.4) : u;
+		const pt = at(p.route, q); p.el.style.left = pt.x + 'px'; p.el.style.top = pt.y + 'px';
+		p.el.style.opacity = Math.min(1, u * 8, (1 - u) * 8);
+	}
+	$('prog').style.width = (100 * t / END) + '%';
+}
+
+// ---------- the player ----------
+const Q = new URLSearchParams(location.search);
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let T = Q.has('at') ? Number(Q.get('at')) : still ? END : 0, playing = !Q.has('at') && !still, visible = true, last = performance.now();
+const playBtn = $('play');
+const sync = () => { playBtn.textContent = playing ? 'Pause' : 'Play'; };
+playBtn.onclick = () => { if (T >= END) T = 0; playing = !playing; sync(); };
+$('replay').onclick = () => { T = 0; playing = true; sync(); };
+new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(fit);
+function loop(now) {
+	requestAnimationFrame(loop);
+	const dt = Math.min(0.1, (now - last) / 1000); last = now;
+	if (playing && visible) { T = Math.min(END, T + dt); if (T >= END) { playing = false; sync(); } }
+	render(T);
+}
+document.fonts.ready.then(() => requestAnimationFrame(loop));
+sync();
+</script>
+</body>
+</html>

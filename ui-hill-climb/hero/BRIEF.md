@@ -1,164 +1,100 @@
-# The landing page's hero: the brief
+# Spinbox hero animation brief
 
-What an agent is told to make the hero, as it stands after the prototype in `index.html` beside
-this file. Read `CLAUDE.md` and `README.md` at the repository's root first: their rules hold for an
-animation as for a page.
+Finish and integrate the Spinbox hero animation in this Astro Starlight repository. Before editing,
+read `AGENTS.md`, `README.md`, `flow.html` beside this brief, and `src/components/Hero.astro`.
 
-## The role
+## Goal
 
-A creative director and motion designer for a technical product's site, at the level of Stripe or
-Linear, working in this repository (Astro Starlight).
+After one viewing without sound, a visitor understands that Spinbox puts a whole machine in their
+own AWS account, built from layers that are not copied, shut in and with its network closed, on a
+machine of its own apart from the ones that run the installation, and that they reach it - a
+terminal, a command, SSH - through the one machine the internet reaches.
 
-## The goal
+## The form
 
-Replace the hero's art (`src/components/Hero.astro`, `src/components/Disk.astro`) with a film that
-leaves one idea behind:
+A live system diagram, not an illustration and not a camera move: one frame, the whole
+installation in view from the first second, and only the data moving. The reference is a diagram
+in the style of a product's own interface: cards, mono labels, curved wires, labelled particles
+travelling along them, counters that rise and states that change, a legend that says what a
+particle is, a progress line. What makes it believable is specificity: real names, real states,
+real commands. Photorealism and metaphor were both tried and dropped: a 3D film read as a tech
+demo, and a short cut of a disk and a terminal lost the parts that make the claim credible.
 
-> One click, and in my own AWS account a whole machine is put together for me, layer by layer,
-> and I am root in it from my browser.
+`flow.html` is the implementation base: its layout, its timeline and its words.
 
-A shot that does not serve that is cut.
+## The frame
 
-## Who watches
+Four columns, the runner the widest:
 
-Infrastructure and platform engineers. They distrust marketing; what stops them is the real
-mechanism, drawn well. A metaphor that has to be explained loses them: the blog tried three
-illustration styles for its headers and dropped all of them for that reason. Decide what each
-shot says before deciding how it looks. No Matrix rain, no robots, no glowing brains.
+1. **Who connects** - the dashboard in a browser, an agent with the CLI, an editor over SSH.
+2. **Two small machines** - the control plane (API, dashboard, PostgreSQL; what should run, by
+   workspace and runner) and the proxy (Caddy on :443, the only machine the internet reaches:
+   dashboard, ports, relay).
+3. **A runner, a large machine of its own** - the runner process; the workspace `api` as a jail
+   (QEMU) with its disk drawn as layers; two other workspaces, each a jail of its own; the host's
+   egress.
+4. **The bucket** - the layers, each with its digest; later, the workspace's sealed layer. And
+   below it, the internet, as far as a policy names it.
 
-## The film
+## The timeline (about 24 s)
 
-One timeline, about 34 s, that plays by itself from start to end, once. Times are the prototype's.
-
-**The click (0-5 s).** A laptop; in its browser the dashboard's *Create workspace*; the cursor
-clicks *Create*. The click becomes a line of light that the camera follows along a fibre to a region
-"in your AWS account", into a hall of racks, where one server's slot lights up: a runner with room,
-or one started for it. The camera goes into the slot; light fills the screen.
-
-**Your account (5-7 s).** One region of the account, its outline dashed on the floor, and in it
-three kinds of machine, **each a machine of its own**, standing apart:
-
-- the **proxy**: the only machine the internet reaches;
-- the **control plane**, with its **database** on it, and a panel of what should run;
-- a **runner**: a large machine that runs many workspaces, drawn as an open chassis so what runs
-  in it shows: its cores and memory, its NVMe (the local copy of the layers), the runner process,
-  and other workspaces, each in a jail of its own;
-- and the **bucket**.
-
-Nothing says whether these share a rack or a zone: no rack, no availability zone, is drawn
-around them.
-
-**01 Layers.** The runner connects to the control plane (the line is drawn from the runner: it
-opens every connection it has) and the whole list of what should run on it comes back. The layers
-the runner does not have leave the bucket, pass a ring that turns green (checked against a digest,
-decrypted), light the NVMe and stack up.
-
-**02 Clone.** One new, light layer drops on top: every write lands there; the image under it is
-read-only and shared; "bytes copied 0".
-
-**03 Boundary.** QEMU's jail is drawn edge by edge around the disk: a user of its own, nothing
-opened by name, a network namespace of its own, empty. The preset's cores and memory light on the
-runner; the disks, sockets and `/dev/kvm` go in from the runner process already open.
-
-**04 Boot.** The serial console types the boot in order, and each line drives the room: `vminitd`
-ready (the kernel lights), the hand-off to the workspace's own init, the supervisor's config over
-vsock (a dashed line to the runner process, "not the network"), its disk, the connection to the
-control plane, the SSH certificate authority, the trust store's egress root, `login:`. The host's
-egress is a gate at the runner's edge, closed: one request outside the policy stops at the bars
-and turns them red, one a policy allows goes through a lane that opens, green. At `login:` the
-runner opens its connection to the proxy's relay: none is ever opened to a runner.
-
-**05 Connect.** On the laptop, the workspace's page in the dashboard: `api` RUNNING, and *Open
-terminal*. The click goes over HTTPS to the proxy, through the relay the runner had connected to,
-to the runner and into the machine; the browser's terminal shows `# whoami`, `root`.
-
-**06 Running.** Everything else fades, and the disk becomes the mark.
-
-## The mark
-
-`logos/mark-clear-512.png` in spin-stack/brand, modelled, not approximated: a rounded blue bowl
-(blue at the rim to deep at the base), a navy groove, a cyan-to-mint disk that bulges past the
-bowl, a navy groove, a frost top with a raised rim, a swirl that starts thin at the back left,
-wraps round the front and runs into the middle disk (a thinner stroke outside it), and its shadow.
-The light comes from the left. The prototype builds it from lathed profiles with vertex colours
-and a tapered tube; the film's stack (three image layers and the workspace's layer) turns into it.
-
-## What is true, and where it is said
-
-Every label and caption says only what a page of the site already says, and links to it ("How we
-know"). The film's facts and their pages:
-
-| What the film shows | The page |
+| Time | What moves |
 |---|---|
-| Proxy, control plane, runners, database, bucket; the proxy the only machine the internet reaches; the relay for SSH, a terminal or a port | `overview/how-it-works` (The pieces) |
-| A runner opens every connection it has, to the control plane and to the relay; none is opened to a runner | `overview/how-it-works` |
-| The control plane sends each runner the whole list of what should run on it | `overview/how-it-works` |
-| Layers fetched from the bucket, checked against a digest, decrypted, a chain of qcow2; the NVMe copy | `overview/how-it-works` |
+| 0.9-2.2 | `create api`: browser → proxy → control plane; `api → runner 1` goes `CREATING` |
+| 2.8-4.2 | The runner opens its connection to the control plane; `list` comes back; `STARTING` |
+| 4.6-7.1 | `L1`, `L2`, `L3` from the bucket, each ✓ against its digest; the shared layers fill |
+| 7.6 | The workspace's own layer; bytes copied 0 |
+| 8.6-9.3 | The jail: a user of its own, nothing opened by name, a namespace of its own, empty |
+| 9.8-12.2 | The serial console: `vminitd`, the supervisor over vsock, the control plane, `login:`; `RUNNING` |
+| 14.0-15.4 | The host's egress: one request outside the policy stops (denied 1), one passes (allowed 1) |
+| 15.6-16.2 | The runner opens its connection to the relay |
+| 16.6-20.7 | Three sessions through the relay: `T` Open terminal → `# whoami` → `root`; `E` `spin exec api -- make test` → ok; `S` `spin ssh api` → a prompt |
+| 21.6-22.6 | The workspace's layer is sealed and uploaded: the bucket gains a row |
+
+## Claims and sources
+
+Every visible word is either a name the example invents (`api`, `web`, `build`, `runner 1`) or
+something a published page says. Keep the film's words and steps in a data file with `reads`,
+following `src/lib/story.ts`.
+
+| What the diagram shows | Published page |
+|---|---|
+| Proxy, control plane, runners, database, bucket; the proxy the only machine the internet reaches; the relay for SSH, a terminal or a port | `overview/how-it-works` |
+| A runner opens every connection it has; none is opened to a runner; the control plane sends the whole list | `overview/how-it-works` |
+| Layers fetched from the bucket, checked against a digest only the control plane writes, decrypted | `overview/how-it-works` |
 | A clone copies nothing; the image is shared | `concepts/images` |
+| `CREATING`, `STARTING`, `RUNNING` | `concepts/workspaces` (States) |
 | QEMU's user, nothing by name, no network, a namespace of its own | `security/` |
 | `vminitd`, the supervisor over vsock | `overview/how-it-works`, `concepts/workspaces` |
-| The disk: the image's size plus the preset's free space | `concepts/workspaces` |
-| Egress closed until a policy opens it; the host's egress proxy; the egress root in the trust store | `concepts/network`, `use/agent-keys` |
-| *Open terminal*, a shell in the browser over the relay | `use/editors` (The dashboard's terminal) |
-| A runner with room, or one started for it | `concepts/workspaces` (States) |
+| Egress closed until a policy opens it | `concepts/network` |
+| Open terminal, `spin exec`, `spin ssh` | `use/editors` |
+| A layer sealed and uploaded to the bucket | `overview/how-it-works` (Where your work is stored) |
 
-And the rules around them:
+No number appears that a page does not give: a counter counts what the diagram itself shows
+(sessions, requests), never sizes or times. Keep installation identifiers, addresses, hostnames
+and domains out. A mechanism is described, never vouched for.
 
-- The film's words and steps live in a data file with `reads`, as `src/lib/story.ts` does, not
-  in the component. A number is a `<Value>` or has its line in `tools/refgen/figures.txt`: the
-  film carries none today, on purpose.
-- What a real installation shows (the CLI, a console, the dashboard) helps to understand, never to
-  copy: ids, addresses, host names and domains stay out, and the console lines are representative,
-  in the order a boot prints them.
-- No logo or trade dress of AWS or anyone's. "Your AWS account" and "S3" as words.
-- A mechanism is described, never vouched for: "closed until a policy opens it", never "nothing
-  gets out".
-- Nothing of spin's that the pages do not publish: `task exposure` is the check.
+## Composition and integration
 
-## The player
+- The diagram is a full-width element: it takes the hero's width under the headline, or a section
+  of its own right after it. Decide with the owner before integrating.
+- Under about 900 px wide, the columns stack: who connects, then the two small machines, then the
+  runner, then the bucket; the wires become short vertical joins, and the particles still travel.
+- Build it from HTML and SVG, as `flow.html` is: no WebGL. Its text is real text, so it scales
+  and stays sharp; the colours are the brand's tokens.
+- The final frame is the static state: without scripts, with reduced motion, and while it loads.
+- Play once when it comes into view, pause out of view, hold the final frame. Pause and Replay,
+  keyboard-reachable. Keep `?at=<seconds>` in the prototype for reviewing frames.
+- Use the screens of the brand catalogue for the dashboard's two moments if they read at this
+  size; otherwise keep the simplified card and record the substitution.
 
-- It plays the whole film by itself, once, and holds the last frame.
-- A bar along the bottom: play and pause; chapters (Click, Layers, Clone, Boundary, Boot, Connect,
-  Running) that fill as the film plays and jump to one when pressed; Replay.
-- **Step by step** is optional: when it is on, the film stops at the end of each chapter and
-  *Next* goes on. The arrow keys move between chapters, the space bar pauses.
-- It pauses when the hero leaves the screen.
-- With reduced motion asked for, it opens on the last frame; without scripts, the hero is a still
-  of that frame (the integration's job: the prototype has none).
+## Verification and delivery
 
-## The look
+Play it through in the Astro page on desktop and on a phone; light and dark themes; pause and
+replay; reduced motion; no scripts. Run `go tool task check`. Deliver the changed files, one
+screenshot per row of the timeline, and what is left unverified.
 
-The brand's tokens (`dist/tokens.css` in spin-stack/brand, and the site's): the dark page, one
-accent (the signal the camera follows), the mint for what the machine says back, green and the
-error pink for the egress gate. Lines thin, like a blueprint; a light bloom only on what glows.
-IBM Plex Sans and Mono. The labels are HTML over the canvas, so they stay sharp and are read in
-the page's own type.
-
-## The technique
-
-- three.js r170 (`three.module.min.js` is 171 KB with gzip; the bloom and the label renderer
-  add about 6 KB), loaded after the headline, which stays HTML.
-- The canvas is sized in CSS (`width: 100%; height: 100%`): a canvas is a replaced element, and
-  `inset: 0` alone left it at its drawing buffer's size, twice the stage on a retina screen.
-- Each timeline value is a pure function of the film's time, so a jump, a pause or a step lands
-  on the same frame as playing does. `?at=<seconds>` freezes the prototype there.
-
-## What is left
-
-1. **Integration.** `three` into `package.json` (the install goes through `sfw` in the image the
-   `Dockerfile` makes, never on the host); `Hero.astro` loads the scene without blocking; the
-   words and steps into a data file with `reads`; the still for reduced motion and for no scripts;
-   `Disk.astro` and what only it used retired; `task check` green.
-2. **The real dashboard.** The browser's two screens (*Create workspace*, the workspace's page
-   with *Open terminal*) from the screen catalogue of spin-stack/brand, not drawn by hand.
-3. **Not verified yet.** A phone's width (headless Chrome would not go under about 500 px); the
-   frame rate on a modest GPU; the light theme; the film playing through in real time (it was
-   checked frame by frame with `?at=`).
-
-## Done when
-
-Someone who has never heard of Spinbox watches it once, without sound, and can say: "it makes a
-real machine in my account, from a disk of layers that are not copied, shut in and with the
-network closed, on a machine of its own apart from the ones that run it, and I get a root shell in
-my browser through the one machine the internet reaches." If all they can say is "it looks cool",
-it failed.
+Done when someone who has never heard of Spinbox can say, after one viewing: "it makes a real
+machine in my account, from a disk of shared layers, shut in and with the network closed, on a
+machine apart from the ones that run it, and I get a root shell in my browser through the one
+machine the internet reaches."
