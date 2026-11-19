@@ -8,10 +8,11 @@ import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
 import { sidebarTopics } from './src/lib/nav.mjs';
 import { rehypePostLinks } from './src/lib/post-links.mjs';
 
-// Where the site is served: a GitHub project page is https://<org>.github.io/<repo>/. The
-// content links from the root, and rehypeBaseLinks puts the base in front.
-const site = process.env.SITE_URL || 'https://spin-stack.github.io';
-const base = process.env.BASE_PATH || '/website';
+// Where the site is served: https://spinbox.dev, at its root, and each preview at the root of its
+// own pages.dev address. The content links from the root; under another base (BASE_PATH),
+// rehypeBaseLinks puts it in front.
+const site = process.env.SITE_URL || 'https://spinbox.dev';
+const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
 	site,

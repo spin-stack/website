@@ -16,7 +16,7 @@
  "screens": [
   {
    "id": "home",
-   "path": "/website/",
+   "path": "/",
    "viewports": [
     "desktop",
     "mobile"
@@ -29,7 +29,7 @@
   },
   {
    "id": "how-it-works",
-   "path": "/website/overview/how-it-works/",
+   "path": "/overview/how-it-works/",
    "steps": [
     {
      "wait": 400
@@ -38,7 +38,7 @@
   },
   {
    "id": "snapshots",
-   "path": "/website/concepts/snapshots/",
+   "path": "/concepts/snapshots/",
    "steps": [
     {
      "wait": 400
@@ -47,7 +47,7 @@
   },
   {
    "id": "cost",
-   "path": "/website/aws/cost/",
+   "path": "/aws/cost/",
    "viewports": [
     "desktop"
    ],
@@ -59,7 +59,7 @@
   },
   {
    "id": "evaluate",
-   "path": "/website/overview/evaluate/",
+   "path": "/overview/evaluate/",
    "viewports": [
     "desktop"
    ],
@@ -71,7 +71,7 @@
   },
   {
    "id": "release",
-   "path": "/website/reference/release/",
+   "path": "/reference/release/",
    "viewports": [
     "desktop"
    ],
@@ -86,7 +86,7 @@
   },
   {
    "id": "cli-exec",
-   "path": "/website/reference/cli/exec/",
+   "path": "/reference/cli/exec/",
    "viewports": [
     "desktop",
     "mobile"
