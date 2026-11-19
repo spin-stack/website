@@ -1,11 +1,11 @@
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { type CollectionEntry, getCollection } from 'astro:content';
+import figures from '../data/figures.json';
 import { value } from './constants';
 import { experimentalMarkdown } from './experimental';
 import { featureHref } from './feature-links.mjs';
 import { nav } from './nav.mjs';
-import { postHref } from './post-links.mjs';
-import figures from '../data/figures.json';
 import { output } from './output';
+import { postHref } from './post-links.mjs';
 import { generated, published, scenariosMarkdown } from './pricing';
 import { statusLine } from './reference';
 import { storyMarkdown } from './story';

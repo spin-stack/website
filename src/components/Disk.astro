@@ -121,17 +121,24 @@ const layer = 'M40 0v32a100 26 0 0 0 200 0V0z';
 <script>
 	const STEP_MS = 2200;
 	for (const root of document.querySelectorAll<HTMLElement>('[data-disk]')) {
-		const states: { cmd: string; say: string }[] = JSON.parse(root.querySelector('[data-states]')!.textContent!);
+		const find = <T extends Element>(selector: string): T => {
+			const el = root.querySelector<T>(selector);
+			if (!el) throw new Error(`Disk: ${selector} is missing`);
+			return el;
+		};
+		const states: { cmd: string; say: string }[] = JSON.parse(find('[data-states]').textContent ?? '[]');
 		const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-to]')];
-		const play = root.querySelector<HTMLButtonElement>('[data-play]')!;
-		const cmd = root.querySelector<HTMLElement>('[data-cmd]')!;
-		const say = root.querySelector<HTMLElement>('[data-say]')!;
+		const play = find<HTMLButtonElement>('[data-play]');
+		const cmd = find<HTMLElement>('[data-cmd]');
+		const say = find<HTMLElement>('[data-say]');
 		let timer = 0;
 
 		const set = (n: number) => {
 			root.dataset.state = String(n);
-			buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === n)));
+			buttons.forEach((b, i) => {
+				b.setAttribute('aria-pressed', String(i === n));
+			});
 			cmd.textContent = states[n].cmd;
 			say.textContent = states[n].say;
 		};
@@ -156,14 +163,14 @@ const layer = 'M40 0v32a100 26 0 0 0 200 0V0z';
 			timer = window.setTimeout(run, STEP_MS);
 		};
 
-		buttons.forEach((b, i) =>
+		buttons.forEach((b, i) => {
 			b.addEventListener('click', () => {
 				stop();
 				set(i);
-			}),
-		);
+			});
+		});
 		play.addEventListener('click', () => (timer ? stop() : start()));
-		root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+		find<HTMLElement>('[data-controls]').hidden = false;
 		if (still) {
 			stop();
 			continue;

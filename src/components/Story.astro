@@ -3,7 +3,7 @@
 // step's commands and prints what the diff printed (src/lib/story.ts). It plays by itself once it
 // is in view and a step can be picked; without scripts it is the whole session at once, and with
 // reduced motion asked for a step is shown whole rather than typed.
-import { steps, stepHref, stepOutput } from '../lib/story';
+import { stepHref, stepOutput, steps } from '../lib/story';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const all = steps.flatMap((s) => s.commands).join('\n');
@@ -69,7 +69,9 @@ const plain = esc(steps.map((s) => [...s.commands.map((c) => `$ ${c}`), ...stepO
 			<button type="button" class="ctl" data-replay hidden>Replay</button>
 			<button type="button" class="ctl" data-copy={all}>Copy commands</button>
 		</div>
-		<pre class="screen" tabindex="0" aria-label="The commands and what the diff printed" set:html={screen + '<span class="caret" aria-hidden="true"></span>'} />
+		{/* biome-ignore lint/a11y/noNoninteractiveTabindex: it scrolls, and what scrolls is reached by keyboard (WCAG 2.1.1) */}
+		{/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: the label is what a keyboard user who reaches it is told it is */}
+		<pre class="screen" tabindex="0" aria-label="The commands and what the diff printed" set:html={`${screen}<span class="caret" aria-hidden="true"></span>`} />
 	</div>
 	<!-- What the terminal types, whole, for a screen reader: the typed one is half written for most
 	     of a minute. -->
@@ -86,7 +88,12 @@ const plain = esc(steps.map((s) => [...s.commands.map((c) => `$ ${c}`), ...stepO
 		const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const buttons = [...root.querySelectorAll<HTMLButtonElement>('.step')];
 		const chunks = [...root.querySelectorAll<HTMLElement>('.chunk')];
-		const screen = root.querySelector<HTMLElement>('.screen')!;
+		const find = <T extends Element>(selector: string, from: ParentNode = root): T => {
+			const el = from.querySelector<T>(selector);
+			if (!el) throw new Error(`Story: ${selector} is missing`);
+			return el;
+		};
+		const screen = find<HTMLElement>('.screen');
 		// Each typed command's characters, wrapped so a count of them can be shown.
 		for (const typed of root.querySelectorAll<HTMLElement>('.typed')) {
 			const walker = document.createTreeWalker(typed, NodeFilter.SHOW_TEXT);
@@ -103,8 +110,8 @@ const plain = esc(steps.map((s) => [...s.commands.map((c) => `$ ${c}`), ...stepO
 				t.replaceWith(frag);
 			}
 		}
-		const skip = root.querySelector<HTMLButtonElement>('[data-skip]')!;
-		const replay = root.querySelector<HTMLButtonElement>('[data-replay]')!;
+		const skip = find<HTMLButtonElement>('[data-skip]');
+		const replay = find<HTMLButtonElement>('[data-replay]');
 		let run = 0;
 
 		const select = (i: number) =>
@@ -114,7 +121,9 @@ const plain = esc(steps.map((s) => [...s.commands.map((c) => `$ ${c}`), ...stepO
 			});
 		const show = (el: Element) => el.classList.add('on');
 		const reset = (el: Element) => el.classList.remove('on');
-		const stopBars = () => buttons.forEach((x) => x.querySelector('.bar')?.classList.remove('fill'));
+		const stopBars = () => {
+			for (const x of buttons) x.querySelector('.bar')?.classList.remove('fill');
+		};
 		// The session whole and still: where a play ends, what Skip and reduced motion show, and
 		// the only state the screen is read in (the typed one is the sr-only copy's).
 		function whole() {
@@ -143,7 +152,7 @@ const plain = esc(steps.map((s) => [...s.commands.map((c) => `$ ${c}`), ...stepO
 				else lines.forEach(reset);
 			});
 			const chunk = chunks[i];
-			const bar = buttons[i].querySelector<HTMLElement>('.bar')!;
+			const bar = find<HTMLElement>('.bar', buttons[i]);
 			for (const line of chunk.querySelectorAll<HTMLElement>('.line')) {
 				if (id !== run) return;
 				show(line);
@@ -176,7 +185,9 @@ const plain = esc(steps.map((s) => [...s.commands.map((c) => `$ ${c}`), ...stepO
 			if (still) whole();
 			else play(i, run);
 		};
-		buttons.forEach((b, i) => b.addEventListener('click', () => begin(i)));
+		buttons.forEach((b, i) => {
+			b.addEventListener('click', () => begin(i));
+		});
 		skip.addEventListener('click', () => {
 			whole();
 			replay.focus();

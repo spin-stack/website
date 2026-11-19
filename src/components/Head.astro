@@ -3,14 +3,14 @@
 // finds the same content as Markdown without guessing the address. linkcheck fails one that
 // does not resolve.
 import Default from '@astrojs/starlight/components/Head.astro';
-import { twinPath } from '../lib/twin';
+import mono400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
+import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2?url';
 // The faces the first screen sets, fetched with the page: found late, through the stylesheet, a
 // face swaps in after the first paint and the notice and the hero move with it (a layout shift of
 // 0.23 on a phone, measured).
 import sans400 from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2?url';
 import sans600 from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2?url';
-import mono400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
-import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2?url';
+import { twinPath } from '../lib/twin';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 // The link preview a chat shows, by its absolute address: the page's card (src/pages/cards/), or
