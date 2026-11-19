@@ -5,7 +5,8 @@ version: '3'
 # produce. SPIN, TERRAFORM and BRAND are checkouts of spin-stack/spin, spin-stack/spin-terraform-aws
 # and spin-stack/brand: by default the ones task sources fetches into .sources/, at the commits
 # versions.yaml pins. SHOTS is where it unpacks the dashboard's screenshots, which spin's
-# release carries as site-shots.tar.gz.
+# release carries as site-shots.tar.gz. Node and pnpm run in the image the Dockerfile makes: a host
+# needs Go and Docker, and every machine builds with the same Node.
 
 vars:
   SPIN: '{{.SPIN | default ".sources/spin"}}'
@@ -13,17 +14,36 @@ vars:
   BRAND: '{{.BRAND | default ".sources/brand"}}'
   SHOTS: '{{.SHOTS | default ".sources/spin-site-shots"}}'
   BASE_PATH: '{{.BASE_PATH | default "/website"}}'
+  PORT: '{{.PORT | default "4321"}}'
+  HOST: '{{.HOST | default "127.0.0.1"}}'
+  IMAGE: spinbox-docs
+  UID:
+    sh: id -u
+  GID:
+    sh: id -g
 
 tasks:
+  # The images are versions.yaml's (versions args). GITHUB_TOKEN, when set, is what sfw downloads
+  # the firewall with: anonymous downloads are the first GitHub sheds under load. A secret, so it
+  # is in no layer of the image.
   install:
-    desc: Install the site's dependencies from the lockfile, through Socket Firewall (sfw).
+    desc: Build the image with the site's dependencies from the lockfile, installed through Socket Firewall (sfw) - the Dockerfile's deps stage. The tasks that need it build it.
     cmds:
-      - sfw pnpm install --frozen-lockfile
+      - docker build --target deps $(versions args golang node) --secret id=github_token,env=GITHUB_TOKEN -t {{.IMAGE}}:deps .
 
   dev:
-    desc: Serve the site with live reload.
+    desc: Serve the site with live reload at http://localhost:4321 (HOST=0.0.0.0 for every interface, PORT=N for another port). The source is mounted; node_modules comes from the image.
+    deps: [install]
     cmds:
-      - pnpm dev
+      # The mount point for the image's node_modules; made here so it is yours, not root's.
+      - mkdir -p node_modules
+      - >-
+        docker run --rm -it --init
+        --user {{.UID}}:{{.GID}} -e HOME=/tmp
+        -v "$PWD":/app -v /app/node_modules
+        -p {{.HOST}}:{{.PORT}}:4321
+        {{.IMAGE}}:deps
+        pnpm dev --port 4321 --host 0.0.0.0
 
   sources:
     desc: Fetch spin, spin-terraform-aws and brand into .sources/, each at the commit versions.yaml pins, and spin's release's screenshots (site-shots.tar.gz) beside them. spin is private - SOURCES_TOKEN, or git's own credentials, reads it.
@@ -96,9 +116,13 @@ tasks:
       - go run ./tools/pricing -terraform .sources/spin-terraform-aws -check
 
   build:
-    desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page.
+    desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page - the Dockerfile's build stage, after the build's own tests. SITE_URL and BASE_PATH are where it is served.
     cmds:
-      - pnpm build
+      - rm -rf dist
+      - >-
+        docker build --target dist $(versions args golang node) --secret id=github_token,env=GITHUB_TOKEN
+        --build-arg SITE_URL={{.SITE_URL}} --build-arg BASE_PATH={{.BASE_PATH}}
+        --output type=local,dest=dist .
 
   links:
     desc: Fail on a link to a page or an anchor the build did not produce.
@@ -111,7 +135,7 @@ tasks:
       - go run ./tools/linkcheck -external dist
 
   gate:
-    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests and the build's, the reference against the public sources, the build, and every link.
+    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, the reference against the public sources, the build, and every link.
     cmds:
       - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
@@ -122,8 +146,6 @@ tasks:
       - task: install
       - go vet ./...
       - go test ./...
-      # The few rules the build keeps in JavaScript, with node's own runner: no dependency.
-      - node --test 'src/lib/*.test.mjs'
       - task: reference:public
       - task: build
       - task: links

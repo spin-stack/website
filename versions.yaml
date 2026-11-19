@@ -48,3 +48,23 @@
   note: >-
     The Task `go tool task` runs (go-tools' cmd/task), for every platform a person or a runner
     works on: no repository compiles it.
+
+- name: node
+  kind: image
+  source: mirror.gcr.io/library/node
+  version: 22-bookworm-slim
+  pin: sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+  track: digest
+  note: >-
+    The Node the Dockerfile installs, builds and serves the site with, on every machine and in CI.
+    After a bump: `task check`, and a look at `task dev`.
+
+- name: golang
+  kind: image
+  source: mirror.gcr.io/library/golang
+  version: 1.27.4-bookworm
+  pin: sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea
+  track: go
+  note: >-
+    What the Dockerfile builds go-tools' sfw with, the firewall the install in the image goes
+    through. After a bump: `task install`.

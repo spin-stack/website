@@ -48,8 +48,8 @@ exist.** Everything below follows from that.
 | a workflow | `task gate` |
 
 Tasks run as `go tool task <name>`. spin is private: `task sources` reads it with `SOURCES_TOKEN`
-(`gh auth token` gives one) or git's own credentials. The build needs the Node the workflows
-install; an older one of the same major fails it, saying so.
+(`gh auth token` gives one) or git's own credentials. A host needs Go and Docker: Node and pnpm
+run in the image the `Dockerfile` makes, never on the host.
 
 ## Claims and tone
 

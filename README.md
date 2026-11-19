@@ -8,8 +8,8 @@ The rule this site keeps: a page is generated from the code it describes, or hel
 check that fails the build, or it does not exist. Everything below is one of those checks.
 
 ```
-go tool task install      # dependencies, through Socket Firewall (sfw)
-go tool task dev          # http://localhost:4321, live reload
+go tool task install      # the image with the dependencies, installed through Socket Firewall (sfw)
+go tool task dev          # http://localhost:4321, live reload, in that image
 go tool task sources      # spin, spin-terraform-aws and brand into .sources/, at the commits versions.yaml pins
 go tool task check        # what CI runs: the reference against the sources, and the gate
 go tool task gate         # the gates, the install, the tests, the public reference, the build, every link
@@ -19,7 +19,12 @@ go tool task --list       # everything else
 
 `go tool task` is go-tools' task command, the one tool `go.mod` takes: it runs the Task
 `versions.yaml` pins, the version CI runs, with go-tools' commands on its PATH; the tasks below
-are named without it. `task check` is what CI runs: the reference against its sources, then `task
+are named without it. A host needs Go and Docker, nothing of Node's: the install,
+the build and the dev server run in the image the `Dockerfile` makes, at the Node it names, so a
+laptop builds with the Node CI does. The install there goes through the firewall as it did on the
+host - the image builds go-tools' `sfw` at the version `go.mod` pins - and `task dev` mounts the
+source and runs as your user, with `node_modules` from the image. Go stays on the host: refgen
+builds spin's CLI, and every check but the build runs there. `task check` is what CI runs: the reference against its sources, then `task
 gate`, which fails first on an install that skips the firewall (`sfw check`) or a workflow step
 that is not one task (`taskgate`).
 
