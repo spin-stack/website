@@ -37,6 +37,12 @@ RUN --mount=type=cache,id=spinbox-docs-sfw,target=/root/.cache/spin-stack/sfw \
  # task dev runs as the host's user: Vite and Astro write their caches under node_modules.
  && chmod a+rwx node_modules
 
+# Biome over the code - lint, formatting, sorted imports (biome.json) - and astro check over the
+# types. .git is in the context, so Biome leaves out what .gitignore does, as it would on a host.
+FROM deps AS lint
+COPY . .
+RUN pnpm exec biome ci . && pnpm exec astro check
+
 FROM deps AS build
 ARG SITE_URL
 ARG BASE_PATH

@@ -124,6 +124,11 @@ tasks:
         --build-arg SITE_URL={{.SITE_URL}} --build-arg BASE_PATH={{.BASE_PATH}}
         --output type=local,dest=dist .
 
+  lint:
+    desc: Biome over the code (lint, formatting, sorted imports; biome.json) and astro check over the types, as a stage of the image. Biome's own fixes are `pnpm exec biome check --write` in it.
+    cmds:
+      - docker build --target lint $(versions args golang node) --secret id=github_token,env=GITHUB_TOKEN --output type=cacheonly .
+
   links:
     desc: Fail on a link to a page or an anchor the build did not produce.
     cmds:
@@ -135,7 +140,7 @@ tasks:
       - go run ./tools/linkcheck -external dist
 
   gate:
-    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, the reference against the public sources, the build, and every link.
+    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, Biome and astro check, the reference against the public sources, the build, and every link.
     cmds:
       - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
@@ -146,6 +151,7 @@ tasks:
       - task: install
       - go vet ./...
       - go test ./...
+      - task: lint
       - task: reference:public
       - task: build
       - task: links
