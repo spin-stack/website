@@ -56,6 +56,11 @@ that is not one task (`taskgate`).
   and the issues, pull requests and comments for secrets and for what is private without being one;
   `.github/workflows/exposure.yml` runs it every morning. A value public on purpose is answered in
   `.github/exposure-allow.txt` with why, a secret gitleaks takes for one in `.gitleaks.toml`.
+- **The code is linted** by `task lint`: [Biome](https://biomejs.dev) - its lint, its
+  formatting and sorted imports, as `biome.json` sets them, the blog's settings - and `astro
+  check` over the types, as a stage of the image. What is generated or copied (`src/data`,
+  `src/assets`, brand's stylesheets, `public/`) is not linted, and nor is `pnpm-workspace.yaml`,
+  which pnpm writes. `pnpm exec biome check --write .` in the image fixes what Biome can.
 - **Pages** are Markdown under `src/content/docs/`. Every page needs a `description`: it is its
   line in `llms.txt`. A page must be in `src/lib/nav.mjs`, or the build fails. Each group there
   belongs to a topic - Docs, Install and operate, Security, Reference - and the sidebar shows one
