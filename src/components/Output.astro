@@ -2,6 +2,11 @@
 // What a spin command prints, as a golden in spin holds it (tools/refgen copies them into
 // src/data/output): shown as a block of output, never retyped. Its Markdown twin is the same
 // block (src/lib/pages.ts).
+//
+// mark, ins and del point at what matters without editing the golden: each is text of the
+// output, every occurrence of which Expressive Code marks. Text, not a line number - a line
+// number keeps pointing after the golden moves, at whatever line is there now; text that is gone
+// fails refgen's check (checkOutputMarks).
 import { Code } from '@astrojs/starlight/components';
 import { output } from '../lib/output';
 
@@ -9,8 +14,11 @@ interface Props {
 	name: string;
 	caption: string;
 	lang?: string;
+	mark?: string;
+	ins?: string;
+	del?: string;
 }
-const { name, caption, lang = 'text' } = Astro.props;
+const { name, caption, lang = 'text', mark, ins, del } = Astro.props;
 ---
 
-<Code code={output(name)} lang={lang} title={caption} />
+<Code code={output(name)} lang={lang} title={caption} mark={mark} ins={ins} del={del} />

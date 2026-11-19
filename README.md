@@ -128,6 +128,12 @@ that is not one task (`taskgate`).
 - **Figures the code decides** - a volume's commit size, how much older a runner may be, how long
   CloudWatch keeps the logs - are `src/data/constants.json`, read from spin's constants and the
   module's defaults by `task reference`, and a page shows one with `<Value name="…" />`.
+- **What a command prints** is the golden a test in spin holds it to, copied by `task reference`
+  into `src/data/output` (`outputs` in `tools/refgen`) and shown with `<Output name="…" />`,
+  never retyped. A page points at what matters in it without editing it: `mark="…"`, `ins="…"`
+  and `del="…"` are text of the output, which the block marks wherever it occurs, and refgen
+  fails on one the golden no longer has, so a change to what the command prints cannot take a
+  mark away unseen. The Markdown twin is the plain block.
 - **A figure said in prose has a line** in `tools/refgen/figures.txt`: every duration, size and
   count a hand-written page says outside `<Value>`, with the constant of spin's that decides it
   (`spin:<file>#<Constant> = 15m`), which `task reference:check` reads and holds the line to; with the text of a file
