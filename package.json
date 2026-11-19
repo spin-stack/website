@@ -16,6 +16,7 @@
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@fontsource/ibm-plex-sans": "5.3.0",
     "astro": "^7.4.11",
+    "satori": "0.63.2",
     "sharp": "^0.35.5",
     "starlight-image-zoom": "0.16.2",
     "starlight-sidebar-topics": "0.9.0",
