@@ -1,8 +1,8 @@
 # Spinbox documentation
 
 The documentation of [Spinbox](https://github.com/spin-stack/spin), at
-<https://spin-stack.github.io/website/>, built with [Astro Starlight](https://starlight.astro.build)
-and published to GitHub Pages.
+<https://spinbox.dev/>, built with [Astro Starlight](https://starlight.astro.build) and published
+to Cloudflare Pages.
 
 The rule this site keeps: a page is generated from the code it describes, or held to it by a
 check that fails the build, or it does not exist. Everything below is one of those checks.
@@ -185,23 +185,30 @@ that is not one task (`taskgate`).
   IBM Plex is served from the site, and a hero draws a workspace's disk as its layers, worked
   step by step (`src/components/Hero.astro`, `Disk.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.
-- The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spin-stack.github.io` and
-  `/website` (a GitHub project page). Content links from the root (`/concepts/network/`) and the
-  build puts the base in front; `task links` fails on one it cannot resolve.
+- The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spinbox.dev` and `/`.
+  Content links from the root (`/concepts/network/`), and under another base the build puts it in
+  front; `task links` fails on one it cannot resolve.
 - **Links out of the site** are opened by `task links:external`, with no credential, as a reader
   would: every link to another site and every `ghcr.io` reference a page quotes. A page links
   only to spin-stack repositories a reader can open (`publicRepos` in `tools/refgen`).
-- Pushing to `main` builds and publishes to GitHub Pages (`.github/workflows/pages.yml`).
+- **Every branch is published** to Cloudflare Pages by `.github/workflows/pages.yml`, after `task
+  check`: `task upload` puts `dist/` in the `spinbox-docs` project as its branch. `main` is
+  production, at https://spinbox.dev; any other branch is a preview at its own address,
+  `https://<branch>.spinbox-docs.pages.dev/` (lowercased, anything else a hyphen, 28
+  characters), and its pull request gets one comment that says it, edited at each push. A preview
+  is public, as the repository is. `task deploy` builds and uploads from a checkout, and `task
+  cf:setup` made the project once. Both need `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`,
+  which CI has as secrets.
 
 ## Contributing
 
 Pull requests are welcome. One from a fork runs the Gate once a maintainer approves it, and never
-deploys: only `main` publishes. Dependencies are locked and installed through [Socket Firewall](https://spin-stack.github.io/go-tools/sfw/),
+deploys: it has none of the secrets an upload needs. Dependencies are locked and installed through [Socket Firewall](https://spin-stack.github.io/go-tools/sfw/),
 which `sfw check` holds every install and every workflow to; `pnpm-workspace.yaml` names the few that
 may run an install script, and a release must be a week old before it is taken.
 
 A security problem in Spinbox goes to a private advisory, never an issue: see
-[Reporting a vulnerability](https://spin-stack.github.io/website/security/reporting/).
+[Reporting a vulnerability](https://spinbox.dev/security/reporting/).
 
 ## License
 

@@ -13,10 +13,13 @@ vars:
   TERRAFORM: '{{.TERRAFORM | default ".sources/spin-terraform-aws"}}'
   BRAND: '{{.BRAND | default ".sources/brand"}}'
   SHOTS: '{{.SHOTS | default ".sources/spin-site-shots"}}'
-  BASE_PATH: '{{.BASE_PATH | default "/website"}}'
+  BASE_PATH: '{{.BASE_PATH | default "/"}}'
   PORT: '{{.PORT | default "4321"}}'
   HOST: '{{.HOST | default "127.0.0.1"}}'
   IMAGE: spinbox-docs
+  # The Cloudflare Pages project, and the domain its main is served at.
+  PROJECT: spinbox-docs
+  DOMAIN: spinbox.dev
   UID:
     sh: id -u
   GID:
@@ -155,6 +158,61 @@ tasks:
       - task: reference:public
       - task: build
       - task: links
+
+  # Cloudflare Pages: main is production at https://spinbox.dev, and any other branch a preview at
+  # its own address, <branch>.spinbox-docs.pages.dev, public as the repository is. wrangler is a
+  # dependency of the lockfile's, installed through the firewall as the rest are.
+  deploy:
+    desc: Build the site and upload it to Cloudflare Pages as BRANCH (else the checkout's) - main is production at https://spinbox.dev, any other a preview at its own pages.dev address. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+    cmds:
+      - task: build
+      - task: upload
+
+  upload:
+    desc: Upload dist/ as it is to Cloudflare Pages as BRANCH (else the checkout's), and say its address - in the job's summary in CI, and as a comment on pull request PR when given. CI runs it after task check built dist/. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+    vars:
+      BRANCH:
+        sh: echo "${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+      # A preview's address is the branch's alias: lowercase, anything else a hyphen, 28 characters.
+      URL:
+        sh: |
+          if [ "{{.BRANCH}}" = main ]; then echo "https://{{.DOMAIN}}/"; else
+            alias=$(printf %s "{{.BRANCH}}" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9]/-/g' | cut -c1-28 | sed 's/-*$//')
+            echo "https://$alias.{{.PROJECT}}.pages.dev/"
+          fi
+    preconditions:
+      - sh: test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
+        msg: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are needed to upload
+      - sh: test -f dist/index.html
+        msg: nothing in dist/ to upload - task build first
+    cmds:
+      - task: install
+      - >-
+        docker run --rm -e CLOUDFLARE_API_TOKEN -e CLOUDFLARE_ACCOUNT_ID
+        -v "$PWD/dist":/dist:ro {{.IMAGE}}:deps
+        pnpm exec wrangler pages deploy /dist --project-name {{.PROJECT}} --branch {{.BRANCH}}
+        --commit-hash "$(git rev-parse HEAD)" --commit-dirty=true
+      - '[ -z "$GITHUB_STEP_SUMMARY" ] || echo "{{.BRANCH}} is at {{.URL}}" >> "$GITHUB_STEP_SUMMARY"'
+      # One comment, edited at each push: the address stays, and the commit it shows moves.
+      - '[ -z "$PR" ] || gh pr comment "$PR" --edit-last --create-if-none --body "Preview of $(git rev-parse --short HEAD): {{.URL}}"'
+
+  cf:setup:
+    desc: Once - create the Cloudflare Pages project (production branch main) and attach spinbox.dev to it, which serves only once the spinbox.dev zone is on Cloudflare's DNS. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+    preconditions:
+      - sh: test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
+        msg: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are needed
+    cmds:
+      - task: install
+      - >-
+        curl -fsS -o /dev/null -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+        "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/{{.PROJECT}}"
+        || docker run --rm -e CLOUDFLARE_API_TOKEN -e CLOUDFLARE_ACCOUNT_ID {{.IMAGE}}:deps
+        pnpm exec wrangler pages project create {{.PROJECT}} --production-branch main
+      - >-
+        curl -fsS -X POST
+        -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json"
+        "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/{{.PROJECT}}/domains"
+        -d '{"name":"{{.DOMAIN}}"}' || echo "{{.DOMAIN}} may already be attached; see the project's Custom domains"
 
   exposure:
     desc: What this repository shows the world - every ref's commits, pull request heads included, and its issues, pull requests and comments - against .github/exposure-allow.txt.

@@ -8,6 +8,9 @@ allowBuilds:
   # install.js checks, and fetches if it has to, the esbuild binary Astro builds through.
   esbuild: true
   sharp: true
+  # Wrangler's runtime: its install script only checks the binary its platform's package brings,
+  # and uploading a directory of files to Cloudflare Pages (task upload) runs no worker.
+  workerd: false
 minimumReleaseAgeExclude:
   - '@img/sharp-darwin-arm64@0.35.5'
   - '@img/sharp-darwin-x64@0.35.5'
