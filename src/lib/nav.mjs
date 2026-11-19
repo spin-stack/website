@@ -61,6 +61,7 @@ export const nav = [
 			['Install', 'aws/setup'],
 			['Network', 'aws/network'],
 			['Cost', 'aws/cost'],
+			['Profiles', 'aws/profiles'],
 			['Update', 'aws/update'],
 			['Remove', 'aws/remove'],
 			['Troubleshooting', 'aws/troubleshooting'],
