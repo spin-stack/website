@@ -1,0 +1,11 @@
+# .git stays: Starlight's "Last updated" is each page's last commit, read by the build.
+node_modules
+dist
+.astro
+.task
+.sources
+.env
+.env.*
+.DS_Store
+_output
+ui-hill-climb/rounds

@@ -40,12 +40,6 @@ jobs:
         with:
           # Every commit, so each page's "Last updated" is its own last change, not the checkout's.
           fetch-depth: 0
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-      # No store cache: a package restored from one is never asked of the registry, so Socket
-      # Firewall, which stands between the two, would not see it.
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: '22'
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
@@ -71,7 +65,8 @@ jobs:
           SOURCES_TOKEN: ${{ steps.sources-token.outputs.token }}
         run: go tool task sources
       # What a developer runs, with the Task go.mod pins: task check, the install through Socket
-      # Firewall among it. The sources are fetched, so this asks nothing of spin.
+      # Firewall among it, in the image the Dockerfile makes - Node and pnpm are the image's, not
+      # the runner's. The sources are fetched, so this asks nothing of spin.
       - if: env.SOURCES_APP == 'true'
         run: go tool task check
       - if: env.SOURCES_APP != 'true'
