@@ -18,7 +18,8 @@ import Value from '../../../components/Value.astro';
 import { generated, published } from '../../../lib/pricing';
 
 An installation has two kinds of cost: a small one that runs all the time, and runners, which
-run only while workspaces do. A workspace that is stopped costs only what it keeps in the bucket.
+run while workspaces do and for a while after (`runner_idle_minutes`). Once its runner is given back,
+a stopped workspace costs what it keeps in the bucket.
 Prices depend on the region and change; every price here says where and when it was read, and
 the [AWS Pricing Calculator](https://calculator.aws/) has yours.
 
