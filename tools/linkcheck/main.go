@@ -36,7 +36,7 @@ const (
 func main() {
 	base := flag.String("base", "", "the path the site is served under, when it is not the root")
 	ext := flag.Bool("external", false, "open every link out of the site and every ghcr.io reference instead, with no credential")
-	site := flag.String("site", "https://spinbox.dev", "where the site is served, whose own links -external leaves alone")
+	site := flag.String("site", "https://docs.spinbox.dev", "where the site is served, whose own links -external leaves alone")
 	flag.Parse()
 	dist := "dist"
 	if flag.NArg() > 0 {

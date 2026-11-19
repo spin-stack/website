@@ -19,7 +19,7 @@ vars:
   IMAGE: spinbox-docs
   # The Cloudflare Pages project, and the domain its main is served at.
   PROJECT: spinbox-docs
-  DOMAIN: spinbox.dev
+  DOMAIN: docs.spinbox.dev
   UID:
     sh: id -u
   GID:
@@ -159,11 +159,11 @@ tasks:
       - task: build
       - task: links
 
-  # Cloudflare Pages: main is production at https://spinbox.dev, and any other branch a preview at
+  # Cloudflare Pages: main is production at https://docs.spinbox.dev, and any other branch a preview at
   # its own address, <branch>.spinbox-docs.pages.dev, public as the repository is. wrangler is a
   # dependency of the lockfile's, installed through the firewall as the rest are.
   deploy:
-    desc: Build the site and upload it to Cloudflare Pages as BRANCH (else the checkout's) - main is production at https://spinbox.dev, any other a preview at its own pages.dev address. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+    desc: Build the site and upload it to Cloudflare Pages as BRANCH (else the checkout's) - main is production at https://docs.spinbox.dev, any other a preview at its own pages.dev address. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
     cmds:
       - task: build
       - task: upload
@@ -197,7 +197,7 @@ tasks:
       - '[ -z "$PR" ] || gh pr comment "$PR" --edit-last --create-if-none --body "Preview of $(git rev-parse --short HEAD): {{.URL}}"'
 
   cf:setup:
-    desc: Once - create the Cloudflare Pages project (production branch main) and attach spinbox.dev to it, which serves only once the spinbox.dev zone is on Cloudflare's DNS. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+    desc: Once - create the Cloudflare Pages project (production branch main) and attach docs.spinbox.dev to it. The DNS record (a CNAME to spinbox-docs.pages.dev) is Route 53's, in spinbox.dev-deploy, as the blog's is. Needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
     preconditions:
       - sh: test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
         msg: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are needed

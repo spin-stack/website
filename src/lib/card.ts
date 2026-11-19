@@ -43,7 +43,7 @@ export interface Card {
 	topic: string;
 	title: string;
 	description: string;
-	/** Where the site is served, without the scheme: spinbox.dev, or a project page's host and path. */
+	/** Where the site is served, without the scheme: docs.spinbox.dev, or a project page's host and path. */
 	site: string;
 }
 
