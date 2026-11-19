@@ -1,5 +1,5 @@
+import { type CollectionEntry, getCollection } from 'astro:content';
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
 import { card } from '../../lib/card';
 import { topicOf } from '../../lib/nav.mjs';
 import { siteBase } from '../../lib/pages';

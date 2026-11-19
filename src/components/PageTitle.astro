@@ -16,10 +16,12 @@ const twin = `${base}${twinPath(Astro.locals.starlightRoute.id)}`;
 
 <script>
 	for (const b of document.querySelectorAll<HTMLButtonElement>('.page-actions .copy')) {
+		const twin = b.dataset.twin;
+		if (!twin) continue;
 		b.addEventListener('click', async () => {
 			const label = b.textContent;
 			try {
-				const md = await (await fetch(b.dataset.twin!)).text();
+				const md = await (await fetch(twin)).text();
 				await navigator.clipboard.writeText(md);
 				b.textContent = 'Copied';
 			} catch {

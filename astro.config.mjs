@@ -1,12 +1,12 @@
 // @ts-check
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
-import { rehypeBaseLinks } from './src/lib/base-links.mjs';
-import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
-import { rehypePostLinks } from './src/lib/post-links.mjs';
 import starlightImageZoom from 'starlight-image-zoom';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
+import { rehypeBaseLinks } from './src/lib/base-links.mjs';
+import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
 import { sidebarTopics } from './src/lib/nav.mjs';
+import { rehypePostLinks } from './src/lib/post-links.mjs';
 
 // Where the site is served: a GitHub project page is https://<org>.github.io/<repo>/. The
 // content links from the root, and rehypeBaseLinks puts the base in front.

@@ -1,5 +1,5 @@
+import { type CollectionEntry, getCollection } from 'astro:content';
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
 import { siteBase, toMarkdown } from '../lib/pages';
 
 // Each page's Markdown twin, at the page's path with .md: what llms.txt links to.
