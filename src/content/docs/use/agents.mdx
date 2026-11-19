@@ -25,7 +25,7 @@ spin snapshot diff task-1 <after-id> --from <before-id> -o json
 spin workspace delete task-1
 ```
 
-<Output name="diff.json" caption="spin snapshot diff task-1 <after-id> --from <before-id> -o json" lang="json" />
+<Output name="diff.json" caption="spin snapshot diff task-1 <after-id> --from <before-id> -o json" lang="json" ins="FILE_CHANGE_KIND_ADDED" mark="FILE_CHANGE_KIND_MODIFIED" del="FILE_CHANGE_KIND_REMOVED" />
 
 Every command prints JSON with `-o json`: the whole answer, each file's type, mode, size and hash
 on both sides. A model reading this site starts at
