@@ -186,6 +186,27 @@ No fields: `{}`.
 | `user` | [User](/reference/api/types/#user) |  |
 | `controlPlaneVersion` | string | The release of the control plane that answered, which is the release of the dashboard asking: the bundle is served from inside that binary. It rides here rather than on an endpoint of its own because every session asks this once, and because a version an installation will be matched against known flaws by is not something to hand out unauthenticated. |
 
+## GetDeviceLogin
+
+`POST /spin.v1.AuthService/GetDeviceLogin`
+
+What a pending device login offers - the SSH key the device connects with - for the dashboard's page that confirms it, which adds that key with the person's passkey.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `userCode` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `sshPublicKey` | string | The key the device offers, as an authorized_keys line, its fingerprint and its name; empty for a device that offers none. |
+| `sshKeyFingerprint` | string |  |
+| `sshKeyName` | string |  |
+| `sshKeyListed` | boolean | Whether the person already logs in with that key, for good: then there is nothing to add. |
+
 ## ListAPIKeys
 
 `POST /spin.v1.AuthService/ListAPIKeys`
@@ -282,6 +303,8 @@ Start device login flow (for CLI when OAuth redirect is not available) Returns a
 | Field | Type | What it is |
 |---|---|---|
 | `identityProviderId` | string | Optional: use default if empty |
+| `sshPublicKey` | string | The SSH public key the device connects to workspaces with, and a name for it - the machine's. The page that confirms the login adds it with the person's passkey, so a first connection from the device is not refused for a key nobody added. Empty: none is offered. |
+| `sshKeyName` | string |  |
 
 **Response**
 

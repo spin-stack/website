@@ -4338,6 +4338,68 @@
         }
       }
     },
+    "/spin.v1.AuthService/GetDeviceLogin": {
+      "post": {
+        "tags": [
+          "AuthService"
+        ],
+        "summary": "GetDeviceLogin",
+        "description": "What a pending device login offers - the SSH key the device connects with - for the\n dashboard's page that confirms it, which adds that key with the person's passkey.",
+        "operationId": "spin.v1.AuthService.GetDeviceLogin",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetDeviceLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetDeviceLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AuthService/ListAPIKeys": {
       "post": {
         "tags": [
@@ -18475,6 +18537,43 @@
         "title": "GetCurrentUserResponse",
         "additionalProperties": false
       },
+      "spin.v1.GetDeviceLoginRequest": {
+        "type": "object",
+        "properties": {
+          "userCode": {
+            "type": "string",
+            "title": "user_code"
+          }
+        },
+        "title": "GetDeviceLoginRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetDeviceLoginResponse": {
+        "type": "object",
+        "properties": {
+          "sshPublicKey": {
+            "type": "string",
+            "title": "ssh_public_key",
+            "description": "The key the device offers, as an authorized_keys line, its fingerprint and its name; empty\n for a device that offers none."
+          },
+          "sshKeyFingerprint": {
+            "type": "string",
+            "title": "ssh_key_fingerprint"
+          },
+          "sshKeyName": {
+            "type": "string",
+            "title": "ssh_key_name"
+          },
+          "sshKeyListed": {
+            "type": "boolean",
+            "title": "ssh_key_listed",
+            "description": "Whether the person already logs in with that key, for good: then there is nothing to add."
+          }
+        },
+        "title": "GetDeviceLoginResponse",
+        "additionalProperties": false,
+        "description": "What a pending device login brings for the person confirming it to see before they do."
+      },
       "spin.v1.GetEmailSettingsRequest": {
         "type": "object",
         "title": "GetEmailSettingsRequest",
@@ -24401,6 +24500,14 @@
           "buildWorkspaceOwnerId": {
             "type": "string",
             "title": "build_workspace_owner_id"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.PrebuildStep"
+            },
+            "title": "steps",
+            "description": "What its build has done and is doing, in the order each began (GetPrebuild only): its guest's\n clone and create tasks, then the control plane's snapshot, publish, scan and share."
           }
         },
         "title": "Prebuild",
@@ -24445,6 +24552,69 @@
           "",
           "",
           "Superseded and given back: its snapshot is being deleted."
+        ]
+      },
+      "spin.v1.PrebuildStep": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PrebuildStepKind"
+              }
+            ],
+            "title": "kind"
+          },
+          "startedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "started_at"
+          },
+          "finishedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "finished_at",
+            "description": "Unset while it runs, and for one its build never finished: a failed prebuild's error is why."
+          },
+          "error": {
+            "type": "string",
+            "title": "error",
+            "description": "Why it failed; empty for one that did not."
+          }
+        },
+        "title": "PrebuildStep",
+        "additionalProperties": false,
+        "description": "One step of a prebuild's build."
+      },
+      "spin.v1.PrebuildStepKind": {
+        "type": "string",
+        "title": "PrebuildStepKind",
+        "enum": [
+          "PREBUILD_STEP_KIND_UNSPECIFIED",
+          "PREBUILD_STEP_KIND_CLONE",
+          "PREBUILD_STEP_KIND_CREATE",
+          "PREBUILD_STEP_KIND_SNAPSHOT",
+          "PREBUILD_STEP_KIND_PUBLISH",
+          "PREBUILD_STEP_KIND_SCAN",
+          "PREBUILD_STEP_KIND_SHARE",
+          "PREBUILD_STEP_KIND_KEEP"
+        ],
+        "description": "The steps of a prebuild's build. They run clone, keep, create, snapshot, publish, scan, share;\n keep is numbered last because it was added last, and a step's number is what is stored.\n\n- `PREBUILD_STEP_KIND_CLONE`: The guest's checkout of the repository at the build's commit.\n- `PREBUILD_STEP_KIND_CREATE`: The guest's run of the checkout's create task (.spin.yaml); none for a checkout without one.\n- `PREBUILD_STEP_KIND_SNAPSHOT`: The control plane's snapshot of the build's disk, once its guest said it was done.\n- `PREBUILD_STEP_KIND_PUBLISH`: The snapshot reaching the object store.\n- `PREBUILD_STEP_KIND_SCAN`: The scan of the snapshot for credentials, which nothing a member clones may carry.\n- `PREBUILD_STEP_KIND_SHARE`: The snapshot shared with the teams the project is shared with.\n- `PREBUILD_STEP_KIND_KEEP`: The control plane's snapshot of the checkout, published before the guest runs create: what\n  the scan compares the build against, so what the repository commits is not refused.",
+        "x-enum-descriptions": [
+          "",
+          "The guest's checkout of the repository at the build's commit.",
+          "The guest's run of the checkout's create task (.spin.yaml); none for a checkout without one.",
+          "The control plane's snapshot of the build's disk, once its guest said it was done.",
+          "The snapshot reaching the object store.",
+          "The scan of the snapshot for credentials, which nothing a member clones may carry.",
+          "The snapshot shared with the teams the project is shared with.",
+          "The control plane's snapshot of the checkout, published before the guest runs create: what\n the scan compares the build against, so what the repository commits is not refused."
         ]
       },
       "spin.v1.PrebuildsKept": {
@@ -27685,6 +27855,15 @@
             "type": "string",
             "title": "identity_provider_id",
             "description": "Optional: use default if empty"
+          },
+          "sshPublicKey": {
+            "type": "string",
+            "title": "ssh_public_key",
+            "description": "The SSH public key the device connects to workspaces with, and a name for it - the\n machine's. The page that confirms the login adds it with the person's passkey, so a first\n connection from the device is not refused for a key nobody added. Empty: none is offered."
+          },
+          "sshKeyName": {
+            "type": "string",
+            "title": "ssh_key_name"
           }
         },
         "title": "StartDeviceLoginRequest",
@@ -30417,9 +30596,10 @@
           "WORKSPACE_EVENT_TYPE_HELD",
           "WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN",
           "WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY",
-          "WORKSPACE_EVENT_TYPE_OVERSIZED"
+          "WORKSPACE_EVENT_TYPE_OVERSIZED",
+          "WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED"
         ],
-        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller preset would fit what it used. Its details say what it used, what it\n  holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.",
+        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller preset would fit what it used. Its details say what it used, what it\n  holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline:\n  its processes are lost, and it comes back from its disk as last published. Its details say\n  when that was, how long before the deadline, and why the memory was not saved.",
         "x-enum-descriptions": [
           "",
           "Workspace was created",
@@ -30448,7 +30628,8 @@
           "Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner",
           "An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why",
           "It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n ceiling. Said, never acted on: nothing resizes a workspace on its own.",
-          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller preset would fit what it used. Its details say what it used, what it\n holds, and that preset. Said, never acted on: nothing resizes a workspace on its own."
+          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller preset would fit what it used. Its details say what it used, what it\n holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.",
+          "Its host was being taken away and its memory could not be saved before the host's deadline:\n its processes are lost, and it comes back from its disk as last published. Its details say\n when that was, how long before the deadline, and why the memory was not saved."
         ]
       },
       "spin.v1.WorkspaceFailure": {

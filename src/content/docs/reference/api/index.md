@@ -21,7 +21,7 @@ curl -s https://app.example.com/spin.v1.WorkspaceService/ListWorkspaces \
 ## Services
 
 - [PasskeyService](/reference/api/passkeyservice/): PasskeyService is a person's passkeys: WebAuthn credentials of their account, under the. installation's base domain (internal/passkey). A passkey signs a challenge the control plane. issued, never a document: what turns a session into a key that logs in (SSHKeyService.AddSSHKey) is an assertion of one, so a session alone - stolen, or an agent's - is no shell.
-- [AuthService](/reference/api/authservice/): 16 procedures
+- [AuthService](/reference/api/authservice/): 17 procedures
 - [WorkspaceService](/reference/api/workspaceservice/): 57 procedures
 - [SettingsService](/reference/api/settingsservice/): 6 procedures
 - [AdminService](/reference/api/adminservice/): AdminService manages installation-wide settings, user management, and resource presets. Only accessible to instance administrators.
