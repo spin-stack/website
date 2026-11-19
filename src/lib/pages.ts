@@ -21,9 +21,7 @@ export interface Section {
 /** A directory's pages in the order the sidebar shows them: by `sidebar.order`, then by id. */
 function inDirectory(docs: Doc[], directory: string): Doc[] {
 	const order = (d: Doc) => d.data.sidebar?.order ?? Number.MAX_SAFE_INTEGER;
-	return docs
-		.filter((d) => d.id === directory || d.id.startsWith(`${directory}/`))
-		.sort((a, b) => order(a) - order(b) || a.id.localeCompare(b.id));
+	return docs.filter((d) => d.id === directory || d.id.startsWith(`${directory}/`)).sort((a, b) => order(a) - order(b) || a.id.localeCompare(b.id));
 }
 
 /** Every page, grouped and ordered as the sidebar has them. */
@@ -85,8 +83,9 @@ export function toMarkdown(d: Doc, base: string): string {
 	body = body.replace(/<\/Card>/g, '');
 	body = body.replace(/<TabItem\s+label="([^"]+)"[^>]*>/g, '**$1**');
 	body = body.replace(/<\/TabItem>/g, '');
-	body = body.replace(/<Aside(?:\s+type="(\w+)")?(?:\s+title="([^"]+)")?\s*>/g, (_, type, title) =>
-		`> **${title ?? (type ? type[0].toUpperCase() + type.slice(1) : 'Note')}:**`,
+	body = body.replace(
+		/<Aside(?:\s+type="(\w+)")?(?:\s+title="([^"]+)")?\s*>/g,
+		(_, type, title) => `> **${title ?? (type ? type[0].toUpperCase() + type.slice(1) : 'Note')}:**`,
 	);
 	body = body.replace(/<\/Aside>/g, '');
 	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
@@ -140,9 +139,7 @@ export function toMarkdown(d: Doc, base: string): string {
 
 /** A link within the site is to the page's Markdown twin, absolute, so it works out of context. */
 function links(md: string, base: string): string {
-	return md.replace(/\]\((\/[^)\s#]*?)\/?(#[^)\s]*)?\)/g, (_, path: string, hash = '') =>
-		`](${base}${path === '' ? '/index' : path}.md${hash})`,
-	);
+	return md.replace(/\]\((\/[^)\s#]*?)\/?(#[^)\s]*)?\)/g, (_, path: string, hash = '') => `](${base}${path === '' ? '/index' : path}.md${hash})`);
 }
 
 /**

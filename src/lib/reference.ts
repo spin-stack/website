@@ -8,9 +8,7 @@ const { counts, spin } = reference;
  * What the reference is generated from: a release, or a commit of spin main that no release has
  * yet, which is not what an installation runs.
  */
-export const generatedFrom = spin.tag
-	? `spin \`${spin.tag}\` (\`${spin.commit.slice(0, 9)}\`)`
-	: `spin main at \`${spin.commit.slice(0, 9)}\`, not released`;
+export const generatedFrom = spin.tag ? `spin \`${spin.tag}\` (\`${spin.commit.slice(0, 9)}\`)` : `spin main at \`${spin.commit.slice(0, 9)}\`, not released`;
 
 /** The feature board's counts and the release, with the status page as Markdown links. */
 export const statusLine =

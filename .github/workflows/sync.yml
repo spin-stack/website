@@ -15,8 +15,8 @@ name: Sync
 
 on:
   schedule:
-    - cron: '23 5 * * *'
-    - cron: '41 5 * * 1'
+    - cron: "23 5 * * *"
+    - cron: "41 5 * * 1"
   repository_dispatch:
     types: [sources-released]
   workflow_dispatch:

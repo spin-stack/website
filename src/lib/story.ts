@@ -20,18 +20,15 @@ export const steps: Step[] = [
 		title: 'Take a snapshot, memory and all',
 		claim: 'A machine of its own, and a snapshot of its disk with the memory of every running process.',
 		feature: 'Snapshots with memory, resumed with their processes',
-		commands: [
-			'spin workspace create --name demo --wait',
-			'spin snapshot create demo --description clean --with-memory --wait',
-		],
+		commands: ['spin workspace create --name demo --wait', 'spin snapshot create demo --description clean --with-memory --wait'],
 	},
 	{
 		label: 'Break it',
 		title: 'Let anyone break anything',
-		claim: 'A person or an agent is root in a KVM machine with its own kernel, not in a container that shares the host\'s.',
+		claim: "A person or an agent is root in a KVM machine with its own kernel, not in a container that shares the host's.",
 		feature: 'A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH',
 		commands: [
-			"spin exec demo -- sh -c 'echo hello > /etc/greeting; rm /etc/issue; echo \"# edited\" >> /etc/hosts'",
+			'spin exec demo -- sh -c \'echo hello > /etc/greeting; rm /etc/issue; echo "# edited" >> /etc/hosts\'',
 			'spin snapshot create demo --description after --wait',
 		],
 	},

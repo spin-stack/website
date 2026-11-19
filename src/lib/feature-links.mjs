@@ -9,7 +9,12 @@ const rows = new Map(board.map((r) => [r.name, r]));
 
 // The id Starlight gives an area's heading: its words, lowercase, joined by hyphens. linkcheck
 // fails a link to an id the page does not have.
-const slug = (s) => s.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+const slug = (s) =>
+	s
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, '')
+		.trim()
+		.replace(/\s+/g, '-');
 
 /** The status page's link for a feature: link, as a page writes it. */
 export function featureHref(name) {
