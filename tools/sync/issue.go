@@ -15,7 +15,7 @@ import (
 const issueTitle = "Site vs spin main"
 
 // issueHead opens the issue's body, above its sections.
-const issueHead = "What the site at https://spinbox.dev/ documents of spin, against what spin has. " +
+const issueHead = "What the site at https://docs.spinbox.dev/ documents of spin, against what spin has. " +
 	"Written by spin-stack/website's `.github/workflows/sync.yml`, section by section; an edit by hand is written over. " +
 	"Advice: nothing here fails a check.\n"
 

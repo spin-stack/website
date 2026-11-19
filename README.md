@@ -1,7 +1,7 @@
 # Spinbox documentation
 
 The documentation of [Spinbox](https://github.com/spin-stack/spin), at
-<https://spinbox.dev/>, built with [Astro Starlight](https://starlight.astro.build) and published
+<https://docs.spinbox.dev/>, built with [Astro Starlight](https://starlight.astro.build) and published
 to Cloudflare Pages.
 
 The rule this site keeps: a page is generated from the code it describes, or held to it by a
@@ -185,7 +185,7 @@ that is not one task (`taskgate`).
   IBM Plex is served from the site, and a hero draws a workspace's disk as its layers, worked
   step by step (`src/components/Hero.astro`, `Disk.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.
-- The site is served at `SITE_URL` + `BASE_PATH`, by default `https://spinbox.dev` and `/`.
+- The site is served at `SITE_URL` + `BASE_PATH`, by default `https://docs.spinbox.dev` and `/`.
   Content links from the root (`/concepts/network/`), and under another base the build puts it in
   front; `task links` fails on one it cannot resolve.
 - **Links out of the site** are opened by `task links:external`, with no credential, as a reader
@@ -193,7 +193,7 @@ that is not one task (`taskgate`).
   only to spin-stack repositories a reader can open (`publicRepos` in `tools/refgen`).
 - **Every branch is published** to Cloudflare Pages by `.github/workflows/pages.yml`, after `task
   check`: `task upload` puts `dist/` in the `spinbox-docs` project as its branch. `main` is
-  production, at https://spinbox.dev; any other branch is a preview at its own address,
+  production, at https://docs.spinbox.dev; any other branch is a preview at its own address,
   `https://<branch>.spinbox-docs.pages.dev/` (lowercased, anything else a hyphen, 28
   characters), and its pull request gets one comment that says it, edited at each push. A preview
   is public, as the repository is. `task deploy` builds and uploads from a checkout, and `task
@@ -208,7 +208,7 @@ which `sfw check` holds every install and every workflow to; `pnpm-workspace.yam
 may run an install script, and a release must be a week old before it is taken.
 
 A security problem in Spinbox goes to a private advisory, never an issue: see
-[Reporting a vulnerability](https://spinbox.dev/security/reporting/).
+[Reporting a vulnerability](https://docs.spinbox.dev/security/reporting/).
 
 ## License
 

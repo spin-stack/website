@@ -1,7 +1,7 @@
 name: Pages
 
 # Builds the site on every push and pull request as a developer checks it, and uploads it to
-# Cloudflare Pages - main to https://spinbox.dev, a pull request's branch to a preview at its own
+# Cloudflare Pages - main to https://docs.spinbox.dev, a pull request's branch to a preview at its own
 # pages.dev address, which the pull request is told in a comment: task check, the reference against spin, spin-terraform-aws and brand at the
 # commits versions.yaml pins, and the gate - the build, every link, a page without the
 # experimental notice. spin is private: the sources App's token reads it, in the one step that
