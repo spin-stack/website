@@ -169,6 +169,7 @@ func run() error {
 	bad = append(bad, shotBad...)
 	for _, c := range []func() ([]string, error){
 		func() ([]string, error) { return checkDescriptions(*docs) },
+		func() ([]string, error) { return checkOutputMarks(*docs, *outputsDir) },
 		func() ([]string, error) { return checkRepos(*docs) },
 		func() ([]string, error) { return checkPins(*pinned, r) },
 		func() ([]string, error) { return checkDomains(*docs, *tf) },

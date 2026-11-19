@@ -112,9 +112,9 @@ export function toMarkdown(d: Doc, base: string): string {
 	body = body.replace(/\{published\}/g, published).replace(/\{generated\}/g, generated);
 	// A screenshot is its alt text: a twin has no picture to show.
 	body = body.replace(/!\[([^\]]*)\]\([^)]*\.png\)/g, '*Screenshot: $1.*');
-	// What a command prints is the same block of output.
+	// What a command prints is the same block of output; what the page marks in it is the page's.
 	body = body.replace(
-		/<Output\s+name="([\w.-]+)"\s+caption="([^"]*)"(?:\s+lang="(\w+)")?\s*\/>/g,
+		/<Output\s+name="([\w.-]+)"\s+caption="([^"]*)"(?:\s+lang="(\w+)")?(?:\s+(?:mark|ins|del)="[^"]*")*\s*\/>/g,
 		(_, name: string, caption: string, lang = 'text') => `${caption}:\n\n\`\`\`${lang}\n${output(name)}\n\`\`\``,
 	);
 	// A diagram is its caption, its words in the order the picture has them, and where it is drawn.
