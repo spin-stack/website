@@ -20,8 +20,8 @@ the processes, back. A workspace's network is closed until a policy opens it.
 ## What it costs
 
 A small part runs all the time: the control plane and the proxy, two machines, and two Route 53
-zones. Runners, the large spot machines workspaces run on, run only while workspaces do, and
-are the largest cost. [Cost](/aws/cost/) lists each part with the setting that changes it, and
+zones. Runners, the large spot machines workspaces run on, run while workspaces do and stop a while
+after, and are the largest cost. [Cost](/aws/cost/) lists each part with the setting that changes it, and
 what to put into the AWS Pricing Calculator.
 
 ## Try it on one Linux machine
