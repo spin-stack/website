@@ -56,7 +56,8 @@ install; an older one of the same major fails it, saying so.
 The site and the blog (blog.spinbox.dev, where the reasons and the failures live) describe the same
 project, and hold it to the same rules. The site says what Spinbox is and how to use it; the blog
 says why it is built that way and what went wrong. Link to a post where a page would explain a
-reason, instead of restating it.
+reason, instead of restating it: `[why](<post:the-slug>)`, a slug of `src/data/posts.json` (the
+published posts; a draft's slug is private and goes nowhere here).
 
 - **What a workspace is comes first; the sandbox follows from it.** A workspace is a whole machine,
   built from parts Linux and QEMU already have, made for a person to work in. That is what makes it

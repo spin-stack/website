@@ -31,10 +31,11 @@ tasks:
       - go run ./tools/sources spin spin-terraform-aws brand
 
   sources:bump:
-    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned, brand to its main - and fetch them, and rewrite the prices. Then task reference.
+    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned, brand to its main - and fetch them, and rewrite the prices and the blog's posts. Then task reference.
     cmds:
       - go run ./tools/sources -bump spin spin-terraform-aws brand
       - task: pricing
+      - task: posts
 
   # The cost page's numbers: generated, dated, and refused by reference:check once they are a
   # month old or of other machines than the module starts, so a figure on the page is never
@@ -43,6 +44,14 @@ tasks:
     desc: Write src/data/pricing.json - what the machines the module starts by default cost an hour, on demand, in each region with images, from the lists the AWS pricing page loads (tools/pricing).
     cmds:
       - go run ./tools/pricing -terraform {{.TERRAFORM}} -out src/data/pricing.json
+
+  # The posts a page may link, [why](<post:the-slug>): what the blog's feed lists, so a draft's
+  # slug never reaches this public site. The build reads the file and never the feed, and a feed
+  # that cannot be read keeps it. The sync rewrites it every day.
+  posts:
+    desc: Write src/data/posts.json - the posts the blog has published, from its feed (tools/posts).
+    cmds:
+      - go run ./tools/posts -out src/data/posts.json
 
   sync:pr:
     desc: Commit what sources:bump and reference changed to branch sync/sources as the sync App (SYNC_TOKEN, BOT its login), and open its one pull request or update it. sync.yml runs it.
@@ -102,7 +111,7 @@ tasks:
       - go run ./tools/linkcheck -external dist
 
   gate:
-    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, the reference against the public sources, the build, and every link.
+    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests and the build's, the reference against the public sources, the build, and every link.
     cmds:
       - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
@@ -113,6 +122,8 @@ tasks:
       - task: install
       - go vet ./...
       - go test ./...
+      # The few rules the build keeps in JavaScript, with node's own runner: no dependency.
+      - node --test 'src/lib/*.test.mjs'
       - task: reference:public
       - task: build
       - task: links
