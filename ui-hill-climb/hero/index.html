@@ -1,0 +1,995 @@
+<!doctype html>
+<!--
+  The landing page's hero, as a throwaway prototype: three.js from a CDN, one file, nothing of the
+  site's build. The brief it answers is BRIEF.md beside it. Serve this directory and open it;
+  ?at=<seconds> freezes the film at that moment. Every label and caption says only what a page of
+  the site already says, and names that page.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+	--page: #0E1421; --surface: #161E2F; --raised: #1F2940; --border: #34405A;
+	--text: #E6EBF2; --muted: #9AA5B8; --accent: #1B7DB4; --accent-text: #6CC6EE;
+	--cyan: #27BFE8; --mint: #5FE3D6; --success: #4CC38A; --error: #EE7BB0; --label: #8FB3C6;
+	--term-bg: #0A0C10; --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--page); color: var(--text); font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+.stage { position: relative; height: 100vh; min-height: 560px; overflow: hidden; }
+/* A canvas is a replaced element: inset alone leaves it at its drawing buffer's size, twice the
+   stage on a retina screen. Its CSS size is the stage's. */
+canvas.gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.labels { position: absolute; inset: 0; pointer-events: none; }
+.flash { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+	background: radial-gradient(circle at 50% 50%, #EAF0F6 0%, #27BFE8 35%, #0E1421 80%); }
+
+.copy { position: absolute; left: clamp(16px, 4vw, 56px); top: clamp(16px, 6vh, 64px); max-width: min(30rem, calc(100vw - 32px)); z-index: 2; }
+.eyebrow { font: 500 12px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--label); display: flex; gap: .5rem; align-items: center; }
+.eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+h1 { font-size: clamp(1.6rem, 3.2vw, 2.6rem); line-height: 1.12; margin: .8rem 0 0; font-weight: 600; letter-spacing: -.01em; }
+h1 .hl { color: var(--accent-text); }
+
+.caption { position: absolute; left: clamp(16px, 4vw, 56px); bottom: clamp(84px, 13vh, 120px); max-width: min(30rem, calc(100vw - 32px)); z-index: 2;
+	transition: opacity 200ms var(--ease); }
+.caption .k { font: 500 12px/1 'IBM Plex Mono', monospace; color: var(--accent-text); letter-spacing: .06em; text-transform: uppercase; }
+.caption p { margin: .5rem 0 0; font-size: 1.05rem; line-height: 1.5; color: var(--text); }
+.caption a { font-size: .85rem; color: var(--accent-text); text-decoration: none; display: inline-block; margin-top: .5rem; }
+.caption a[hidden] { display: none; }
+.caption a:hover { text-decoration: underline; }
+
+/* The player: one bar along the bottom. The whole film plays by itself; the steps are there to
+   jump to one, and "step by step" stops at the end of each. */
+.player { position: absolute; left: clamp(16px, 4vw, 56px); right: clamp(16px, 4vw, 56px); bottom: clamp(16px, 4vh, 36px); z-index: 3;
+	display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.player button { font: 500 12px/1 'IBM Plex Mono', monospace; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+	border-radius: 6px; padding: 8px 10px; cursor: pointer; transition: border-color 120ms var(--ease); }
+.player button:hover { border-color: var(--accent-text); }
+.player button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.player button[aria-pressed="true"] { border-color: var(--cyan); color: var(--accent-text); }
+.player .play { width: 36px; padding: 8px 0; text-align: center; }
+.player .next[hidden] { display: none; }
+.chapters { flex: 1; min-width: 260px; display: flex; gap: 4px; }
+.chapters button { all: unset; cursor: pointer; flex: var(--w, 1); display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
+.chapters button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; border-radius: 3px; }
+.chapters .bar { height: 3px; border-radius: 2px; background: var(--border); position: relative; overflow: hidden; }
+.chapters .fill { position: absolute; inset: 0; width: 0; background: var(--cyan); }
+.chapters .t { font: 500 11px/1 'IBM Plex Mono', monospace; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chapters button[aria-current="true"] .t { color: var(--text); }
+
+.term { position: absolute; right: clamp(16px, 4vw, 56px); bottom: clamp(84px, 13vh, 120px); width: min(34rem, calc(100vw - 32px)); z-index: 2;
+	background: color-mix(in srgb, var(--term-bg) 92%, transparent); border: 1px solid var(--border); border-radius: 8px;
+	font: 12.5px/1.6 'IBM Plex Mono', monospace; color: #C9D1DE; padding: .7rem .9rem; opacity: 0; transform: translateY(8px);
+	transition: opacity 200ms var(--ease), transform 200ms var(--ease); }
+.term.on { opacity: 1; transform: none; }
+.term .bar { font-size: 11px; color: #7D889C; margin-bottom: .35rem; }
+.term .who { color: #27BFE8; }
+.term .cur { display: inline-block; width: .55em; height: 1.05em; background: #27BFE8; vertical-align: -2px; }
+
+.meter { position: absolute; z-index: 2; font: 500 12px/1 'IBM Plex Mono', monospace; color: var(--muted); }
+
+.lbl { font: 500 11.5px/1.3 'IBM Plex Mono', monospace; color: var(--text); background: color-mix(in srgb, var(--page) 80%, transparent);
+	border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; white-space: nowrap; opacity: 0; }
+.lbl.accent { color: var(--accent-text); border-color: color-mix(in srgb, var(--cyan) 45%, var(--border)); }
+.lbl.ok { color: var(--success); border-color: color-mix(in srgb, var(--success) 45%, var(--border)); }
+.lbl.no { color: var(--error); border-color: color-mix(in srgb, var(--error) 45%, var(--border)); }
+.lbl.big { font-size: 13px; }
+.lbl.title { font-size: 12.5px; font-weight: 500; color: var(--text); border-color: var(--border_strong, #6B7894); }
+.after { padding: 4rem clamp(16px, 4vw, 56px); color: var(--muted); max-width: 50rem; }
+
+@media (max-width: 720px) {
+	.chapters .t { display: none; }
+	.term { bottom: 150px; font-size: 11px; }
+	.caption { bottom: 70px; }
+	.caption p { font-size: .95rem; }
+}
+</style>
+<script type="importmap">
+{ "imports": {
+	"three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+	"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<section class="stage" id="stage" aria-label="How a workspace is built">
+	<canvas class="gl" id="gl" aria-hidden="true"></canvas>
+	<div class="labels" id="labels" aria-hidden="true"></div>
+	<div class="flash" id="flash"></div>
+
+	<div class="copy">
+		<div class="eyebrow">spin-stack · workspaces you own</div>
+		<h1>Workspaces for people. <span class="hl">A sandbox for agents, as a side effect.</span></h1>
+	</div>
+
+	<div class="caption" id="caption" aria-live="polite"><div class="k"></div><p></p><a href="#" hidden>How we know →</a></div>
+	<div class="term" id="term" aria-hidden="true"><div class="bar">serial console</div><div id="termBody"></div></div>
+
+	<div class="player">
+		<button class="play" id="play" type="button" aria-label="Pause">❚❚</button>
+		<div class="chapters" id="chapters"></div>
+		<button id="stepmode" type="button" aria-pressed="false">Step by step</button>
+		<button class="next" id="next" type="button" hidden>Next ▸</button>
+		<button id="replay" type="button">Replay ↺</button>
+	</div>
+</section>
+<div class="after">The rest of the landing page continues here.</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+
+// ---------- helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const smooth = (t) => t * t * (3 - 2 * t);
+const out = (t) => 1 - Math.pow(1 - t, 3);
+const lerp = (a, b, t) => a + (b - a) * t;
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const C = {
+	page: 0x0E1421, surface: 0x161E2F, raised: 0x1F2940, overlay: 0x2A3550, border: 0x34405A, muted: 0x9AA5B8,
+	cyan: 0x27BFE8, mint: 0x5FE3D6, blue: 0x2F6BE3, deep: 0x0C3C84, frost: 0xEAF0F6, success: 0x4CC38A, error: 0xEE7BB0, label: 0x8FB3C6,
+};
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- renderer ----------
+const canvas = document.getElementById('gl');
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.NoToneMapping;
+const labelRenderer = new CSS2DRenderer({ element: document.getElementById('labels') });
+const camera = new THREE.PerspectiveCamera(50, 1, 0.02, 600);
+
+const glow = (() => {
+	const c = document.createElement('canvas'); c.width = c.height = 128;
+	const g = c.getContext('2d'); const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+	r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.25, 'rgba(120,220,255,.9)'); r.addColorStop(1, 'rgba(39,191,232,0)');
+	g.fillStyle = r; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+})();
+const spark = (s = 1, color = 0xffffff) => {
+	const m = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+	m.scale.setScalar(s); return m;
+};
+const lineMat = (color, opacity = 1) => new THREE.LineBasicMaterial({ color, transparent: true, opacity });
+const edges = (geo, color, opacity = 1) => new THREE.LineSegments(new THREE.EdgesGeometry(geo), lineMat(color, opacity));
+const label = (text, cls = '') => {
+	const el = document.createElement('div'); el.className = 'lbl ' + cls; el.innerHTML = text;
+	const o = new CSS2DObject(el); o.el = el; return o;
+};
+const show = (lbl, a) => { lbl.el.style.opacity = a.toFixed(3); lbl.visible = a > 0.01; };
+const solid = (geo, color, opts = {}) => new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.2, ...opts }));
+const boxed = (w, h, d, color, edge = C.label, eo = 0.9) => {
+	const g = new THREE.Group(); const geo = new THREE.BoxGeometry(w, h, d);
+	g.add(solid(geo, color)); g.add(edges(geo, edge, eo)); return g;
+};
+const canvasPlane = (w, h, pxW, pxH, draw) => {
+	const c = document.createElement('canvas'); c.width = pxW; c.height = pxH;
+	const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+	const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, transparent: true, side: THREE.DoubleSide }));
+	m.redraw = (...a) => { draw(c.getContext('2d'), c, ...a); tex.needsUpdate = true; };
+	return m;
+};
+const at = (o, p) => { o.position.copy(p); return o; };
+const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
+
+// =====================================================================
+// SCENE A: the click, the fibre, the region, the hall, the rack, the slot.
+// =====================================================================
+const A = new THREE.Scene();
+A.fog = new THREE.FogExp2(C.page, 0.02);
+A.background = new THREE.Color(C.page);
+
+const BTN = { x: 920, y: 646, w: 200, h: 56 };
+const BW = 4.8, BH = 3.0;
+const browser = canvasPlane(BW, BH, 1280, 800, (bg, bc, t) => {
+	const W = bc.width, H = bc.height;
+	bg.fillStyle = '#0E1421'; bg.fillRect(0, 0, W, H);
+	bg.fillStyle = '#161E2F'; bg.fillRect(0, 0, W, 56);
+	['#EE7BB0', '#E3B04B', '#4CC38A'].forEach((c, i) => { bg.fillStyle = c; bg.beginPath(); bg.arc(28 + i * 22, 28, 7, 0, 7); bg.fill(); });
+	rr(bg, 120, 14, 760, 28, 14); bg.fillStyle = '#0E1421'; bg.fill();
+	bg.fillStyle = '#9AA5B8'; bg.font = '16px "IBM Plex Mono"'; bg.fillText('your installation · /workspaces/new', 140, 34);
+	bg.fillStyle = '#161E2F'; bg.fillRect(0, 56, 220, H - 56);
+	bg.font = '500 17px "IBM Plex Sans"';
+	['Workspaces', 'Snapshots', 'Projects', 'Teams', 'Settings'].forEach((s, i) => {
+		if (i === 0) { rr(bg, 12, 80, 196, 36, 6); bg.fillStyle = 'rgba(39,191,232,.14)'; bg.fill(); }
+		bg.fillStyle = i === 0 ? '#6CC6EE' : '#9AA5B8'; bg.fillText(s, 28, 104 + i * 44);
+	});
+	rr(bg, 300, 110, 880, 640, 12); bg.fillStyle = '#1F2940'; bg.fill(); bg.strokeStyle = '#34405A'; bg.lineWidth = 2; bg.stroke();
+	bg.fillStyle = '#E6EBF2'; bg.font = '600 34px "IBM Plex Sans"'; bg.fillText('Create workspace', 340, 172);
+	bg.fillStyle = '#9AA5B8'; bg.font = '18px "IBM Plex Sans"'; bg.fillText('A whole machine of its own: its kernel, root, a disk.', 340, 206);
+	const field = (y, k, v) => {
+		bg.fillStyle = '#8FB3C6'; bg.font = '500 15px "IBM Plex Mono"'; bg.fillText(k, 340, y);
+		rr(bg, 340, y + 12, 800, 52, 8); bg.fillStyle = '#0E1421'; bg.fill(); bg.strokeStyle = '#6B7894'; bg.lineWidth = 1.5; bg.stroke();
+		bg.fillStyle = '#E6EBF2'; bg.font = '20px "IBM Plex Mono"'; bg.fillText(v, 360, y + 46);
+	};
+	field(262, 'NAME', 'api'); field(362, 'PRESET', 'default'); field(462, 'IMAGE', 'the installation’s default');
+	bg.fillStyle = '#9AA5B8'; bg.font = '16px "IBM Plex Sans"'; bg.fillText('Network: closed until a policy opens it.', 340, 600);
+	const press = seg(t, 1.05, 1.15) * (1 - seg(t, 1.3, 1.5));
+	rr(bg, BTN.x, BTN.y, BTN.w, BTN.h, 8); bg.fillStyle = press > 0 ? '#2595D0' : '#1B7DB4'; bg.fill();
+	bg.fillStyle = '#FFFFFF'; bg.font = '600 20px "IBM Plex Sans"'; bg.fillText(t > 1.15 ? 'Creating…' : 'Create', BTN.x + (t > 1.15 ? 52 : 68), BTN.y + 36);
+	if (t > 1.1) {
+		const r = out(seg(t, 1.1, 1.8)); bg.strokeStyle = `rgba(108,198,238,${1 - r})`; bg.lineWidth = 3;
+		bg.beginPath(); bg.arc(BTN.x + BTN.w / 2, BTN.y + BTN.h / 2, 10 + r * 160, 0, 7); bg.stroke();
+	}
+	const p = smooth(seg(t, 0.15, 1.0));
+	const cx = lerp(620, BTN.x + 120, p), cy = lerp(420, BTN.y + 32, p);
+	bg.save(); bg.translate(cx, cy); bg.scale(1.6 - press * 0.15, 1.6 - press * 0.15);
+	bg.beginPath(); bg.moveTo(0, 0); bg.lineTo(0, 18); bg.lineTo(4.5, 14); bg.lineTo(8, 21); bg.lineTo(10.5, 20); bg.lineTo(7, 13); bg.lineTo(13, 13); bg.closePath();
+	bg.fillStyle = '#fff'; bg.fill(); bg.strokeStyle = '#0A0C10'; bg.lineWidth = 1.2; bg.stroke(); bg.restore();
+});
+A.add(browser);
+const lapBaseA = boxed(BW * 1.04, 0.1, BH * 0.95, 0x1b2333, C.label, 0.7); lapBaseA.position.set(0, -BH / 2 - 0.05, BH * 0.475); A.add(lapBaseA);
+const frame = edges(new THREE.PlaneGeometry(BW, BH), C.border, 0.9); A.add(frame);
+const btnWorld = V((BTN.x + BTN.w / 2) / 1280 * BW - BW / 2, BH / 2 - (BTN.y + BTN.h / 2) / 800 * BH, 0.01);
+
+const GY = -30;
+const grid = new THREE.GridHelper(400, 200, C.border, C.raised); grid.position.y = GY; grid.material.transparent = true; grid.material.opacity = 0.55; A.add(grid);
+const fibre = new THREE.CatmullRomCurve3([btnWorld.clone(), V(1.9, -1.4, -1.8), V(0.6, -5, -9), V(-7, -17, -28), V(5, -27.2, -58), V(-1, -28.7, -92), V(0, -28.7, -104), V(0, -28.7, -113)], false, 'centripetal');
+const FN = 600;
+const fpts = fibre.getSpacedPoints(FN);
+A.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(fpts), lineMat(C.label, 0.25)));
+const litGeo = new THREE.BufferGeometry().setFromPoints(fpts);
+A.add(new THREE.Line(litGeo, new THREE.LineBasicMaterial({ color: 0x9ef0ff, toneMapped: false })));
+litGeo.setDrawRange(0, 0);
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rnd = mulberry(7);
+for (let i = 0; i < 26; i++) {
+	const ang = rnd() * Math.PI * 2, d = 60 + rnd() * 220;
+	const s = V(Math.cos(ang) * d, GY + 0.05, -110 + Math.sin(ang) * d);
+	const m = V(lerp(s.x, 0, 0.5) + (rnd() - 0.5) * 40, GY + 0.05, lerp(s.z, -112, 0.5) + (rnd() - 0.5) * 40);
+	const c = new THREE.QuadraticBezierCurve3(s, m, V((rnd() - 0.5) * 8, GY + 0.05, -112));
+	A.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(c.getPoints(60)), lineMat(i % 5 ? C.border : C.label, i % 5 ? 0.7 : 0.45)));
+}
+{
+	const n = 1400, pos = new Float32Array(n * 3);
+	for (let i = 0; i < n; i++) { const a = rnd() * 7, d = 20 + Math.pow(rnd(), 0.6) * 280; pos.set([Math.cos(a) * d, GY + 0.06, -110 + Math.sin(a) * d], i * 3); }
+	const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+	A.add(new THREE.Points(g, new THREE.PointsMaterial({ color: C.label, size: 0.18, transparent: true, opacity: 0.55 })));
+}
+const signal = spark(1.1); A.add(signal);
+const regionLbl = label('a region · <b>your AWS account</b>', 'accent big'); regionLbl.position.set(0, GY + 7, -112); A.add(regionLbl);
+
+const HALL = { z0: -110, z1: -170, x: 16, h: 7 };
+const hall = edges(new THREE.BoxGeometry(HALL.x * 2, HALL.h, HALL.z0 - HALL.z1), C.label, 0.5);
+hall.position.set(0, GY + HALL.h / 2, (HALL.z0 + HALL.z1) / 2); A.add(hall);
+const RACK = { w: 0.8, d: 1.1, h: 2.3 };
+const rackGeo = new THREE.BoxGeometry(RACK.d, RACK.h, RACK.w);
+const rackFill = new THREE.MeshStandardMaterial({ color: C.surface, roughness: 0.8, metalness: 0.2 });
+const ledPos = [], ledCol = [];
+const TARGET = { row: 1, z: -140 };
+const ROWS = [-1.35, 1.35, -5.2, 5.2, -9, 9, -12.8, 12.8];
+for (const [ri, rx] of ROWS.entries()) {
+	for (let z = -116; z > -166; z -= RACK.w + 0.04) {
+		const r = new THREE.Mesh(rackGeo, rackFill); r.position.set(rx, GY + RACK.h / 2, z); A.add(r);
+		const e = edges(rackGeo, C.border, ri < 2 ? 0.9 : 0.5); e.position.copy(r.position); A.add(e);
+		const face = rx < 0 ? rx + RACK.d / 2 + 0.01 : rx - RACK.d / 2 - 0.01;
+		for (let k = 0; k < 14; k++) {
+			if (rnd() < 0.55) continue;
+			ledPos.push(face, GY + 0.25 + k * 0.145, z + (rnd() - 0.5) * 0.5);
+			const c = new THREE.Color(rnd() < 0.85 ? C.cyan : C.success).multiplyScalar(0.6 + rnd() * 0.8); ledCol.push(c.r, c.g, c.b);
+		}
+	}
+}
+{
+	const g = new THREE.BufferGeometry();
+	g.setAttribute('position', new THREE.Float32BufferAttribute(ledPos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(ledCol, 3));
+	A.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.022, vertexColors: true, toneMapped: false })));
+}
+const SLOT_Y = GY + 1.25;
+const slotFace = ROWS[TARGET.row] - RACK.d / 2 - 0.015;
+const slot = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.11, 0.66), new THREE.MeshBasicMaterial({ color: C.raised, toneMapped: false }));
+slot.position.set(slotFace, SLOT_Y, TARGET.z); A.add(slot);
+const slotGlow = spark(0.01, C.cyan); slotGlow.position.set(slotFace - 0.02, SLOT_Y, TARGET.z); A.add(slotGlow);
+const runnerLbl = label('a runner with room, or <b>one started</b> for it', 'accent'); runnerLbl.position.set(slotFace - 0.05, SLOT_Y + 0.42, TARGET.z); A.add(runnerLbl);
+A.add(new THREE.AmbientLight(0xffffff, 0.6));
+{ const dl = new THREE.DirectionalLight(0xbfd8ff, 1.4); dl.position.set(5, 10, 6); A.add(dl); }
+A.add(new THREE.HemisphereLight(0x6cc6ee, 0x0e1421, 0.6));
+
+const tmpP = new THREE.Vector3(), tmpL = new THREE.Vector3();
+function shotA(t) {
+	browser.redraw(t);
+	const wide = camera.aspect > 1.1;
+	const camStart = wide ? V(-1.45, -0.15, 5.9) : V(0, 0.6, 12.5), lookStart = wide ? V(-1.45, -0.15, 0) : V(0, 0.6, 0);
+	const u = smooth(seg(t, 1.35, 3.3));
+	litGeo.setDrawRange(0, Math.floor(FN * clamp(u + (t > 1.15 ? 0.015 : 0))));
+	signal.position.copy(fibre.getPointAt(clamp(u + 0.012)));
+	signal.material.opacity = t > 1.12 && t < 3.6 ? 1 : 0; signal.scale.setScalar(0.16 + 0.22 * (1 - u));
+	const fc = fibre.getPointAt(u), ahead = fibre.getPointAt(clamp(u + 0.05));
+	const followP = fc.clone().add(fibre.getTangentAt(u).multiplyScalar(-1.7).add(V(0, 0.55, 0))), followL = ahead;
+	const nearBtn = btnWorld.clone().add(V(0, 0.2, 1.6));
+	if (t < 1.35) {
+		const k = smooth(seg(t, 1.0, 1.35));
+		tmpP.lerpVectors(camStart, nearBtn, k * 0.6); tmpL.lerpVectors(lookStart, btnWorld, k);
+	} else if (t < 3.3) {
+		const k = smooth(seg(t, 1.35, 1.7));
+		tmpP.lerpVectors(nearBtn.clone().lerp(camStart, 0.4), followP, k); tmpL.lerpVectors(btnWorld, followL, k);
+	} else {
+		const door = fibre.getPointAt(1).clone().add(V(0, 0, 1.0));
+		const aisle = V(-0.55, SLOT_Y + 0.08, TARGET.z + 0.7);
+		tmpP.lerpVectors(door, aisle, smooth(seg(t, 3.3, 4.25)));
+		tmpL.lerpVectors(V(0, SLOT_Y, TARGET.z - 8), V(slotFace, SLOT_Y, TARGET.z), smooth(seg(t, 3.75, 4.35)));
+		tmpP.lerp(V(slotFace - 0.06, SLOT_Y, TARGET.z), Math.pow(seg(t, 4.3, 5.0), 2));
+	}
+	camera.position.copy(tmpP); camera.lookAt(tmpL);
+	camera.fov = 50 - 12 * seg(t, 4.3, 5.0); camera.updateProjectionMatrix();
+	const on = smooth(seg(t, 3.75, 4.15));
+	slot.material.color.setHex(C.raised).lerp(new THREE.Color(0x9ef0ff), on);
+	slotGlow.scale.setScalar(0.01 + on * 0.7);
+	show(regionLbl, seg(t, 2.2, 2.6) * (1 - seg(t, 3.2, 3.5)));
+	show(runnerLbl, seg(t, 3.95, 4.15) * (1 - seg(t, 4.55, 4.75)));
+	browser.material.opacity = 1 - seg(t, 1.9, 2.4); lapBaseA.visible = t < 2.2;
+	frame.material.opacity = 0.9 * (1 - seg(t, 1.9, 2.4));
+}
+
+// =====================================================================
+// SCENE B: your account, one region. Three kinds of machine, each a machine of its own: the
+// proxy (the only one the internet reaches), the control plane (with its database), and the
+// runner, a large machine that runs many workspaces. Nothing here says whether they share a
+// rack or a zone: they stand apart, on the region's floor, and no more is drawn.
+// The runner opens every connection it has: to the control plane, and to the proxy's relay.
+// =====================================================================
+const B = new THREE.Scene();
+B.fog = new THREE.FogExp2(C.page, 0.018);
+B.background = new THREE.Color(C.page);
+B.add(new THREE.AmbientLight(0xffffff, 0.55));
+{ const kl = new THREE.DirectionalLight(0xffffff, 2.2); kl.position.set(4, 9, 7); B.add(kl); }
+{ const rl = new THREE.DirectionalLight(0x6cc6ee, 1.2); rl.position.set(-6, 3, -4); B.add(rl); }
+B.add(new THREE.HemisphereLight(0x9cc0ff, 0x0e1421, 0.5));
+const FLOOR_Y = -1.45;
+const floor = new THREE.GridHelper(160, 160, C.border, C.raised); floor.position.y = FLOOR_Y - 0.05; floor.material.transparent = true; floor.material.opacity = 0.35; B.add(floor);
+
+// the region: a dashed outline on the floor, and nothing finer than that
+const REGION = { x0: -16.5, x1: 13.5, z0: -17, z1: 8.5 };
+{
+	const r = REGION, y = FLOOR_Y;
+	const pts = [V(r.x0, y, r.z0), V(r.x1, y, r.z0), V(r.x1, y, r.z1), V(r.x0, y, r.z1), V(r.x0, y, r.z0)];
+	const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineDashedMaterial({ color: C.label, dashSize: 0.6, gapSize: 0.35, transparent: true, opacity: 0.8 }));
+	l.computeLineDistances(); B.add(l); B.region = l;
+}
+const regionLblB = label('<b>your AWS account</b> · one region', 'title'); regionLblB.position.set(REGION.x0 + 0.3, FLOOR_Y, REGION.z1); regionLblB.center.set(0, 0); B.add(regionLblB);
+
+// A machine: a chassis on a plinth of its own, its front vents and LEDs.
+function machine(w, h, d, accent = C.cyan) {
+	const g = new THREE.Group();
+	const plinth = new THREE.Mesh(new THREE.BoxGeometry(w + 0.8, 0.12, d + 0.8), new THREE.MeshStandardMaterial({ color: 0x0b111c, roughness: 0.9 }));
+	plinth.position.y = 0.06; g.add(plinth); g.add(at(edges(new THREE.BoxGeometry(w + 0.8, 0.12, d + 0.8), C.border, 0.9), plinth.position.clone()));
+	const body = boxed(w, h, d, C.surface, C.label, 0.95); body.position.y = 0.12 + h / 2; g.add(body);
+	const vents = [];
+	for (let i = 0; i < 6; i++) vents.push(V(-w / 2 + 0.25, 0.12 + 0.25 + i * (h - 0.5) / 5, d / 2 + 0.005), V(w * 0.15, 0.12 + 0.25 + i * (h - 0.5) / 5, d / 2 + 0.005));
+	g.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(vents), lineMat(C.border, 1)));
+	g.leds = [];
+	for (let i = 0; i < 3; i++) {
+		const led = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.06, 0.02), new THREE.MeshBasicMaterial({ color: i < 2 ? C.success : accent, toneMapped: false }));
+		led.position.set(w / 2 - 0.35 - i * 0.24, 0.12 + h - 0.22, d / 2 + 0.01); g.add(led); g.leds.push(led);
+	}
+	g.top = 0.12 + h; return g;
+}
+
+// --- the proxy: Caddy, the only machine the internet reaches; the dashboard, ports and the relay ---
+const PROXY_AT = V(-11.5, FLOOR_Y, 3.2);
+const proxyM = machine(3.2, 1.1, 2.0, C.mint); proxyM.position.copy(PROXY_AT); B.add(proxyM);
+const port443 = spark(0.01, C.mint); port443.position.copy(PROXY_AT).add(V(1.0, 0.7, 1.05)); B.add(port443);
+const proxyLbl = label('<b>proxy</b> · a machine of its own · the only one the internet reaches', 'title'); proxyLbl.position.copy(PROXY_AT).add(V(0, proxyM.top + 0.35, 0)); B.add(proxyLbl);
+
+// --- the control plane: a machine of its own, its database on it, and what it wants written down ---
+const CP_AT = V(-11.5, FLOOR_Y, -7.5);
+const cpM = machine(3.6, 1.4, 2.4); cpM.position.copy(CP_AT); B.add(cpM);
+const db = new THREE.Group();
+{
+	for (let i = 0; i < 3; i++) {
+		const c = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.18, 40), new THREE.MeshStandardMaterial({ color: C.raised, roughness: 0.5 }));
+		c.position.y = i * 0.22; db.add(c); db.add(at(edges(new THREE.CylinderGeometry(0.42, 0.42, 0.18, 20), C.label, 0.6), c.position.clone()));
+	}
+}
+db.position.copy(CP_AT).add(V(1.1, cpM.top + 0.1, 0.4)); B.add(db);
+const dbLbl = label('database', ''); dbLbl.position.copy(db.position).add(V(0.7, 0.3, 0)); dbLbl.center.set(0, 0.5); B.add(dbLbl);
+let cpPanelLast = -1;
+const cpPanel = canvasPlane(3.6, 2.3, 720, 460, (g, c, hl) => {
+	g.clearRect(0, 0, c.width, c.height);
+	rr(g, 4, 4, c.width - 8, c.height - 8, 14); g.fillStyle = 'rgba(22,30,47,.92)'; g.fill(); g.strokeStyle = '#6CC6EE'; g.lineWidth = 3; g.stroke();
+	g.fillStyle = '#8FB3C6'; g.font = '500 26px "IBM Plex Mono"'; g.fillText('what should run', 32, 56);
+	const rows = [['api', 'running', 'runner 1'], ['web', 'stopped', '—'], ['build', 'running', 'runner 1'], ['docs', 'running', 'runner 2']];
+	rows.forEach(([n, s, h], i) => {
+		const y = 110 + i * 80;
+		if (i === 0) { rr(g, 18, y - 44, c.width - 36, 66, 10); g.fillStyle = `rgba(39,191,232,${0.08 + 0.25 * hl})`; g.fill(); }
+		g.font = '30px "IBM Plex Mono"'; g.fillStyle = '#E6EBF2'; g.fillText(n, 36, y);
+		g.fillStyle = s === 'running' ? '#4CC38A' : '#9AA5B8'; g.fillText(s, 230, y);
+		g.fillStyle = '#9AA5B8'; g.fillText(h, 450, y);
+	});
+});
+cpPanel.position.copy(CP_AT).add(V(-0.3, cpM.top + 1.5, 0)); B.add(cpPanel);
+const cpLbl = label('<b>control plane</b> · a machine of its own · it writes what should run', 'title'); cpLbl.position.copy(CP_AT).add(V(0, cpM.top + 2.95, 0)); B.add(cpLbl);
+
+// --- the runner: a large machine of its own. An open chassis, so what runs in it shows. ---
+const BOARD = { w: 15.5, d: 11, y: -0.62, cx: 2.4, cz: -1.4 };
+const board = new THREE.Group();
+{
+	const geo = new THREE.BoxGeometry(BOARD.w, 0.3, BOARD.d);
+	board.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x111a2b, roughness: 0.85, metalness: 0.3 }))); board.add(edges(geo, C.label, 0.6));
+	const wallGeo = new THREE.BoxGeometry(BOARD.w, 0.9, BOARD.d);
+	const walls = new THREE.Mesh(wallGeo, new THREE.MeshBasicMaterial({ color: C.cyan, transparent: true, opacity: 0.035, side: THREE.BackSide, depthWrite: false }));
+	walls.position.y = 0.6; board.add(walls); board.add(at(edges(wallGeo, C.label, 0.45), walls.position.clone()));
+	const tr = [], r2 = mulberry(21);
+	for (let i = 0; i < 60; i++) {
+		let x = (r2() - 0.5) * BOARD.w * 0.9, z = (r2() - 0.5) * BOARD.d * 0.9;
+		const pts = [V(x, 0.155, z)];
+		for (let k = 0; k < 3; k++) { if (r2() < 0.5) x += (r2() - 0.5) * 4; else z += (r2() - 0.5) * 4; pts.push(V(clamp(x, -7.5, 7.5), 0.155, clamp(z, -5.3, 5.3))); }
+		for (let k = 1; k < pts.length; k++) tr.push(pts[k - 1], pts[k]);
+	}
+	board.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(tr), lineMat(0x2a4a6a, 0.8)));
+	const legGeo = new THREE.BoxGeometry(0.4, 0.68, 0.4);
+	for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { const leg = solid(legGeo, 0x0b111c); leg.position.set(x * (BOARD.w / 2 - 0.4), -0.48, z * (BOARD.d / 2 - 0.4)); board.add(leg); }
+}
+board.position.set(BOARD.cx, BOARD.y - 0.15, BOARD.cz); B.add(board);
+const boardLbl = label('<b>runner</b> · a large machine of its own · many workspaces', 'title'); boardLbl.position.set(BOARD.cx + BOARD.w / 2, BOARD.y + 1.2, BOARD.cz - BOARD.d / 2); boardLbl.center.set(1, 1); B.add(boardLbl);
+
+const cores = [], mem = [];
+const CORES_AT = V(3.4, BOARD.y, 1.4);
+for (let i = 0; i < 8; i++) {
+	const c = boxed(0.62, 0.12, 0.62, C.raised, C.label, 0.6);
+	c.position.set(CORES_AT.x + (i % 4) * 0.8, BOARD.y + 0.06, CORES_AT.z + Math.floor(i / 4) * 0.8); B.add(c); cores.push(c);
+}
+for (let i = 0; i < 4; i++) {
+	const m = boxed(2.6, 0.34, 0.14, C.raised, C.label, 0.6);
+	m.position.set(CORES_AT.x + 1.2, BOARD.y + 0.17, CORES_AT.z + 1.75 + i * 0.24); B.add(m); mem.push(m);
+}
+const coresLbl = label('cores and memory, as its preset says', ''); coresLbl.position.set(CORES_AT.x + 1.2, BOARD.y + 0.6, CORES_AT.z - 0.5); B.add(coresLbl);
+const nvme = [];
+const NVME_AT = V(-3.6, BOARD.y, -5.4);
+for (let i = 0; i < 3; i++) {
+	const n = boxed(2.2, 0.1, 0.5, C.raised, C.label, 0.7);
+	n.position.set(NVME_AT.x, BOARD.y + 0.05, NVME_AT.z + i * 0.62); B.add(n); nvme.push(n);
+}
+const nvmeLbl = label('NVMe · the local copy', ''); nvmeLbl.position.set(NVME_AT.x, BOARD.y + 0.45, NVME_AT.z - 0.4); B.add(nvmeLbl);
+const RUN_AT = V(4.8, BOARD.y, -4.8);
+const runner = new THREE.Group();
+{
+	runner.add(boxed(2.0, 0.34, 1.5, 0x1a2740, C.cyan, 0.9));
+	const pinGeo = new THREE.BoxGeometry(0.08, 0.06, 0.2), pinMat = new THREE.MeshStandardMaterial({ color: 0x8FB3C6, metalness: 0.8, roughness: 0.3 });
+	for (let i = 0; i < 9; i++) for (const s of [-1, 1]) { const p = new THREE.Mesh(pinGeo, pinMat); p.position.set(-0.85 + i * 0.21, -0.12, s * 0.85); runner.add(p); }
+	const die = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.04, 0.7), new THREE.MeshBasicMaterial({ color: C.cyan, toneMapped: false, transparent: true, opacity: 0.35 }));
+	die.position.y = 0.19; runner.add(die); runner.die = die;
+}
+runner.position.set(RUN_AT.x, BOARD.y + 0.2, RUN_AT.z); B.add(runner);
+const runnerLbl2 = label('the runner process', 'accent'); runnerLbl2.position.set(RUN_AT.x, BOARD.y + 0.8, RUN_AT.z); B.add(runnerLbl2);
+function miniJail(x, z, s) {
+	const g = new THREE.Group();
+	const box = edges(new THREE.BoxGeometry(5.2, 3.4, 5.2), C.cyan, 0.35); box.position.y = 0.95; g.add(box);
+	[C.deep, C.blue, C.cyan, C.frost].forEach((c, i) => {
+		const d = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.45, 0.24, 48), new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, transparent: true, opacity: 0.5 }));
+		d.position.y = i * 0.32; g.add(d);
+	});
+	g.scale.setScalar(s); g.position.set(x, BOARD.y + 0.62 * s, z); B.add(g); return g;
+}
+const neighbours = [miniJail(8.0, -1.4, 0.42), miniJail(8.0, 1.9, 0.42)];
+const neighLbl = label('other workspaces · <b>a jail each</b>', ''); neighLbl.position.set(8.0, BOARD.y + 2.1, -1.4); B.add(neighLbl);
+
+// the host's egress: a gate at the runner's back. Closed; a policy opens one lane.
+const EG = V(8.6, BOARD.y, BOARD.cz - BOARD.d / 2);
+const egress = new THREE.Group();
+{
+	for (const z of [-1.3, 1.3]) { const p = boxed(0.3, 2.4, 0.3, C.surface, C.label, 0.9); p.position.set(0, 1.2, z); egress.add(p); }
+	const top = boxed(0.4, 0.3, 2.9, C.surface, C.label, 0.9); top.position.set(0, 2.45, 0); egress.add(top);
+	egress.bars = [];
+	for (let i = 0; i < 9; i++) {
+		const b = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.1, 0.05), new THREE.MeshBasicMaterial({ color: C.label, toneMapped: false, transparent: true }));
+		b.position.set(0, 1.15, -1.0 + i * 0.25); egress.add(b); egress.bars.push(b);
+	}
+}
+egress.rotation.y = Math.PI / 2; egress.position.copy(EG); B.add(egress);
+const egressLbl = label('<b>the host’s egress</b> · closed until a policy opens it', 'title'); egressLbl.position.copy(EG).add(V(0, 3.2, 0)); B.add(egressLbl);
+const deniedLbl = label('✕ not in its policy', 'no'); deniedLbl.position.copy(EG).add(V(1.6, 0.5, 0.3)); deniedLbl.center.set(0, 0.5); B.add(deniedLbl);
+const allowedLbl = label('✓ allowed by a policy', 'ok'); allowedLbl.position.copy(EG).add(V(-1.2, 3.0, -5)); allowedLbl.center.set(0.5, 1); B.add(allowedLbl);
+
+// --- the bucket ---
+const bucket = new THREE.Group();
+{
+	const geo = new THREE.CylinderGeometry(1.5, 1.1, 1.8, 48, 1, true);
+	bucket.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: C.raised, roughness: 0.7, side: THREE.DoubleSide, transparent: true, opacity: 0.85 })));
+	bucket.add(edges(new THREE.CylinderGeometry(1.5, 1.1, 1.8, 24, 1, true), C.label, 0.7));
+	const rim = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.03, 8, 64), new THREE.MeshBasicMaterial({ color: C.label, transparent: true })); rim.rotation.x = Math.PI / 2; rim.position.y = 0.9; bucket.add(rim);
+}
+bucket.position.set(1.0, 4.4, -13.5); B.add(bucket);
+const bucketLbl = label('<b>bucket</b> · S3, in your account', 'title'); bucketLbl.position.set(1.0, 5.8, -13.5); B.add(bucketLbl);
+const GATE = V(1.6, 2.6, -6.4);
+const gate = new THREE.Mesh(new THREE.TorusGeometry(1.85, 0.035, 8, 96), new THREE.MeshBasicMaterial({ color: C.label, toneMapped: false, transparent: true }));
+gate.position.copy(GATE); gate.lookAt(V(0, 0.4, 0)); B.add(gate);
+const gateLbl = label('checked against its digest · decrypted', ''); gateLbl.position.copy(GATE).add(V(2.0, 1.6, 0)); gateLbl.center.set(0, 0.5); B.add(gateLbl);
+
+// --- the laptop: a person, a browser, outside the account ---
+function laptop(screen, sw, sh) {
+	const g = new THREE.Group();
+	const base = boxed(sw * 1.04, 0.1, sh * 0.95, 0x1b2333, C.label, 0.7); base.position.set(0, 0.05, sh * 0.475); g.add(base);
+	const keys = [];
+	for (let r = 0; r < 4; r++) for (let k = 0; k < 12; k++) keys.push(V(-sw * 0.42 + k * sw * 0.0765, 0.105, 0.25 + r * 0.24 * sh / 2.5), V(-sw * 0.42 + k * sw * 0.0765 + sw * 0.06, 0.105, 0.25 + r * 0.24 * sh / 2.5));
+	g.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(keys), lineMat(C.border, 1)));
+	const lid = new THREE.Group();
+	const back = boxed(sw * 1.04, sh * 1.06, 0.06, 0x1b2333, C.label, 0.7); back.position.set(0, sh * 0.53, -0.04); lid.add(back);
+	screen.position.set(0, sh * 0.53, 0.0); lid.add(screen);
+	lid.rotation.x = -0.18; g.add(lid);
+	return g;
+}
+let lapLast = -1;
+const lapScreen = canvasPlane(4.0, 2.5, 1024, 640, (g, c, ph) => {
+	const W = c.width, H = c.height;
+	g.fillStyle = '#0E1421'; g.fillRect(0, 0, W, H);
+	g.fillStyle = '#161E2F'; g.fillRect(0, 0, W, 46);
+	['#EE7BB0', '#E3B04B', '#4CC38A'].forEach((col, i) => { g.fillStyle = col; g.beginPath(); g.arc(22 + i * 18, 23, 6, 0, 7); g.fill(); });
+	rr(g, 100, 11, 600, 24, 12); g.fillStyle = '#0E1421'; g.fill();
+	g.fillStyle = '#9AA5B8'; g.font = '14px "IBM Plex Mono"'; g.fillText('your installation · /workspaces/api', 116, 28);
+	g.fillStyle = '#E6EBF2'; g.font = '600 30px "IBM Plex Sans"'; g.fillText('api', 40, 100);
+	rr(g, 100, 74, 120, 34, 17); g.fillStyle = 'rgba(76,195,138,.16)'; g.fill(); g.fillStyle = '#4CC38A'; g.font = '500 16px "IBM Plex Mono"'; g.fillText('● RUNNING', 112, 97);
+	const press = seg(ph, 0.16, 0.2) * (1 - seg(ph, 0.24, 0.28));
+	rr(g, W - 240, 72, 200, 40, 8); g.fillStyle = press ? '#2595D0' : '#1B7DB4'; g.fill();
+	g.fillStyle = '#fff'; g.font = '600 17px "IBM Plex Sans"'; g.fillText('Open terminal', W - 202, 98);
+	// the terminal pane: a shell in the browser, over the relay
+	const open = smooth(seg(ph, 0.24, 0.34));
+	if (open > 0) {
+		rr(g, 40, 140, W - 80, (H - 180) * open, 8); g.fillStyle = '#0A0C10'; g.fill(); g.strokeStyle = '#34405A'; g.lineWidth = 2; g.stroke();
+		if (open > 0.9) {
+			g.font = '22px "IBM Plex Mono"';
+			const lines = [];
+			if (ph < 0.62) lines.push(['#7D889C', 'connecting through the relay…']);
+			if (ph >= 0.62) lines.push(['#E6EBF2', '# whoami']);
+			if (ph >= 0.72) lines.push(['#4CC38A', 'root']);
+			if (ph >= 0.8) lines.push(['#E6EBF2', '# ']);
+			lines.forEach(([col, t], i) => { g.fillStyle = col; g.fillText(t, 70, 190 + i * 34); });
+			if (ph >= 0.8) { g.fillStyle = '#27BFE8'; g.fillRect(70 + g.measureText('# ').width, 190 + 2 * 34 - 20, 12, 24); }
+		}
+	}
+	const p = smooth(seg(ph, 0.02, 0.16));
+	const cx = lerp(560, W - 130, p), cy = lerp(360, 96, p);
+	g.save(); g.translate(cx, cy); g.scale(1.4, 1.4);
+	g.beginPath(); g.moveTo(0, 0); g.lineTo(0, 18); g.lineTo(4.5, 14); g.lineTo(8, 21); g.lineTo(10.5, 20); g.lineTo(7, 13); g.lineTo(13, 13); g.closePath();
+	g.fillStyle = '#fff'; g.fill(); g.strokeStyle = '#0A0C10'; g.lineWidth = 1.2; g.stroke(); g.restore();
+});
+const LAP_AT = V(-19.5, FLOOR_Y + 0.02, 0.5);
+const lap = laptop(lapScreen, 4.0, 2.5); lap.position.copy(LAP_AT); lap.rotation.y = 0.5; lap.scale.setScalar(1.35); B.add(lap);
+const youLbl = label('<b>you</b> · a browser, anywhere', 'title'); youLbl.position.copy(LAP_AT).add(V(0, 4.4, 0)); B.add(youLbl);
+
+// --- the disk ---
+const LAYERS = [C.deep, C.blue, C.cyan];
+const R = 1.55, H = 0.26, GAP = 0.06;
+function disk(color, r = R, h = H) {
+	const g = new THREE.Group();
+	const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.97, h, 96, 1), new THREE.MeshStandardMaterial({ color, roughness: 0.35, metalness: 0.15, emissive: color, emissiveIntensity: 0.12, transparent: true }));
+	g.add(mesh);
+	const cg = new THREE.CylinderGeometry(r, r * 0.97, h, 48, 1); cg.deleteAttribute('uv'); cg.deleteAttribute('normal');
+	const e = new THREE.LineSegments(new THREE.EdgesGeometry(mergeVertices(cg), 20), lineMat(0xffffff, 0.18)); g.add(e);
+	g.mesh = mesh; g.edge = e; return g;
+}
+const stack = LAYERS.map((c, i) => { const d = disk(c); d.rest = V(0, i * (H + GAP), 0); B.add(d); return d; });
+const tip = disk(C.frost, R, H * 0.8); tip.rest = V(0, 3 * (H + GAP) - 0.02, 0); B.add(tip);
+const tipLbl = label('<b>your layer</b>: every write lands here', 'accent'); tipLbl.position.set(R + 0.3, tip.rest.y + 0.35, 0.4); B.add(tipLbl);
+const imgLbl = label('the image: read-only, shared, <b>nothing copied</b>', ''); imgLbl.position.set(-R - 0.3, 0.35, 0.4); imgLbl.center.set(1, 0.5); B.add(imgLbl);
+const layerLbls = stack.map((d, i) => { const l = label(`layer ${i + 1} <span style="color:#4CC38A">✓</span>`, 'ok'); B.add(l); return l; });
+
+const JAIL = { w: 5.2, h: 3.4, d: 5.2, y: 0.95 };
+const jail = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(JAIL.w, JAIL.h, JAIL.d)), new THREE.LineBasicMaterial({ color: 0x9ef0ff, transparent: true, toneMapped: false }));
+jail.position.y = JAIL.y; B.add(jail);
+const jailFill = new THREE.Mesh(new THREE.BoxGeometry(JAIL.w, JAIL.h, JAIL.d), new THREE.MeshBasicMaterial({ color: C.cyan, transparent: true, opacity: 0, depthWrite: false, side: THREE.BackSide }));
+jailFill.position.y = JAIL.y; B.add(jailFill);
+const jailLbls = [
+	['a user of its own', V(-JAIL.w / 2, JAIL.y + JAIL.h / 2 + 0.3, JAIL.d / 2), [0, 1]],
+	['a network namespace of its own · <b>empty</b>', V(0, JAIL.y - JAIL.h / 2 - 0.35, JAIL.d / 2), [0.5, 0.5]],
+	['nothing opened by name', V(-JAIL.w / 2 - 0.15, JAIL.y - 0.2, JAIL.d / 2), [1, 0.5]],
+].map(([t, p, c]) => { const l = label(t, 'accent'); l.position.copy(p); l.center.set(...c); B.add(l); return l; });
+const qemuLbl = label('QEMU', 'big'); qemuLbl.position.set(0, JAIL.y + JAIL.h / 2 - 0.35, -JAIL.d / 2 + 0.1); B.add(qemuLbl);
+
+// --- the connections. Each is drawn from the end that opens it. ---
+function link(a, b, color = C.cyan, dashed = false, lift = 1.0) {
+	const pts = new THREE.QuadraticBezierCurve3(a, a.clone().lerp(b, 0.5).add(V(0, lift, 0)), b).getPoints(80);
+	const g = new THREE.BufferGeometry().setFromPoints(pts);
+	const m = dashed ? new THREE.LineDashedMaterial({ color, dashSize: 0.18, gapSize: 0.12, transparent: true, toneMapped: false })
+		: new THREE.LineBasicMaterial({ color, transparent: true, toneMapped: false });
+	const l = new THREE.Line(g, m); if (dashed) l.computeLineDistances(); l.n = pts.length; g.setDrawRange(0, 0); B.add(l);
+	const s = spark(0.45); B.add(s); l.spark = s; l.curvePts = pts; return l;
+}
+const drawLink = (l, p, a = 1) => {
+	l.geometry.setDrawRange(0, Math.floor(l.n * p)); l.material.opacity = p > 0 ? a : 0; l.visible = p > 0 && a > 0.01;
+	const i = Math.min(l.n - 1, Math.floor((l.n - 1) * p)); l.spark.position.copy(l.curvePts[i]); l.spark.material.opacity = p > 0 && p < 1 && a > 0.01 ? 1 : 0;
+};
+const along = (pts, p) => pts[Math.min(pts.length - 1, Math.floor((pts.length - 1) * clamp(p)))];
+const runnerTop = runner.position.clone().add(V(0, 0.2, 0));
+const toCp = link(runnerTop, CP_AT.clone().add(V(1.8, cpM.top - 0.3, 0.6)), C.cyan, false, 4);
+const toCpLbl = label('the runner connects to the control plane', 'accent'); toCpLbl.position.set(-4, 5.4, -7); B.add(toCpLbl);
+const listLbl = label('and gets <b>the whole list</b> of what should run on it', 'accent'); listLbl.position.set(-4, 4.6, -7); B.add(listLbl);
+const listPkt = spark(0.6, C.cyan); B.add(listPkt);
+const toRelay = link(runnerTop.clone().add(V(-0.6, 0, 0.6)), PROXY_AT.clone().add(V(1.6, proxyM.top - 0.2, 0)), C.mint, false, 3.5);
+const relayLbl = label('the runner opens its connection to the relay · <b>none is opened to a runner</b>', 'accent'); relayLbl.position.set(-3.5, 4.2, 0.5); B.add(relayLbl);
+const fromLap = link(LAP_AT.clone().add(V(1.2, 2.2, 0.6)), PROXY_AT.clone().add(V(-1.6, 0.7, 0.4)), 0xffffff, true, 2.2);
+const lapLbl = label('HTTPS to the proxy: <b>Open terminal</b>, a shell in the browser over the relay', 'accent'); lapLbl.position.set(-15.5, 4.6, 2.2); B.add(lapLbl);
+const sessPkt = spark(0.7, 0xffffff); B.add(sessPkt);
+const fdLinks = [V(0, 0.2, 0), V(0, 0.6, 0.2), V(0.2, 1.0, -0.2), V(-0.2, 1.4, 0.1)].map((p) => link(runner.position.clone().add(V(-1.0, 0.1, 0.4)), p, 0x9cc0ff));
+const fdLbl = label('disks, sockets, /dev/kvm: <b>handed in already open</b>', ''); fdLbl.position.set(3.6, 2.4, -3.4); B.add(fdLbl);
+const vsock = link(V(JAIL.w / 2, 1.6, -1.6), runner.position.clone().add(V(-0.6, 0.2, 0.6)), C.mint, true);
+const vsockLbl = label('vsock, <b>not the network</b>', 'accent'); vsockLbl.position.set(3.9, 2.0, -2.2); B.add(vsockLbl);
+const toEgress = link(V(1.8, 0.9, -JAIL.d / 2), EG.clone().add(V(0, 1.1, 0.2)), C.mint, true);
+const allowedPath = new THREE.CatmullRomCurve3([EG.clone().add(V(-0.3, 1.2, 0.3)), EG.clone().add(V(-0.5, 1.4, -1.5)), EG.clone().add(V(-1.2, 2.6, -5))]);
+const deniedPath = new THREE.CatmullRomCurve3([EG.clone().add(V(0.5, 1.0, 0.6)), EG.clone().add(V(0.6, 1.05, 0.06)), EG.clone().add(V(1.1, 1.3, 0.9))]);
+const pktOk = spark(0.5, C.success), pktNo = spark(0.5, C.error); B.add(pktOk, pktNo);
+const kernel = spark(0.01, C.mint); kernel.position.set(0, 1.9, 0); B.add(kernel);
+const growRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.012, 6, 120), new THREE.MeshBasicMaterial({ color: C.mint, transparent: true, toneMapped: false }));
+growRing.rotation.x = Math.PI / 2; B.add(growRing);
+
+// --- the mark, modelled on logos/mark-clear-512.png: a rounded blue bowl, a cyan-to-mint disk
+// that bulges past it, navy grooves between, a frost top with a raised rim, a swirl that wraps
+// from the back left round the front and runs into the middle disk, and its shadow. ---
+const mark = new THREE.Group();
+const markMats = [];
+function shaded(profile, top, bottom, lightSide = 0.35) {
+	const g = new THREE.LatheGeometry(profile.map(([x, y]) => new THREE.Vector2(x, y)), 160);
+	const pos = g.attributes.position, col = [];
+	const ys = profile.map((p) => p[1]), y0 = Math.min(...ys), y1 = Math.max(...ys), rmax = Math.max(...profile.map((p) => p[0]));
+	const ct = new THREE.Color(top), cb = new THREE.Color(bottom), c = new THREE.Color();
+	for (let i = 0; i < pos.count; i++) {
+		const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+		c.copy(cb).lerp(ct, (y - y0) / (y1 - y0 || 1));
+		const side = clamp(0.5 - 0.5 * (x * 0.8 - z * 0.2) / rmax);   // the light comes from the left
+		c.lerp(new THREE.Color(0xffffff), side * lightSide * 0.5);
+		col.push(c.r, c.g, c.b);
+	}
+	g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+	const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.4, metalness: 0.0, envMapIntensity: 0, transparent: true });
+	markMats.push(m); return new THREE.Mesh(g, m);
+}
+const NAVY = 0x0b1e4a;
+mark.add(shaded([[0, -1.3], [0.8, -1.28], [1.35, -1.15], [1.68, -0.88], [1.84, -0.5], [1.86, -0.22], [1.78, -0.12], [0, -0.12]], 0x2563d9, 0x0a2f78, 0.12));
+mark.add(shaded([[0, -0.16], [1.76, -0.16], [1.8, -0.05], [0, -0.05]], NAVY, NAVY, 0));
+mark.add(shaded([[0, -0.06], [1.7, -0.06], [1.86, 0.06], [1.92, 0.24], [1.86, 0.42], [1.62, 0.56], [1.3, 0.6], [0, 0.6]], 0x4fd8e0, 0x1aa6dc, 0.12));
+mark.add(shaded([[0, 0.56], [1.4, 0.56], [1.42, 0.68], [0, 0.68]], NAVY, NAVY, 0));
+mark.add(shaded([[0, 0.66], [1.22, 0.66], [1.3, 0.74], [1.3, 0.84], [1.2, 0.9], [0.98, 0.92], [0.95, 0.88], [0, 0.88]], 0xf4f7fc, 0xb8c8f0, 0.25));
+function swirl(r0, r1, a0, a1, y0, y1, thick, cA, cB, seg = 160) {
+	const pts = [];
+	for (let i = 0; i <= 60; i++) { const t = i / 60, a = lerp(a0, a1, t), r = lerp(r0, r1, t); pts.push(V(r * Math.cos(a), lerp(y0, y1, t), r * Math.sin(a))); }
+	const curve = new THREE.CatmullRomCurve3(pts);
+	const g = new THREE.TubeGeometry(curve, seg, thick, 16, false);
+	const pos = g.attributes.position, col = [], ca = new THREE.Color(cA), cb = new THREE.Color(cB), c = new THREE.Color();
+	for (let i = 0; i <= seg; i++) {
+		const t = i / seg, ctr = curve.getPointAt(t), taper = Math.pow(smooth(clamp(t * 1.1)), 0.7) * (1 - 0.35 * seg_(t, 0.85, 1));
+		for (let j = 0; j <= 16; j++) {
+			const k = i * 17 + j;
+			const o = V(pos.getX(k), pos.getY(k), pos.getZ(k)).sub(ctr);
+			o.multiplyScalar(taper); o.y *= 0.55;
+			pos.setXYZ(k, ctr.x + o.x, ctr.y + o.y, ctr.z + o.z);
+			c.copy(ca).lerp(cb, t); col.push(c.r, c.g, c.b);
+		}
+	}
+	g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.computeVertexNormals();
+	const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.28, metalness: 0.05, emissive: 0x0a3040, emissiveIntensity: 0.4, transparent: true });
+	markMats.push(m); return new THREE.Mesh(g, m);
+}
+function seg_(t, a, b) { return clamp((t - a) / (b - a)); }
+mark.add(swirl(2.55, 1.9, Math.PI * 1.12, Math.PI * 0.12, 0.62, 0.28, 0.2, C.blue, C.mint));
+mark.add(swirl(2.95, 2.45, Math.PI * 1.16, Math.PI * 0.62, 0.92, 0.62, 0.07, C.cyan, C.mint, 120));
+{
+	const sh = new THREE.Mesh(new THREE.CircleGeometry(2.3, 80), new THREE.MeshBasicMaterial({ color: 0x05080f, transparent: true, opacity: 0.7, depthWrite: false }));
+	sh.rotation.x = -Math.PI / 2; sh.scale.set(1.15, 0.32, 1); sh.position.y = -1.5; mark.add(sh); markMats.push(sh.material); sh.material.userData.max = 0.7;
+	const ring = new THREE.Mesh(new THREE.RingGeometry(2.3, 2.75, 80), new THREE.MeshBasicMaterial({ color: 0x8FB3C6, transparent: true, opacity: 0.1, depthWrite: false }));
+	ring.rotation.x = -Math.PI / 2; ring.scale.set(1.15, 0.32, 1); ring.position.y = -1.51; mark.add(ring); markMats.push(ring.material); ring.material.userData.max = 0.1;
+}
+mark.position.set(0, 0.55, 0); mark.rotation.set(0.32, 0, 0); B.add(mark);
+const runningLbl = label('<span style="color:#4CC38A">●</span> api · <b>RUNNING</b> · root, in your browser', 'ok big'); runningLbl.position.set(0, 3.3, 0); B.add(runningLbl);
+
+const CONSOLE = [
+	['vminitd', 'ready'],
+	['vminitd', 'handing off to the workspace’s own init'],
+	['spin-supervisor', 'config from the runner, over vsock'],
+	['spin-supervisor', 'its disk: the image, and the preset\u2019s free space'],
+	['spin-supervisor', 'connected to the control plane'],
+	['spin-supervisor', 'installed the SSH certificate authority'],
+	['spin-supervisor', 'trust store: the egress proxy’s root'],
+	['', 'login:'],
+];
+const termEl = document.getElementById('term'), termBody = document.getElementById('termBody');
+let termShown = -1;
+function setTerm(n, on) {
+	termEl.classList.toggle('on', on);
+	if (n === termShown) return; termShown = n;
+	termBody.innerHTML = CONSOLE.slice(0, n).map(([w, m]) => w ? `<div><span class="who">${w}</span> ${m}</div>` : `<div>${m} <span class="cur"></span></div>`).join('') + (n < CONSOLE.length ? '<div><span class="cur"></span></div>' : '');
+}
+const meter = document.createElement('div'); meter.className = 'meter';
+meter.innerHTML = 'bytes copied <b style="color:#E6EBF2;font-size:16px">0</b>';
+meter.style.cssText = 'left:50%;top:22%;transform:translateX(-50%);opacity:0';
+stage.appendChild(meter);
+
+// camera keys, one per state: 0 the account, 1 layers, 2 clone, 3 boundary, 4 boot, 5 connect, 6 running
+const KEYS = [
+	{ p: V(-1.0, 17, 27), l: V(-3.5, -0.5, -4) },
+	{ p: V(-2.0, 8.5, 15), l: V(0.4, 1.4, -5.0) },
+	{ p: V(-3.2, 3.2, 7.4), l: V(-1.9, 0.6, 0) },
+	{ p: V(5.0, 6.4, 12.6), l: V(0.6, 0.4, -1.2) },
+	{ p: V(2.0, 11, 21), l: V(-1.5, 0.5, -3.5) },
+	{ p: V(-9.0, 9.5, 21), l: V(-8.5, 0.6, -1.0) },
+	{ p: V(-0.4, 2.6, 11.2), l: V(-1.9, 0.55, 0) },
+];
+function shotB(s, o = 1) {
+	const i = Math.min(KEYS.length - 2, Math.floor(s)), f = smooth(s - i);
+	camera.position.lerpVectors(KEYS[i].p, KEYS[i + 1].p, f);
+	tmpL.lerpVectors(KEYS[i].l, KEYS[i + 1].l, f);
+	if (camera.aspect < 1) { tmpL.x *= 0.15; tmpL.y -= 0.6; camera.position.sub(tmpL).multiplyScalar(1.75).add(tmpL); }
+	camera.lookAt(tmpL); camera.fov = 42; camera.updateProjectionMatrix();
+
+	const p0 = o, p1 = seg(s, 0, 1), p2 = seg(s, 1, 2), p3 = seg(s, 2, 3), p4 = seg(s, 3, 4), p5 = seg(s, 4, 5), p6 = seg(s, 5, 6);
+	const away = 1 - seg(p6, 0, 0.5);
+
+	// 0-1. the runner connects to the control plane, and the whole list comes back
+	drawLink(toCp, smooth(seg(p1, 0, 0.16)), (1 - seg(p1, 0.5, 0.7)) + ev4(p4) * (1 - seg(p6, 0, 0.4)));
+	const lp = seg(p1, 0.16, 0.3);
+	listPkt.position.copy(along(toCp.curvePts, 1 - lp)); listPkt.material.opacity = lp > 0 && lp < 1 ? 1 : 0;
+	const hl = seg(p1, 0.12, 0.2);
+	if (Math.abs(hl - cpPanelLast) > 0.01) { cpPanel.redraw(hl); cpPanelLast = hl; }
+	show(toCpLbl, seg(p1, 0.02, 0.1) * (1 - seg(p1, 0.18, 0.24)));
+	show(listLbl, seg(p1, 0.18, 0.24) * (1 - seg(p1, 0.4, 0.5)));
+	runner.die.material.opacity = 0.35 + 0.6 * (seg(p1, 0.28, 0.32) * (1 - seg(p1, 0.4, 0.6)) + seg(p3, 0.5, 0.6) * (1 - seg(p3, 0.9, 1)));
+
+	// 1. layers: out of the bucket, through the gate, onto the NVMe and the stack
+	stack.forEach((d, k) => {
+		const q = smooth(seg(p1, 0.3 + k * 0.16, 0.3 + k * 0.16 + 0.38));
+		const from = bucket.position.clone().add(V(0, 0.4, 0));
+		const pos = q < 0.5 ? from.clone().lerp(GATE, smooth(q * 2)) : GATE.clone().lerp(d.rest, smooth((q - 0.5) * 2)).add(V(0, Math.sin((q - 0.5) * 2 * Math.PI) * 0.6, 0));
+		d.position.copy(pos); d.visible = q > 0.001;
+		d.rotation.set(0, (1 - q) * 2.2, (1 - q) * 0.5);
+		const passed = q >= 0.5;
+		d.mesh.material.color.setHex(passed ? LAYERS[k] : C.raised);
+		d.mesh.material.emissive.setHex(passed ? LAYERS[k] : C.raised);
+		d.mesh.material.emissiveIntensity = passed ? 0.12 + 0.6 * (1 - smooth(seg(q, 0.5, 0.75))) : 0.0;
+		nvme[k].children[0].material.emissive.setHex(C.cyan);
+		nvme[k].children[0].material.emissiveIntensity = 0.5 * seg(q, 0.45, 0.55);
+		layerLbls[k].position.copy(d.position).add(V(R + 0.25, 0, 0.3));
+		show(layerLbls[k], seg(q, 0.55, 0.7) * (1 - seg(p2, 0, 0.3)));
+	});
+	const flashGate = stack.reduce((m, d, k) => Math.max(m, 1 - Math.abs(seg(p1, 0.3 + k * 0.16, 0.68 + k * 0.16) - 0.5) * 8), 0);
+	gate.material.color.setHex(C.label).lerp(new THREE.Color(C.success), clamp(flashGate));
+	gate.material.opacity = 1 - seg(p2, 0.1, 0.6); gate.visible = p2 < 0.6 && p1 > 0.25;
+	show(gateLbl, seg(p1, 0.32, 0.42) * (1 - seg(p2, 0, 0.3)));
+	show(bucketLbl, (1 - seg(p2, 0, 0.3)) * away);
+	bucket.visible = p2 < 0.9;
+	show(nvmeLbl, seg(p1, 0.45, 0.55) * (1 - seg(p2, 0.2, 0.5)));
+
+	// 2. the clone: one new layer on top
+	tip.visible = p2 > 0.001;
+	tip.position.copy(tip.rest).add(V(0, (1 - out(p2)) * 1.6, 0));
+	tip.mesh.material.opacity = out(p2);
+	tip.mesh.material.emissiveIntensity = 0.15 + 0.5 * (1 - seg(p2, 0.6, 1));
+	show(tipLbl, seg(p2, 0.5, 0.8) * (1 - seg(p3, 0, 0.25)));
+	show(imgLbl, seg(p2, 0.6, 0.9) * (1 - seg(p3, 0, 0.25)));
+	meter.style.opacity = (seg(p2, 0.4, 0.7) * (1 - seg(p3, 0, 0.3))).toFixed(2);
+
+	// 3. the jail; the preset's cores and memory; what goes in, already open
+	jail.geometry.setDrawRange(0, Math.floor(24 * smooth(seg(p3, 0, 0.55))));
+	jail.material.opacity = 1 - seg(p6, 0, 0.5);
+	jailFill.material.opacity = 0.05 * smooth(seg(p3, 0.4, 0.7)) * (1 - seg(p6, 0, 0.5));
+	jailLbls.forEach((l, k) => show(l, seg(p3, 0.3 + k * 0.1, 0.42 + k * 0.1) * (1 - seg(p4, 0, 0.2))));
+	show(qemuLbl, seg(p3, 0.25, 0.4) * (1 - seg(p4, 0.8, 1)));
+	const lit = seg(p3, 0.35, 0.5);
+	cores.forEach((c, k) => { const m = c.children[0].material; m.emissive.setHex(C.cyan); m.emissiveIntensity = k < 2 ? 0.7 * lit * away : 0; });
+	mem.forEach((c, k) => { const m = c.children[0].material; m.emissive.setHex(C.mint); m.emissiveIntensity = k < 1 ? 0.6 * lit * away : 0; });
+	show(coresLbl, seg(p3, 0.4, 0.55) * (1 - seg(p4, 0, 0.2)));
+	fdLinks.forEach((l, k) => drawLink(l, smooth(seg(p3, 0.55 + k * 0.08, 0.8 + k * 0.05)), 1 - seg(p4, 0, 0.3)));
+	show(fdLbl, seg(p3, 0.7, 0.85) * (1 - seg(p4, 0, 0.2)));
+	show(runnerLbl2, (seg(p1, 0.0, 0.05) * (1 - seg(p1, 0.3, 0.4)) + seg(p3, 0.5, 0.6) * (1 - seg(p4, 0.1, 0.2))) * away);
+
+	// 4. the boot: the console drives the room
+	const N = CONSOLE.length + 1.2;
+	const n = Math.floor(p4 * N);
+	setTerm(Math.min(n, CONSOLE.length), p4 > 0.01 && p5 < 0.12);
+	const ev = (k) => smooth(clamp(p4 * N - k));
+	kernel.scale.setScalar(0.01 + 1.6 * ev(0) * (1 - seg(p6, 0, 0.4)));
+	[...stack, tip].forEach((d) => { d.mesh.material.emissiveIntensity = Math.max(d.mesh.material.emissiveIntensity, 0.12 + 0.35 * ev(1) * (1 - ev(2))); });
+	drawLink(vsock, ev(2), 1 - seg(p6, 0, 0.4));
+	show(vsockLbl, ev(2) * (1 - seg(p4, 0.55, 0.65)));
+	growRing.scale.setScalar(R * (1 + 0.35 * ev(3))); growRing.position.y = tip.rest.y; growRing.material.opacity = ev(3) * (1 - ev(4));
+	cpM.leds[2].material.color.setHex(C.cyan).lerp(new THREE.Color(0xffffff), ev(4) * (1 - ev(5)));
+	drawLink(toEgress, ev(6), 1 - seg(p6, 0, 0.4));
+	const pOk = seg(p4 * N, 6.6, 7.6), pNo = seg(p4 * N, 6.4, 7.2);
+	pktOk.position.copy(allowedPath.getPointAt(pOk)); pktOk.material.opacity = pOk > 0 && pOk < 1 ? 1 : 0;
+	pktNo.position.copy(deniedPath.getPointAt(pNo)); pktNo.material.opacity = pNo > 0 && pNo < 1 ? 1 : 0;
+	const hitBars = Math.max(0, 1 - Math.abs(pNo - 0.5) * 5);
+	egress.bars.forEach((b, k) => {
+		const lane = k === 6 || k === 7;
+		const open = lane ? seg(pOk, 0, 0.3) * (1 - seg(pOk, 0.7, 1)) : 0;
+		b.material.color.setHex(C.label).lerp(new THREE.Color(lane ? C.success : C.error), lane ? seg(pOk, 0, 0.4) : hitBars);
+		b.scale.y = 1 - 0.85 * open; b.position.y = 1.15 + 1.05 * 0.85 * open;
+	});
+	show(egressLbl, (seg(p0, 0.3, 1) * (1 - seg(p1, 0.05, 0.15)) + ev(6) * (1 - seg(p5, 0, 0.15))) * away);
+	show(deniedLbl, seg(pNo, 0.4, 0.55) * (1 - seg(p5, 0, 0.15)));
+	show(allowedLbl, seg(pOk, 0.5, 0.7) * (1 - seg(p5, 0, 0.15)));
+	// at login, the runner opens its connection to the proxy's relay
+	drawLink(toRelay, smooth(seg(p4 * N, 7.6, 8.6)) + (p5 > 0 ? 1 : 0), 1 - seg(p6, 0, 0.4));
+	show(relayLbl, seg(p4 * N, 7.8, 8.4) * (1 - seg(p5, 0.1, 0.2)));
+
+	// 5. connect: a person opens a terminal in the browser; HTTPS to the proxy, the relay, the runner, the machine
+	const ph = p5;
+	if (Math.abs(ph - lapLast) > 0.004) { lapScreen.redraw(ph); lapLast = ph; }
+	drawLink(fromLap, smooth(seg(ph, 0.28, 0.42)), 1 - seg(p6, 0, 0.4));
+	const leg1 = seg(ph, 0.28, 0.42), leg2 = seg(ph, 0.42, 0.56), leg3 = seg(ph, 0.56, 0.62);
+	if (leg1 > 0 && leg1 < 1) sessPkt.position.copy(along(fromLap.curvePts, leg1));
+	else if (leg2 > 0 && leg2 < 1) sessPkt.position.copy(along(toRelay.curvePts, 1 - leg2));
+	else if (leg3 > 0 && leg3 < 1) sessPkt.position.lerpVectors(runnerTop, V(0, 1.2, 0), leg3);
+	sessPkt.material.opacity = ph > 0.28 && ph < 0.62 ? 1 : 0;
+	port443.scale.setScalar(0.01 + 1.2 * Math.max(0, 1 - Math.abs(ph - 0.42) * 10));
+	show(lapLbl, seg(ph, 0.22, 0.3) * (1 - seg(p6, 0, 0.2)));
+	show(youLbl, (seg(p0, 0.3, 1) * (1 - seg(p1, 0.05, 0.15)) + seg(ph, 0, 0.1)) * (1 - seg(p6, 0, 0.3)));
+	kernel.scale.setScalar(Math.max(kernel.scale.x, 0.01 + 1.4 * Math.max(0, 1 - Math.abs(ph - 0.62) * 10)));
+
+	// the machines and the account: named at the start, back again to connect, gone at the end
+	const named = seg(p0, 0.3, 1) * (1 - seg(p1, 0.05, 0.15));
+	show(proxyLbl, (named + seg(ph, 0.25, 0.35) * (1 - seg(p6, 0, 0.2))) * away);
+	show(cpLbl, (named + seg(p1, 0.02, 0.1) * (1 - seg(p1, 0.45, 0.55))) * away);
+	show(dbLbl, named * away);
+	show(boardLbl, (named + seg(ph, 0.4, 0.5) * (1 - seg(p6, 0, 0.2))) * away);
+	show(regionLblB, (named + seg(ph, 0, 0.1) * (1 - seg(p6, 0, 0.2))) * away);
+	show(neighLbl, (named + seg(p3, 0.85, 1) * (1 - seg(p4, 0, 0.2))) * away);
+	const vis = away > 0.02;
+	[board, cpM, cpPanel, proxyM, runner, egress, db, lap, B.region, ...neighbours, ...cores, ...mem, ...nvme].forEach((o) => { o.visible = vis; });
+	cpPanel.material.opacity = away;
+	floor.material.opacity = 0.35 * (0.4 + 0.6 * away);
+
+	// 6. running: the stack becomes the mark
+	const m = smooth(p6);
+	[...stack, tip].forEach((d, k) => {
+		d.mesh.material.opacity = k === 3 ? Math.min(d.mesh.material.opacity, 1 - m) : 1 - m;
+		d.edge.material.opacity = 0.18 * (1 - m);
+		const sc = [1.18, 1.18, 1.2, 0.82][k];
+		d.scale.set(lerp(1, sc, m), 1, lerp(1, sc, m));
+		d.visible = d.visible && m < 0.99;
+	});
+	markMats.forEach((mt) => { mt.opacity = (mt.userData.max ?? 1) * smooth(seg(p6, 0.15, 0.75)); });
+	mark.visible = p6 > 0.15;
+	mark.rotation.y = -0.9 * (1 - out(seg(p6, 0.15, 1)));
+	mark.scale.setScalar(lerp(0.9, 1, out(seg(p6, 0.15, 1))));
+	show(runningLbl, seg(p6, 0.6, 0.85));
+}
+function ev4(p4) { return smooth(clamp(p4 * (CONSOLE.length + 1.2) - 4)) * (1 - smooth(clamp(p4 * (CONSOLE.length + 1.2) - 5.5))); }
+
+// ---------- the film: one timeline, the intro and then each step ----------
+const INTRO = 5.0, OPEN = 2.2;
+const NAMES = ['Layers', 'Clone', 'Boundary', 'Boot', 'Connect', 'Running'];
+const D = [4.8, 2.6, 3.6, 7.0, 5.6, 3.6];   // seconds per step, each with a beat held at its end
+const HOLD = 0.7;
+const START = []; { let t = INTRO + OPEN; for (const d of D) { START.push(t); t += d; } }
+const END = START[D.length - 1] + D[D.length - 1];
+function sOf(T) {
+	if (T < INTRO) return 0;
+	if (T < INTRO + OPEN) return 0.3 * seg(T, INTRO, INTRO + OPEN) * 0; // the account, named, held
+	for (let k = D.length - 1; k >= 0; k--) if (T >= START[k]) return k + clamp((T - START[k]) / (D[k] - HOLD));
+	return 0;
+}
+const CHAPTERS = [
+	{ name: 'Click', from: 0, to: INTRO + OPEN },
+	...NAMES.map((name, k) => ({ name, from: START[k], to: START[k] + D[k] })),
+];
+const STEPS = [
+	{ k: 'Your account', t: 'Three kinds of machine, each its own: the proxy, the control plane with its database, and runners. In one region of your AWS account.', src: 'overview/how-it-works/#the-pieces' },
+	{ k: '01 · Layers', t: 'The runner connects to the control plane and gets the whole list of what should run on it. It fetches the layers it doesn’t have from the bucket, checks each against a digest, and decrypts it.', src: 'overview/how-it-works/#how-a-workspace-comes-to-run' },
+	{ k: '02 · Clone', t: 'Your workspace is one new layer on top. Writes land there; the image under it is shared, and nothing is copied.', src: 'concepts/images/' },
+	{ k: '03 · Boundary', t: 'QEMU runs as a user of its own, opens nothing by name, has no network, and sits in a namespace of its own.', src: 'security/' },
+	{ k: '04 · Boot', t: 'Its own kernel boots. A supervisor speaks to the runner over vsock, and the host’s egress stays closed until a policy opens it.', src: 'concepts/network/' },
+	{ k: '05 · Connect', t: 'Open terminal, in the dashboard: your browser reaches the proxy, the only machine the internet can reach, and the session goes through the relay the runner had already connected to.', src: 'use/editors/#the-dashboards-terminal' },
+	{ k: '06 · Running', t: 'A whole machine, yours: root, its own kernel, a disk that is a chain of layers.', src: 'concepts/workspaces/' },
+];
+const INTRO_CAPS = [
+	{ until: 1.4, k: 'A click', t: 'Create a workspace from the dashboard, the CLI or the API.' },
+	{ until: 3.3, k: 'In your account', t: 'The request reaches your installation\u2019s proxy, in your own AWS account.' },
+	{ until: 99, k: 'A runner', t: 'The control plane places it on a runner with room, or starts one for it.', src: 'concepts/workspaces/#states' },
+];
+const cap = document.getElementById('caption');
+let capKey = '';
+function caption(c) {
+	if (c.k === capKey) return; capKey = c.k;
+	cap.style.opacity = 0;
+	setTimeout(() => {
+		cap.querySelector('.k').textContent = c.k; cap.querySelector('p').textContent = c.t;
+		const a = cap.querySelector('a'); a.hidden = !c.src; if (c.src) a.href = '/' + c.src;
+		cap.style.opacity = 1;
+	}, 120);
+}
+
+// ---------- the player ----------
+const chaptersEl = document.getElementById('chapters');
+const chapterBtns = CHAPTERS.map((c, k) => {
+	const b = document.createElement('button'); b.type = 'button';
+	b.style.setProperty('--w', String(c.to - c.from));
+	b.innerHTML = `<span class="bar"><span class="fill"></span></span><span class="t">${c.name}</span>`;
+	b.setAttribute('aria-label', `Play from ${c.name}`);
+	b.onclick = () => jump(k); chaptersEl.appendChild(b); return b;
+});
+const playBtn = document.getElementById('play'), stepBtn = document.getElementById('stepmode'), nextBtn = document.getElementById('next');
+let T = 0, playing = !still, stepMode = false, holdAt = Infinity, dirty = true;
+function setPlaying(p) { playing = p; playBtn.textContent = p ? '❚❚' : '▶'; playBtn.setAttribute('aria-label', p ? 'Pause' : 'Play'); updateNext(); dirty = true; }
+function chapterAt(t) { for (let k = CHAPTERS.length - 1; k >= 0; k--) if (t >= CHAPTERS[k].from - 1e-6) return k; return 0; }
+function updateNext() { nextBtn.hidden = !(stepMode && !playing && T < END - 0.01); }
+function jump(k) {
+	T = CHAPTERS[k].from + (k === 0 ? 0 : 0.001);
+	if (still) { T = CHAPTERS[k].to - 0.01; setPlaying(false); return; }
+	holdAt = stepMode ? CHAPTERS[k].to : Infinity;
+	setPlaying(true);
+}
+playBtn.onclick = () => {
+	if (!playing && T >= END - 0.01) { jump(0); return; }
+	if (!playing && stepMode) holdAt = CHAPTERS[chapterAt(T + 0.01)].to;
+	setPlaying(!playing);
+};
+stepBtn.onclick = () => {
+	stepMode = !stepMode; stepBtn.setAttribute('aria-pressed', String(stepMode));
+	holdAt = stepMode ? CHAPTERS[chapterAt(T)].to : Infinity; updateNext();
+};
+nextBtn.onclick = () => { const k = chapterAt(T + 0.01); jump(Math.min(CHAPTERS.length - 1, T >= CHAPTERS[k].to - 0.02 ? k + 1 : k)); };
+document.getElementById('replay').onclick = () => jump(0);
+stage.addEventListener('keydown', (e) => {
+	if (e.key === ' ' && e.target === stage) { e.preventDefault(); playBtn.click(); }
+	if (e.key === 'ArrowRight') jump(Math.min(CHAPTERS.length - 1, chapterAt(T) + 1));
+	if (e.key === 'ArrowLeft') jump(Math.max(0, chapterAt(T) - 1));
+});
+stage.tabIndex = -1;
+
+// Debug: ?at=<seconds> freezes the film there.
+const Q = new URLSearchParams(location.search);
+if (Q.has('at')) { T = Number(Q.get('at')); setPlaying(false); }
+if (still && !Q.has('at')) { T = END; setPlaying(false); }
+
+// ---------- render ----------
+const flash = document.getElementById('flash');
+const composer = new EffectComposer(renderer);
+const pass = new RenderPass(A, camera); composer.addPass(pass);
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.5, 0.86));
+composer.addPass(new OutputPass());
+function resize() {
+	const w = stage.clientWidth, h = stage.clientHeight;
+	renderer.setSize(w, h, false); composer.setSize(w, h); labelRenderer.setSize(w, h);
+	camera.aspect = w / h; camera.updateProjectionMatrix(); dirty = true;
+}
+addEventListener('resize', resize); resize();
+let visible = true;
+new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(stage);
+function hideLabels(scene) { scene.traverse((o) => { if (o.isCSS2DObject) o.element.style.display = 'none'; }); }
+
+let last = performance.now();
+function loop(now) {
+	requestAnimationFrame(loop);
+	const dt = Math.min(0.1, (now - last) / 1000); last = now;
+	if (!visible) return;
+	if (playing) {
+		T += dt;
+		if (T >= holdAt) { T = holdAt; holdAt = Infinity; setPlaying(false); }
+		if (T >= END) { T = END; setPlaying(false); }
+	} else if (!dirty) return;
+	dirty = false;
+	const k = chapterAt(T);
+	chapterBtns.forEach((b, i) => {
+		const c = CHAPTERS[i];
+		b.querySelector('.fill').style.width = (100 * clamp((T - c.from) / (c.to - c.from))).toFixed(1) + '%';
+		b.setAttribute('aria-current', String(i === k));
+	});
+	flash.style.opacity = (T < INTRO ? seg(T, 4.55, INTRO) : 1 - seg(T, INTRO, INTRO + 0.6)).toFixed(3);
+	if (T < INTRO) {
+		pass.scene = A; shotA(T);
+		caption(INTRO_CAPS.find((c) => T < c.until));
+		setTerm(0, false); meter.style.opacity = 0;
+		hideLabels(B); labelRenderer.render(A, camera);
+	} else {
+		const s = T < INTRO + OPEN ? 0 : sOf(T);
+		pass.scene = B; shotB(s, T < INTRO + OPEN ? seg(T, INTRO + 0.4, INTRO + 1.2) : 1);
+		const idx = T < START[0] ? 0 : Math.min(STEPS.length - 1, chapterAt(T));
+		caption(STEPS[idx]);
+		hideLabels(A); labelRenderer.render(B, camera);
+	}
+	composer.render();
+}
+document.fonts.ready.then(() => { dirty = true; lapLast = -1; cpPanelLast = -1; });
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
