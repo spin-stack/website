@@ -12,8 +12,7 @@ export const GET: APIRoute = async ({ site }) => {
 		'',
 		`> ${experimental} ${idx.data.description}`,
 		'',
-		'Every page is also served as Markdown at the linked `.md` path, and all of them together at ' +
-			`${base}/llms-full.txt.`,
+		'Every page is also served as Markdown at the linked `.md` path, and all of them together at ' + `${base}/llms-full.txt.`,
 		'',
 	];
 	lines.push(

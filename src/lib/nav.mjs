@@ -128,9 +128,7 @@ export function sidebarTopics() {
 
 /** The topic a page belongs to, by its id: what its social card names. A page in no group fails the build. */
 export function topicOf(id) {
-	const g = nav.find((g) =>
-		g.groups ? g.groups.some(([, dir]) => id === dir || id.startsWith(`${dir}/`)) : g.items.some(([, slug]) => slug === id),
-	);
+	const g = nav.find((g) => (g.groups ? g.groups.some(([, dir]) => id === dir || id.startsWith(`${dir}/`)) : g.items.some(([, slug]) => slug === id)));
 	if (!g) throw new Error(`src/lib/nav.mjs: page ${id} is in no group`);
 	return topics.find((t) => t.id === g.topic).label;
 }

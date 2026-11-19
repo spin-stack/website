@@ -1,12 +1,12 @@
 /* Spinbox's look on Starlight. Every color is spin-stack/brand's (brand-tokens.css and
    brand-starlight.css, which `task reference` copies and holds to brand's); this file says only
    how the site's parts use them. IBM Plex is served from the site itself. */
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
-@import '@fontsource/ibm-plex-sans/600.css';
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
-@import '@fontsource/ibm-plex-mono/600.css';
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
 
 /* Headings in the mono (spin-stack/brand's type.display): a site about machines, set like their
    consoles, at the display's tight tracking and with its word gaps closed - a mono's own spacing
@@ -37,7 +37,7 @@ h1#_top {
 }
 
 /* A claim tied to the feature board: a hairline under it, the board's row on hover. */
-a[data-feature='built'] {
+a[data-feature="built"] {
 	text-decoration-style: dotted;
 	text-underline-offset: 0.2em;
 }
@@ -97,9 +97,9 @@ a[data-feature='built'] {
 }
 
 /* The sidebar's current page: the accent as a tint, not a block of it. */
-.sidebar-content a[aria-current='page'],
-.sidebar-content a[aria-current='page']:hover,
-.sidebar-content a[aria-current='page']:focus {
+.sidebar-content a[aria-current="page"],
+.sidebar-content a[aria-current="page"]:hover,
+.sidebar-content a[aria-current="page"]:focus {
 	background-color: var(--sl-color-accent-low);
 	color: var(--sl-color-accent-high);
 	font-weight: 600;
@@ -195,15 +195,14 @@ a[data-feature='built'] {
 	}
 }
 
-
 /* Text that is not a command - a command's --help, output - wraps in its block rather than running
    past its edge, where the CLI's reference cut its flags' descriptions off. A command does not: a
    wrap would break it at a flag's dash; it scrolls, as a terminal's line does. Expressive Code's
    own wrap rule, set here for plain text alone. */
-.sl-markdown-content .expressive-code pre[data-language='plaintext'] .ec-line .code {
+.sl-markdown-content .expressive-code pre[data-language="plaintext"] .ec-line .code {
 	white-space: pre-wrap;
 	overflow-wrap: break-word;
 }
-.sl-markdown-content .expressive-code pre[data-language='plaintext'] .ec-line .code span.indent {
+.sl-markdown-content .expressive-code pre[data-language="plaintext"] .ec-line .code span.indent {
 	white-space: pre;
 }

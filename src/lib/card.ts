@@ -24,8 +24,7 @@ function token(name: string): string {
 const c = { page: token('page'), text: token('text'), muted: token('muted'), accent: token('accent-text'), dim: token('border-strong') };
 
 // IBM Plex as the site serves it. satori reads WOFF, not the WOFF2 the pages load.
-const face = (pkg: string, weight: 400 | 600) =>
-	readFileSync(`node_modules/@fontsource/${pkg}/files/${pkg}-latin-${weight}-normal.woff`);
+const face = (pkg: string, weight: 400 | 600) => readFileSync(`node_modules/@fontsource/${pkg}/files/${pkg}-latin-${weight}-normal.woff`);
 const fonts = [
 	{ name: 'Plex Sans', data: face('ibm-plex-sans', 400), weight: 400 as const },
 	{ name: 'Plex Sans', data: face('ibm-plex-sans', 600), weight: 600 as const },
@@ -61,11 +60,7 @@ export async function card({ topic, title, description, site }: Card): Promise<B
 				el('span', { color: c.muted, marginLeft: 16 }, `·  ${topic.toUpperCase()}`),
 			]),
 			el('div', { flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }, [
-				el(
-					'div',
-					{ width: column, fontSize: title.length > 32 ? 64 : 76, fontWeight: 600, lineHeight: 1.1, color: c.text, letterSpacing: -1 },
-					title,
-				),
+				el('div', { width: column, fontSize: title.length > 32 ? 64 : 76, fontWeight: 600, lineHeight: 1.1, color: c.text, letterSpacing: -1 }, title),
 				el('div', { width: column, marginTop: 28, fontSize: 30, lineHeight: 1.4, color: c.muted, display: 'block', lineClamp: 3 }, description),
 			]),
 			el('div', { alignSelf: 'flex-end', fontSize: 18, color: c.dim, ...mono, letterSpacing: 0 }, site),

@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 # The site: Astro Starlight under src/, and two Go tools under tools/ - refgen writes the
 # reference pages from the sources they describe, linkcheck fails on a link the build did not
