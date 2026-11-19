@@ -199,6 +199,9 @@ that is not one task (`taskgate`).
   is public, as the repository is. `task deploy` builds and uploads from a checkout, and `task
   cf:setup` made the project once. Both need `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`,
   which CI has as secrets.
+- **The site stays static, which is what keeps it free**: Pages serves static files without charge
+  or limit, and bills a Function's requests as Workers requests. `task static`, in the gate and
+  before every upload, fails on a `functions/` directory or a `_worker.js` in `dist/`.
 
 ## Contributing
 

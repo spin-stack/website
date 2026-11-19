@@ -143,7 +143,7 @@ tasks:
       - go run ./tools/linkcheck -external dist
 
   gate:
-    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, Biome and astro check, the reference against the public sources, the build, and every link.
+    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, Biome and astro check, the reference against the public sources, the build, every link, and no Pages Function.
     cmds:
       - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
@@ -158,6 +158,15 @@ tasks:
       - task: reference:public
       - task: build
       - task: links
+      - task: static
+
+  # Cloudflare Pages serves static files free and without limit; a Function is billed as a Workers
+  # request. The site has none, and this keeps it that way: a `functions/` directory or a
+  # `_worker.js` in what is uploaded would turn every page view into one.
+  static:
+    desc: Fail when the upload would carry a Pages Function - functions/ in the tree, or _worker.js in dist/ - since a Function's requests are billed and a static file's are not.
+    cmds:
+      - 'if [ -e functions ] || [ -e dist/_worker.js ]; then echo "a Pages Function (functions/ or dist/_worker.js): the site is static, and a Function is billed per request"; exit 1; fi'
 
   # Cloudflare Pages: main is production at https://docs.spinbox.dev, and any other branch a preview at
   # its own address, <branch>.spinbox-docs.pages.dev, public as the repository is. wrangler is a
@@ -186,6 +195,7 @@ tasks:
       - sh: test -f dist/index.html
         msg: nothing in dist/ to upload - task build first
     cmds:
+      - task: static
       - task: install
       - >-
         docker run --rm -e CLOUDFLARE_API_TOKEN -e CLOUDFLARE_ACCOUNT_ID
