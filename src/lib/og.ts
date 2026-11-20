@@ -62,7 +62,7 @@ const sheet = (u: number) => `
 .wire,.outline,.ref,.arrowhead{fill:none;stroke:${c.strong};stroke-width:${1.5 * u}}
 .outline{stroke:${c.label}}
 .ref{stroke:${c.cyan};stroke-width:${u}}
-.pulse{display:none}
+.pulse,.floor,.flow{display:none}
 .pill{fill:${c.raised};stroke:${c.strong};stroke-width:${u}}
 .side-deep{fill:${c.deep}}
 .side-blue,.top-blue{fill:${c.blue}}

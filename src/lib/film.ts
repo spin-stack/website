@@ -189,6 +189,19 @@ const lives = (t: number, spans: [number, number][]) => Math.max(0, ...spans.map
 /** What rises out of a mask line: its offset below the line, 0 once it has risen. */
 const rise = (t: number, at: number, h = 28, out = Number.POSITIVE_INFINITY) => h * (1 - S(t - at, 16)) - h * S(t - out, 16);
 
+/** A word as it decodes: each letter a random glyph until its turn, from `at` on. */
+const GLYPHS = '0123456789abcdef#$%&*+=<>';
+function decoded(word: string, t: number, at: number): string {
+	const step = Math.floor(t * 24);
+	return [...word]
+		.map((ch, j) => {
+			if (t < at || t >= at + 0.15 + j * 0.05) return ch;
+			const h = Math.imul(j + 1, 73856093) ^ Math.imul(step + 1, 19349663);
+			return GLYPHS[(h >>> 0) % GLYPHS.length];
+		})
+		.join('');
+}
+
 // --- geometry
 
 function lengths(p: Pt[]): number[] {
@@ -224,7 +237,7 @@ const elbow = (a: Pt, b: Pt, first: 'x' | 'y'): Pt[] => (first === 'x' ? [a, [b[
 
 /** The room's tilt: turned by `turn` degrees, then pressed to `press` of its height. The room is
  * drawn flat and the tilt is one matrix over all of it; the camera frames the tilted room. */
-const TILT = { turn: 0, press: 1 };
+const TILT = { turn: -10, press: 0.85 };
 const rad = (TILT.turn * Math.PI) / 180;
 const M = [Math.cos(rad), TILT.press * Math.sin(rad), -Math.sin(rad), TILT.press * Math.cos(rad)];
 const tilt = ([x, y]: Pt): Pt => [M[0] * x + M[2] * y, M[1] * x + M[3] * y];
@@ -235,7 +248,9 @@ export function tilted(b: Box): Box {
 
 // --- the camera
 
-type Shot = { at: number; see: (Actor | Box)[]; focus?: (Actor | Box)[]; w?: number; only?: 'wide' | 'tall' };
+// A whole shot frames the room whatever the hero's width, its labels a little under 12 px where the
+// tilted room is wider than the camera may be.
+type Shot = { at: number; see: (Actor | Box)[]; focus?: (Actor | Box)[]; w?: number; only?: 'wide' | 'tall'; whole?: boolean };
 
 const rB = (L: Layout, y: number, h: number): Box => [L.at.runB[0], L.at.runB[1] + y, R.w, h];
 function shots(L: Layout): Shot[] {
@@ -259,7 +274,7 @@ function shots(L: Layout): Shot[] {
 		{ at: 24.6, see: ['cp'], w: 6, only: 'tall' },
 		{ at: 25.1, see: ['runB', 'bucket'], focus: [nvme], w: 5 },
 		{ at: 26.0, see: ['bucket'], w: 6, only: 'tall' },
-		{ at: 25.9, see: [L.room], focus: ['browser'], w: 5 },
+		{ at: 25.9, see: [L.room], focus: ['browser'], w: 5, whole: true },
 	];
 	return all.filter((s) => !s.only || s.only === L.name);
 }
@@ -271,7 +286,7 @@ function aim(L: Layout, s: Shot, px: number): [number, number, number] {
 	const pad = L.name === 'wide' ? 20 : 10;
 	const u = union(s.see.map(box));
 	let w = Math.max(u[2] + 2 * pad, (u[3] + 2 * pad) * L.aspect);
-	const most = Math.min(widest(px), tilted(L.room)[2]);
+	const most = s.whole ? Number.POSITIVE_INFINITY : Math.min(widest(px), tilted(L.room)[2]);
 	let [cx, cy] = centre(u);
 	w = Math.max(w, L.name === 'wide' ? 760 : 380);
 	if (w > most) {
@@ -320,6 +335,18 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	// The lines that are always there: the browser's to the control plane, and the runners', which
 	// they opened.
 	f.lReq = { d: pathD(L.lines.req) };
+	// What always travels them: the light that runs along an open line, each at its own phase.
+	(
+		[
+			['fReq', L.lines.req, 0],
+			['fRA', L.lines.rA, 0.45],
+			['fRB', L.lines.rB, 0.9],
+		] as [string, Pt[], number][]
+	).forEach(([id, p, phase]) => {
+		f[id] = { d: pathD(p), 'stroke-dashoffset': 0.12 - ((t * 0.55 + phase) % 1.6) };
+	});
+	const [fx, fy, fw, fh] = L.room;
+	f.floor = { x: fx - 400, y: fy - 400, width: fw + 800, height: fh + 800 };
 	f.lRA = { d: pathD(L.lines.rA), style: `--k:${lives(r, [[3.3, 4.1]])}` };
 	f.lRB = { d: pathD(L.lines.rB), style: `--k:${lives(r, [[4.3, 6.6]])}` };
 	f.fRA = { style: `--k:${lives(r, [[3.3, 4.1]])}` };
@@ -434,8 +461,10 @@ export function frame(time: number, L: Layout, px: number): Frame {
 
 	// 5. Boot: kernel, vminitd, systemd, the supervisor and its vsock line out through the machine's
 	// wall; the disks vminitd mounts read-only; the egress namespace's gate, closed.
-	['kernel', 'vminitd', 'systemd', 'supervisor'].forEach((_, i) => {
-		f[`g${i}`] = { transform: `translate(0 ${rise(r, [14.0, 14.5, 15.15, 15.6][i], 26)})` };
+	['kernel', 'vminitd', 'systemd', 'supervisor'].forEach((word, i) => {
+		const at = [14.0, 14.5, 15.15, 15.6][i];
+		f[`g${i}`] = { transform: `translate(0 ${rise(r, at, 26)})` };
+		f[`gt${i}`] = { text: decoded(word, r, at) };
 	});
 	f.eSup = { 'stroke-dashoffset': drawn(r, 14.6, 0.4) };
 	f.eVs = { 'stroke-dashoffset': drawn(r, 14.75, 0.4) };

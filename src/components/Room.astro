@@ -41,7 +41,8 @@ const ch = CP.chip;
 const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 ---
 
-<figure class="room" data-room data-t={t} data-end={END}>
+<figure class="room" data-look="grid" data-room data-t={t} data-end={END}>
+	<div class="screen">
 	<svg {...a('svg')} class="film" role="img" aria-labelledby="room-t room-d">
 		<title id="room-t">One workspace, from a click to its disk</title>
 		<desc id="room-d">
@@ -78,13 +79,26 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 					</clipPath>
 				))
 			}
+			<!-- The floor's grid, fading out towards the edges of the room. -->
+			<pattern id="rm-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+				<path d="M48 0H0V48" class="gridline" />
+			</pattern>
+			<radialGradient id="rm-fade-g">
+				<stop offset="0.35" stop-color="#fff" />
+				<stop offset="1" stop-color="#000" />
+			</radialGradient>
+			<mask id="rm-fade" maskContentUnits="objectBoundingBox">
+				<rect width="1" height="1" fill="url(#rm-fade-g)" />
+			</mask>
 		</defs>
 		<g {...a('world')}>
+			<rect {...a('floor')} class="floor" fill="url(#rm-grid)" mask="url(#rm-fade)" />
 
 		<!-- The lines that are always there: each arrow points at what was dialled. -->
 		<path {...a('lReq')} class="wire" marker-end="url(#rm-arr)" />
 		<path {...a('lRA')} class="wire lv" marker-end="url(#rm-arr)" />
 		<path {...a('lRB')} class="wire lv" marker-end="url(#rm-arr)" />
+		{['fReq', 'fRA', 'fRB'].map((id) => <path {...a(id)} pathLength="1" class="flow" />)}
 
 
 		<!-- The browser: the dashboard's create dialog, then the workspace's page. -->
@@ -198,8 +212,8 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 				['kernel', 'vminitd', 'systemd', 'supervisor'].map((w, i) => (
 					<g clip-path={`url(#rm-g${i})`}>
 						<g {...a(`g${i}`)}>
-							<text x="56" y={182 + i * 26} class="mono">
-								{w}
+							<text {...a(`gt${i}`)} x="56" y={182 + i * 26} class="mono">
+								{txt(`gt${i}`) || w}
 							</text>
 						</g>
 					</g>
@@ -345,6 +359,7 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 		</g>
 		<path {...a('cur')} d="M0 0L0 18L5 13.5L8.5 21L11.5 19.8L8 12.5L14 12.5z" class="cursor" />
 	</svg>
+	</div>
 
 	<figcaption>
 		<p class="cmdline" data-cmdline data-empty={chapters[now].cmd ? undefined : ''}>
@@ -515,14 +530,64 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 		font-family: var(--sl-font);
 		--line: var(--spin-border-strong);
 	}
+	.screen {
+		border: 1px solid var(--spin-border);
+		border-radius: var(--spin-radius-lg);
+		background: var(--spin-page);
+		overflow: hidden;
+	}
 	.film {
 		width: 100%;
 		height: auto;
 		aspect-ratio: 16 / 10;
 		display: block;
-		border: 1px solid var(--spin-border);
-		border-radius: var(--spin-radius-lg);
-		background: var(--spin-page);
+	}
+	.floor,
+	.flow {
+		display: none;
+	}
+	/* The grid look: the room on the terminal's black in either theme, a floor under it, its lines lit
+	   in the mark's cyan, and light running along the lines that stay open. */
+	[data-look='grid'] .screen {
+		background: var(--spin-terminal-background);
+		border-color: color-mix(in srgb, var(--spin-brand-cyan) 30%, var(--spin-terminal-background));
+	}
+	[data-look='grid'] .film {
+		--spin-page: var(--spin-terminal-background);
+		--spin-surface: color-mix(in srgb, var(--spin-brand-cyan) 5%, var(--spin-terminal-background));
+		--spin-raised: color-mix(in srgb, var(--spin-brand-cyan) 10%, var(--spin-terminal-background));
+		--spin-border: color-mix(in srgb, var(--spin-brand-cyan) 45%, var(--spin-terminal-background));
+		--spin-border-strong: color-mix(in srgb, var(--spin-brand-cyan) 75%, var(--spin-terminal-background));
+		--spin-text: var(--spin-brand-frost);
+		--spin-muted: color-mix(in srgb, var(--spin-brand-cyan) 55%, var(--spin-brand-frost));
+		--spin-label: var(--spin-brand-cyan);
+		--spin-accent: var(--spin-brand-mint);
+		--spin-success: var(--spin-terminal-green);
+		--spin-warning: var(--spin-terminal-yellow);
+		--spin-error: var(--spin-terminal-red);
+		--line: var(--spin-brand-cyan);
+		filter: drop-shadow(0 0 1.5px rgb(39 191 232 / 0.7)) drop-shadow(0 0 7px rgb(39 191 232 / 0.3));
+	}
+	[data-look='grid'] .primary {
+		fill: color-mix(in srgb, var(--spin-brand-cyan) 30%, var(--spin-terminal-background));
+		stroke: var(--spin-brand-cyan);
+		stroke-width: calc(1 * var(--u, 1));
+	}
+	[data-look='grid'] .floor,
+	[data-look='grid'] .flow {
+		display: inline;
+	}
+	.gridline {
+		fill: none;
+		stroke: color-mix(in srgb, var(--spin-brand-cyan) 22%, transparent);
+		stroke-width: calc(1 * var(--u, 1));
+	}
+	.flow {
+		fill: none;
+		stroke: var(--spin-brand-mint);
+		stroke-width: calc(2.5 * var(--u, 1));
+		stroke-dasharray: 0.12 2;
+		stroke-linecap: round;
 	}
 	[data-layout='tall'] .film {
 		aspect-ratio: 4 / 5;
