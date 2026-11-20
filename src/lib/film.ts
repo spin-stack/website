@@ -1,5 +1,5 @@
 // The landing page's film: one workspace born, from a click in the browser to a process writing on
-// its disk, and back to the click. Every attribute of the drawing is a pure function of the time
+// its disk and a snapshot of it in the bucket. It plays once. Every attribute of the drawing is a pure function of the time
 // (frame), so a scrub, a chapter button and the still the page is served with are the same call.
 // A value that changes more than once is a sum of closed-form springs, one per change; a line is
 // drawn by its dash offset over pathLength 1; the camera is the SVG's viewBox.
@@ -9,18 +9,17 @@
 // actors and whatever flies along them are in the world frame.
 import { writes } from './story';
 
-export const LOOP = 28;
+/** The film's length in its own seconds: it ends on the whole room, the snapshot in the browser. */
+export const END = 27.6;
 /** The still the page is served with and stays at under reduced motion: the terminal open. */
 export const STILL = 20.6;
-/** From here on, what the closing frame does not show is put back as it was at 0. */
-const RESET = 27.7;
 
 type Pt = [number, number];
 type Box = [number, number, number, number];
 export type Attrs = Record<string, string | number>;
 export type Frame = Record<string, Attrs>;
 
-export type Actor = 'person' | 'browser' | 'cp' | 'relay' | 'runA' | 'runB' | 'bucket';
+export type Actor = 'browser' | 'cp' | 'relay' | 'runA' | 'runB' | 'bucket';
 type LineId = 'req' | 'rA' | 'rB' | 'bR' | 'rR' | 'up';
 
 export interface Layout {
@@ -29,7 +28,6 @@ export interface Layout {
 	room: Box;
 	at: Record<Actor, Box>;
 	lines: Record<LineId, Pt[]>;
-	desk: Pt[];
 }
 
 // Each actor's own drawing, in its local frame: shared with the component that draws them.
@@ -69,7 +67,6 @@ export const R = {
 export const BK = { h: 110, shelf: 86, top: 56, rx: 40, ry: 10, side: 16 };
 
 const actorsW: Record<Actor, Box> = {
-	person: [180, 548, 100, 160],
 	browser: [10, 150, B.w, B.h],
 	cp: [500, 150, CP.w, CP.h],
 	relay: [600, 470, 160, 56],
@@ -78,7 +75,6 @@ const actorsW: Record<Actor, Box> = {
 	bucket: [500, 766, 870, BK.h],
 };
 const actorsT: Record<Actor, Box> = {
-	person: [40, 430, 100, 160],
 	browser: [130, 40, B.w, B.h],
 	cp: [40, 640, CP.w, CP.h],
 	relay: [420, 700, 160, 56],
@@ -97,10 +93,6 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 		aspect: 1.6,
 		room: [0, 30, 1390, 846],
 		at: actorsW,
-		desk: [
-			[10, 708],
-			[450, 708],
-		],
 		lines: {
 			req: [
 				[450, 270],
@@ -126,7 +118,7 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 				[910, 498],
 				[760, 498],
 			],
-			up: [sealedAt(actorsW), [1386, sealedAt(actorsW)[1]], [1386, slot(actorsW)[1]], slot(actorsW)],
+			up: [sealedAt(actorsW), [1382, sealedAt(actorsW)[1]], [1382, slot(actorsW)[1]], slot(actorsW)],
 		},
 	},
 	tall: {
@@ -134,10 +126,6 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 		aspect: 0.8,
 		room: [0, 20, 600, 1760],
 		at: actorsT,
-		desk: [
-			[0, 590],
-			[600, 590],
-		],
 		lines: {
 			req: [
 				[230, 420],
@@ -198,7 +186,6 @@ const drawn = (t: number, at: number, d = 0.5, back = Number.POSITIVE_INFINITY) 
 const live = (t: number, from: number, to: number) => clamp(S(t - from, 12) - S(t - to, 12));
 const lives = (t: number, spans: [number, number][]) => Math.max(0, ...spans.map(([a, b]) => live(t, a, b)));
 /** The loop's last half second: a spring that has nearly come back is put exactly where it began. */
-const land = (t: number, v: number, v0: number) => v + (v0 - v) * ease((t - LOOP + 0.5) / 0.5);
 /** What rises out of a mask line: its offset below the line, 0 once it has risen. */
 const rise = (t: number, at: number, h = 28, out = Number.POSITIVE_INFINITY) => h * (1 - S(t - at, 16)) - h * S(t - out, 16);
 
@@ -233,6 +220,19 @@ const local = (a: Box, x: number, y: number): Pt => [a[0] + x, a[1] + y];
 /** A path from a to b that goes along one axis and then the other. */
 const elbow = (a: Pt, b: Pt, first: 'x' | 'y'): Pt[] => (first === 'x' ? [a, [b[0], a[1]], b] : [a, [a[0], b[1]], b]);
 
+// --- the tilt
+
+/** The room's tilt: turned by `turn` degrees, then pressed to `press` of its height. The room is
+ * drawn flat and the tilt is one matrix over all of it; the camera frames the tilted room. */
+const TILT = { turn: 0, press: 1 };
+const rad = (TILT.turn * Math.PI) / 180;
+const M = [Math.cos(rad), TILT.press * Math.sin(rad), -Math.sin(rad), TILT.press * Math.cos(rad)];
+const tilt = ([x, y]: Pt): Pt => [M[0] * x + M[2] * y, M[1] * x + M[3] * y];
+export function tilted(b: Box): Box {
+	const ps = [tilt([b[0], b[1]]), tilt([b[0] + b[2], b[1]]), tilt([b[0], b[1] + b[3]]), tilt([b[0] + b[2], b[1] + b[3]])];
+	return union(ps.map(([x, y]) => [x, y, 0, 0] as Box));
+}
+
 // --- the camera
 
 type Shot = { at: number; see: (Actor | Box)[]; focus?: (Actor | Box)[]; w?: number; only?: 'wide' | 'tall' };
@@ -243,7 +243,7 @@ function shots(L: Layout): Shot[] {
 	const nvme = rB(L, 400, R.h - 400);
 	const qemu = rB(L, 0, 410);
 	const guest: Box = [L.at.runB[0] + R.user[0], L.at.runB[1] + R.user[1], R.egress[0] + R.egress[2] - R.user[0], R.user[3]];
-	const start: Shot = { at: 0, see: ['person', 'browser'] };
+	const start: Shot = { at: 0, see: ['browser'] };
 	const all: Shot[] = [
 		start,
 		{ at: 1.0, see: ['browser', 'cp'], focus: ['cp'], w: 6 },
@@ -259,8 +259,7 @@ function shots(L: Layout): Shot[] {
 		{ at: 24.6, see: ['cp'], w: 6, only: 'tall' },
 		{ at: 25.1, see: ['runB', 'bucket'], focus: [nvme], w: 5 },
 		{ at: 26.0, see: ['bucket'], w: 6, only: 'tall' },
-		{ at: 26.3, see: [L.room], focus: ['browser'], w: 5 },
-		{ ...start, at: 27.0, w: 9 },
+		{ at: 25.9, see: [L.room], focus: ['browser'], w: 5 },
 	];
 	return all.filter((s) => !s.only || s.only === L.name);
 }
@@ -268,11 +267,11 @@ function shots(L: Layout): Shot[] {
 const widest = (px: number) => (px * 16) / 12;
 
 function aim(L: Layout, s: Shot, px: number): [number, number, number] {
-	const box = (a: Actor | Box): Box => (typeof a === 'string' ? L.at[a] : a);
+	const box = (a: Actor | Box): Box => tilted(typeof a === 'string' ? L.at[a] : a);
 	const pad = L.name === 'wide' ? 20 : 10;
 	const u = union(s.see.map(box));
 	let w = Math.max(u[2] + 2 * pad, (u[3] + 2 * pad) * L.aspect);
-	const most = Math.min(widest(px), L.room[2]);
+	const most = Math.min(widest(px), tilted(L.room)[2]);
 	let [cx, cy] = centre(u);
 	w = Math.max(w, L.name === 'wide' ? 760 : 380);
 	if (w > most) {
@@ -288,28 +287,27 @@ function aim(L: Layout, s: Shot, px: number): [number, number, number] {
 
 // --- the frame
 
-/** Everything the drawing is at time t (seconds, any value: it is taken modulo the loop). */
+/** Everything the drawing is at time t, in seconds from 0 to END. */
 export function frame(time: number, L: Layout, px: number): Frame {
-	const t = ((time % LOOP) + LOOP) % LOOP;
-	// What the closing frame does not show is back at its start before the loop does.
-	const r = t >= RESET ? 0 : t;
+	const t = clamp(time, 0, END);
+	const r = t;
 	const f: Frame = {};
 	const A = L.at;
 	const bw = (x: number, y: number) => local(A.browser, x, y);
 
 	// The camera.
 	const sh = shots(L).map((s) => ({ s, v: aim(L, s, px) }));
-	let [cx, cy, cw] = [0, 1, 2].map((i) =>
+	const [cx, cy, cw] = [0, 1, 2].map((i) =>
 		tr(
 			t,
 			sh[0].v[i],
 			sh.slice(1).map(({ s, v }) => [s.at, v[i], s.w]),
 		),
 	);
-	[cx, cy, cw] = [cx, cy, cw].map((v, i) => land(t, v, sh[0].v[i]));
 	const ch = cw / L.aspect;
 	const ink = cw / px; // world units per screen pixel: a stroke's width is in pixels times this
 	f.svg = { viewBox: `${cx - cw / 2} ${cy - ch / 2} ${cw} ${ch}`, style: `--u:${ink}` };
+	f.world = { transform: `matrix(${M.join(' ')} 0 0)` };
 
 	for (const a of Object.keys(A) as Actor[]) f[`g-${a}`] = { transform: `translate(${A[a][0]} ${A[a][1]})` };
 	f['g-row'] = f['g-cp'];
@@ -318,7 +316,6 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	f.bk = { width: bk };
 	f.bkShelf = { x2: bk - 16 };
 	f.bkSlot = { transform: `translate(${bk - 140} 0)` };
-	f.desk = { d: pathD(L.desk) };
 
 	// The lines that are always there: the browser's to the control plane, and the runners', which
 	// they opened.
@@ -360,7 +357,7 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	f.p1c = box1;
 	f.p1a = { x: c1[0], y: c1[1] + 6 + rise(r, -1, 34, 0.62), visibility: vis1 };
 	f.p1b = { x: c1[0], y: c1[1] + 6 + rise(r, 0.72, 34, 2.28), visibility: vis1 };
-	f.v1btn = { visibility: t >= 0.6 && t < 27.0 ? 'hidden' : 'visible' };
+	f.v1btn = { visibility: t >= 0.6 ? 'hidden' : 'visible' };
 	f.rowIn = { transform: `translate(0 ${rise(r, 2.42, 34)})` };
 	f.odo = {
 		transform: `translate(0 ${
@@ -373,12 +370,9 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	};
 
 	// The browser's two pages: the create dialog, and the workspace's page it goes to.
-	const slide = tr(t, 0, [
-		[1.0, 1, 12],
-		[27.2, 2, 12],
-	]);
-	f.v1 = { transform: `translate(${land(t, slide <= 1 ? -B.w * slide : B.w * (2 - slide), 0)} 0)` };
-	f.v2 = { transform: `translate(${slide <= 1 ? B.w * (1 - slide) : -B.w * (slide - 1)} 0)` };
+	const slide = tr(t, 0, [[1.0, 1, 12]]);
+	f.v1 = { transform: `translate(${-B.w * slide} 0)` };
+	f.v2 = { transform: `translate(${B.w * (1 - slide)} 0)` };
 	const grow = (at: number, b: Box, back = Number.POSITIVE_INFINITY) => {
 		const s = S(r - at, 14) - S(r - back, 14);
 		const [x, y] = centre(b);
@@ -462,16 +456,16 @@ export function frame(time: number, L: Layout, px: number): Frame {
 				]))
 		})`,
 	};
-	f.lBR = { d: pathD(L.lines.bR), 'stroke-dashoffset': drawn(t, 18.5, 0.6, 27.0), style: `--k:${live(r, 19.3, 21.0)}` };
-	f.lRR = { d: pathD(L.lines.rR), 'stroke-dashoffset': drawn(r, 18.75, 0.6, 27.0), style: `--k:${live(r, 19.3, 21.0)}` };
+	f.lBR = { d: pathD(L.lines.bR), 'stroke-dashoffset': drawn(t, 18.5, 0.6), style: `--k:${live(r, 19.3, 21.0)}` };
+	f.lRR = { d: pathD(L.lines.rR), 'stroke-dashoffset': drawn(r, 18.75, 0.6), style: `--k:${live(r, 19.3, 21.0)}` };
 	const arrow = (id: string, p: Pt[], at: number, back = Number.POSITIVE_INFINITY) => {
 		const [a, b] = p.slice(-2);
 		const deg = (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI;
 		const s = S(r - at, 18) - S(r - back, 18);
 		f[id] = { transform: `translate(${b[0]} ${b[1]}) rotate(${deg}) scale(${s})`, visibility: s > 0.001 ? 'visible' : 'hidden' };
 	};
-	arrow('aBR', L.lines.bR, 19.05, 27.0);
-	arrow('aRR', L.lines.rR, 19.3, 27.0);
+	arrow('aBR', L.lines.bR, 19.05);
+	arrow('aRR', L.lines.rR, 19.3);
 	const pane = B.term[3] * tr(r, 0, [[19.6, 1, 10]]);
 	f.termBg = { height: pane };
 	f.termClip = { height: pane };
@@ -544,7 +538,8 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	f.sc = { transform: `translate(${from[0] + (to[0] - from[0]) * k} ${from[1] + (to[1] - from[1]) * k})`, visibility: sOn ? 'visible' : 'hidden' };
 	f.v2chip = { visibility: r >= 27.0 ? 'visible' : 'hidden' };
 
-	// The cursor: the person's hand, the same size on screen whatever the camera does.
+	// The cursor: the person's hand, the same size on screen whatever the camera does, and not tilted
+	// with the room.
 	const cur: [number, Pt][] = [
 		[0.15, [btnC[0] + 10, btnC[1] + 6]],
 		[0.95, bw(B.rest[0] + 20, B.rest[1] + 10)],
@@ -552,8 +547,7 @@ export function frame(time: number, L: Layout, px: number): Frame {
 		[17.75, bw(B.cont[0] + 50, B.cont[1] + 20)],
 		[18.35, bw(300, 250)],
 		[23.95, bw(snap[0] + 90, snap[1] + 24)],
-		[24.6, bw(snap[0] + 150, snap[1] + 90)],
-		[27.1, bw(...B.rest)],
+		[24.6, bw(300, 366)],
 	];
 	const rest = bw(...B.rest);
 	const px0 = tr(
@@ -567,6 +561,7 @@ export function frame(time: number, L: Layout, px: number): Frame {
 		cur.map(([at, p]) => [at, p[1], 9]),
 	);
 	const press = 1 - 0.18 * Math.max(...[0.6, 17.35, 18.15, 24.3].map((c) => live(t, c - 0.02, c + 0.1)));
-	f.cur = { transform: `translate(${land(t, px0, rest[0])} ${land(t, py0, rest[1])}) scale(${ink * press})` };
+	const [qx, qy] = tilt([px0, py0]);
+	f.cur = { transform: `translate(${qx} ${qy}) scale(${ink * press})` };
 	return f;
 }

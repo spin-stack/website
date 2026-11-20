@@ -3,7 +3,7 @@ import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import satori from 'satori';
 import sharp from 'sharp';
 import Room from '../components/Room.astro';
-import { layouts, STILL } from './film';
+import { layouts, STILL, tilted } from './film';
 
 // The landing page's social card: the hero's still - the terminal open, every actor wired - in the
 // light theme, drawn from the same component the page serves. The page's colours are CSS variables
@@ -51,7 +51,7 @@ const sheet = (u: number) => `
 .sheet{fill:${c.raised};stroke:${c.strong};stroke-width:${u}}
 .input{fill:${c.page};stroke:${c.strong};stroke-width:${u}}
 .bar,.gauge{fill:${c.raised}}
-.dot,.person{fill:${c.border}}
+.dot{fill:${c.border}}
 .gauge-on{fill:${c.blue}}
 .tick,.gate{stroke:${c.text};stroke-width:${1.5 * u}}
 .gate{fill:${c.text}}
@@ -186,7 +186,7 @@ export async function landingCard(): Promise<Buffer> {
 	const html = await container.renderToString(Room, { props: { t: STILL, px: 1600 } });
 	let svg = html.slice(html.indexOf('<svg'), html.indexOf('</svg>') + '</svg>'.length);
 	// The whole room, framed for the card: as wide as it needs, centred.
-	const [rx, ry, rw, rh] = layouts.wide.room;
+	const [rx, ry, rw, rh] = tilted(layouts.wide.room);
 	const pad = 24;
 	const vw = Math.max(rw + 2 * pad, ((rh + 2 * pad) * W) / H);
 	const vh = (vw * H) / W;
