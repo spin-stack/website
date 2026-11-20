@@ -21,8 +21,8 @@ curl -s https://app.example.com/spin.v1.WorkspaceService/ListWorkspaces \
 ## Services
 
 - [PasskeyService](/reference/api/passkeyservice/): PasskeyService is a person's passkeys: WebAuthn credentials of their account, under the. installation's base domain (internal/passkey). A passkey signs a challenge the control plane. issued, never a document: what turns a session into a key that logs in (SSHKeyService.AddSSHKey) is an assertion of one, so a session alone - stolen, or an agent's - is no shell.
-- [AuthService](/reference/api/authservice/): 16 procedures
-- [WorkspaceService](/reference/api/workspaceservice/): 57 procedures
+- [AuthService](/reference/api/authservice/): 17 procedures
+- [WorkspaceService](/reference/api/workspaceservice/): 58 procedures
 - [SettingsService](/reference/api/settingsservice/): 6 procedures
 - [AdminService](/reference/api/adminservice/): AdminService manages installation-wide settings, user management, and resource presets. Only accessible to instance administrators.
 - [ExecService](/reference/api/execservice/): ExecService runs commands and moves files in a running workspace, as its root, for a caller who. is no terminal: a program or an agent holding a key with workspace:exec. The control plane logs. in over the same session a terminal's goes over (a host's stream from the guest's vsock, met at. the control plane rather than at the relay) with a certificate of its own for five minutes, and. every call is recorded with who made it and on which credential (audit: workspace_exec).
@@ -35,5 +35,5 @@ curl -s https://app.example.com/spin.v1.WorkspaceService/ListWorkspaces \
 - [SetupService](/reference/api/setupservice/): SetupService handles initial platform setup and admin bootstrap. Most endpoints require admin authentication, except GetSetupStatus and PasswordLogin.
 - [ShareService](/reference/api/shareservice/): ShareService manages snapshot sharing. Snapshots can be shared with specific users or made public. Users can create new workspaces from shared snapshots.
 - [SSHKeyService](/reference/api/sshkeyservice/): SSHKeyService is the keys that log in as the person, to every workspace that lets them in: a key. of their own, for good, or a browser's or a CLI's enrolled for twelve hours. Each is added with an. assertion of a passkey of theirs (PasskeyService), so a session alone adds none.
-- [TeamService](/reference/api/teamservice/): 19 procedures
+- [TeamService](/reference/api/teamservice/): 20 procedures
 - [Types](/reference/api/types/): every message and enum the procedures name

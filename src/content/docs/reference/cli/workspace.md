@@ -77,7 +77,7 @@ its own person may not raise it. Its host is told after the value is recorded; i
 the machine goes on as it was, and the host is asked again.
 
 Usage:
-  spin workspace bandwidth <id> <mbps> [flags]
+  spin workspace bandwidth <workspace> <mbps> [flags]
 
 Flags:
   -h, --help[=true|false]   help for bandwidth
@@ -243,7 +243,7 @@ what was attempted while it was held, and around the holding. Reading it is an
 administrator's act.
 
 Usage:
-  spin workspace denials <id> [flags]
+  spin workspace denials <workspace> [flags]
 
 Flags:
   -h, --help[=true|false]   help for denials
@@ -565,7 +565,7 @@ A running workspace is stopped first, forced, and held when its host says it sto
 workspace attempted, kept beside it, is what spin workspace denials reads.
 
 Usage:
-  spin workspace quarantine <id> [flags]
+  spin workspace quarantine <workspace> [flags]
 
 Flags:
   -h, --help[=true|false]   help for quarantine
@@ -860,7 +860,7 @@ longer held. The account of what it attempted is kept, and stays to be read (spi
 denials).
 
 Usage:
-  spin workspace unquarantine <id> [flags]
+  spin workspace unquarantine <workspace> [flags]
 
 Flags:
   -h, --help[=true|false]   help for unquarantine
@@ -893,6 +893,7 @@ Flags:
       --env strings                   Environment variables (KEY=VALUE)
   -h, --help[=true|false]             help for update
       --name string                   New workspace name
+      --replace-env[=true|false]      The --env given are all its variables: the others are taken away, every one when no --env is given
       --wake-on-access[=true|false]   Resume it, when suspended, for a signed-in visitor of one of its ports (never an anonymous one)
 
 Global Flags:

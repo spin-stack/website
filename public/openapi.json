@@ -2544,6 +2544,68 @@
         }
       }
     },
+    "/spin.v1.AdminService/ListUserWorkspaces": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListUserWorkspaces",
+        "description": "A person's workspaces, or a runner's, those in the trash among them: how an administrator\n finds the one to stop or recover. Each one's name, whose it is, its state and where it runs,\n and nothing of what is in it. Audited, as a reading of somebody else's.",
+        "operationId": "spin.v1.AdminService.ListUserWorkspaces",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListUserWorkspacesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListUserWorkspacesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.AdminService/ListUsers": {
       "post": {
         "tags": [
@@ -4331,6 +4393,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.GetCurrentUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AuthService/GetDeviceLogin": {
+      "post": {
+        "tags": [
+          "AuthService"
+        ],
+        "summary": "GetDeviceLogin",
+        "description": "What a pending device login offers - the SSH key the device connects with - for the\n dashboard's page that confirms it, which adds that key with the person's passkey.",
+        "operationId": "spin.v1.AuthService.GetDeviceLogin",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.GetDeviceLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.GetDeviceLoginResponse"
                 }
               }
             }
@@ -10827,6 +10951,68 @@
         }
       }
     },
+    "/spin.v1.TeamService/TransferOwnership": {
+      "post": {
+        "tags": [
+          "TeamService"
+        ],
+        "summary": "TransferOwnership",
+        "description": "Hand the team to another of its members: they become its owner and the owner who asked an\n admin, in one change, so the team has one owner throughout. Its owner's alone (or an instance\n admin's); a personal team is its person's and is never handed over.",
+        "operationId": "spin.v1.TeamService.TransferOwnership",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.TransferTeamOwnershipRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.TransferTeamOwnershipResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.TeamService/UpdateIdentityProvider": {
       "post": {
         "tags": [
@@ -11686,6 +11872,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.DiffSnapshotsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.WorkspaceService/EnsureAgentWorkspace": {
+      "post": {
+        "tags": [
+          "WorkspaceService"
+        ],
+        "summary": "EnsureAgentWorkspace",
+        "description": "A workspace of a project for the caller's agent to work in: the one of theirs that runs or is\n on its way up, else the newest of theirs that is stopped - started again - else a new one,\n made as CreateWorkspace makes a project's, from its prebuild where one is ready. fresh asks\n for a new one whatever there is: a task kept apart. Answers once it is chosen, started or\n made; how its start goes is the workspace's progress, as for any other.",
+        "operationId": "spin.v1.WorkspaceService.EnsureAgentWorkspace",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.EnsureAgentWorkspaceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.EnsureAgentWorkspaceResponse"
                 }
               }
             }
@@ -17556,6 +17804,73 @@
         "title": "EnableDevModeResponse",
         "additionalProperties": false
       },
+      "spin.v1.EnsureAgentWorkspaceRequest": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "title": "project_id",
+            "description": "A project the caller sees, as CreateWorkspace's project_id."
+          },
+          "fresh": {
+            "type": "boolean",
+            "title": "fresh",
+            "description": "A new workspace whatever the caller has of the project: a task kept apart from the others."
+          },
+          "teamId": {
+            "type": "string",
+            "title": "team_id",
+            "description": "The team a new one is made in, the caller's personal team when empty; one chosen or started\n is the caller's own in any team."
+          },
+          "requestId": {
+            "type": "string",
+            "title": "request_id",
+            "description": "As CreateWorkspace's: a retry after an answer never got is answered with the workspace the\n first attempt made, rather than a second one."
+          }
+        },
+        "title": "EnsureAgentWorkspaceRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.EnsureAgentWorkspaceResponse": {
+        "type": "object",
+        "properties": {
+          "workspace": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Workspace"
+              }
+            ],
+            "title": "workspace"
+          },
+          "outcome": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.EnsureOutcome"
+              }
+            ],
+            "title": "outcome"
+          }
+        },
+        "title": "EnsureAgentWorkspaceResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.EnsureOutcome": {
+        "type": "string",
+        "title": "EnsureOutcome",
+        "enum": [
+          "ENSURE_OUTCOME_UNSPECIFIED",
+          "ENSURE_OUTCOME_REUSED",
+          "ENSURE_OUTCOME_RESUMED",
+          "ENSURE_OUTCOME_CREATED"
+        ],
+        "description": "What EnsureAgentWorkspace did to have a workspace to answer with.\n\n- `ENSURE_OUTCOME_REUSED`: One of the caller's that runs or is on its way up.\n- `ENSURE_OUTCOME_RESUMED`: The newest of the caller's that was stopped, started again.\n- `ENSURE_OUTCOME_CREATED`: A new one, made as CreateWorkspace makes a project's.",
+        "x-enum-descriptions": [
+          "",
+          "One of the caller's that runs or is on its way up.",
+          "The newest of the caller's that was stopped, started again.",
+          "A new one, made as CreateWorkspace makes a project's."
+        ]
+      },
       "spin.v1.ExchangeWorkloadTokenRequest": {
         "type": "object",
         "properties": {
@@ -18470,10 +18785,52 @@
             "type": "string",
             "title": "control_plane_version",
             "description": "The release of the control plane that answered, which is the release of the dashboard asking:\n the bundle is served from inside that binary. It rides here rather than on an endpoint of its\n own because every session asks this once, and because a version an installation will be\n matched against known flaws by is not something to hand out unauthenticated."
+          },
+          "operatorContact": {
+            "type": "string",
+            "title": "operator_contact",
+            "description": "Whom a person of this installation asks when a page can only say to ask its operator: an\n email address or an https link (the operator_contact setting); empty where none is set. Here\n for the same reason as the version: every session asks this once."
           }
         },
         "title": "GetCurrentUserResponse",
         "additionalProperties": false
+      },
+      "spin.v1.GetDeviceLoginRequest": {
+        "type": "object",
+        "properties": {
+          "userCode": {
+            "type": "string",
+            "title": "user_code"
+          }
+        },
+        "title": "GetDeviceLoginRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.GetDeviceLoginResponse": {
+        "type": "object",
+        "properties": {
+          "sshPublicKey": {
+            "type": "string",
+            "title": "ssh_public_key",
+            "description": "The key the device offers, as an authorized_keys line, its fingerprint and its name; empty\n for a device that offers none."
+          },
+          "sshKeyFingerprint": {
+            "type": "string",
+            "title": "ssh_key_fingerprint"
+          },
+          "sshKeyName": {
+            "type": "string",
+            "title": "ssh_key_name"
+          },
+          "sshKeyListed": {
+            "type": "boolean",
+            "title": "ssh_key_listed",
+            "description": "Whether the person already logs in with that key, for good: then there is nothing to add."
+          }
+        },
+        "title": "GetDeviceLoginResponse",
+        "additionalProperties": false,
+        "description": "What a pending device login brings for the person confirming it to see before they do."
       },
       "spin.v1.GetEmailSettingsRequest": {
         "type": "object",
@@ -20943,6 +21300,31 @@
             ],
             "title": "max_workspace_io_ops_per_second",
             "format": "int32"
+          },
+          "pooledBootMachines": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "pooled_boot_machines",
+            "format": "int32",
+            "description": "Machines this host keeps launched ahead of the workspaces that will claim them, held for a\n boot and for a checkpoint; unset or zero keeps none. Each costs the host its QEMU at rest."
+          },
+          "pooledRestoreMachines": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "pooled_restore_machines",
+            "format": "int32"
+          },
+          "fastLoad": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "title": "fast_load",
+            "description": "Resume a checkpoint as its guest touches its memory; unset is off, which reached the first\n login sooner on the bench."
           }
         },
         "title": "HostPolicy",
@@ -22948,6 +23330,53 @@
         "title": "ListUserAPIKeysResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListUserWorkspacesRequest": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string",
+            "title": "owner",
+            "description": "A person's id, or their email as they sign in with it."
+          },
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "A runner's id: the workspaces whose disk it holds, whatever each is doing."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state",
+            "description": "Only those in this state; unset is every state. DELETED is the trash."
+          }
+        },
+        "title": "ListUserWorkspacesRequest",
+        "additionalProperties": false,
+        "description": "Whose workspaces, or which runner's: at least one of owner and host_id, or the request is\n refused - the whole installation's is no list a person reads."
+      },
+      "spin.v1.ListUserWorkspacesResponse": {
+        "type": "object",
+        "properties": {
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.UserWorkspace"
+            },
+            "title": "workspaces",
+            "description": "At most 500, the newest first."
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "truncated",
+            "description": "More matched than were answered: narrow by state, or by both owner and runner."
+          }
+        },
+        "title": "ListUserWorkspacesResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListUsersRequest": {
         "type": "object",
         "properties": {
@@ -24401,6 +24830,14 @@
           "buildWorkspaceOwnerId": {
             "type": "string",
             "title": "build_workspace_owner_id"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.PrebuildStep"
+            },
+            "title": "steps",
+            "description": "What its build has done and is doing, in the order each began (GetPrebuild only): its guest's\n clone and create tasks, then the control plane's snapshot, publish, scan and share."
           }
         },
         "title": "Prebuild",
@@ -24445,6 +24882,69 @@
           "",
           "",
           "Superseded and given back: its snapshot is being deleted."
+        ]
+      },
+      "spin.v1.PrebuildStep": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PrebuildStepKind"
+              }
+            ],
+            "title": "kind"
+          },
+          "startedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "started_at"
+          },
+          "finishedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "finished_at",
+            "description": "Unset while it runs, and for one its build never finished: a failed prebuild's error is why."
+          },
+          "error": {
+            "type": "string",
+            "title": "error",
+            "description": "Why it failed; empty for one that did not."
+          }
+        },
+        "title": "PrebuildStep",
+        "additionalProperties": false,
+        "description": "One step of a prebuild's build."
+      },
+      "spin.v1.PrebuildStepKind": {
+        "type": "string",
+        "title": "PrebuildStepKind",
+        "enum": [
+          "PREBUILD_STEP_KIND_UNSPECIFIED",
+          "PREBUILD_STEP_KIND_CLONE",
+          "PREBUILD_STEP_KIND_CREATE",
+          "PREBUILD_STEP_KIND_SNAPSHOT",
+          "PREBUILD_STEP_KIND_PUBLISH",
+          "PREBUILD_STEP_KIND_SCAN",
+          "PREBUILD_STEP_KIND_SHARE",
+          "PREBUILD_STEP_KIND_KEEP"
+        ],
+        "description": "The steps of a prebuild's build. They run clone, keep, create, snapshot, publish, scan, share;\n keep is numbered last because it was added last, and a step's number is what is stored.\n\n- `PREBUILD_STEP_KIND_CLONE`: The guest's checkout of the repository at the build's commit.\n- `PREBUILD_STEP_KIND_CREATE`: The guest's run of the checkout's create task (.spin.yaml); none for a checkout without one.\n- `PREBUILD_STEP_KIND_SNAPSHOT`: The control plane's snapshot of the build's disk, once its guest said it was done.\n- `PREBUILD_STEP_KIND_PUBLISH`: The snapshot reaching the object store.\n- `PREBUILD_STEP_KIND_SCAN`: The scan of the snapshot for credentials, which nothing a member clones may carry.\n- `PREBUILD_STEP_KIND_SHARE`: The snapshot shared with the teams the project is shared with.\n- `PREBUILD_STEP_KIND_KEEP`: The control plane's snapshot of the checkout, published before the guest runs create: what\n  the scan compares the build against, so what the repository commits is not refused.",
+        "x-enum-descriptions": [
+          "",
+          "The guest's checkout of the repository at the build's commit.",
+          "The guest's run of the checkout's create task (.spin.yaml); none for a checkout without one.",
+          "The control plane's snapshot of the build's disk, once its guest said it was done.",
+          "The snapshot reaching the object store.",
+          "The scan of the snapshot for credentials, which nothing a member clones may carry.",
+          "The snapshot shared with the teams the project is shared with.",
+          "The control plane's snapshot of the checkout, published before the guest runs create: what\n the scan compares the build against, so what the repository commits is not refused."
         ]
       },
       "spin.v1.PrebuildsKept": {
@@ -24806,7 +25306,7 @@
           "prebuildOwnerId": {
             "type": "string",
             "title": "prebuild_owner_id",
-            "description": "Who the builds run as, for what they use: the project admin who last named the refs."
+            "description": "Who the builds run as, for what they use: the project admin who last named the refs (or the\n repository). Saving anything else leaves them as they are."
           },
           "sharedWithEveryone": {
             "type": "boolean",
@@ -24860,6 +25360,11 @@
             ],
             "title": "time_to_ready",
             "description": "In GetProject: how long its workspaces took to be ready. Unset where none has been."
+          },
+          "prebuildOwnerName": {
+            "type": "string",
+            "title": "prebuild_owner_name",
+            "description": "The name of who the builds run as (prebuild_owner_id), so the page says whose forge\n credentials they use."
           }
         },
         "title": "Project",
@@ -25188,6 +25693,14 @@
             "type": "string",
             "title": "packets",
             "format": "int64"
+          },
+          "allowedBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "allowed_by",
+            "description": "The network policies the workspace does not run under, and could, that let it through: the\n installation's and its team's, read as a host reads them. The control plane's, not the host's;\n empty where none would, and for what is not tcp."
           }
         },
         "title": "RefusedDestination",
@@ -27036,6 +27549,11 @@
             "title": "dropped_connections",
             "format": "int32",
             "description": "dropped_connections is how many of the machine's open connections were cut, because the\n change took a policy away and what a policy no longer allows must not survive in a socket\n that was opened before it. Zero when the change only added."
+          },
+          "notApplied": {
+            "type": "string",
+            "title": "not_applied",
+            "description": "Empty when the machine runs under the new policies now. Otherwise why it does not yet - its\n host is not connected, did not answer, or refused - while the change is recorded and carried\n by the workspace's next start: the change was made, and this says it has not reached the\n machine."
           }
         },
         "title": "SetWorkspaceNetworkTagsResponse",
@@ -27360,6 +27878,11 @@
             "type": "string",
             "title": "parent_snapshot_id",
             "description": "The snapshot the disk this one was taken of had been cloned from. A restore gives the\n workspace a new disk cloned from the snapshot restored, so the snapshots with one parent are\n one disk's, and one whose parent is not ListSnapshotsResponse.base_snapshot_id was taken on a\n disk a restore left detached. Empty for a disk that was not cloned."
+          },
+          "sharedBy": {
+            "type": "string",
+            "title": "shared_by",
+            "description": "Who it is from, where its owner shared it with the caller by name (ListSharedSnapshots): they\n chose to give it, so saying who did is no leak. Empty for one reached only as public, which\n names nobody, and for the caller's own."
           }
         },
         "title": "Snapshot",
@@ -27685,6 +28208,15 @@
             "type": "string",
             "title": "identity_provider_id",
             "description": "Optional: use default if empty"
+          },
+          "sshPublicKey": {
+            "type": "string",
+            "title": "ssh_public_key",
+            "description": "The SSH public key the device connects to workspaces with, and a name for it - the\n machine's. The page that confirms the login adds it with the person's passkey, so a first\n connection from the device is not refused for a key nobody added. Empty: none is offered."
+          },
+          "sshKeyName": {
+            "type": "string",
+            "title": "ssh_key_name"
           }
         },
         "title": "StartDeviceLoginRequest",
@@ -27823,16 +28355,18 @@
           "STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT",
           "STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE",
           "STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING",
-          "STATUS_DISAGREEMENT_KIND_UNHEALTHY"
+          "STATUS_DISAGREEMENT_KIND_UNHEALTHY",
+          "STATUS_DISAGREEMENT_KIND_CREDENTIAL_MISSING"
         ],
-        "description": "- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`: The control plane says the workspace runs and the supervisor has gone quiet for longer\n  than several heartbeat intervals.\n- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`: The control plane says the workspace runs and no supervisor ever reported.\n- `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`: The host holding this workspace is not ACTIVE, or has stopped heartbeating.\n- `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`: The volume under the workspace is refusing to serve.\n- `STATUS_DISAGREEMENT_KIND_UNHEALTHY`: The supervisor reports a failing health check.",
+        "description": "- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`: The control plane says the workspace runs and the supervisor has gone quiet for longer\n  than several heartbeat intervals.\n- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`: The control plane says the workspace runs and no supervisor ever reported.\n- `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`: The host holding this workspace is not ACTIVE, or has stopped heartbeating.\n- `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`: The volume under the workspace is refusing to serve.\n- `STATUS_DISAGREEMENT_KIND_UNHEALTHY`: The supervisor reports a failing health check.\n- `STATUS_DISAGREEMENT_KIND_CREDENTIAL_MISSING`: A policy the workspace runs under brokers a name with a credential its team does not hold\n  (InjectionStatus.held false): the policy says the workspace may reach it, and every request\n  there is refused.",
         "x-enum-descriptions": [
           "",
           "The control plane says the workspace runs and the supervisor has gone quiet for longer\n than several heartbeat intervals.",
           "The control plane says the workspace runs and no supervisor ever reported.",
           "The host holding this workspace is not ACTIVE, or has stopped heartbeating.",
           "The volume under the workspace is refusing to serve.",
-          "The supervisor reports a failing health check."
+          "The supervisor reports a failing health check.",
+          "A policy the workspace runs under brokers a name with a credential its team does not hold\n (InjectionStatus.held false): the policy says the workspace may reach it, and every request\n there is refused."
         ]
       },
       "spin.v1.StopUserWorkspaceRequest": {
@@ -28683,6 +29217,38 @@
           "A project's prebuild (Prebuild.id)."
         ]
       },
+      "spin.v1.TransferTeamOwnershipRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "title": "team_id"
+          },
+          "userId": {
+            "type": "string",
+            "title": "user_id",
+            "description": "The member who becomes the owner."
+          }
+        },
+        "title": "TransferTeamOwnershipRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.TransferTeamOwnershipResponse": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.TeamMember"
+              }
+            ],
+            "title": "owner",
+            "description": "The new owner, as a member now."
+          }
+        },
+        "title": "TransferTeamOwnershipResponse",
+        "additionalProperties": false
+      },
       "spin.v1.UndeleteWorkspaceRequest": {
         "type": "object",
         "properties": {
@@ -29397,6 +29963,11 @@
             ],
             "title": "wake_on_access",
             "description": "Note: resource changes require stop/start Optional: Workspace.wake_on_access"
+          },
+          "replaceEnv": {
+            "type": "boolean",
+            "title": "replace_env",
+            "description": "env replaces the variables even when it is empty, which is how the last one is taken away;\n without it an empty env leaves them as they are."
           }
         },
         "title": "UpdateWorkspaceRequest",
@@ -29541,6 +30112,76 @@
         },
         "title": "UserSettings",
         "additionalProperties": false
+      },
+      "spin.v1.UserWorkspace": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name"
+          },
+          "ownerId": {
+            "type": "string",
+            "title": "owner_id"
+          },
+          "ownerEmail": {
+            "type": "string",
+            "title": "owner_email"
+          },
+          "ownerName": {
+            "type": "string",
+            "title": "owner_name"
+          },
+          "teamId": {
+            "type": "string",
+            "title": "team_id"
+          },
+          "teamName": {
+            "type": "string",
+            "title": "team_name"
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.WorkspaceState"
+              }
+            ],
+            "title": "state"
+          },
+          "hostId": {
+            "type": "string",
+            "title": "host_id",
+            "description": "The runner its disk is on; empty for one placed nowhere yet."
+          },
+          "hostName": {
+            "type": "string",
+            "title": "host_name"
+          },
+          "createdAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "created_at"
+          },
+          "trashedUntil": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "trashed_until",
+            "description": "Set only for one in the trash: when it is erased, unless its owner undeletes it first."
+          }
+        },
+        "title": "UserWorkspace",
+        "additionalProperties": false,
+        "description": "UserWorkspace is a workspace as an administrator lists it: where it is and whose, and nothing\n its owner put in it - no environment, ports, secrets or disk."
       },
       "spin.v1.VSCodeServerPublish": {
         "type": "object",
@@ -30417,9 +31058,10 @@
           "WORKSPACE_EVENT_TYPE_HELD",
           "WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN",
           "WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY",
-          "WORKSPACE_EVENT_TYPE_OVERSIZED"
+          "WORKSPACE_EVENT_TYPE_OVERSIZED",
+          "WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED"
         ],
-        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller preset would fit what it used. Its details say what it used, what it\n  holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.",
+        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller preset would fit what it used. Its details say what it used, what it\n  holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline:\n  its processes are lost, and it comes back from its disk as last published. Its details say\n  when that was, how long before the deadline, and why the memory was not saved.",
         "x-enum-descriptions": [
           "",
           "Workspace was created",
@@ -30448,7 +31090,8 @@
           "Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner",
           "An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why",
           "It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n ceiling. Said, never acted on: nothing resizes a workspace on its own.",
-          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller preset would fit what it used. Its details say what it used, what it\n holds, and that preset. Said, never acted on: nothing resizes a workspace on its own."
+          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller preset would fit what it used. Its details say what it used, what it\n holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.",
+          "Its host was being taken away and its memory could not be saved before the host's deadline:\n its processes are lost, and it comes back from its disk as last published. Its details say\n when that was, how long before the deadline, and why the memory was not saved."
         ]
       },
       "spin.v1.WorkspaceFailure": {

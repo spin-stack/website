@@ -30,7 +30,7 @@ Available Commands:
   token       Manage runner registration tokens
   versions    What is running where: this control plane, each runner and its machine
   volume      Re-key a workspace's disk, and list the disks hosts refuse
-  workspace   Stop, recover or read the egress of a workspace that is somebody else's
+  workspace   List somebody else's workspaces, and stop, recover or read the egress of one
 
 Flags:
   -h, --help[=true|false]   help for admin
@@ -319,12 +319,15 @@ Usage:
 Flags:
       --cpu-cores int32                         cores this runner advertises; unset advertises what it has
       --disk-gb int32                           disk this runner advertises; unset advertises what it has
+      --fast-load[=true|false]                  resume a checkpoint as its guest touches its memory; off reached the first login sooner on the bench
   -h, --help[=true|false]                       help for policy
       --max-workspace-cpu-cores int32           the cores one workspace may grow to there
       --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
       --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
       --max-workspace-memory-mb int32           the memory one workspace may grow to there
       --memory-mb int32                         memory this runner advertises; unset advertises what it has
+      --pooled-boot-machines int32              machines this runner keeps launched ahead of the workspaces that will boot in them; 0 keeps none
+      --pooled-restore-machines int32           machines this runner keeps launched ahead of the checkpoints that will resume in them; 0 keeps none
       --preemptible[=true|false]                a stop on this runner is the machine being taken away, not a restart
       --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
@@ -772,12 +775,15 @@ Flags:
       --description string                      Description for the token
       --disk-gb int32                           disk each host it registers advertises; unset advertises what it has
       --expires duration                        how long the token registers hosts; unset is the control plane's 24 hours, and at most 30 days
+      --fast-load[=true|false]                  resume a checkpoint as its guest touches its memory; off reached the first login sooner on the bench
   -h, --help[=true|false]                       help for create
       --max-workspace-cpu-cores int32           the cores one workspace may grow to there
       --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
       --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
       --max-workspace-memory-mb int32           the memory one workspace may grow to there
       --memory-mb int32                         memory each host it registers advertises; unset advertises what it has
+      --pooled-boot-machines int32              machines each host it registers keeps launched ahead of the workspaces that will boot in them; 0 keeps none
+      --pooled-restore-machines int32           machines each host it registers keeps launched ahead of the checkpoints that will resume in them; 0 keeps none
       --preemptible[=true|false]                a stop on each host it registers is the machine being taken away, not a restart
       --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
@@ -939,7 +945,7 @@ Global Flags:
 ### spin admin workspace
 
 ```
-Stop, recover or read the egress of a workspace that is somebody else's
+List somebody else's workspaces, and stop, recover or read the egress of one
 
 Usage:
   spin admin workspace [flags]
@@ -947,6 +953,7 @@ Usage:
 
 Available Commands:
   egress      What somebody else's workspace has reached beyond this installation
+  list        A person's workspaces, or a runner's
   recover     Move somebody else's workspace off a host that is gone
   stop        Stop somebody else's workspace
 
@@ -975,6 +982,30 @@ Usage:
 Flags:
   -h, --help[=true|false]   help for egress
       --reason string       Why: kept on the audit entry for the reading
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+#### spin admin workspace list
+
+```
+List the workspaces of one person, of one runner, or of that person on that runner: the
+trash's among them, with each one's state, whose it is and where it runs. Nothing of what is in
+them. At most 500, the newest first. The listing is audited: it names workspaces that are not
+yours.
+
+Usage:
+  spin admin workspace list [flags]
+
+Flags:
+  -h, --help[=true|false]   help for list
+      --host string         Which runner's: its id
+      --owner string        Whose: a person's id, or the email they sign in with
+      --state string        Only those in this state (running, stopped, deleted for the trash, ...)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

@@ -775,6 +775,27 @@ List another user's API keys. The secret is never stored, so this is what an adm
 | `apiKeys` | list of [APIKey](/reference/api/types/#apikey) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
 
+## ListUserWorkspaces
+
+`POST /spin.v1.AdminService/ListUserWorkspaces`
+
+A person's workspaces, or a runner's, those in the trash among them: how an administrator finds the one to stop or recover. Each one's name, whose it is, its state and where it runs, and nothing of what is in it. Audited, as a reading of somebody else's.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `owner` | string | A person's id, or their email as they sign in with it. |
+| `hostId` | string | A runner's id: the workspaces whose disk it holds, whatever each is doing. |
+| `state` | [WorkspaceState](/reference/api/types/#workspacestate) | Only those in this state; unset is every state. DELETED is the trash. |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaces` | list of [UserWorkspace](/reference/api/types/#userworkspace) | At most 500, the newest first. |
+| `truncated` | boolean | More matched than were answered: narrow by state, or by both owner and runner. |
+
 ## ListUsers
 
 `POST /spin.v1.AdminService/ListUsers`
