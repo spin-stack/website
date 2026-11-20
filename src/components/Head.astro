@@ -14,7 +14,7 @@ import { twinPath } from '../lib/twin';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 // The link preview a chat shows, by its absolute address: the page's card (src/pages/cards/), or
-// for the landing page and the 404, which have none, public/og.png.
+// for the landing page and the 404, which have none, the hero's still (src/pages/og.png.ts).
 const { id } = Astro.locals.starlightRoute;
 const hasCard = !['', 'index', '404'].includes(id);
 const image = new URL(`${base}${hasCard ? `/cards/${id.replace(/\/$/, '')}.png` : '/og.png'}`, Astro.site).href;

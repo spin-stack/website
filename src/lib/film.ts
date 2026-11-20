@@ -49,7 +49,7 @@ export const B = {
 export const CP = { w: 360, h: 220, row: [8, 80, 344, 40] as Box, chip: [172, 87, 104, 26] as Box };
 export const R = {
 	w: 460,
-	h: 630,
+	h: 606,
 	gauge: 208,
 	user: [16, 76, 290, 330] as Box,
 	cg: [28, 102, 266, 292] as Box,
@@ -58,79 +58,81 @@ export const R = {
 	tok: [84, 16, 56, 28] as Box,
 	// A layer: the top ellipse's centre, its radii and the height of its side.
 	// The image's layer in the runner's cache, and the top of the workspace's own (its tip).
-	cache: [70, 528] as Pt,
-	vol: [220, 498] as Pt,
+	cache: [70, 508] as Pt,
+	vol: [220, 478] as Pt,
 	lx: 56,
 	ly: 14,
 	side: 30,
-	sup: [312, 520] as Pt,
-	vs: [380, 520] as Pt,
+	sup: [312, 500] as Pt,
+	vs: [380, 500] as Pt,
 };
 export const BK = { h: 110, shelf: 86, top: 56, rx: 40, ry: 10, side: 16 };
 
 const actorsW: Record<Actor, Box> = {
-	person: [30, 400, 100, 160],
-	browser: [140, 150, B.w, B.h],
-	cp: [680, 150, CP.w, CP.h],
-	relay: [780, 470, 160, 56],
-	runA: [1100, 40, R.w, 96],
-	runB: [1100, 170, R.w, R.h],
-	bucket: [680, 850, 880, BK.h],
+	person: [180, 548, 100, 160],
+	browser: [10, 150, B.w, B.h],
+	cp: [500, 150, CP.w, CP.h],
+	relay: [600, 470, 160, 56],
+	runA: [910, 30, R.w, 96],
+	runB: [910, 140, R.w, R.h],
+	bucket: [500, 766, 870, BK.h],
 };
 const actorsT: Record<Actor, Box> = {
 	person: [40, 430, 100, 160],
 	browser: [130, 40, B.w, B.h],
 	cp: [40, 640, CP.w, CP.h],
 	relay: [420, 700, 160, 56],
-	runA: [70, 1060, R.w, 96],
-	runB: [70, 1190, R.w, R.h],
-	bucket: [40, 900, 520, BK.h],
+	runA: [70, 900, R.w, 96],
+	runB: [70, 1030, R.w, R.h],
+	bucket: [40, 1660, 520, BK.h],
 };
 const slot = (a: Record<Actor, Box>): Pt => [a.bucket[0] + a.bucket[2] - 140, a.bucket[1] + BK.top];
 const sealedAt = (a: Record<Actor, Box>): Pt => [a.runB[0] + R.vol[0] + R.lx, a.runB[1] + R.vol[1] + R.ly];
 
+// The wide room is 1430 wide with its margins: the whole of it at 16 units a label is 12 px on a
+// hero 1078 px wide, the page's at 1440.
 export const layouts: Record<'wide' | 'tall', Layout> = {
 	wide: {
 		name: 'wide',
 		aspect: 1.6,
-		room: [0, 20, 1600, 1000],
+		room: [0, 30, 1390, 846],
 		at: actorsW,
 		desk: [
-			[10, 560],
-			[600, 560],
+			[10, 708],
+			[450, 708],
 		],
 		lines: {
 			req: [
-				[580, 270],
-				[680, 270],
+				[450, 270],
+				[500, 270],
 			],
 			rA: [
-				[1100, 88],
-				[1062, 88],
-				[1062, 210],
-				[1040, 210],
+				[910, 78],
+				[882, 78],
+				[882, 210],
+				[860, 210],
 			],
 			rB: [
-				[1100, 200],
-				[1074, 200],
-				[1074, 250],
-				[1040, 250],
+				[910, 190],
+				[894, 190],
+				[894, 250],
+				[860, 250],
 			],
 			bR: [
-				[580, 498],
-				[780, 498],
+				[450, 498],
+				[600, 498],
 			],
 			rR: [
-				[1100, 498],
-				[940, 498],
+				[910, 498],
+				[760, 498],
 			],
-			up: [sealedAt(actorsW), [1585, sealedAt(actorsW)[1]], [1585, slot(actorsW)[1]], slot(actorsW)],
+			up: [sealedAt(actorsW), [1386, sealedAt(actorsW)[1]], [1386, slot(actorsW)[1]], slot(actorsW)],
 		},
 	},
 	tall: {
 		name: 'tall',
 		aspect: 0.8,
-		room: [0, 20, 600, 1800],
+		room: [0, 20, 600, 1760],
 		at: actorsT,
 		desk: [
 			[0, 590],
@@ -142,29 +144,26 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 				[230, 640],
 			],
 			rA: [
-				[530, 1108],
-				[582, 1108],
-				[582, 830],
-				[400, 830],
+				[300, 900],
+				[300, 860],
 			],
 			rB: [
-				[530, 1220],
-				[594, 1220],
-				[594, 846],
-				[400, 846],
+				[70, 1070],
+				[30, 1070],
+				[30, 880],
+				[100, 880],
+				[100, 860],
 			],
 			bR: [
 				[500, 420],
 				[500, 700],
 			],
 			rR: [
-				[530, 1290],
-				[570, 1290],
-				[570, 780],
-				[500, 780],
-				[500, 756],
+				[530, 1100],
+				[570, 1100],
+				[570, 756],
 			],
-			up: [sealedAt(actorsT), [548, sealedAt(actorsT)[1]], [548, 1030], [slot(actorsT)[0], 1030], slot(actorsT)],
+			up: [sealedAt(actorsT), [548, sealedAt(actorsT)[1]], [548, slot(actorsT)[1]], slot(actorsT)],
 		},
 	},
 };
@@ -241,8 +240,8 @@ type Shot = { at: number; see: (Actor | Box)[]; focus?: (Actor | Box)[]; w?: num
 const rB = (L: Layout, y: number, h: number): Box => [L.at.runB[0], L.at.runB[1] + y, R.w, h];
 function shots(L: Layout): Shot[] {
 	const head = rB(L, 0, 80);
-	const nvme = rB(L, 420, R.h - 420);
-	const qemu = rB(L, 0, 420);
+	const nvme = rB(L, 400, R.h - 400);
+	const qemu = rB(L, 0, 410);
 	const guest: Box = [L.at.runB[0] + R.user[0], L.at.runB[1] + R.user[1], R.egress[0] + R.egress[2] - R.user[0], R.user[3]];
 	const start: Shot = { at: 0, see: ['person', 'browser'] };
 	const all: Shot[] = [
@@ -270,7 +269,7 @@ const widest = (px: number) => (px * 16) / 12;
 
 function aim(L: Layout, s: Shot, px: number): [number, number, number] {
 	const box = (a: Actor | Box): Box => (typeof a === 'string' ? L.at[a] : a);
-	const pad = L.name === 'wide' ? 24 : 10;
+	const pad = L.name === 'wide' ? 20 : 10;
 	const u = union(s.see.map(box));
 	let w = Math.max(u[2] + 2 * pad, (u[3] + 2 * pad) * L.aspect);
 	const most = Math.min(widest(px), L.room[2]);

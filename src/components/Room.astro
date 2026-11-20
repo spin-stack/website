@@ -9,13 +9,19 @@ import { B, BK, CP, frame, LOOP, layouts, R, STILL } from '../lib/film';
 import { output } from '../lib/output';
 import { chapters, writes } from '../lib/story';
 
-const still = frame(STILL, layouts.wide, 1200);
+interface Props {
+	/** The instant the page is served at, and the hero's width in pixels it is framed for. */
+	t?: number;
+	px?: number;
+}
+const { t = STILL, px = 1200 } = Astro.props;
+const still = frame(t, layouts.wide, px);
 const a = (id: string) => {
 	const { text: _, ...rest } = still[id] ?? {};
 	return { 'data-f': id, ...rest };
 };
 const txt = (id: string) => String(still[id]?.text ?? '');
-const now = chapters.findLastIndex((c) => c.at <= STILL);
+const now = chapters.findLastIndex((c) => c.at <= t);
 const kinds = output('diff.txt')
 	.split('\n')
 	.filter(Boolean)
@@ -35,7 +41,7 @@ const ch = CP.chip;
 const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 ---
 
-<figure class="room" data-room data-t={STILL} data-loop={LOOP}>
+<figure class="room" data-room data-t={t} data-loop={LOOP}>
 	<svg {...a('svg')} class="film" role="img" aria-labelledby="room-t room-d">
 		<title id="room-t">One workspace, from a click to its disk</title>
 		<desc id="room-d">
@@ -63,8 +69,8 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 					['g1', R.ns[0], 190, R.ns[2]],
 					['g2', R.ns[0], 216, R.ns[2]],
 					['g3', R.ns[0], 242, R.ns[2]],
-					['lb', 0, 580, R.w],
-					['lb2', 0, 602, R.w],
+					['lb', 0, 560, R.w],
+					['lb2', 0, 580, R.w],
 					['snap', 40, 56, 100],
 				].map(([id, x, y, w]) => (
 					<clipPath id={`rm-${id}`}>
@@ -179,7 +185,7 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 								{g.label}
 							</text>
 							<rect x="236" y={g.y} width={R.gauge} height="10" rx="2" class="gauge" />
-							<rect x="236" y={g.y} width={g.w} height="10" rx="2" class="gauge-on" {...(g.id ? a(g.id) : {})} />
+							<rect x="236" y={g.y} height="10" rx="2" class="gauge-on" {...(g.id ? a(g.id) : { width: g.w })} />
 						</>
 					))}
 					<path d={`M${236 + 0.7 * R.gauge} 13V31`} class="tick" />
@@ -218,10 +224,10 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 				<text x="374" y="318" class="mono mid">offline</text>
 			</g>
 
-			<text x="16" y="452" class="muted">NVMe</text>
-			<path {...a('drive')} d={`M${vx} 406V452`} pathLength="1" class="wire" />
-			<path {...a('eSup')} d={`M${R.sup[0]} 513V440H284V406`} pathLength="1" class="wire" />
-			<path {...a('eVs')} d={`M${R.vs[0]} 513V426H298V406`} pathLength="1" class="wire" />
+			<text x="16" y="432" class="muted">NVMe</text>
+			<path {...a('drive')} d={`M${vx} 406V432`} pathLength="1" class="wire" />
+			<path {...a('eSup')} d={`M${R.sup[0]} 493V426H284V406`} pathLength="1" class="wire" />
+			<path {...a('eVs')} d={`M${R.vs[0]} 493V416H298V406`} pathLength="1" class="wire" />
 			<g class="sealed">
 				<path d={side(R.cache[0], R.cache[1], lx, ly, R.side)} class="side-deep" />
 				<ellipse cx={R.cache[0]} cy={R.cache[1]} rx={lx} ry={ly} class="top-blue" />
@@ -262,12 +268,12 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 				))
 			}
 			<g clip-path="url(#rm-lb)">
-				<text x={R.cache[0]} y="598" class="mid label">ubuntu</text>
-				<g {...a('lbTip')}><text x={vx} y="598" class="mid label">api</text></g>
-				<g {...a('lbSup')}><text x={R.sup[0]} y="598" class="mid label">supervisor</text></g>
+				<text x={R.cache[0]} y="578" class="mid label">ubuntu</text>
+				<g {...a('lbTip')}><text x={vx} y="578" class="mid label">api</text></g>
+				<g {...a('lbSup')}><text x={R.sup[0]} y="578" class="mid label">supervisor</text></g>
 			</g>
 			<g clip-path="url(#rm-lb2)">
-				<g {...a('lbVs')}><text x={R.vs[0]} y="620" class="mid label">VS Code server</text></g>
+				<g {...a('lbVs')}><text x={R.vs[0]} y="598" class="mid label">VS Code server</text></g>
 			</g>
 		</g>
 

@@ -167,7 +167,8 @@ that is not one task (`taskgate`).
 - **A link's preview** is the page's card: `src/pages/cards/` draws one for every page, the
   generated ones included, from its topic in `nav.mjs`, its title and its description, in brand's
   colours and IBM Plex (`src/lib/card.ts`, with satori), and `Head.astro` names it as the page's
-  `og:image`. Nobody draws one by hand; the landing page keeps `public/og.png`. A hundred cards add
+  `og:image`. Nobody draws one by hand: the landing page's is the hero's still in the light theme
+  (`src/pages/og.png.ts`, `src/lib/og.ts`), each label drawn by satori. A hundred cards add
   some two seconds to the build.
 - **The look** is spin-stack/brand's: its palette, checked there for contrast and perceptual
   distance on real panels and through colour-vision deficiencies, and the organization's mark.
