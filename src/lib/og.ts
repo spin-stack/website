@@ -166,7 +166,7 @@ async function outline(svg: string): Promise<string> {
 			continue;
 		}
 		const end = svg.indexOf('</text>', m.index);
-		const text = decode(svg.slice(m.index + whole.length, end));
+		const text = decode(svg.slice(m.index + whole.length, end).replace(/<[^>]*>/g, ''));
 		out += svg.slice(at, m.index);
 		at = end + '</text>'.length;
 		tag.lastIndex = at;

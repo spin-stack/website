@@ -1,11 +1,11 @@
 ---
 // The landing page's hero: one workspace born, in one take, played once. Create workspace is clicked; the
 // control plane places it on a runner; the runner clones its disk, starts its machine, and the
-// machine boots; the browser opens a terminal over the relay, root writes in the top layer, and a
+// machine boots; the browser opens a terminal over the proxy's relay, root writes in the top layer, and a
 // snapshot seals that layer into the bucket. Every attribute is src/lib/film.ts's frame(t): the
 // page is served at the still (the terminal open), which is also what it stays at under reduced
 // motion. The words are src/lib/story.ts's chapters and writes, and the diff golden's kinds.
-import { B, BK, CP, END, frame, layouts, R, STILL } from '../lib/film';
+import { B, BK, CP, END, frame, layouts, PX, R, STILL } from '../lib/film';
 import { output } from '../lib/output';
 import { chapters, writes } from '../lib/story';
 
@@ -46,8 +46,8 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 	<svg {...a('svg')} class="film" role="img" aria-labelledby="room-t room-d">
 		<title id="room-t">One workspace, from a click to its disk</title>
 		<desc id="room-d">
-			A browser, the control plane, the relay, two runners and the bucket. The browser has opened a terminal: its line and the runner's
-			both go out to the relay and meet there. Inside the runner, the workspace's QEMU/KVM machine in its own user, cgroup and empty network namespace, booted
+			A browser, the control plane, the proxy, two runners and the bucket. The browser has opened a terminal: its line and the runner's
+			both go out to the relay on the proxy and meet there. Inside the runner, the workspace's QEMU/KVM machine in its own user, cgroup and empty network namespace, booted
 			through kernel, vminitd and systemd; its disk is a clone of the image's layer with its own layer on top.
 		</desc>
 		<defs>
@@ -96,6 +96,7 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 
 		<!-- The lines that are always there: each arrow points at what was dialled. -->
 		<path {...a('lReq')} class="wire" marker-end="url(#rm-arr)" />
+		<path {...a('lPC')} class="wire" marker-end="url(#rm-arr)" />
 		<path {...a('lRA')} class="wire lv" marker-end="url(#rm-arr)" />
 		<path {...a('lRB')} class="wire lv" marker-end="url(#rm-arr)" />
 		{['fReq', 'fRA', 'fRB'].map((id) => <path {...a(id)} pathLength="1" class="flow" />)}
@@ -166,15 +167,29 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 		<!-- The control plane: a table of workspaces. -->
 		<g {...a('g-cp')}>
 			<rect width={CP.w} height={CP.h} rx="10" class="frame" />
-			<text x="16" y="30" class="h">control plane</text>
+			<text x="16" y="30" class="h">control plane<tspan class="nick"> · brain</tspan></text>
 			<text x="20" y="62" class="muted">workspace</text>
 			<text x="180" y="62" class="muted">state</text>
 			<path d="M8 70H352" class="hair" />
 		</g>
 
-		<g {...a('g-relay')}>
-			<rect width="160" height="56" rx="10" class="frame" />
-			<text x="80" y="34" class="h mid">relay</text>
+		<!-- The proxy: the only machine the internet reaches. It serves the dashboard and the relay. -->
+		<g {...a('g-proxy')}>
+			<rect width={PX.w} height={PX.h} rx="10" class="frame" />
+			<text x="16" y="30" class="h">proxy<tspan class="nick"> · gateway</tspan></text>
+			{
+				[
+					[PX.dash, 'dashboard'],
+					[PX.relay, 'relay'],
+				].map(([b, name]) => (
+					<>
+						<rect {...box(b as number[])} rx="6" class="card" />
+						<text x={(b as number[])[0] + 12} y={(b as number[])[1] + 22} class="mono">
+							{name}
+						</text>
+					</>
+				))
+			}
 		</g>
 
 		<!-- The runners: their disk and memory, and the second one's inside once it runs api. -->
@@ -186,18 +201,18 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 				<g {...a(run.id)}>
 					<rect {...a(run.frame)} width={R.w} height={run.h} rx="10" class="frame lv" />
 					<text x="16" y="34" class="h">
-						runner
+						runner<tspan class="nick"> · construct</tspan>
 					</text>
 					{run.bars.map((g) => (
 						<>
-							<text x="168" y={g.y + 10} class="muted">
+							<text x="204" y={g.y + 10} class="muted">
 								{g.label}
 							</text>
-							<rect x="236" y={g.y} width={R.gauge} height="10" rx="2" class="gauge" />
-							<rect x="236" y={g.y} height="10" rx="2" class="gauge-on" {...(g.id ? a(g.id) : { width: g.w })} />
+							<rect x="270" y={g.y} width={R.gauge} height="10" rx="2" class="gauge" />
+							<rect x="270" y={g.y} height="10" rx="2" class="gauge-on" {...(g.id ? a(g.id) : { width: g.w })} />
 						</>
 					))}
-					<path d={`M${236 + 0.7 * R.gauge} 13V31`} class="tick" />
+					<path d={`M${270 + 0.7 * R.gauge} 13V31`} class="tick" />
 				</g>
 			))
 		}
@@ -329,7 +344,7 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 			</g>
 		</g>
 
-		<!-- The session: both ends dial out to the relay. -->
+		<!-- The session: both ends dial out to the relay on the proxy. -->
 		<path {...a('lBR')} pathLength="1" class="wire lv" />
 		<path {...a('lRR')} pathLength="1" class="wire lv" />
 		<path {...a('pBR')} pathLength="1" class="pulse" />
@@ -614,6 +629,11 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 	}
 	.h {
 		font-weight: 600;
+	}
+	/* The name each of the three machines goes by, after what it is. */
+	.nick {
+		font-weight: 400;
+		fill: var(--spin-label);
 	}
 	.big {
 		font-size: 22px;

@@ -92,7 +92,7 @@ export const chapters: Chapter[] = [
 		name: 'Ask',
 		at: 0,
 		cmd: steps[0].commands[0],
-		say: 'Create workspace asks the control plane for one. It exists, and has not run yet.',
+		say: 'Create workspace goes through the proxy to the control plane. The workspace exists, and has not run yet.',
 	},
 	{ name: 'Place', at: 3, say: 'The control plane places it on an active runner with room for its disk and memory.' },
 	{
@@ -110,7 +110,7 @@ export const chapters: Chapter[] = [
 		name: 'Open',
 		at: 17,
 		cmd: 'spin ssh api',
-		say: "Your passkey adds this browser's key for twelve hours. The browser and the runner each dial out to the relay: nothing dials in.",
+		say: "Your passkey adds this browser's key for twelve hours. The browser and the runner each dial out to the relay on the proxy: nothing dials in.",
 	},
 	{ name: 'Write', at: 21, cmd: steps[1].commands[0], say: 'What you do as root lands in the top layer: a file added, one modified, one removed.' },
 	{

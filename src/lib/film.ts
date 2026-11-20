@@ -19,8 +19,8 @@ type Box = [number, number, number, number];
 export type Attrs = Record<string, string | number>;
 export type Frame = Record<string, Attrs>;
 
-export type Actor = 'browser' | 'cp' | 'relay' | 'runA' | 'runB' | 'bucket';
-type LineId = 'req' | 'rA' | 'rB' | 'bR' | 'rR' | 'up';
+export type Actor = 'browser' | 'cp' | 'proxy' | 'runA' | 'runB' | 'bucket';
+type LineId = 'req' | 'pc' | 'rA' | 'rB' | 'bR' | 'rR' | 'up';
 
 export interface Layout {
 	name: 'wide' | 'tall';
@@ -48,12 +48,12 @@ export const CP = { w: 360, h: 220, row: [8, 80, 344, 40] as Box, chip: [172, 87
 export const R = {
 	w: 460,
 	h: 606,
-	gauge: 208,
+	gauge: 174,
 	user: [16, 76, 290, 330] as Box,
 	cg: [28, 102, 266, 292] as Box,
 	ns: [40, 128, 242, 254] as Box,
 	egress: [322, 150, 122, 180] as Box,
-	tok: [84, 16, 56, 28] as Box,
+	tok: [16, 44, 56, 26] as Box,
 	// A layer: the top ellipse's centre, its radii and the height of its side.
 	// The image's layer in the runner's cache, and the top of the workspace's own (its tip).
 	cache: [70, 508] as Pt,
@@ -64,29 +64,32 @@ export const R = {
 	sup: [312, 500] as Pt,
 	vs: [380, 500] as Pt,
 };
+/** The proxy: the dashboard it serves and the relay, each a part of it the lines reach. */
+export const PX = { w: 360, h: 150, dash: [16, 48, 200, 32] as Box, relay: [16, 96, 200, 32] as Box };
 export const BK = { h: 110, shelf: 86, top: 56, rx: 40, ry: 10, side: 16 };
 
 const actorsW: Record<Actor, Box> = {
 	browser: [10, 150, B.w, B.h],
-	cp: [500, 150, CP.w, CP.h],
-	relay: [600, 470, 160, 56],
+	cp: [500, 110, CP.w, CP.h],
+	proxy: [500, 380, PX.w, PX.h],
 	runA: [910, 30, R.w, 96],
 	runB: [910, 140, R.w, R.h],
 	bucket: [500, 766, 870, BK.h],
 };
 const actorsT: Record<Actor, Box> = {
 	browser: [130, 40, B.w, B.h],
-	cp: [40, 640, CP.w, CP.h],
-	relay: [420, 700, 160, 56],
-	runA: [70, 900, R.w, 96],
-	runB: [70, 1030, R.w, R.h],
-	bucket: [40, 1660, 520, BK.h],
+	proxy: [120, 460, PX.w, PX.h],
+	cp: [40, 650, CP.w, CP.h],
+	runA: [70, 910, R.w, 96],
+	runB: [70, 1040, R.w, R.h],
+	bucket: [40, 1670, 520, BK.h],
 };
 const slot = (a: Record<Actor, Box>): Pt => [a.bucket[0] + a.bucket[2] - 140, a.bucket[1] + BK.top];
 const sealedAt = (a: Record<Actor, Box>): Pt => [a.runB[0] + R.vol[0] + R.lx, a.runB[1] + R.vol[1] + R.ly];
 
 // The wide room is 1430 wide with its margins: the whole of it at 16 units a label is 12 px on a
-// hero 1078 px wide, the page's at 1440.
+// hero 1078 px wide, the page's at 1440. The browser reaches the installation only through the
+// proxy: the dashboard it serves, and the relay.
 export const layouts: Record<'wide' | 'tall', Layout> = {
 	wide: {
 		name: 'wide',
@@ -95,14 +98,19 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 		at: actorsW,
 		lines: {
 			req: [
-				[450, 270],
-				[500, 270],
+				[450, 444],
+				[514, 444],
+			],
+			pc: [
+				[716, 444],
+				[800, 444],
+				[800, 330],
 			],
 			rA: [
 				[910, 78],
 				[882, 78],
-				[882, 210],
-				[860, 210],
+				[882, 170],
+				[860, 170],
 			],
 			rB: [
 				[910, 190],
@@ -111,12 +119,12 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 				[860, 250],
 			],
 			bR: [
-				[450, 498],
-				[600, 498],
+				[450, 492],
+				[516, 492],
 			],
 			rR: [
-				[910, 498],
-				[760, 498],
+				[910, 492],
+				[716, 492],
 			],
 			up: [sealedAt(actorsW), [1382, sealedAt(actorsW)[1]], [1382, slot(actorsW)[1]], slot(actorsW)],
 		},
@@ -124,32 +132,40 @@ export const layouts: Record<'wide' | 'tall', Layout> = {
 	tall: {
 		name: 'tall',
 		aspect: 0.8,
-		room: [0, 20, 600, 1760],
+		room: [0, 20, 600, 1780],
 		at: actorsT,
 		lines: {
 			req: [
-				[230, 420],
-				[230, 640],
+				[250, 420],
+				[250, 506],
+			],
+			pc: [
+				[136, 524],
+				[100, 524],
+				[100, 650],
 			],
 			rA: [
-				[300, 900],
-				[300, 860],
+				[300, 910],
+				[300, 870],
 			],
 			rB: [
 				[70, 1070],
 				[30, 1070],
-				[30, 880],
-				[100, 880],
-				[100, 860],
+				[30, 890],
+				[100, 890],
+				[100, 870],
 			],
 			bR: [
-				[500, 420],
-				[500, 700],
+				[450, 420],
+				[450, 572],
+				[336, 572],
 			],
 			rR: [
 				[530, 1100],
 				[570, 1100],
-				[570, 756],
+				[570, 620],
+				[300, 620],
+				[300, 588],
 			],
 			up: [sealedAt(actorsT), [548, sealedAt(actorsT)[1]], [548, slot(actorsT)[1]], slot(actorsT)],
 		},
@@ -185,7 +201,6 @@ const drawn = (t: number, at: number, d = 0.5, back = Number.POSITIVE_INFINITY) 
 /** A highlight's weight between two times: what the accent mixes into a line. */
 const live = (t: number, from: number, to: number) => clamp(S(t - from, 12) - S(t - to, 12));
 const lives = (t: number, spans: [number, number][]) => Math.max(0, ...spans.map(([a, b]) => live(t, a, b)));
-/** The loop's last half second: a spring that has nearly come back is put exactly where it began. */
 /** What rises out of a mask line: its offset below the line, 0 once it has risen. */
 const rise = (t: number, at: number, h = 28, out = Number.POSITIVE_INFINITY) => h * (1 - S(t - at, 16)) - h * S(t - out, 16);
 
@@ -261,13 +276,13 @@ function shots(L: Layout): Shot[] {
 	const start: Shot = { at: 0, see: ['browser'] };
 	const all: Shot[] = [
 		start,
-		{ at: 1.0, see: ['browser', 'cp'], focus: ['cp'], w: 6 },
+		{ at: 1.0, see: ['browser', 'proxy', 'cp'], focus: ['proxy', 'cp'], w: 6 },
 		{ at: 3.0, see: ['cp', 'runA', head], w: 5 },
 		{ at: 6.8, see: [nvme, 'bucket'], focus: [nvme], w: 5 },
 		{ at: 10.9, see: [qemu], w: 5 },
 		{ at: 13.9, see: [guest], w: 5 },
-		{ at: 16.4, see: ['browser', 'relay', 'runB'], focus: ['browser'], w: 5 },
-		{ at: 18.4, see: ['relay'], focus: ['relay', head], w: 5, only: 'tall' },
+		{ at: 16.4, see: ['browser', 'proxy', 'runB'], focus: ['browser'], w: 5 },
+		{ at: 18.4, see: ['proxy'], focus: ['proxy', head], w: 5, only: 'tall' },
 		{ at: 19.4, see: ['browser'], w: 5, only: 'tall' },
 		{ at: 22.6, see: [nvme], w: 5, only: 'tall' },
 		{ at: 23.9, see: ['browser', 'cp', 'runB'], focus: ['browser'], w: 5 },
@@ -335,10 +350,11 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	// The lines that are always there: the browser's to the control plane, and the runners', which
 	// they opened.
 	f.lReq = { d: pathD(L.lines.req) };
+	f.lPC = { d: pathD(L.lines.pc) };
 	// What always travels them: the light that runs along an open line, each at its own phase.
 	(
 		[
-			['fReq', L.lines.req, 0],
+			['fReq', [...L.lines.req, ...L.lines.pc], 0],
 			['fRA', L.lines.rA, 0.45],
 			['fRB', L.lines.rB, 0.9],
 		] as [string, Pt[], number][]
@@ -357,9 +373,10 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	const btn = B.btn;
 	const btnC = bw(btn[0] + btn[2] / 2, btn[1] + btn[3] / 2);
 	const req = L.lines.req;
-	const p1path = [...elbow(btnC, req[0], L.name === 'wide' ? 'y' : 'x').slice(0, -1), ...req];
+	const pc = L.lines.pc;
+	const p1path = [...elbow(btnC, req[0], L.name === 'wide' ? 'y' : 'x').slice(0, -1), ...req, ...pc];
 	const row: Box = [A.cp[0] + CP.row[0], A.cp[1] + CP.row[1], CP.row[2], CP.row[3]];
-	const landed = req[req.length - 1];
+	const landed = pc[pc.length - 1];
 	let c1: Pt = btnC;
 	if (r >= 2.25) {
 		const k = S(r - 2.25, 12);
@@ -474,7 +491,7 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	f.veth = { 'stroke-dashoffset': drawn(r, 16.2, 0.4) };
 
 	// 6. Open. Open terminal; the browser's passkey sheet; then the browser and the runner each
-	// dial the relay, and the two lines are one.
+	// dial the relay on the proxy, and the two lines are one.
 	f.sheet = {
 		transform: `translate(0 ${
 			-(B.sheet[1] + B.sheet[3]) *
@@ -537,7 +554,7 @@ export function frame(time: number, L: Layout, px: number): Frame {
 	// create dialog.
 	const snap = B.snap;
 	const snapC = bw(snap[0] + snap[2] / 2, snap[1] + snap[3] / 2);
-	const p2path = [...elbow(snapC, req[0], L.name === 'wide' ? 'y' : 'x').slice(0, -1), ...req, [landed[0], rBpath[0][1]] as Pt, ...rBpath];
+	const p2path = [...elbow(snapC, req[0], L.name === 'wide' ? 'y' : 'x').slice(0, -1), ...req, ...pc, [landed[0], rBpath[0][1]] as Pt, ...rBpath];
 	const c2 = r >= 24.5 ? along(p2path, ease((r - 24.5) / 0.85)) : snapC;
 	const w2 = tr(r, snap[2], [
 		[24.32, 222],
