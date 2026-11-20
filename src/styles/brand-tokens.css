@@ -119,6 +119,7 @@
 	--spin-control-gap: 6px;
 	--spin-width-page: 1600px;
 	--spin-width-panel-min: 560px;
+	--spin-width-aside: 280px;
 	--spin-duration-fast: 120ms;
 	--spin-duration: 200ms;
 	--spin-duration-slow: 400ms;
