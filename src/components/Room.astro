@@ -1,0 +1,808 @@
+---
+// The landing page's hero: one workspace born, in one take. A person clicks Create workspace; the
+// control plane places it on a runner; the runner clones its disk, starts its machine, and the
+// machine boots; the browser opens a terminal over the relay, root writes in the top layer, and a
+// snapshot seals that layer into the bucket. Every attribute is src/lib/film.ts's frame(t): the
+// page is served at the still (the terminal open), which is also what it stays at under reduced
+// motion. The words are src/lib/story.ts's chapters and writes, and the diff golden's kinds.
+import { B, BK, CP, frame, LOOP, layouts, R, STILL } from '../lib/film';
+import { output } from '../lib/output';
+import { chapters, writes } from '../lib/story';
+
+const still = frame(STILL, layouts.wide, 1200);
+const a = (id: string) => {
+	const { text: _, ...rest } = still[id] ?? {};
+	return { 'data-f': id, ...rest };
+};
+const txt = (id: string) => String(still[id]?.text ?? '');
+const now = chapters.findLastIndex((c) => c.at <= STILL);
+const kinds = output('diff.txt')
+	.split('\n')
+	.filter(Boolean)
+	.map((l) => l.trim().split(/\s+/)[0]);
+if (kinds.length !== writes.length) throw new Error('Room: the diff golden and the writes differ in length');
+
+/** A layer of a disk: its side, then its top, as the mark draws them. */
+const side = (cx: number, y: number, rx: number, ry: number, h: number) => `M${cx - rx} ${y}v${h}a${rx} ${ry} 0 0 0 ${2 * rx} 0V${y}z`;
+const outline = (cx: number, y: number, rx: number, ry: number, h: number) =>
+	`M${cx - rx} ${y}v${h}a${rx} ${ry} 0 0 0 ${2 * rx} 0v${-h}a${rx} ${ry} 0 0 0 ${-2 * rx} 0a${rx} ${ry} 0 0 0 ${2 * rx} 0`;
+const lock = 'M-3.5 0v-2.5a3.5 3.5 0 0 1 7 0V0M-5 0h10v7h-10z';
+const [vx, vy] = R.vol;
+const { lx, ly } = R;
+const gauge = (y: number, label: string, id?: string, w = 0) => ({ y, label, id, w });
+const bars = (disk: number, mem: number, ids = false) => [gauge(17, 'disk', ids ? 'bDisk' : undefined, disk), gauge(41, 'memory', ids ? 'bMem' : undefined, mem)];
+const ch = CP.chip;
+const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
+---
+
+<figure class="room" data-room data-t={STILL} data-loop={LOOP}>
+	<svg {...a('svg')} class="film" role="img" aria-labelledby="room-t room-d">
+		<title id="room-t">One workspace, from a click to its disk</title>
+		<desc id="room-d">
+			A person in front of a browser, the control plane, the relay, two runners and the bucket. The browser has opened a terminal: its line and the runner's
+			both go out to the relay and meet there. Inside the runner, the workspace's QEMU/KVM machine in its own user, cgroup and empty network namespace, booted
+			through kernel, vminitd and systemd; its disk is a clone of the image's layer with its own layer on top.
+		</desc>
+		<defs>
+			<marker id="rm-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+				<path d="M0 0L10 5L0 10" class="arrowhead" />
+			</marker>
+			<clipPath id="rm-vp"><rect x="0" y={B.top} width={B.w} height={B.h - B.top} rx="10" /></clipPath>
+			<clipPath id="rm-term"><rect {...a('termClip')} x={B.term[0]} y={B.term[1]} width={B.term[2]} /></clipPath>
+			<clipPath id="rm-p1"><rect {...a('p1c')} /></clipPath>
+			<clipPath id="rm-p2"><rect {...a('p2c')} /></clipPath>
+			<clipPath id="rm-row"><rect {...box(CP.row)} /></clipPath>
+			<clipPath id="rm-odo"><rect {...box(ch)} rx="13" /></clipPath>
+			{
+				// The mask lines text rises out of: one per line, in its actor's frame.
+				[
+					['user', R.user[0], R.user[1], R.user[2]],
+					['cg', R.cg[0], R.cg[1], R.cg[2]],
+					['ns', R.ns[0], R.ns[1], R.ns[2]],
+					['g0', R.ns[0], 164, R.ns[2]],
+					['g1', R.ns[0], 190, R.ns[2]],
+					['g2', R.ns[0], 216, R.ns[2]],
+					['g3', R.ns[0], 242, R.ns[2]],
+					['lb', 0, 580, R.w],
+					['lb2', 0, 602, R.w],
+					['snap', 40, 56, 100],
+				].map(([id, x, y, w]) => (
+					<clipPath id={`rm-${id}`}>
+						<rect x={x} y={y} width={w} height="24" />
+					</clipPath>
+				))
+			}
+		</defs>
+
+		<!-- The lines that are always there: each arrow points at what was dialled. -->
+		<path {...a('desk')} class="hair" />
+		<path {...a('lReq')} class="wire" marker-end="url(#rm-arr)" />
+		<path {...a('lRA')} class="wire lv" marker-end="url(#rm-arr)" />
+		<path {...a('lRB')} class="wire lv" marker-end="url(#rm-arr)" />
+
+		<!-- The person: three shapes. -->
+		<g {...a('g-person')} class="person" aria-hidden="true">
+			<circle cx="50" cy="44" r="22" />
+			<path d="M12 160V108Q12 76 50 76Q88 76 88 108V160z" />
+		</g>
+
+		<!-- The browser: the dashboard's create dialog, then the workspace's page. -->
+		<g {...a('g-browser')}>
+			<rect width={B.w} height={B.h} rx="10" class="frame" />
+			<path d={`M0 ${B.top}H${B.w}`} class="hair" />
+			{[18, 34, 50].map((x) => <circle cx={x} cy="17" r="4" class="dot" />)}
+			<rect x="70" y="9" width="300" height="16" rx="8" class="bar" />
+			<g clip-path="url(#rm-vp)">
+				<g {...a('v1')}>
+					<rect x="30" y="60" width="380" height="240" rx="10" class="card" />
+					<text x="52" y="98" class="h">Create workspace</text>
+					<text x="52" y="134" class="muted">Name</text>
+					<rect x="52" y="144" width="336" height="36" rx="6" class="input" />
+					<text x="64" y="168" class="mono">api</text>
+					<g {...a('v1btn')}>
+						<rect {...box(B.btn)} rx="8" class="primary" />
+						<text x={B.btn[0] + B.btn[2] / 2} y={B.btn[1] + 25} class="on-primary">Create workspace</text>
+					</g>
+				</g>
+				<g {...a('v2')}>
+					<text x="24" y="74" class="h big">api</text>
+					<g {...a('v2open')}>
+						<rect {...box(B.open)} rx="8" class="primary" />
+						<text x={B.open[0] + B.open[2] / 2} y={B.open[1] + 25} class="on-primary">Open terminal</text>
+					</g>
+					{
+						['v2snap', 'v2snap2'].map((id) => (
+							<g {...a(id)}>
+								<rect {...box(B.snap)} rx="8" class="secondary" />
+								<text x={B.snap[0] + B.snap[2] / 2} y={B.snap[1] + 25} class="mid">
+									Create snapshot
+								</text>
+							</g>
+						))
+					}
+					<rect {...a('termBg')} x={B.term[0]} y={B.term[1]} width={B.term[2]} rx="6" class="term" />
+					<g clip-path="url(#rm-term)" class="tty">
+						<g {...a('t0r')}><text {...a('t0')} x={B.term[0] + 12} y={B.term[1] + 26}>{txt('t0')}</text></g>
+						{
+							writes.map((_, i) => (
+								<text {...a(`t${i + 1}`)} x={B.term[0] + 12} y={B.term[1] + 26 + (i + 1) * 24}>
+									{txt(`t${i + 1}`)}
+								</text>
+							))
+						}
+					</g>
+					<text x="24" y="330" class="muted">Snapshots</text>
+					<g {...a('v2chip')}>
+						<rect {...box(B.chip)} rx="13" class="chip" />
+						<text x={B.chip[0] + B.chip[2] / 2} y={B.chip[1] + 18} class="mono mid">snapshot</text>
+					</g>
+				</g>
+				<!-- The browser's own passkey sheet, down from its toolbar. -->
+				<g {...a('sheet')}>
+					<rect {...box(B.sheet)} rx="12" class="sheet" />
+					<text x="100" y="74" class="h">Use your passkey</text>
+					<text x="100" y="100" class="muted">this browser's key · 12 h</text>
+					<rect {...box(B.cont)} rx="8" class="primary" />
+					<text x={B.cont[0] + B.cont[2] / 2} y={B.cont[1] + 21} class="on-primary">Continue</text>
+				</g>
+			</g>
+		</g>
+
+		<!-- The control plane: a table of workspaces. -->
+		<g {...a('g-cp')}>
+			<rect width={CP.w} height={CP.h} rx="10" class="frame" />
+			<text x="16" y="30" class="h">control plane</text>
+			<text x="20" y="62" class="muted">workspace</text>
+			<text x="180" y="62" class="muted">state</text>
+			<path d="M8 70H352" class="hair" />
+		</g>
+
+		<g {...a('g-relay')}>
+			<rect width="160" height="56" rx="10" class="frame" />
+			<text x="80" y="34" class="h mid">relay</text>
+		</g>
+
+		<!-- The runners: their disk and memory, and the second one's inside once it runs api. -->
+		{
+			[
+				{ id: 'g-runA', frame: 'fRA', h: 96, bars: bars(0.72 * R.gauge, 0.6 * R.gauge) },
+				{ id: 'g-runB', frame: 'fRB', h: R.h, bars: bars(0, 0, true) },
+			].map((run) => (
+				<g {...a(run.id)}>
+					<rect {...a(run.frame)} width={R.w} height={run.h} rx="10" class="frame lv" />
+					<text x="16" y="34" class="h">
+						runner
+					</text>
+					{run.bars.map((g) => (
+						<>
+							<text x="168" y={g.y + 10} class="muted">
+								{g.label}
+							</text>
+							<rect x="236" y={g.y} width={R.gauge} height="10" rx="2" class="gauge" />
+							<rect x="236" y={g.y} width={g.w} height="10" rx="2" class="gauge-on" {...(g.id ? a(g.id) : {})} />
+						</>
+					))}
+					<path d={`M${236 + 0.7 * R.gauge} 13V31`} class="tick" />
+				</g>
+			))
+		}
+		<g {...a('g-runB2')}>
+			<rect {...a('oUser')} {...box(R.user)} rx="8" pathLength="1" class="outline lv" />
+			<rect {...a('oCg')} {...box(R.cg)} rx="6" pathLength="1" class="outline" />
+			<rect {...a('oNs')} {...box(R.ns)} rx="4" pathLength="1" class="outline" />
+			<g clip-path="url(#rm-user)"><g {...a('oUserT')}><text x={R.user[0] + 10} y={R.user[1] + 18} class="label">QEMU/KVM · own user</text></g></g>
+			<g clip-path="url(#rm-cg)"><g {...a('oCgT')}><text x={R.cg[0] + 10} y={R.cg[1] + 18} class="label">cgroup</text></g></g>
+			<g clip-path="url(#rm-ns)"><g {...a('oNsT')}><text x={R.ns[0] + 10} y={R.ns[1] + 18} class="label">empty network namespace</text></g></g>
+			{
+				['kernel', 'vminitd', 'systemd', 'supervisor'].map((w, i) => (
+					<g clip-path={`url(#rm-g${i})`}>
+						<g {...a(`g${i}`)}>
+							<text x="56" y={182 + i * 26} class="mono">
+								{w}
+							</text>
+						</g>
+					</g>
+				))
+			}
+			<path {...a('vs')} d="M52 255H8V44" pathLength="1" class="wire lv" />
+			<g {...a('vsT')}><text x="-10" y="150" transform="rotate(-90 -10 150)" class="mono mid">vsock</text></g>
+			<path {...a('veth')} d="M282 250H322" pathLength="1" class="wire" />
+			<g {...a('eg')}>
+				<rect {...box(R.egress)} rx="8" class="card" />
+				<text x="334" y="174" class="h">egress</text>
+				<text x="334" y="194" class="h">namespace</text>
+				<path d="M322 250H372M394 250H444" class="wire" />
+				<rect x="379" y="234" width="8" height="32" rx="2" class="gate" />
+				<text x="334" y="292" class="muted">nftables</text>
+				<rect x="334" y="300" width="80" height="24" rx="12" class="chip" />
+				<text x="374" y="318" class="mono mid">offline</text>
+			</g>
+
+			<text x="16" y="452" class="muted">NVMe</text>
+			<path {...a('drive')} d={`M${vx} 406V452`} pathLength="1" class="wire" />
+			<path {...a('eSup')} d={`M${R.sup[0]} 513V440H284V406`} pathLength="1" class="wire" />
+			<path {...a('eVs')} d={`M${R.vs[0]} 513V426H298V406`} pathLength="1" class="wire" />
+			<g class="sealed">
+				<path d={side(R.cache[0], R.cache[1], lx, ly, R.side)} class="side-deep" />
+				<ellipse cx={R.cache[0]} cy={R.cache[1]} rx={lx} ry={ly} class="top-blue" />
+			</g>
+			<path {...a('ref')} d={`M${R.cache[0] + lx} ${R.cache[1] + ly + 10}H${vx - lx}`} pathLength="1" class="ref" />
+			<path {...a('ghost')} d={outline(vx, vy + R.side, lx, ly, R.side)} pathLength="1" class="ref" />
+			<g {...a('tip')}>
+				<g {...a('tipLive')} class="layer">
+					<path d={side(vx, vy, lx, ly, R.side)} />
+					<ellipse cx={vx} cy={vy} rx={lx} ry={ly} />
+				</g>
+			</g>
+			<g {...a('tipLock')}><path d={lock} transform={`translate(${vx} ${vy - 2})`} class="lock" /></g>
+			<g {...a('tip2')}>
+				<g {...a('tip2Live')} class="layer">
+					<path d={side(vx, vy, lx, ly, R.side)} />
+					<ellipse cx={vx} cy={vy} rx={lx} ry={ly} />
+				</g>
+			</g>
+			{
+				kinds.map((k, i) => (
+					<g {...a(`c${i}`)} class={`kchip k-${k}`}>
+						<rect x="-13" y="-9" width="26" height="18" rx="4" />
+						<text y="5">{k}</text>
+					</g>
+				))
+			}
+			{
+				[
+					['dSup', R.sup],
+					['dVs', R.vs],
+				].map(([id, [cx, cy]]) => (
+					<g {...a(id as string)} class="sealed">
+						<path d={side(cx as number, cy as number, 26, 7, 12)} class="side-deep" />
+						<ellipse cx={cx} cy={cy} rx="26" ry="7" class="top-blue" />
+						<path d={lock} transform={`translate(${cx} ${(cy as number) + 2}) scale(.8)`} class="lock on-disk" />
+					</g>
+				))
+			}
+			<g clip-path="url(#rm-lb)">
+				<text x={R.cache[0]} y="598" class="mid label">ubuntu</text>
+				<g {...a('lbTip')}><text x={vx} y="598" class="mid label">api</text></g>
+				<g {...a('lbSup')}><text x={R.sup[0]} y="598" class="mid label">supervisor</text></g>
+			</g>
+			<g clip-path="url(#rm-lb2)">
+				<g {...a('lbVs')}><text x={R.vs[0]} y="620" class="mid label">VS Code server</text></g>
+			</g>
+		</g>
+
+		<!-- The bucket: a shelf of sealed layers. -->
+		<g {...a('g-bucket')}>
+			<rect {...a('bk')} height={BK.h} rx="10" class="frame" />
+			<text x="16" y="30" class="h">bucket</text>
+			<line {...a('bkShelf')} x1="16" y1={BK.shelf} y2={BK.shelf} class="hair" />
+			<g class="sealed">
+				<path d={side(70, BK.top, BK.rx, BK.ry, BK.side)} class="side-deep" />
+				<ellipse cx="70" cy={BK.top} rx={BK.rx} ry={BK.ry} class="top-blue" />
+				<path d={lock} transform={`translate(70 ${BK.top + 2})`} class="lock on-disk" />
+			</g>
+			<text x="118" y="74" class="label">image · ubuntu</text>
+			<g {...a('bkSlot')}>
+				<g {...a('bSnap')} class="sealed">
+					<path d={side(0, BK.top, BK.rx, BK.ry, BK.side)} class="side-blue" />
+					<ellipse cy={BK.top} rx={BK.rx} ry={BK.ry} class="top-cyan" />
+					<path d={lock} transform={`translate(0 ${BK.top + 2})`} class="lock on-disk" />
+				</g>
+				<g clip-path="url(#rm-snap)"><g {...a('bSnapT')}><text x="52" y="74" class="label">snapshot</text></g></g>
+			</g>
+		</g>
+
+		<!-- The workspace's row, over the request that becomes it. -->
+		<rect {...a('p1')} class="pill lv" />
+		<g clip-path="url(#rm-p1)">
+			<text {...a('p1a')} class="on-primary">Create workspace</text>
+			<text {...a('p1b')} class="mono mid">CreateWorkspace · api</text>
+		</g>
+		<g {...a('g-row')}>
+			<g clip-path="url(#rm-row)">
+				<g {...a('rowIn')}>
+					<text x="20" y="106" class="mono">api</text>
+					<rect {...box(ch)} rx="13" class="chip" />
+					<g clip-path="url(#rm-odo)">
+						<g {...a('odo')} class="mono mid">
+							<text x={ch[0] + ch[2] / 2} y={ch[1] + 18} class="st-wait">CREATING</text>
+							<text x={ch[0] + ch[2] / 2} y={ch[1] + 44} class="st-wait">STARTING</text>
+							<text x={ch[0] + ch[2] / 2} y={ch[1] + 70} class="st-run">RUNNING</text>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+
+		<!-- The session: both ends dial out to the relay. -->
+		<path {...a('lBR')} pathLength="1" class="wire lv" />
+		<path {...a('lRR')} pathLength="1" class="wire lv" />
+		<path {...a('pBR')} pathLength="1" class="pulse" />
+		<path {...a('pRR')} pathLength="1" class="pulse" />
+		<path {...a('aBR')} d="M-9 -5L0 0L-9 5" class="wire lv" />
+		<path {...a('aRR')} d="M-9 -5L0 0L-9 5" class="wire lv" />
+		<path {...a('lUp')} pathLength="1" class="wire" />
+
+		<g {...a('tok')}>
+			<rect x="-28" y="-14" width="56" height="28" rx="14" class="pill" />
+			<text y="6" class="mono mid">api</text>
+		</g>
+		<rect {...a('p2')} class="pill" />
+		<g clip-path="url(#rm-p2)">
+			<text {...a('p2a')} class="mid">Create snapshot</text>
+			<text {...a('p2b')} class="mono mid">CreateSnapshot · api</text>
+		</g>
+		<g {...a('up')} class="sealed">
+			<path d={side(0, 0, BK.rx, BK.ry, BK.side)} class="side-blue" />
+			<ellipse rx={BK.rx} ry={BK.ry} class="top-cyan" />
+			<path d={lock} transform="translate(0 2)" class="lock on-disk" />
+		</g>
+		<g {...a('sc')}>
+			<rect x="-48" y="-13" width="96" height="26" rx="13" class="chip lit" />
+			<text y="5" class="mono mid">snapshot</text>
+		</g>
+		<path {...a('cur')} d="M0 0L0 18L5 13.5L8.5 21L11.5 19.8L8 12.5L14 12.5z" class="cursor" />
+	</svg>
+
+	<figcaption>
+		<p class="cmdline" data-cmdline data-empty={chapters[now].cmd ? undefined : ''}>
+			<span class="prompt">$ </span><code data-cmd>{chapters[now].cmd ?? ''}</code>
+		</p>
+		<p class="say" data-say aria-live="polite">{chapters[now].say}</p>
+	</figcaption>
+
+	<div class="controls">
+		<button type="button" class="play" data-play aria-label="Pause" disabled>❚❚</button>
+		<ol>
+			{
+				chapters.map((c, i) => (
+					<li>
+						<button type="button" data-to={i} data-at={c.at} aria-pressed={i === now ? 'true' : 'false'} disabled>
+							{c.name}
+						</button>
+					</li>
+				))
+			}
+		</ol>
+		<input type="range" data-scrub min="0" max={LOOP} step="0.01" value={STILL} aria-label="Time in the film, in seconds" disabled />
+	</div>
+	<script type="application/json" data-chapters set:html={JSON.stringify(chapters)} />
+</figure>
+
+<script>
+	import { frame, type Layout, LOOP, layouts, STILL } from '../lib/film';
+	import type { Chapter } from '../lib/story';
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-room]')) {
+		const svg = root.querySelector<SVGSVGElement>('svg');
+		if (!svg) continue;
+		const chapters: Chapter[] = JSON.parse(root.querySelector('[data-chapters]')?.textContent ?? '[]');
+		const els = new Map<string, Element>();
+		for (const el of root.querySelectorAll('[data-f]')) els.set((el as HTMLElement).dataset.f ?? '', el);
+		const last = new Map<string, string>();
+		const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-to]')];
+		const play = root.querySelector<HTMLButtonElement>('[data-play]');
+		const scrub = root.querySelector<HTMLInputElement>('[data-scrub]');
+		const cmd = root.querySelector<HTMLElement>('[data-cmd]');
+		const cmdline = root.querySelector<HTMLElement>('[data-cmdline]');
+		const say = root.querySelector<HTMLElement>('[data-say]');
+		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		let layout: Layout = layouts.wide;
+		let px = 1200;
+		let t = STILL;
+		let playing = !reduced;
+		let held = false; // pointer over the drawing, or focus in the figure
+		let seen = true;
+		let shown = -1;
+
+		const apply = (id: string, attrs: Record<string, string | number>) => {
+			const el = els.get(id);
+			if (!el) return;
+			for (const [k, v] of Object.entries(attrs)) {
+				const s = String(v);
+				const key = `${id}.${k}`;
+				if (last.get(key) === s) continue;
+				last.set(key, s);
+				if (k === 'text') el.textContent = s;
+				else el.setAttribute(k, s);
+			}
+		};
+		const seek = (to: number) => {
+			t = ((to % LOOP) + LOOP) % LOOP;
+			for (const [id, attrs] of Object.entries(frame(t, layout, px))) apply(id, attrs);
+			if (scrub) scrub.value = String(t);
+			const n = chapters.findLastIndex((c) => c.at <= t);
+			if (n !== shown) {
+				shown = n;
+				buttons.forEach((b, i) => {
+					b.setAttribute('aria-pressed', String(i === n));
+				});
+				if (cmd) cmd.textContent = chapters[n].cmd ?? '';
+				cmdline?.toggleAttribute('data-empty', !chapters[n].cmd);
+				if (say) say.textContent = chapters[n].say;
+			}
+		};
+		const measure = () => {
+			const w = root.clientWidth;
+			const next = w >= 900 ? layouts.wide : layouts.tall;
+			px = svg.clientWidth || w;
+			if (next !== layout) {
+				layout = next;
+				last.clear();
+			}
+			root.dataset.layout = layout.name;
+			seek(t);
+		};
+		const setPlaying = (on: boolean) => {
+			playing = on;
+			if (play) {
+				play.textContent = on ? '❚❚' : '▶';
+				play.setAttribute('aria-label', on ? 'Pause' : 'Play');
+			}
+		};
+
+		let before = 0;
+		const tick = (now: number) => {
+			const dt = before ? Math.min(0.1, (now - before) / 1000) : 0;
+			before = now;
+			if (playing && !held && seen && !document.hidden) seek(t + dt);
+			requestAnimationFrame(tick);
+		};
+
+		for (const el of [play, scrub, ...buttons]) el?.removeAttribute('disabled');
+		buttons.forEach((b, i) => {
+			b.addEventListener('click', () => {
+				// Under reduced motion a chapter is shown at its end, still; otherwise it plays from its start.
+				const c = chapters[i];
+				const end = (chapters[i + 1]?.at ?? LOOP) - 0.4;
+				seek(reduced ? end : c.at + 0.001);
+			});
+		});
+		play?.addEventListener('click', () => setPlaying(!playing));
+		scrub?.addEventListener('input', () => {
+			setPlaying(false);
+			seek(Number(scrub.value));
+		});
+		svg.addEventListener('pointerenter', () => {
+			held = true;
+		});
+		svg.addEventListener('pointerleave', () => {
+			held = false;
+		});
+		root.addEventListener('focusin', () => {
+			held = true;
+		});
+		root.addEventListener('focusout', () => {
+			held = false;
+		});
+		new IntersectionObserver(([e]) => {
+			seen = e.isIntersecting;
+		}).observe(root);
+		new ResizeObserver(measure).observe(root);
+		setPlaying(playing);
+		measure();
+		if (!reduced) seek(0);
+		(window as unknown as { roomSeek?: (t: number) => void }).roomSeek = (to: number) => {
+			setPlaying(false);
+			seek(to);
+		};
+		requestAnimationFrame(tick);
+	}
+</script>
+
+<style>
+	.room {
+		width: 100%;
+		margin: 0;
+		display: grid;
+		gap: 0.75rem;
+		font-family: var(--sl-font);
+		--line: var(--spin-border-strong);
+	}
+	.film {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 16 / 10;
+		display: block;
+		border: 1px solid var(--spin-border);
+		border-radius: var(--spin-radius-lg);
+		background: var(--spin-page);
+	}
+	[data-layout='tall'] .film {
+		aspect-ratio: 4 / 5;
+	}
+	text {
+		font-size: 16px;
+		fill: var(--spin-text);
+		font-family: var(--sl-font);
+	}
+	.h {
+		font-weight: 600;
+	}
+	.big {
+		font-size: 22px;
+	}
+	.muted {
+		fill: var(--spin-muted);
+	}
+	.label {
+		fill: var(--spin-label);
+	}
+	.mono,
+	.tty text {
+		font-family: var(--sl-font-mono);
+	}
+	.mid,
+	.on-primary,
+	.kchip text {
+		text-anchor: middle;
+	}
+	.on-primary {
+		fill: var(--spin-on-accent, #fff);
+		font-weight: 600;
+	}
+	.tty text {
+		font-size: 14px;
+		fill: var(--spin-terminal-foreground);
+	}
+	.frame,
+	.card,
+	.sheet,
+	.input,
+	.secondary,
+	.chip,
+	.bar {
+		stroke-width: calc(1 * var(--u, 1));
+	}
+	.frame {
+		fill: var(--spin-surface);
+		stroke: color-mix(in srgb, var(--spin-accent) calc(var(--k, 0) * 100%), var(--spin-border));
+	}
+	.card {
+		fill: var(--spin-raised);
+		stroke: var(--spin-border);
+	}
+	.sheet {
+		fill: var(--spin-raised);
+		stroke: var(--spin-border-strong);
+	}
+	.input {
+		fill: var(--spin-page);
+		stroke: var(--spin-border-strong);
+	}
+	.bar,
+	.gauge {
+		fill: var(--spin-raised);
+	}
+	.dot {
+		fill: var(--spin-border);
+	}
+	.gauge-on {
+		fill: var(--spin-brand-blue);
+	}
+	.tick {
+		stroke: var(--spin-text);
+		stroke-width: calc(1.5 * var(--u, 1));
+	}
+	.primary {
+		fill: var(--spin-accent);
+	}
+	.secondary {
+		fill: var(--spin-page);
+		stroke: var(--spin-border-strong);
+	}
+	.chip {
+		fill: var(--spin-page);
+		stroke: var(--spin-border-strong);
+	}
+	.chip.lit {
+		stroke: var(--spin-accent);
+	}
+	.st-wait {
+		fill: var(--spin-warning);
+	}
+	.st-run {
+		fill: var(--spin-success);
+	}
+	.term {
+		fill: var(--spin-terminal-background);
+	}
+	.person {
+		fill: var(--spin-border);
+	}
+	.hair {
+		stroke: var(--spin-border);
+		stroke-width: calc(1 * var(--u, 1));
+		fill: none;
+	}
+	.wire,
+	.outline,
+	.ref,
+	.pulse {
+		fill: none;
+		stroke-width: calc(1.5 * var(--u, 1));
+		stroke-dasharray: 1 1;
+	}
+	.wire {
+		stroke: color-mix(in srgb, var(--spin-accent) calc(var(--k, 0) * 100%), var(--line));
+	}
+	.wire:not([pathLength]) {
+		stroke-dasharray: none;
+	}
+	.arrowhead {
+		fill: none;
+		stroke: var(--line);
+		stroke-width: calc(1.5 * var(--u, 1));
+	}
+	.outline {
+		stroke: color-mix(in srgb, var(--spin-accent) calc(var(--k, 0) * 100%), var(--spin-label));
+	}
+	.ref {
+		stroke: var(--spin-brand-cyan);
+		stroke-width: calc(1 * var(--u, 1));
+	}
+	.pulse {
+		stroke: var(--spin-brand-mint);
+		stroke-width: calc(3 * var(--u, 1));
+		stroke-dasharray: 0.08 2;
+	}
+	.pill {
+		fill: color-mix(in srgb, var(--spin-accent) calc(var(--f, 0) * 100%), var(--spin-raised));
+		stroke: color-mix(in srgb, var(--spin-accent) calc(var(--k, 0) * 100%), var(--spin-border-strong));
+		stroke-width: calc(1 * var(--u, 1));
+	}
+	.gate {
+		fill: var(--spin-text);
+	}
+	.side-deep {
+		fill: var(--spin-brand-deep);
+	}
+	.side-blue {
+		fill: var(--spin-brand-blue);
+	}
+	.top-blue {
+		fill: var(--spin-brand-blue);
+	}
+	.top-cyan {
+		fill: var(--spin-brand-cyan);
+	}
+	/* The layer the machine writes: an outline until a snapshot seals it, then the mark's blue. */
+	.layer > * {
+		fill: color-mix(in srgb, var(--spin-brand-blue) calc(var(--s, 0) * 100%), var(--spin-page));
+		stroke: color-mix(in srgb, var(--spin-accent) calc(var(--k, 0) * 100%), var(--spin-label));
+		stroke-width: calc(1.5 * var(--u, 1));
+		stroke-dasharray: calc(6 * var(--u, 1)) calc(5 * var(--u, 1));
+	}
+	.lock {
+		fill: none;
+		stroke: var(--spin-text);
+		stroke-width: calc(1.5 * var(--u, 1));
+	}
+	.lock.on-disk {
+		stroke: var(--spin-brand-frost);
+	}
+	.kchip rect {
+		fill: var(--spin-page);
+		stroke: var(--k-c);
+		stroke-width: calc(1.5 * var(--u, 1));
+	}
+	.kchip text {
+		fill: var(--k-c);
+		font-weight: 600;
+		font-family: var(--sl-font-mono);
+	}
+	.k-A {
+		--k-c: var(--spin-success);
+	}
+	.k-M {
+		--k-c: var(--spin-warning);
+	}
+	.k-D {
+		--k-c: var(--spin-error);
+	}
+	.cursor {
+		fill: var(--spin-text);
+		stroke: var(--spin-page);
+		stroke-width: calc(1 * var(--u, 1));
+	}
+
+	figcaption {
+		display: grid;
+		gap: 0.4rem;
+	}
+	.cmdline {
+		margin: 0;
+		padding: 0.5rem 0.8rem;
+		min-height: 2.6rem;
+		border-radius: var(--spin-radius);
+		background: var(--spin-surface);
+		border: 1px solid var(--spin-border);
+		font-family: var(--sl-font-mono);
+		font-size: 0.8125rem;
+		color: var(--spin-text);
+		overflow-wrap: anywhere;
+	}
+	.cmdline[data-empty] > * {
+		visibility: hidden;
+	}
+	.cmdline code {
+		background: none;
+		padding: 0;
+		font-size: inherit;
+	}
+	.prompt {
+		color: var(--spin-muted);
+		user-select: none;
+	}
+	.say {
+		margin: 0;
+		min-height: 3em;
+		font-size: var(--sl-text-sm);
+		color: var(--spin-muted);
+	}
+	.controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.controls ol {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.controls li {
+		margin: 0;
+	}
+	.controls button {
+		all: unset;
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--spin-target);
+		padding: 0.2rem 0.6rem;
+		border-radius: var(--spin-radius-sm);
+		border: 1px solid var(--spin-border);
+		font-size: 0.75rem;
+		color: var(--spin-text);
+		cursor: pointer;
+	}
+	/* Without scripts the chapters are a list of names. */
+	.controls button[disabled] {
+		border-color: transparent;
+		cursor: default;
+	}
+	.controls .play[disabled],
+	.controls input[disabled] {
+		display: none;
+	}
+	.controls button:not([disabled]):hover {
+		border-color: var(--spin-accent);
+	}
+	.controls button:focus-visible,
+	.controls input:focus-visible {
+		outline: 2px solid var(--spin-accent);
+		outline-offset: 1px;
+	}
+	.controls button[aria-pressed='true']:not([disabled]) {
+		background: var(--spin-accent-selected);
+		border-color: var(--spin-accent);
+	}
+	.controls .play {
+		min-width: var(--spin-target);
+		justify-content: center;
+	}
+	.controls input {
+		flex: 1 1 8rem;
+		accent-color: var(--spin-accent);
+	}
+	@media (pointer: coarse) {
+		.controls button {
+			min-height: var(--spin-target-touch);
+		}
+	}
+</style>

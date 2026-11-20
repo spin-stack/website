@@ -3,7 +3,7 @@
 // project's name above the title. The title's second sentence - what Spinbox does, after what it
 // is - is in the accent's text colour: one colour, flat, as the console sets what matters.
 import { LinkButton } from '@astrojs/starlight/components';
-import Disk from './Disk.astro';
+import Room from './Room.astro';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, actions = [] } = data.hero || {};
@@ -28,7 +28,7 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 			}
 		</div>
 	</div>
-	<div class="art"><Disk /></div>
+	<div class="art"><Room /></div>
 </div>
 
 <style>
