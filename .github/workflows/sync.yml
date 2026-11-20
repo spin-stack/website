@@ -1,10 +1,11 @@
 name: Sync
 
 # The site against what it is generated from, so a sync no longer waits for somebody to remember
-# it. Every day, and when a source's release dispatches `sources-released`: the pins in
-# versions.yaml move to the newest releases (spin's only to one that holds the commit pinned), the
-# reference is regenerated from them, and the result is force-pushed to sync/sources as the sync
-# App, whose push starts Gate as a person's would, with its one pull request opened or updated.
+# it. Every day, and when spin-stack/ship-it dispatches it for a source's release newer than the
+# last sync run: the pins in versions.yaml move to the newest releases (spin's only to one that
+# holds the commit pinned), the reference is regenerated from them, and the result is force-pushed
+# to sync/sources as the sync App, whose push starts Gate as a person's would, with its one pull
+# request opened or updated.
 # A person reviews and merges it: it publishes spin's help, API and board on a public site, and
 # behaviour that changed under the hand-written pages is theirs to write.
 #
@@ -17,8 +18,6 @@ on:
   schedule:
     - cron: "23 5 * * *"
     - cron: "41 5 * * 1"
-  repository_dispatch:
-    types: [sources-released]
   workflow_dispatch:
 
 permissions:
