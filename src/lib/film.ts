@@ -237,7 +237,7 @@ const elbow = (a: Pt, b: Pt, first: 'x' | 'y'): Pt[] => (first === 'x' ? [a, [b[
 
 /** The room's tilt: turned by `turn` degrees, then pressed to `press` of its height. The room is
  * drawn flat and the tilt is one matrix over all of it; the camera frames the tilted room. */
-const TILT = { turn: -10, press: 0.85 };
+const TILT = { turn: 0, press: 1 };
 const rad = (TILT.turn * Math.PI) / 180;
 const M = [Math.cos(rad), TILT.press * Math.sin(rad), -Math.sin(rad), TILT.press * Math.cos(rad)];
 const tilt = ([x, y]: Pt): Pt => [M[0] * x + M[2] * y, M[1] * x + M[3] * y];

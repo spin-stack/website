@@ -546,18 +546,35 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 	.flow {
 		display: none;
 	}
-	/* The grid look: the room on the terminal's black in either theme, a floor under it, its lines lit
-	   in the mark's cyan, and light running along the lines that stay open. */
+	/* The grid look: a floor grid under the room that fades out, its lines lit, and light running
+	   along the lines that stay open. Dark is the room on the terminal's black in the mark's cyan;
+	   light is the page's white in the accent, with a fainter light. */
+	[data-look='grid'] {
+		--g-bg: var(--spin-terminal-background);
+		--g-ink: var(--spin-brand-cyan);
+		--g-run: var(--spin-brand-mint);
+		--g-glow: drop-shadow(0 0 1.5px rgb(39 191 232 / 0.7)) drop-shadow(0 0 7px rgb(39 191 232 / 0.3));
+	}
+	:global(:root[data-theme='light']) [data-look='grid'] {
+		--g-bg: var(--spin-page);
+		--g-ink: var(--spin-accent);
+		--g-run: var(--spin-brand-cyan);
+		--g-glow: drop-shadow(0 0 1px rgb(10 111 163 / 0.35)) drop-shadow(0 0 6px rgb(39 191 232 / 0.3));
+	}
 	[data-look='grid'] .screen {
-		background: var(--spin-terminal-background);
-		border-color: color-mix(in srgb, var(--spin-brand-cyan) 30%, var(--spin-terminal-background));
+		background: var(--g-bg);
+		border-color: color-mix(in srgb, var(--g-ink) 30%, var(--g-bg));
 	}
 	[data-look='grid'] .film {
-		--spin-page: var(--spin-terminal-background);
-		--spin-surface: color-mix(in srgb, var(--spin-brand-cyan) 5%, var(--spin-terminal-background));
-		--spin-raised: color-mix(in srgb, var(--spin-brand-cyan) 10%, var(--spin-terminal-background));
-		--spin-border: color-mix(in srgb, var(--spin-brand-cyan) 45%, var(--spin-terminal-background));
-		--spin-border-strong: color-mix(in srgb, var(--spin-brand-cyan) 75%, var(--spin-terminal-background));
+		--spin-page: var(--g-bg);
+		--spin-surface: color-mix(in srgb, var(--g-ink) 5%, var(--g-bg));
+		--spin-raised: color-mix(in srgb, var(--g-ink) 10%, var(--g-bg));
+		--spin-border: color-mix(in srgb, var(--g-ink) 45%, var(--g-bg));
+		--spin-border-strong: color-mix(in srgb, var(--g-ink) 75%, var(--g-bg));
+		--line: var(--g-ink);
+		filter: var(--g-glow);
+	}
+	:global(:root:not([data-theme='light'])) [data-look='grid'] .film {
 		--spin-text: var(--spin-brand-frost);
 		--spin-muted: color-mix(in srgb, var(--spin-brand-cyan) 55%, var(--spin-brand-frost));
 		--spin-label: var(--spin-brand-cyan);
@@ -565,10 +582,8 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 		--spin-success: var(--spin-terminal-green);
 		--spin-warning: var(--spin-terminal-yellow);
 		--spin-error: var(--spin-terminal-red);
-		--line: var(--spin-brand-cyan);
-		filter: drop-shadow(0 0 1.5px rgb(39 191 232 / 0.7)) drop-shadow(0 0 7px rgb(39 191 232 / 0.3));
 	}
-	[data-look='grid'] .primary {
+	:global(:root:not([data-theme='light'])) [data-look='grid'] .primary {
 		fill: color-mix(in srgb, var(--spin-brand-cyan) 30%, var(--spin-terminal-background));
 		stroke: var(--spin-brand-cyan);
 		stroke-width: calc(1 * var(--u, 1));
@@ -579,12 +594,12 @@ const box = (b: number[]) => ({ x: b[0], y: b[1], width: b[2], height: b[3] });
 	}
 	.gridline {
 		fill: none;
-		stroke: color-mix(in srgb, var(--spin-brand-cyan) 22%, transparent);
+		stroke: color-mix(in srgb, var(--g-ink) 22%, transparent);
 		stroke-width: calc(1 * var(--u, 1));
 	}
 	.flow {
 		fill: none;
-		stroke: var(--spin-brand-mint);
+		stroke: var(--g-run);
 		stroke-width: calc(2.5 * var(--u, 1));
 		stroke-dasharray: 0.12 2;
 		stroke-linecap: round;
