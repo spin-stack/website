@@ -48,7 +48,7 @@ func checkFeatureLinks(docs string, rows []feature) ([]string, error) {
 const unsaidList = "tools/refgen/unsaid.txt"
 
 // checkSaid holds the board to the pages the other way round from checkFeatureLinks: every built
-// row is said somewhere - a feature: link of a page, a feature= prop, a step of the story - or
+// row is said somewhere - a feature: link of a page, a feature= prop, a claim of the hero - or
 // is in list, and list names nothing else. Before it, three quarters of what the board called
 // built was in the generated reference and on no page a reader starts from.
 func checkSaid(docs, src, list string, rows []feature) ([]string, error) {
@@ -64,11 +64,11 @@ func checkSaid(docs, src, list string, rows []feature) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	story, err := os.ReadFile(filepath.Join(src, "lib", "story.ts"))
+	hero, err := os.ReadFile(filepath.Join(src, "lib", "undo.ts"))
 	if err != nil {
 		return nil, err
 	}
-	for _, m := range storyFeature.FindAllStringSubmatch(string(story), -1) {
+	for _, m := range heroFeature.FindAllStringSubmatch(string(hero), -1) {
 		said[unescape(m[1]+m[2])] = true
 	}
 	raw, err := os.ReadFile(list)

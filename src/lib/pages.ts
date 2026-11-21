@@ -8,7 +8,6 @@ import { output } from './output';
 import { postHref } from './post-links.mjs';
 import { generated, published, scenariosMarkdown } from './pricing';
 import { statusLine } from './reference';
-import { storyMarkdown } from './story';
 import { twinPath } from './twin';
 
 type Doc = CollectionEntry<'docs'>;
@@ -89,9 +88,8 @@ export function toMarkdown(d: Doc, base: string): string {
 	);
 	body = body.replace(/<\/Aside>/g, '');
 	body = body.replace(/<StatusCounts\s*\/>/g, statusLine);
-	// The landing page's parts: the story's steps with their commands, a card as its claim linked
-	// to the row that proves it, the numbers as the sentence they come from, the last word's links.
-	body = body.replace(/<Story\s*\/>/g, () => storyMarkdown());
+	// The landing page's parts: a card as its claim linked to the row that proves it, the numbers
+	// as the sentence they come from, the last word's links.
 	body = body.replace(/<Stats\s*\/>/g, statusLine);
 	body = body.replace(/<\/?Bento>/g, '');
 	body = body.replace(/<Answers\s[^>]*>|<\/Answers>/g, '');

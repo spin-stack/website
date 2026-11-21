@@ -11,7 +11,7 @@ import (
 )
 
 // componentFiles are the site's code outside its pages that shows a reader commands and claims:
-// the landing page's story and cards are written there, not in Markdown.
+// the landing page's hero session and cards are written there, not in Markdown.
 func componentFiles(src string) ([]string, error) {
 	var files []string
 	for _, glob := range []string{"lib/*.ts", "components/*.astro"} {
@@ -58,12 +58,12 @@ func componentCommands(src string) (map[string][]shellLine, error) {
 var (
 	// featureProp is a component's claim on the landing page: <BentoCard feature="...">.
 	featureProp = regexp.MustCompile(`\bfeature="([^"]+)"`)
-	// storyFeature is a step of the landing page's story: feature: '...' in src/lib/story.ts.
-	storyFeature = regexp.MustCompile(`\bfeature:\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")`)
+	// heroFeature is a claim of the landing page's hero: feature: '...' in src/lib/undo.ts.
+	heroFeature = regexp.MustCompile(`\bfeature:\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")`)
 )
 
 // checkCardFeatures holds the landing page's claims to what is tested end to end: every
-// feature= prop of a page and every step of the story must name a built row of the board that
+// feature= prop of a page and every claim of the hero must name a built row of the board that
 // names an end-to-end test. A claim the landing page makes is one a reader takes as proved; a
 // row that only exists, or says what no test checks yet, is not.
 func checkCardFeatures(docs, src string, rows []feature) ([]string, error) {
@@ -94,14 +94,14 @@ func checkCardFeatures(docs, src string, rows []feature) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	story := filepath.Join(src, "lib", "story.ts")
-	raw, err := os.ReadFile(story)
+	hero := filepath.Join(src, "lib", "undo.ts")
+	raw, err := os.ReadFile(hero)
 	if err != nil {
 		return nil, err
 	}
 	for i, line := range strings.Split(string(raw), "\n") {
-		for _, m := range storyFeature.FindAllStringSubmatch(line, -1) {
-			claim(story, i+1, unescape(m[1]+m[2]))
+		for _, m := range heroFeature.FindAllStringSubmatch(line, -1) {
+			claim(hero, i+1, unescape(m[1]+m[2]))
 		}
 	}
 	return bad, nil
