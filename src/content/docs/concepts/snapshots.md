@@ -62,9 +62,8 @@ The diff lists every file added (`A`), removed (`D`), modified (`M`) or that cha
 It runs in a machine of its own with no network, so the workspace can be stopped, and nothing
 it left on its disk runs.
 
-Two things a diff does not report. It hashes a file's content only when its size, inode or
-times changed, so root in the guest can hide a change by setting the times back, and the clock
-with them. And it does not compare extended attributes.
+[A diff does not see everything](/overview/limitations/#workspaces): root in the guest can hide a
+change from it, and it does not compare extended attributes.
 
 `--under` starts the comparison at one directory. Use it: a diff covers the whole root
 filesystem, and one package install changes tens of thousands of files.

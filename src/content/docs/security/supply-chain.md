@@ -56,20 +56,13 @@ base image. A release of Spinbox pins the machine's release by version and diges
 release lists every upstream source with its version, URL and SHA-256, and every package in the
 base image with its exact version.
 
-## Disks and images
-
-A volume's history is a chain of manifests, each naming its parent by digest, anchored in digests
-only the control plane writes to the database. A runner refuses a history that does not reach the
-anchor. An image's layers are also measured with fs-verity on the runner's disk, and the kernel
-verifies every block read from them.
-
 ## Boot, verified
 
 Each role's image is signed for Secure Boot by a key of that role held in KMS, and an instance
 boots only what its role's key signed. Every build records the measurements an instance of it
-takes in its NitroTPM. A runner joins an installation only by proving those measurements in an
-attestation document, and the keys that open volumes are released only to a runner that proves
-them. What is still open is on [Known gaps](/reference/security/known-gaps/).
+takes in its NitroTPM, and [NitroTPM](/security/nitrotpm/) is what they decide: which runner
+joins, and which machine the keys are released to. What is still open is on
+[Known gaps](/reference/security/known-gaps/).
 
 A commit built again comes out with the same root hash, kernel image and boot measurement. The
 disk's bytes differ only in the times on its EFI partition, which nothing measures.

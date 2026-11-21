@@ -69,5 +69,5 @@ A daily job in the control plane removes what nothing refers to any more.
 A runner keeps volumes on its local NVMe disks. A disk holds what its workspace wrote, not its
 full size, so the control plane charges a runner part of each new volume's size (50% unless
 `disk_reserve_percent` says otherwise) until the volume writes more, and does not place a
-workspace on a runner without room for it. A runner whose disk fills past 70% stops taking new
-workspaces until it is back under 65%.
+workspace on a runner without room for it, nor on one whose disk is filling
+([Placement](/concepts/runners/#placement)).

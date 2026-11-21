@@ -28,10 +28,11 @@ A runner opens every connection it has. It has no inbound rule at all.
 
 ## Joining
 
-A runner in the installation's autoscaling group joins **by who it is**. It signs an AWS
-`GetCallerIdentity` request with its instance role, bound to this installation and to its own
-id, and sends it to the control plane. The control plane passes it to AWS STS and checks that
-the answer names the runners' role. There is no token to create, store or rotate.
+A runner in the installation's autoscaling group joins **by who it is**: it signs an AWS request
+with its instance role, which the control plane has AWS check, and sends a NitroTPM document that
+says which build of Spin OS it booted, which the control plane checks against the builds it
+allows. There is no token to create, store or rotate. [NitroTPM](/security/nitrotpm/#how-a-runner-is-admitted)
+is the whole of it.
 
 A machine outside the group can join with a one-time registration token from Admin → Runners.
 
@@ -82,13 +83,8 @@ new process adopts them.
 
 ## Operating runners
 
-| Action | The runner | Its workspaces | Undo |
-|---|---|---|---|
-| **Drain** | Stays connected, takes no new workspace | Keep running; with `--suspend`, are moved off | Activate |
-| **Activate** | Takes workspaces again | — | — |
-| **Revoke** | Its credentials are deleted and it is disconnected for good | Refused while it holds any, unless you choose to leave them | None: replace the machine |
-
-See [Operating hosts](/admin/hosts/).
+An administrator can **drain** a runner, so it takes no new workspace, **activate** it again, or
+**revoke** it for good. [Taking a runner out](/admin/runners/) is what each does and how.
 
 ## When a runner is lost
 
@@ -96,8 +92,13 @@ A runner can vanish without draining: the machine loses power, or its network. T
 does not guess. Its workspaces stay where they are, and each one has lost only what the runner
 had not yet uploaded.
 
-- The owner moves one with `spin workspace recover <workspace>`, which says how much would be
-  lost and waits for `--accept-data-loss`.
+- [The owner moves one, at a cost they accept](<feature:Recover a workspace whose host is gone, at a cost its owner accepts>):
+
+  ```bash
+  spin workspace recover api                      # says what moving it would lose
+  spin workspace recover api --accept-data-loss   # moves it
+  ```
+
 - An administrator can let the control plane move workspaces on its own, after a runner has
   been silent for `rehome_after_seconds`, when no more than `rehome_max_unpublished_bytes` would
   be lost: [the workspace is moved, and its owner is told when it waits for them instead](<feature:A workspace whose host never comes back is moved when little would be lost, and its owner is told when it waits for them>).

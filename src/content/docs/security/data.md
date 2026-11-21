@@ -74,10 +74,11 @@ state on purpose, which is why the state is encrypted with KMS.
 
 ## Integrity
 
-A volume's history hangs from digests only the control plane writes, in the database. A runner
-checks every layer it reads against them, so a layer replaced in the bucket is refused. Image
-layers are also protected by fs-verity on the runner's disk. See
-[Supply chain](/security/supply-chain/) for what this does not cover.
+A volume's history is a chain of manifests, each naming its parent by digest, anchored in digests
+only the control plane writes to the database. A runner checks every layer it reads against them,
+so a layer replaced in the bucket is refused. An image's layers are also measured with fs-verity
+on the runner's disk, and the kernel verifies every block read from them. What this does not cover
+is on [Known gaps](/reference/security/known-gaps/).
 
 ## Who can read the bucket
 

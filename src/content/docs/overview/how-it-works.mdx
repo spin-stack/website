@@ -68,15 +68,13 @@ stays that way until you start it again.
 ## Where your work is stored
 
 A running workspace writes to the top layer of its disk on the runner. The runner seals that
-layer and uploads it to the bucket every five minutes by default (the installation's
-`volume_rpo_seconds`), when you take a snapshot, and when the workspace stops. Each layer is compressed, encrypted with the volume's
+layer and uploads it to the bucket once its oldest write not yet there is five minutes old by
+default (the installation's RPO), and also on size, when you take a snapshot, and when the
+workspace stops ([Disks and storage](/concepts/volumes/#layers)). Each layer is compressed, encrypted with the volume's
 own key, and uploaded before the pointer to it moves.
 
 This means a runner that disappears takes with it only what was written since its last
-upload. Nothing moves a workspace off a dead runner without asking. The workspace's owner runs
-`spin workspace recover`, which says how much unpublished work would be lost, and does nothing
-until they accept. An administrator can allow small losses to be recovered automatically. See
-[Runners and hosts](/concepts/runners/).
+upload, and nothing moves its workspaces without asking: [When a runner is lost](/concepts/runners/#when-a-runner-is-lost).
 
 ## How runners come and go
 

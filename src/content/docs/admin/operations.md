@@ -43,6 +43,8 @@ estimated from the last billed day. Then the cloud's bill by service, what the m
 to end at, and its budget. It is the bill as the control plane last read it, never the cloud
 itself. The control plane reads only the costs that `bill_scope` names in the
 [configuration file](/reference/configuration/file/): without a scope it reads none, and says so.
+The AWS module sets it; AWS also shows a tag in the bill only once the account has made it a cost
+allocation tag ([Reading the bill](/aws/cost/#reading-the-bill)).
 
 `by` shares the month out. The runners are shared by the cores and memory each workspace held,
 and the volumes' bucket by what its volumes kept. What nobody caused is said apart and never

@@ -61,10 +61,10 @@ protect.
 
 ## Runners
 
-A runner in the installation's autoscaling group joins **by its AWS identity**. It signs an STS
-`GetCallerIdentity` request with its instance role, bound to this installation and to its own host
-id; the control plane sends it to AWS and checks the role in the answer. A signed request is good
-for fifteen minutes at most. Nothing is minted, stored or rotated.
+A runner in the installation's autoscaling group joins **by its AWS identity and the build it
+booted**: a request signed with its instance role, which AWS checks, and a NitroTPM document the
+control plane holds to the builds it allows. Nothing is minted, stored or rotated.
+[NitroTPM](/security/nitrotpm/#how-a-runner-is-admitted) is the whole of it.
 
 Once joined, a runner holds an access token that lasts an hour and is refreshed, over TLS under
 the installation's CA. A runner is trusted only for what is placed on it: it can report on and ask

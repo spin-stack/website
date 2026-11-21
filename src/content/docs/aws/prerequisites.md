@@ -41,7 +41,7 @@ dashboard: nothing a workspace serves can set a cookie the dashboard reads.
 ## Room for runners
 
 Each runner is a large spot machine, of one of the types
-[`instance_types`](/reference/terraform/runners/#instance_types) lists: one CPU generation, with
+[`runner_instance_types`](/reference/terraform/root/#runner_instance_types) lists: one CPU generation, with
 local NVMe, and nested virtualization.
 
 **Quota.** A new account's spot vCPU quota can be lower than one runner (Service Quotas → EC2 →

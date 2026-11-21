@@ -145,17 +145,9 @@ default.
 
 The control plane reads the installation's own bill: [the month's costs from Cost Explorer, its
 forecast, and its budget if it has one, every six hours](<feature:The month's bill, its forecast, and what each workspace cost>).
-A day's cost settles a day or two after it ends. `spin admin costs` shows it, starting with the
-standby: the installation's daily cost with nobody working, from the last billed day.
-
-```bash
-spin admin costs
-spin admin costs by workspace
-```
-
-The dashboard's Costs page (Admin) shows the same, and
-[each workspace's owner sees its cost and its rate](<feature:A workspace's cost this month and its rate, as an estimate with its day, for its owner; a team's workspaces summed for its admins, and a project's with its prebuilds' storage for its admins>).
-[Jobs, the bill and the store](/admin/operations/#the-bill) explains how the month is shared out.
+A day's cost settles a day or two after it ends. `spin admin costs` and the dashboard's Costs page
+(Admin) show it, and [The bill](/admin/operations/#the-bill) is how to read it and how the month is
+shared out. On AWS, two things have to be in place first.
 
 The bill is read by the installation's tags, and AWS shows a tag in the bill only once it is a
 cost allocation tag. That is the account's to switch on, once, and AWS refuses to before it has
