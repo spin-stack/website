@@ -28,7 +28,7 @@ No machine runs SSH. The control plane's and the proxy's machines take a shell w
 Manager, on the one in service. A runner takes no Session Manager shell: its image carries no
 agent and its role grants none, so its serial console, its boot log and its metrics say what it
 does, and one that fails is replaced. When a runner has to be looked at from inside, an
-administrator opens [a recorded root shell on it](/admin/operations/#a-root-shell-on-a-runner)
+administrator opens [a recorded root shell on it](/admin/hosts/#a-root-shell-on-a-runner)
 through the control plane.
 
 ```bash
@@ -46,7 +46,7 @@ spin admin shell open <runner-id> --reason "<why>" --incident
 ```
 
 `--incident` opens it on the runner as it is, and the runner is retired once the shell ends:
-[A root shell on a runner](/admin/operations/#a-root-shell-on-a-runner).
+[A root shell on a runner](/admin/hosts/#a-root-shell-on-a-runner).
 
 Spin OS has the tools to look with — `tcpdump`, `strace`, `ss`, `nft`, `conntrack`, `dig`,
 `bpftool`, `htop`, `iostat` — because nothing can be installed on a machine.

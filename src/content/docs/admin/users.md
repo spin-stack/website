@@ -65,7 +65,7 @@ included: [membership is checked at the time of every action](/security/identity
 
 ## API keys
 
-Users create API keys for scripts and agents ([Agents and automation](/use/agents/)); what a key
+Users create API keys for scripts and agents ([Automation and API keys](/use/agents/)); what a key
 can and cannot do is [Identity and access](/security/identity/#api-keys). Administrators see and
 revoke every user's keys in **Admin → Users**.
 

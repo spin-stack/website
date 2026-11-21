@@ -1,5 +1,5 @@
 ---
-title: The agent in a workspace
+title: An agent UI in a workspace
 description: Open T3 Code in a workspace, sign Claude Code and Codex in once, and see what the agent reaches, where its chats live and how it drives other workspaces.
 reads:
   - "spin:cmd/cli/cmd/agent.go@v20261114.01"

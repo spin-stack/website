@@ -1,16 +1,15 @@
 ---
-title: Jobs, the bill and the store
+title: Jobs, workspaces, the bill and the store
 description: What an administrator runs and reads beyond runners, from the control plane's jobs and the month's bill to the store, disk keys and a root shell.
 reads:
   - "spin:cmd/cli/cmd/admin_jobs.go@v20261114.01"
   - "spin:cmd/cli/cmd/admin_costs.go@v20261114.01"
   - "spin:cmd/cli/cmd/admin_storage.go@v20261114.01"
   - "spin:cmd/cli/cmd/admin_volume.go@v20261114.01"
-  - "spin:cmd/cli/cmd/admin_shell.go@v20261114.01"
 ---
 
 These are the `spin admin` commands that are not about a runner's state. For drain, activate and
-revoke, see [Operating hosts](/admin/hosts/).
+revoke, see [Operating runners](/admin/hosts/).
 
 ## Jobs
 
@@ -115,29 +114,6 @@ whose workspace cannot run for it.
 in **Admin → Timeline**, reads what happened to a workspace, a runner, a team, a project or the
 installation, and who did it, in one place.
 
-## A root shell on a runner
-
-An administrator can open
-[a root shell on a runner, for a while and with a reason](<feature:A root shell on a runner, for a while and with a reason: the runner emptied first, every session recorded under Object Lock, the runner retired after>).
-
-```bash
-spin admin shell open <runner-id> --reason "<why>" --minutes <minutes>
-spin admin shell open <runner-id> --reason "<why>" --incident
-spin admin shell list
-spin admin shell approve <shell-id>
-spin admin shell close <shell-id>
-spin admin shell recording <shell-id>
-```
-
-The runner is emptied first: each workspace is suspended and resumed on another runner. With
-`--incident` the shell opens on the runner as it is. Where the installation sets
-`host_shell_needs_approval`, another administrator approves the shell before the runner is
-touched. Every session is recorded by the control plane and kept in the logs bucket under Object
-Lock.
-
-Once the shell has ended, the runner is retired: it is revoked, every disk it held the key of is
-marked to be re-keyed, and its machine is replaced by its group.
-
 ## A workspace's bandwidth
 
 An administrator
@@ -149,19 +125,3 @@ spin workspace bandwidth <id> <mbps>    # megabits a second, each way; 0 lifts t
 
 A stopped or suspended workspace takes the value at its next start. The limit bounds what a
 workspace can cost in egress, so its owner may not raise it.
-
-## Writeback on a host
-
-A runner's policy can carry
-[a writeback bound of its own, measured on that host first](<feature:A writeback bound per host, measured on that host before it is taken>).
-
-```bash
-spin admin runner policy <runner-id>
-spin admin runner policy <runner-id> --writeback-limit-bytes <bytes> --writeback-background-bytes <bytes>
-```
-
-With no flags the command shows the policy. Any flag writes the whole policy: a setting you do not
-pass goes back to the runner's own default. Thresholds that no preset names are refused until
-that host has been tested with them. The test is
-[TestHostWriteback](/reference/api/hostservice/#testhostwriteback), and it loads the host's disk
-while it runs.

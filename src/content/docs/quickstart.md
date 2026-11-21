@@ -147,4 +147,4 @@ Do the same for `online` if you created it. Where the installation keeps a trash
 
 - [Workspaces](/concepts/workspaces/) and [Snapshots and rollback](/concepts/snapshots/)
 - [Editors and SSH](/use/editors/): VS Code, `ssh`, `scp` and `rsync`
-- [Agents and automation](/use/agents/): API keys and JSON output
+- [Automation and API keys](/use/agents/): API keys and JSON output
