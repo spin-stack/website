@@ -54,7 +54,6 @@ concepts/workspaces.md | 2 GB | spin:internal/controlplane/installconfig/config.
 concepts/workspaces.md | 10 GB | spin:internal/controlplane/server/workspaceserver/workspace.go#DefaultDiskGB = 10
 concepts/workspaces.md | three times | spin:internal/lifecycle/budget.go#GenerationAttempts = 3
 concepts/workspaces.md | Ten minutes | spin:internal/controlplane/server/workspaceserver/idle.go#WarnMinutes = 10
-overview/evaluate.md | 30 GB | spin:hack/lanes/cmd/lanes/ci.go has "fs.Int("free-gb", 30,"
 overview/how-it-works.mdx | five minutes | spin:internal/pgserver/server.go#ArchiveTimeoutSeconds = 300
 overview/how-it-works.mdx | a minute | spin:internal/controlplane/domain/reconcile/reconcile.go#Every = 1m
 overview/how-it-works.mdx | three times | spin:internal/lifecycle/budget.go#GenerationAttempts = 3

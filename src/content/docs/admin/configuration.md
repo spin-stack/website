@@ -71,8 +71,8 @@ store and the mail server. Among the ones an administrator changes:
   may be made public (off by default).
 - **Rate limits** on sign-in and on the API.
 - **Telemetry**: which traces and metrics are kept. See [Observability](/admin/observability/).
-- **A root shell on a host**: whether another administrator approves each one, and how long it
-  may stay open. See [Operations](/admin/operations/).
+- **A root shell on a runner**: whether another administrator approves each one, and how long it
+  may stay open. See [A root shell on a runner](/admin/hosts/#a-root-shell-on-a-runner).
 
 Sign-in providers, GitHub and OIDC, are not settings: they are in **Admin → Security**. See
 [Users and teams](/admin/users/).

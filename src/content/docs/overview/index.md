@@ -1,8 +1,9 @@
 ---
 title: What is Spinbox
-description: What Spinbox is, who it is for, what it lets you do, and the projects an installation is made of.
+description: What Spinbox is, who it is for, what it lets you do, how to evaluate it, and the projects an installation is made of.
 reads:
   - "spin:internal/features/features.go@v20261114.01"
+  - "spin-terraform-aws:README.md@v20261027.02"
 ---
 
 Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code. You
@@ -42,29 +43,36 @@ Each is a built feature, with what proves it on the status page:
 [network](/reference/status/#network). See [Workspaces](/concepts/workspaces/) and
 [Snapshots and rollback](/concepts/snapshots/) for the details.
 
+## Evaluate it
+
+In this order:
+
+1. **What it costs.** A small part runs all the time: the control plane and the proxy, two
+   machines, and two Route 53 zones. Runners, the large spot machines workspaces run on, run while
+   workspaces do and stop a while after, and are the largest cost. [Cost](/aws/cost/) lists each
+   part with the setting that changes it.
+2. **Try it on one Linux machine.** [Try it on one machine](/overview/one-machine/) brings the
+   development stack up on a single Linux host with KVM, with a real runner booting real virtual
+   machines. It is not an installation: nothing in it is backed up, and it answers only on
+   `localhost`.
+3. **What it does not do.** Spinbox is experimental: APIs change and data may be lost.
+   [Limitations](/overview/limitations/) is what it does not do by design or by where it runs, and
+   [Status](/reference/status/) every feature with what proves it, what is partly there, and what
+   is not built. [Security](/security/) is the model, its mechanisms and its known gaps.
+4. **Install it.** One OpenTofu module creates everything in your account and your region:
+   [Install on AWS](/aws/overview/) says what it creates, [Before you start](/aws/prerequisites/)
+   what you need, and [Install](/aws/setup/) the commands. Then the [Quickstart](/quickstart/):
+   sign in, create a workspace, snapshot, change something, see the diff, go back.
+
 ## Questions people ask first
 
 ### Is there a hosted version?
 
-No. Spinbox runs in your AWS account, installed by one OpenTofu module. See
-[Install on AWS](/aws/overview/).
-
-### What does it cost?
-
-A small part runs all the time, and runners run only while workspaces do. See [Cost](/aws/cost/).
-
-### Can I try it without AWS?
-
-Yes, on one Linux machine with KVM: [Try it on one machine](/overview/one-machine/).
+No. Spinbox runs in your AWS account, installed by one OpenTofu module.
 
 ### Does it need Kubernetes?
 
 No. An installation is a handful of EC2 machines, buckets and roles that the module creates.
-
-### What does it not do yet?
-
-[Status](/reference/status/) lists every feature with what proves it, says where a test can't
-reach, and lists what is not built. [Limitations](/overview/limitations/) lists what Spinbox does not do by design.
 
 ### How do I report a security problem?
 
@@ -79,18 +87,16 @@ Privately, through a security advisory: see [Reporting a vulnerability](/securit
   container. A workspace does not. Code that escapes a process still has to get out of a
   virtual machine, whose QEMU runs under its own user with almost nothing to reach. See
   [Isolation](/security/isolation/).
-- **Snapshots are layers, not copies.** A disk is a chain of qcow2 layers. A snapshot seals the
-  top one, a clone points at the same layers, and a diff compares two of them. None of these
-  copies a disk.
+- **Snapshots are layers, not copies**, so a snapshot, a clone and a diff are cheap: see
+  [Disks and storage](/concepts/volumes/).
 - **Your account, your data.** The control plane, the database, the bucket that holds every
   disk, the logs, the metrics and the traces all stay in your AWS account. There is no hosted
   part of Spinbox for any of it to be sent to.
 - **Machines you do not patch.** Every machine boots Spin OS, a read-only image with a
   verified root filesystem. An update replaces the machine with one built from the new
   release. See [Update](/aws/update/).
-- **Pay for runners only while they work.** Runners are large spot machines. The control plane
-  starts one when a workspace needs it and removes it when nothing has run for a while. See
-  [Cost](/aws/cost/).
+- **Pay for runners only while they work.** The control plane starts one when a workspace needs
+  it and removes it when nothing has run for a while. See [Cost](/aws/cost/).
 
 ## The projects
 

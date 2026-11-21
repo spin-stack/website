@@ -1,9 +1,10 @@
 ---
-title: Operating hosts
+title: Operating runners
 description: Drain, activate and revoke runners, see what runs where, replace a runner's machine, and add a runner outside the autoscaling group.
 reads:
   - "spin:docs/runners.md@v20261114.01"
   - "spin:cmd/cli/cmd/admin.go@v20261114.01"
+  - "spin:cmd/cli/cmd/admin_shell.go@v20261114.01"
   - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
 ---
 
@@ -99,3 +100,42 @@ The same flags set what the runner advertises and whether it is preemptible.
 
 Such a machine needs KVM, and must run the control plane's release of Spinbox: a host of any other is
 refused, and the refusal says so.
+
+## A root shell on a runner
+
+An administrator can open
+[a root shell on a runner, for a while and with a reason](<feature:A root shell on a runner, for a while and with a reason: the runner emptied first, every session recorded under Object Lock, the runner retired after>).
+
+```bash
+spin admin shell open <runner-id> --reason "<why>" --minutes <minutes>
+spin admin shell open <runner-id> --reason "<why>" --incident
+spin admin shell list
+spin admin shell approve <shell-id>
+spin admin shell close <shell-id>
+spin admin shell recording <shell-id>
+```
+
+The runner is emptied first: each workspace is suspended and resumed on another runner. With
+`--incident` the shell opens on the runner as it is. Where the installation sets
+`host_shell_needs_approval`, another administrator approves the shell before the runner is
+touched. Every session is recorded by the control plane and kept in the logs bucket under Object
+Lock.
+
+Once the shell has ended, the runner is retired: it is revoked, every disk it held the key of is
+marked to be re-keyed, and its machine is replaced by its group.
+
+## Writeback on a runner
+
+A runner's policy can carry
+[a writeback bound of its own, measured on that host first](<feature:A writeback bound per host, measured on that host before it is taken>).
+
+```bash
+spin admin runner policy <runner-id>
+spin admin runner policy <runner-id> --writeback-limit-bytes <bytes> --writeback-background-bytes <bytes>
+```
+
+With no flags the command shows the policy. Any flag writes the whole policy: a setting you do not
+pass goes back to the runner's own default. Thresholds that no preset names are refused until
+that host has been tested with them. The test is
+[TestHostWriteback](/reference/api/hostservice/#testhostwriteback), and it loads the host's disk
+while it runs.

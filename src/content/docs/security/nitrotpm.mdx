@@ -1,5 +1,5 @@
 ---
-title: NitroTPM and runner authorization
+title: "NitroTPM: how a machine proves its build"
 description: How OpenTofu, NitroTPM, AWS STS and KMS make a runner prove both its AWS identity and the image it booted before it is trusted.
 reads:
   - "spin:internal/installation/provider/aws/machine.go@v20261114.01"
@@ -69,8 +69,8 @@ measured runner image.
 
 ## Why KMS checks the same evidence
 
-The admission check decides whether a runner can participate in the control plane. KMS independently
-enforces whether it can open sensitive keys. For a volume or workload-identity key, the runner
+The admission check decides whether a runner joins. KMS decides on its own whether it can open a
+key. For a volume or workload-identity key, the runner
 creates a short-lived recipient key, has NitroTPM attest to its public half, and sends that document
 to KMS. KMS encrypts its answer to that recipient only if the document's PCRs match its key policy.
 
@@ -97,14 +97,14 @@ to obtain it.
 
 ## What it does not protect against
 
-NitroTPM attestation is a boot-time authorization boundary, not a cure for every compromise. In
-particular, it does not prevent malicious code that has already compromised a legitimate, running
-runner from using that runner's current authority. It also does not prevent an AWS account
-administrator from changing IAM or KMS policy, and it relies on AWS's Nitro attestation root.
+NitroTPM attestation decides what boots and joins; it does not undo a compromise after that. Code
+that has taken a legitimate, running runner holds that runner's authority. An administrator of the
+AWS account can still change IAM and KMS policy, and all of it rests on AWS's Nitro attestation
+root.
 
-The remaining boundaries are therefore still necessary: a verified, read-only Spin OS image;
-least-privilege IAM roles and permissions boundaries; per-workspace VM isolation; short-lived
-credentials; and KMS policies that name exact PCR combinations. Two limits are spelled out in
+So the other boundaries stay: a verified, read-only Spin OS image; IAM roles held to permissions
+boundaries; a virtual machine per workspace; short-lived credentials; and KMS policies that name
+exact PCR values. Two limits are spelled out in
 [what the security model does not protect](/reference/security/known-gaps/#what-this-does-not-protect):
 user data is not measured, so a machine started under the runners' launch template with other user
 data might attest as a runner; and a control plane running other code with its own permissions is
