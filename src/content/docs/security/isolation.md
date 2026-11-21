@@ -53,9 +53,9 @@ filesystem:
 ## The network boundary
 
 The workspace's network is enforced in nftables on the runner, in a namespace of its own, outside
-the virtual machine. It drops every packet to private, loopback, link-local (including the
-instance metadata service) and reserved addresses, and to the runner's own addresses, before any
-policy is read. The workspace's resolver removes those addresses from its answers.
+the virtual machine, and what it always drops comes before any policy: the runner's own
+addresses, private and link-local ones (the instance metadata service among them), and IPv6
+([Always blocked](/concepts/network/#always-blocked)).
 
 A workspace is never told the control plane's address or its CA. The programs Spinbox runs inside it
 reach the control plane over vsock, through the runner.

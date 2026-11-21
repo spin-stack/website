@@ -18,20 +18,14 @@ it.
 
 ## 1. Get the CLI
 
-The CLI is a single binary, published with every release as `spin-linux-amd64`,
-`spin-linux-arm64`, `spin-darwin-arm64` and `spin-darwin-amd64`. Put the one for your machine on
-your `PATH` as `spin`:
+The CLI is a single binary of your installation's release, for Linux and macOS:
+[Install](/use/cli/#install) says where to get the one for your machine. Put it on your `PATH` as
+`spin`:
 
 ```bash
 chmod +x spin-linux-amd64
 sudo mv spin-linux-amd64 /usr/local/bin/spin
 spin version
-```
-
-Each is also in the release's public package, under a tag of its own:
-
-```bash
-oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
 ```
 
 ## 2. Sign in
@@ -51,8 +45,8 @@ spin workspace create --name demo --wait
 ```
 
 The workspace starts from the installation's default image, with its default CPU, memory and
-disk. If no runner is up, it waits in *Waiting for a host* for the few minutes one takes to
-start; `--wait` waits for it.
+disk. If no runner is up, it is `WAITING` (*Waiting for a host* in the dashboard) for the
+few minutes one takes to start; `--wait` waits for it.
 
 A workspace lets you in with an SSH key you added with your passkey. Add one once, from this
 machine: the command opens the page where your passkey confirms it, and waits. See
@@ -102,7 +96,7 @@ spin snapshot diff demo <after-id> --from <clean-id> --under /etc
 The diff lists every file added (`A`), removed (`D`), modified (`M`) or changed type (`T`)
 between the two snapshots: here, `/etc/greeting` added, `/etc/issue` removed and `/etc/hosts`
 modified. It runs in a separate machine, so the workspace does not need to be running.
-`--under` narrows it to one directory; installing a package alone changes thousands of files.
+`--under` narrows it to one directory; installing a package alone changes tens of thousands of files.
 
 ## 6. Go back
 

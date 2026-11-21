@@ -8,13 +8,18 @@ reads:
 
 A coding agent needs a key to talk to its provider, and a key on a workspace's disk is in every
 snapshot of it and in every clone. Spinbox has what it takes for the key to never be there: the
-host's egress proxy can [stand in for a host name and set a header from a secret the team holds](<feature:Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role>).
+runner's egress proxy can [stand in for a host name and set a header from a secret the team holds](<feature:Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role>).
 Nothing here knows what Anthropic or OpenAI is; it is four things Spinbox already does, in order.
+
+The other way to sign an agent in is your own subscription's login, from
+[the agent's page](/use/agent/#sign-in-once). It is one step, and its token is on the
+workspace's disk, in every workspace of yours: a [known gap](/reference/security/known-gaps/).
+A key the team holds, brokered as below, is on no disk.
 
 ## 1. The installation brokers the name
 
 An administrator declares a policy in the installation's config file (or in the dashboard under
-Network). A brokered rule has the host's proxy stand in for the names it allows, on HTTPS, and
+Network). A brokered rule has the runner's egress proxy stand in for the names it allows, on HTTPS, and
 set a header from a team secret:
 
 ```yaml
@@ -63,7 +68,7 @@ A project's tags do the same for every workspace that opens it.
 ## 4. The tool wants to see a key
 
 Claude Code and Codex refuse to start without a key in their environment. Give them one that
-means nothing; the proxy replaces the header on the wire:
+means nothing; the egress proxy replaces the header on the wire:
 
 ```bash
 spin settings set env.ANTHROPIC_API_KEY spin
@@ -80,7 +85,7 @@ carried as bytes](<feature:A WebSocket to a brokered name: its handshake under t
 
 A key is for a provider that takes nothing else. For a service the team runs itself - a model
 gateway, an internal API, a Vault - there is nothing to set and nothing to rotate: the rule names
-an `identity`, the audience the token is for, and the proxy sets a five-minute token of the
+an `identity`, the audience the token is for, and the egress proxy sets a five-minute token of the
 workspace's identity in the header instead. No secret exists, in the database or anywhere.
 
 ```yaml
@@ -98,9 +103,9 @@ one for any. The service still decides which workspaces it admits.
 
 The service verifies the token against the installation's issuer, `https://id.<domain>`, whose
 discovery document and key set the installation publishes. The token's subject is
-`spiffe://<domain>/t/<team>/w/<workspace>/p` - the `/p` says the proxy presented it on the
+`spiffe://<domain>/t/<team>/w/<workspace>/p` - the `/p` says the egress proxy presented it on the
 workspace's behalf, so the service admits what it chooses to: this workspace, every workspace of
-the team, or any of the installation. It is bound to no key and says so; the proxy holds none of
+the team, or any of the installation. It is bound to no key and says so; the egress proxy holds none of
 the workspace's.
 
 ## Seeing it work, and what went wrong
@@ -110,12 +115,12 @@ spin workspace egress agent-1
 spin workspace status agent-1
 ```
 
-`egress` [lists each request the proxy read to a brokered name](<feature:Each request to a brokered name as the proxy read it, served or refused and why; and whether each injection's secret is the team's to give>), newest first, with the real
-host's status or, for one the proxy refused, why: `credentials` is a secret the team does not
+`egress` [lists each request the egress proxy read to a brokered name](<feature:Each request to a brokered name as the proxy read it, served or refused and why; and whether each injection's secret is the team's to give>), newest first, with the real
+host's status or, for one the egress proxy refused, why: `credentials` is a secret the team does not
 hold, `scope` a method or path the rule does not allow. `status` says, per injection, whether
 the team holds what it is set from.
 
-## What the proxy cannot do
+## What the egress proxy cannot do
 
 - An upgrade to anything but a WebSocket - h2c, for one - is refused with 501: what would follow
   it is nothing a rule can read.
@@ -123,5 +128,5 @@ the team holds what it is set from.
 - Nothing but HTTPS on 443 is brokered: `git` over SSH is not, and `git` over HTTPS with the
   account you connected is the way to a private repository
   ([Projects](/concepts/projects/#your-github-account)).
-- A client that pins its provider's certificate does not accept the proxy's; it keeps its own
+- A client that pins its provider's certificate does not accept the egress proxy's; it keeps its own
   key, and the rule is better left as a plain allow.

@@ -35,8 +35,8 @@ Drain a runner that should stop taking work for a while. It stays drained until 
 it. If workspaces wait for a host while a runner is up, check that the runner is not drained: the
 waiting workspace says *the connected runners take no new workspace*.
 
-A runner whose local disk is more than 70% full is cordoned automatically, and uncordoned when it
-falls under 65%. The automatic cordon never clears one a person set.
+A runner whose disk fills is also cordoned on its own, and uncordoned when it has room again
+([Placement](/concepts/runners/#placement)). The automatic cordon never clears one a person set.
 
 ## Revoke
 

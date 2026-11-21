@@ -48,7 +48,8 @@ a guest holds none.
 
 This is a known gap: whoever runs code in one of your workspaces holds the provider token of
 all of them, until you log out or revoke it at the provider. See [Known
-gaps](/reference/security/known-gaps/).
+gaps](/reference/security/known-gaps/). [An agent without keys](/use/agent-keys/) is the way
+whose key is on no disk.
 
 ## What it reaches
 

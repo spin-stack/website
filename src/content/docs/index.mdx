@@ -30,7 +30,7 @@ Every workspace is a KVM virtual machine with its own kernel, root and a persist
 A snapshot before and one after, and the files added, modified or removed between them, read by a separate machine. What the agent did is on the record before you decide to keep it.
 </BentoCard>
 <BentoCard size="wide" icon="shield" title="Control: closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">
-Egress is closed by default, and policies name what a workspace may reach. A team's secret stays on the host's proxy and never enters the workspace. All of it in your AWS account, where the logs stay too.
+Egress is closed by default, and policies name what a workspace may reach. A team's secret stays on the runner's egress proxy and never enters the workspace. All of it in your AWS account, where the logs stay too.
 </BentoCard>
 </Bento>
 

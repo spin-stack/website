@@ -45,9 +45,8 @@ spin admin runner list
 spin admin shell open <runner-id> --reason "<why>" --incident
 ```
 
-`--incident` opens the shell on the runner as it is, its workspaces still running; without it the
-runner is emptied first. Either way the session is recorded and the runner is retired once the
-shell ends, so it costs the runner.
+`--incident` opens it on the runner as it is, and the runner is retired once the shell ends:
+[A root shell on a runner](/admin/operations/#a-root-shell-on-a-runner).
 
 Spin OS has the tools to look with — `tcpdump`, `strace`, `ss`, `nft`, `conntrack`, `dig`,
 `bpftool`, `htop`, `iostat` — because nothing can be installed on a machine.
@@ -105,10 +104,5 @@ it.
 
 ## A runner is wedged
 
-Replace its machine: terminate it without lowering the group's size, and the group starts
-another, which joins as a new host. Drain it first if it holds workspaces you want kept.
-
-```bash
-aws autoscaling terminate-instance-in-auto-scaling-group \
-  --instance-id <i-...> --no-should-decrement-desired-capacity
-```
+Drain it if it holds workspaces you want kept, then
+[replace its machine](/admin/hosts/#replacing-a-runners-machine-on-aws).

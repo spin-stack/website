@@ -89,7 +89,7 @@ project's next open then starts from the image. See [Snapshots](/concepts/snapsh
 A private repository on GitHub is cloned with the workspace owner's own account. You
 [connect your GitHub account once](<feature:Your GitHub account, connected once: private repositories cloned and pushed with nothing on the disk>),
 and it clones and pushes your workspaces' private repositories. The control plane keeps the
-token. The host your workspace runs on sets it on the requests a network policy brokers to
+token. The runner's egress proxy sets it on the requests a network policy brokers to
 GitHub, so no workspace's disk holds it.
 
 Connect in the dashboard, under Settings → Git, or

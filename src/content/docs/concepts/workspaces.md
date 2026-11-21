@@ -107,18 +107,8 @@ image's own systemd. Nothing else of Spinbox's lives on the disk:
 
 `/usr` is the image's, so `apt install` works as it does anywhere. You are `root`.
 
-When a workspace is created from a snapshot someone else shared, its first boot removes that
-person's identity from the disk: SSH keys, shell history and credentials.
-
 ## When a runner is lost
 
 If the runner a workspace was on disappears, the workspace keeps what reached the bucket and
-loses what did not. [Nothing moves it without asking](<feature:Recover a workspace whose host is gone, at a cost its owner accepts>):
-
-```bash
-spin workspace recover api                      # says what moving it would lose
-spin workspace recover api --accept-data-loss   # moves it
-```
-
-An administrator can let the control plane move workspaces on its own after a runner has been
-silent for a while, when little would be lost. See [Runners and hosts](/concepts/runners/).
+loses what did not, and nothing moves it without asking: [When a runner is lost](/concepts/runners/#when-a-runner-is-lost)
+says how its owner moves it.

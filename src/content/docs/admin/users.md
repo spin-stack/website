@@ -60,17 +60,14 @@ spin team member list <team-id>
 Teams can be nested under a parent team. A person must have signed in once before they can be
 added: there are no invitations.
 
-Membership is checked every time something is done, not only when a workspace was created. A
-member removed from a team loses its workspaces at once, including terminals and port
-connections they had open.
+A member removed from a team loses its workspaces at once, terminals and port connections
+included: [membership is checked at the time of every action](/security/identity/).
 
 ## API keys
 
-Users create API keys for scripts and agents, with scopes and an expiry of at most a year. A key
-can never approve a login or administer the installation, and makes keys of its own only with
-the `keys:delegate` scope, each holding no more than it does. See
-[Agents and automation](/use/agents/). Administrators see and revoke every user's keys in
-**Admin → Users**.
+Users create API keys for scripts and agents ([Agents and automation](/use/agents/)); what a key
+can and cannot do is [Identity and access](/security/identity/#api-keys). Administrators see and
+revoke every user's keys in **Admin → Users**.
 
 ## The audit log
 

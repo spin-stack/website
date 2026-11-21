@@ -109,8 +109,8 @@ spin exec task-142 -w /srv/app -- make test
 echo $?
 ```
 
-`spin exec` streams output, forwards standard input, and exits with the command's exit status,
-so it composes with the agent's own tools. It needs no network path to the workspace.
+It exits with the command's exit status and needs no network path to the workspace, so it
+composes with the agent's own tools ([Running one command](/use/editors/#running-one-command)).
 
 ## The API
 
