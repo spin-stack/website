@@ -4,6 +4,7 @@ description: How users, API keys, runners and machines prove who they are, how e
 reads:
   - "spin:docs/security/README.md@v20261114.01"
   - "spin:internal/controlplane/server/middleware/scopes.go@v20261114.01"
+  - "spin:docs/security/traffic.md@v20261114.01"
   - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
 ---
 
@@ -84,8 +85,9 @@ attached later, by mistake or from a machine that was taken, no role can:
 - lift the bucket's Object Lock, bypass a retention, or rewrite the bucket's policy,
 - delete logs or flow logs, or touch CloudTrail.
 
-**Only the control plane's role reads the installation's secrets**: the encryption key, the CA's
-key, the first password and the installation's configuration. Session Manager is granted by a
+**Only the control plane's role reads the installation's secrets**: the CA's key, the first
+password and the installation's configuration. The encryption key is not among them: nothing
+stores it ([Data and encryption](/security/data/#the-installations-secrets)). Session Manager is granted by a
 policy of the module's own, not by AWS's managed policy, which would let any machine read every
 parameter in the account.
 
@@ -102,6 +104,6 @@ running other code: see
 | From | Proven by |
 |---|---|
 | A browser or the CLI | A session or an API key, then scopes and per-resource checks |
-| The proxy | TLS under the installation's CA; the request's own credential. The proxy has none of its own. |
+| The proxy | TLS under the installation's CA; the request's own credential, and for the calls only a proxy makes (who may open a port, whether it is published, a workspace's session) a token of its own, given for an hour to what its role and its boot prove |
 | A runner | TLS under the installation's CA and its access token |
 | The programs inside a workspace | A token for that workspace, carried over vsock by its runner |

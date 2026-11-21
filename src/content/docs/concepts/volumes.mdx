@@ -50,17 +50,10 @@ holds an image's layers shares them between every workspace cloned from it.
 
 ## Encryption
 
-Every volume has a **data key**. Each layer is compressed, then encrypted with AES-256-GCM
-under that key, before it leaves the runner. The data key is itself encrypted under the
-installation's key-encryption key, which the control plane keeps in the database, sealed under
-a key that the database does not hold.
-
-A runner holds no key-encryption key. It asks the control plane for the data key of each volume
-placed on it, and keeps it in memory only.
-
-A workspace cloned from a snapshot shares the data key of the snapshot's volume, because it
-reads the same layers. See [Data and encryption](/security/data/) for what this means for
-deletion.
+Every volume has a **data key** of its own, a clone too. Each layer is compressed, then
+encrypted under its volume's key before it leaves the runner, and a clone opens the layers it
+inherits with the key of the volume that wrote them. Where the keys are made, who can open them,
+and what a delete destroys is on [Data and encryption](/security/data/).
 
 ## Deleting
 

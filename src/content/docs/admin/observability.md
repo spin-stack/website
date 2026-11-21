@@ -66,7 +66,7 @@ Alloy reads the policy every thirty seconds and decides at the end of each trace
 shows what the collector kept, and failed to, over its last minute. Metrics are pushed every
 minute.
 
-## What is not there
+## Alerts, and what is outside
 
 - **No pager.** Alert rules fire in the installation's Grafana, whose one contact point is the
   control plane: it records each firing and resolution once, and emails every administrator who

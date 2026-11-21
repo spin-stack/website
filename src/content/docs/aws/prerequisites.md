@@ -78,5 +78,7 @@ your own instead, name them with [`image_ids`](/reference/terraform/root/#image_
 
 ## Pick a release
 
-Releases are named by date: `v<YYYYMMDD>.<N>`, the Nth release of that day. This site documents
-`v20261027.01`. See [github.com/spin-stack/spin/releases](https://github.com/spin-stack/spin/releases).
+Releases are named by date: `v<YYYYMMDD>.<N>`, the Nth release of that day. An installation runs a
+release the module has images of, and [What this release is made of](/reference/release/) names
+the newest. These pages describe the newest release of spin, which can be ahead of it: the
+[status page](/reference/status/) says which, and the CLI must be the installation's release.
