@@ -126,10 +126,10 @@ that is not one task (`taskgate`).
 - **Commands on the other pages** are held to the same checkouts: every `spin` command in a
   shell block must be one the CLI has, with flags its help lists, and every `task` one spin's
   Taskfile has (after a `cd` into another checkout, that one's). So is every `spin` command a
-  string of `src/lib/*.ts` or `src/components/*.astro` holds - the landing page's story.
+  string of `src/lib/*.ts` or `src/components/*.astro` holds - the landing page's hero.
   `task reference:check` fails on one that is not.
 - **The landing page claims only what a test checks end to end**: every `feature="…"` of a
-  component and every step of `src/lib/story.ts` must name a built row of the board that names an
+  component and every claim of the hero (`src/lib/undo.ts`) must name a built row of the board that names an
   end-to-end test.
 - **The AWS pages are held to spin-terraform-aws.** Updating and removing an installation are the
   module's README, included verbatim between its `<!-- BEGIN website:aws/update -->` and

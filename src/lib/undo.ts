@@ -3,6 +3,10 @@
 // command prints is what spin v20261118.01 printed on a workspace made for it (the snapshot and
 // the restore took 2.4 s and 1.6 s); rm's complaints about /sys and /proc are cut to one.
 
+// What the hero claims, each a row of spin's feature board that an end-to-end test checks
+// (task reference:check holds them): the machine is the Bento's to say, the diff too.
+export const claims = [{ feature: 'Snapshots with memory, resumed with their processes' }, { feature: 'Restore a workspace to a snapshot' }];
+
 export type Line = { cmd: string } | { out: string; tone?: 'ok' | 'bad' | 'dim' };
 
 const snap = '01a1fb7c-970e-72d0-a333-635af5a6b0a2';

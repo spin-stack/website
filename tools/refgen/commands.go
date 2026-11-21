@@ -16,7 +16,7 @@ import (
 // a page's shell block must be one the CLI has, with flags its help lists, and every `task` one
 // spin's Taskfile has. The reference pages are the CLI's own help; the guides only quote it, and
 // a renamed flag would otherwise leave a page telling people to type something that fails. The
-// commands the components under src show - the landing page's story - are held the same way.
+// commands the components under src show - the landing page's hero - are held the same way.
 func checkCommands(docs, src, spin, bin, home string) ([]string, error) {
 	tasks, err := taskNames(spin)
 	if err != nil {

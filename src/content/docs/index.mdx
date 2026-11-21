@@ -19,25 +19,22 @@ import BentoCard from '../../components/BentoCard.astro';
 import Cta from '../../components/Cta.astro';
 import Figure from '../../components/Figure.astro';
 import Stats from '../../components/Stats.astro';
-import Story from '../../components/Story.astro';
 
-## Break it. See it. Undo it.
-
-<Story />
-
-## Three things it does
+## What its own machine gives it
 
 <Bento>
 <BentoCard size="big" art="isolation" icon="machine" title="Isolate: a whole machine, not a container" feature="A machine per workspace: KVM, its own kernel, root, a persistent disk, SSH">
-Every workspace is a KVM virtual machine with its own kernel, root and a persistent disk. A person or an agent can install anything and break anything inside it. Around it, the QEMU process runs as a user of its own, opens nothing by name and has no network, and each machine sits in a network namespace of its own. What that boundary covers, and what it doesn't yet, is in the [security model](/security/).
+Every workspace is a KVM virtual machine with its own kernel, root and a persistent disk. A person or an agent can install anything and break anything inside it. Around it, the QEMU process runs as a user of its own, opens nothing by name and has no network, and each machine sits in a network namespace of its own.
 </BentoCard>
-<BentoCard size="wide" icon="diff" title="Inspect: snapshot, diff, roll back" feature="A diff of the files that changed between two snapshots">
-A snapshot before, with the memory of the running processes. The files added, modified or removed between two snapshots, read by a separate machine. Restore, and the processes are running where they were.
+<BentoCard size="wide" icon="diff" title="Inspect: every file it changed" feature="A diff of the files that changed between two snapshots">
+A snapshot before and one after, and the files added, modified or removed between them, read by a separate machine. What the agent did is on the record before you decide to keep it.
 </BentoCard>
 <BentoCard size="wide" icon="shield" title="Control: closed until you open it" feature="Egress is closed by default; policies, by tag, name what a workspace may reach">
 Egress is closed by default, and policies name what a workspace may reach. A team's secret stays on the host's proxy and never enters the workspace. All of it in your AWS account, where the logs stay too.
 </BentoCard>
 </Bento>
+
+What that boundary covers, and what it doesn't yet, is in the [security model](/security/).
 
 <Figure name="installation" caption="Where the boundary is: people and agents reach the proxy; the control plane, the runners, the buckets and the keys are the module's, in your account and your region." />
 
@@ -69,6 +66,6 @@ Egress is closed by default, and policies name what a workspace may reach. A tea
 Each answer is a limit row of the [status page](/reference/status/).
 The rest are on [Limitations](/overview/limitations/).
 
-<Cta title="Workspaces you own, from the first snapshot." links={[{ text: 'Evaluate Spinbox', href: 'overview/evaluate/', variant: 'primary' }, { text: 'Install on AWS', href: 'aws/overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
+<Cta title="Give every agent its own machine." links={[{ text: 'Evaluate Spinbox', href: 'overview/evaluate/', variant: 'primary' }, { text: 'Install on AWS', href: 'aws/overview/' }, { text: 'Quickstart', href: 'quickstart/' }, { text: 'For agents', href: 'use/agents/' }]}>
 What it is for, what it costs to run, how to try it on one machine, and how to install it.
 </Cta>
