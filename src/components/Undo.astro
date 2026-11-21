@@ -1,0 +1,182 @@
+---
+// The landing page's hero terminal: a snapshot, the whole disk removed from inside, the machine
+// back with its processes. What each command prints is what spin v20261118.01 printed on a
+// workspace made for it (the snapshot and the restore took 2.4 s and 1.6 s); rm's complaints
+// about /sys and /proc are cut to one. It types once, when it is first on screen; without
+// scripts, or with reduced motion asked for, it is the whole session from the start.
+const snap = '01a1fb7c-970e-72d0-a333-635af5a6b0a2';
+type Line = { cmd: string } | { out: string; tone?: 'ok' | 'bad' | 'dim' };
+const lines: Line[] = [
+	{ cmd: 'spin snapshot create api --with-memory --wait' },
+	{ out: `Snapshot ${snap} published`, tone: 'ok' },
+	{ cmd: 'spin exec api -- rm -rf --no-preserve-root /' },
+	{ out: "rm: cannot remove '/sys/module/sctp/parameters/no_checksums': Operation not permitted", tone: 'dim' },
+	{ cmd: 'spin exec api -- ls' },
+	{ out: '/bin/bash: No such file or directory', tone: 'bad' },
+	{ cmd: `spin workspace restore api ${snap} --with-memory` },
+	{ out: `Workspace api resumed from snapshot ${snap}`, tone: 'ok' },
+	{ cmd: 'spin exec api -- ls /' },
+	{ out: 'bin  boot  dev  efi  etc  home  init  lib  media  opt  root  run  srv  usr  var  workspace' },
+];
+
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+// A narrow screen wraps a command between its words, never inside a flag at its hyphen.
+const words = (t: string) =>
+	t
+		.split(' ')
+		.map((w) => `<span class="w">${esc(w)}</span>`)
+		.join(' ');
+const html = (l: Line) => ('cmd' in l ? `<span class="prompt">$ </span>${words(l.cmd)}` : `<span class="${l.tone ?? ''}">${esc(l.out)}</span>`);
+const screen = `${lines.map((l) => `<span class="line">${html(l)}</span>`).join('')}<span class="line"><span class="prompt">$ </span><span class="caret"></span></span>`;
+const plain = lines.map((l) => ('cmd' in l ? `$ ${l.cmd}` : l.out)).join('\n');
+---
+
+<div class="term spin-dark" data-undo>
+	<div class="chrome">
+		<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+		<span class="name">api — spin</span>
+		<button type="button" class="ctl" data-replay hidden>Replay</button>
+	</div>
+	<pre class="screen" aria-hidden="true" set:html={screen} />
+	<pre class="sr-only" set:text={plain} />
+</div>
+
+<script>
+	// Each line of the server's still is hidden and shown again in order: a command is typed
+	// word by word, and what it printed appears whole after a pause.
+	const TYPE = 26; // ms a character
+	const AFTER = 380; // ms between a command and what it printed
+	const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+	for (const term of document.querySelectorAll<HTMLElement>('[data-undo]')) {
+		const rows = [...term.querySelectorAll<HTMLElement>('.screen > .line')];
+		const replay = term.querySelector<HTMLButtonElement>('[data-replay]');
+		if (reduced || !replay) continue;
+		const typed = rows.map((r) => [...r.querySelectorAll<HTMLElement>('.w')].map((w) => [w, w.textContent ?? ''] as const));
+		let run = 0;
+		const play = async () => {
+			const me = ++run;
+			replay.hidden = true;
+			for (const r of rows) r.hidden = true;
+			for (const [i, row] of rows.entries()) {
+				if (me !== run) return;
+				for (const [w] of typed[i]) w.textContent = '';
+				row.hidden = false;
+				for (const [w, text] of typed[i]) {
+					for (const ch of text) {
+						if (me !== run) return;
+						w.textContent += ch;
+						await sleep(TYPE);
+					}
+					await sleep(TYPE);
+				}
+				await sleep(typed[i].length ? AFTER : 220);
+			}
+			replay.hidden = false;
+		};
+		replay.addEventListener('click', play);
+		new IntersectionObserver((seen, obs) => {
+			if (seen.some((e) => e.isIntersecting)) {
+				obs.disconnect();
+				play();
+			}
+		}).observe(term);
+	}
+</script>
+
+<style>
+	.term {
+		position: relative;
+		border-radius: var(--spin-radius);
+		background: var(--spin-page);
+		border: 1px solid var(--spin-border);
+		overflow: hidden;
+		color-scheme: dark;
+		box-shadow: 0 24px 60px -30px rgb(0 0 0 / 0.55);
+	}
+	.chrome {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		min-height: 2.5rem;
+		padding: 0 0.5rem 0 1rem;
+		border-bottom: 1px solid var(--spin-border);
+		background: var(--spin-surface);
+		font-family: var(--sl-font-mono);
+		font-size: 0.75rem;
+		color: var(--spin-muted);
+	}
+	.name {
+		flex: 1;
+	}
+	.dots {
+		display: inline-flex;
+		gap: 0.35rem;
+	}
+	.dots i {
+		width: 0.6rem;
+		height: 0.6rem;
+		border-radius: 50%;
+		background: var(--spin-border);
+	}
+	.ctl {
+		all: unset;
+		box-sizing: border-box;
+		cursor: pointer;
+		padding: 0.2rem 0.6rem;
+		border-radius: var(--spin-radius-sm);
+		border: 1px solid var(--spin-border);
+		color: var(--spin-text);
+	}
+	.ctl[hidden] {
+		display: none;
+	}
+	.ctl:hover {
+		border-color: var(--spin-accent);
+	}
+	.ctl:focus-visible {
+		outline: 2px solid var(--spin-accent);
+		outline-offset: 1px;
+	}
+	/* Hidden lines keep their room, so the page under it stays put while it types. */
+	.screen {
+		margin: 0;
+		padding: 1.1rem 1.25rem 1.3rem;
+		font-family: var(--sl-font-mono);
+		font-size: 0.8125rem;
+		line-height: 1.75;
+		color: var(--spin-text);
+		background: var(--spin-page);
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+	.screen :global(.line) {
+		display: block;
+	}
+	.screen :global(.line[hidden]) {
+		display: block;
+		visibility: hidden;
+	}
+	.screen :global(.w) {
+		white-space: nowrap;
+	}
+	.screen :global(.prompt) {
+		color: var(--spin-muted);
+	}
+	.screen :global(.ok) {
+		color: var(--spin-terminal-green);
+	}
+	.screen :global(.bad) {
+		color: var(--spin-terminal-red);
+	}
+	.screen :global(.dim) {
+		color: var(--spin-muted);
+	}
+	.screen :global(.caret) {
+		display: inline-block;
+		width: 0.55em;
+		height: 1.1em;
+		vertical-align: -0.2em;
+		background: var(--spin-terminal-cursor);
+	}
+</style>

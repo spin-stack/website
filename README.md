@@ -182,8 +182,8 @@ that is not one task (`taskgate`).
   `task reference:check` fails on a picture that is not the release's, and on a record of
   another release than the site documents. A release without the asset fails `task sources`,
   saying to give it one: `gh workflow run site-shots.yml -R spin-stack/spin -f tag=<tag>`.
-  IBM Plex is served from the site, and a hero draws a workspace's disk as its layers, worked
-  step by step (`src/components/Hero.astro`, `Disk.astro`). `task links` fails a page that loads a
+  IBM Plex is served from the site, and the hero types a session spin printed: a snapshot, the
+  disk removed from inside, the machine restored (`src/components/Hero.astro`, `Undo.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://docs.spinbox.dev` and `/`.
   Content links from the root (`/concepts/network/`), and under another base the build puts it in
