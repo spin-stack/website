@@ -5,6 +5,7 @@ reads:
   - "spin:docs/security/README.md@v20261114.01"
   - "spin:docs/storage/README.md@v20261114.01"
   - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/secrets.tf@v20261027.02"
 ---
 
 ## Disks
@@ -54,8 +55,10 @@ wrote. A snapshot's memory has a key of its own (above), destroyed at once.
 | Sessions, API keys, runner tokens | The database | Stored only as a hash |
 | The encryption key itself | Nowhere | Derived at every start from a KMS key, which answers only a control plane that proves the image it booted |
 
-The database alone opens none of them. The encryption key and the first password are written by
-the install through write-only attributes, and never reach OpenTofu's state. The CA's key is in the
+The database alone opens none of them, and no apply ever makes or sees the encryption key. The
+install writes two secrets to Parameter Store, which only the control plane's role reads. The first
+administrator's one-time password goes through a write-only attribute, so it never reaches
+OpenTofu's state, and it opens nothing after the first sign-in replaces it. The CA's key is in the
 state on purpose, which is why the state is encrypted with KMS.
 
 ## In transit

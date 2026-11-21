@@ -100,7 +100,8 @@ The first page asks for a password of your own.
 In **Admin → Security**:
 
 - Add a sign-in provider: GitHub, or any OIDC provider.
-- Choose who may register: nobody (the default), anyone, or a list of addresses and domains.
+- Choose who may register: a list of addresses and domains (the default, and empty, so nobody
+  until you add one), anyone, or nobody.
 
 Then disable password sign-in for the first administrator, once a provider works.
 

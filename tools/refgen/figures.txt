@@ -74,3 +74,5 @@ use/agents.mdx | a year | spin:internal/controlplane/server/authserver/apikeys.g
 use/agents.mdx | ten attempts | not a figure: an illustration of cloning one snapshot many times
 use/editors.md | five minutes | spin:internal/controlplane/sshca/sshca.go#DefaultCertValidity = 5m
 use/editors.md | 220 MB | not held: a third-party fact (the VS Code server's download size), a literal in the message strings of cmd/cli/cmd/code.go
+overview/how-it-works.mdx | ten minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#GrowAfter = 10m
+aws/cost.mdx | ten minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#GrowAfter = 10m

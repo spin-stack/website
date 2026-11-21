@@ -19,7 +19,7 @@ bucket** holds every workspace's disk.
 
 ## The pieces
 
-**Control plane.** Serves the API and the dashboard, decides which runner each workspace runs
+**Control plane.** Answers the API and the dashboard, which are reached through the proxy, decides which runner each workspace runs
 on, and tells each runner what it should be running. It is the only thing that writes to the
 database. Only one control plane leads at a time: before it writes, it claims a *term*, and a
 control plane whose term has been taken stops. On AWS it also sizes the runners' autoscaling
@@ -81,8 +81,8 @@ until they accept. An administrator can allow small losses to be recovered autom
 ## How runners come and go
 
 On AWS, runners are an autoscaling group that the control plane sizes. It asks for one runner
-when a workspace is waiting and none is up, adds another if a workspace has waited longer than
-a runner takes to start, and goes back to none when nothing has run for `runner_idle_minutes`.
+when a workspace is waiting and none is up, adds another if a workspace has waited ten minutes
+([Runners](/concepts/runners/#scaling-from-zero)), and goes back to none when nothing has run for `runner_idle_minutes`.
 
 A runner joins by proving who it is: it signs an AWS request with its instance role, and the
 control plane asks AWS whose signature it is. With it goes a NitroTPM document that says which

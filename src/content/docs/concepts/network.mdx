@@ -65,8 +65,8 @@ allows them all.
 port 53. A DNS question leaves from the runner, where no firewall rule sees it, and reaches whoever
 answers that name, so [the resolver only takes up the ones a workspace's policy names](<feature:A workspace's DNS goes upstream only for what its policy names, so a policy that closes egress closes the tunnel through names>):
 
-- A workspace with no tag, or with a rule that reaches every address (ports with no destination,
-  or `0.0.0.0/0`), resolves anything. DNS gives it nothing it could not already do.
+- A workspace with a rule that reaches every address (ports with no destination, or
+  `0.0.0.0/0`) resolves anything. DNS gives it nothing it could not already do.
 - Under any other policy, a name one of its rules names resolves, wildcards included, in any
   record type. Any other question is answered `REFUSED` and goes no further, and
   `spin workspace egress` lists it.

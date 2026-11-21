@@ -139,11 +139,14 @@ It is at `https://8000-demo.ws.<domain>`, and only you can open it. See
 
 ## 8. Clean up
 
+A workspace is stopped before it is deleted:
+
 ```bash
+spin workspace stop demo --wait
 spin workspace delete demo
 ```
 
-Where the installation keeps a trash, the workspace goes there with its disk, and
+Do the same for `online` if you created it. Where the installation keeps a trash, the workspace goes there with its disk, and
 `spin workspace undelete demo` brings it back; `--permanently` erases it now.
 
 ## Next

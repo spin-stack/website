@@ -56,7 +56,7 @@ spin exec demo --no-tty -- uname -a
 ```
 
 The workspace is a virtual machine of its own on this host. From here the
-[Quickstart](/quickstart/) applies, with `demo` on this stack.
+[Quickstart](/quickstart/) applies from step 4, with `demo` on this stack.
 
 ## 4. Take it down
 

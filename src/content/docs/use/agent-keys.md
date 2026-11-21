@@ -121,6 +121,7 @@ the team holds what it is set from.
   it is nothing a rule can read.
 - A request body is read whole only when a rule signs it as a cloud principal, up to 16 MiB.
 - Nothing but HTTPS on 443 is brokered: `git` over SSH is not, and `git` over HTTPS with the
-  team's forge app is the way to a private repository.
+  account you connected is the way to a private repository
+  ([Projects](/concepts/projects/#your-github-account)).
 - A client that pins its provider's certificate does not accept the proxy's; it keeps its own
   key, and the rule is better left as a plain allow.

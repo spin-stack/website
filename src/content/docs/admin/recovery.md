@@ -3,6 +3,7 @@ title: Backups and recovery
 description: What an installation's durable state is, how each part is backed up, and what can be recovered after losing a runner, a machine, or the database.
 reads:
   - "spin:internal/pgserver/server.go@v20261114.01"
+  - "spin:cmd/controlplane/cmd/databasecmd.go@v20261114.01"
   - "spin-terraform-aws:modules/controlplane/database_bucket.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261027.02"
   - "spin-terraform-aws:modules/controlplane/bucket.tf@v20261027.02"
@@ -52,8 +53,23 @@ from a recent one.
 
 ## Going back to an older release
 
-A release older than the one that last started the database refuses to start on it. Going back
-past a schema change is not something an update or a command does today.
+A release older than the one that last started the database refuses to start on it, and no update
+goes back. Going back past a schema change is a restore of the database to a time before the newer
+release first started it, done by hand on the control plane's machine, in a shell through Session
+Manager:
+
+```bash
+sudo /usr/local/bin/controlplane database bases
+sudo systemctl stop spin-postgres.service
+sudo /usr/local/bin/controlplane database restore --to 2026-11-12T09:30:00Z
+sudo systemctl start spin-postgres.service
+```
+
+`bases` lists the archive's base backups and how far its WAL goes, which is what a restore can
+reach. `restore` lays the newest base backup taken before `--to` and replays up to that time and
+no further. Everything the database recorded after it is left out: workspaces created, snapshots
+taken, people added. What the runners uploaded after it stays in the bucket, which the restored
+database no longer names.
 
 ## What is not backed up
 
