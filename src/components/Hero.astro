@@ -1,22 +1,24 @@
 ---
-// The landing page's hero: Starlight's, with a workspace's disk to work under it and the
-// project's name above the title. The title's second sentence - what Spinbox does, after what it
+// The landing page's hero: Starlight's, with the project's name above the title and, beside it, a
+// terminal where a workspace is broken and brought back (Undo.astro). The title's second sentence - what Spinbox does, after what it
 // is - is in the accent's text colour: one colour, flat, as the console sets what matters.
 import { LinkButton } from '@astrojs/starlight/components';
-import Disk from './Disk.astro';
+import Undo from './Undo.astro';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, actions = [] } = data.hero || {};
 const cut = title.indexOf('. ');
 const lead = cut < 0 ? title : title.slice(0, cut + 1);
 const rest = cut < 0 ? '' : title.slice(cut + 2);
+// A command in the title, between backticks, is set in the mono face.
+const code = (s: string) => s.split('`').map((part, i) => (i % 2 ? `<code>${part}</code>` : part)).join('');
 ---
 
 <div class="hero">
 	<div class="backdrop" aria-hidden="true"></div>
 	<div class="copy">
 		<p class="eyebrow"><span class="dot"></span>spin-stack · workspaces you own</p>
-		<h1 id="_top" data-page-title>{lead} {rest && <span class="hl">{rest}</span>}</h1>
+		<h1 id="_top" data-page-title><Fragment set:html={code(lead)} /> {rest && <span class="hl" set:html={code(rest)} />}</h1>
 		{tagline && <p class="tagline" set:html={tagline} />}
 		<div class="actions">
 			{
@@ -28,7 +30,7 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 			}
 		</div>
 	</div>
-	<div class="art"><Disk /></div>
+	<div class="art"><Undo /></div>
 </div>
 
 <style>
@@ -80,8 +82,16 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 		color: var(--sl-color-white);
 		margin: 0;
 	}
+	/* The second sentence starts its own line: what Spinbox does, under what it is. */
 	.hl {
+		display: block;
 		color: var(--spin-accent-text);
+	}
+	h1 :global(code) {
+		font: inherit;
+		background: none;
+		padding: 0;
+		white-space: nowrap;
 	}
 	.tagline {
 		font-size: var(--sl-text-lg);
@@ -98,14 +108,13 @@ const rest = cut < 0 ? '' : title.slice(cut + 2);
 	/* The disk is the hero's second half, the width of the page under the words: a thing to work,
 	   not a picture beside them. */
 	.art {
-		margin-top: 1rem;
+		min-width: 0;
 	}
-	@media (min-width: 56rem) {
+	@media (min-width: 64rem) {
 		.hero {
-			padding-block: 3.5rem 2rem;
-		}
-		.copy {
-			max-width: 52rem;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+			gap: 3.5rem;
+			padding-block: 4rem 3rem;
 		}
 	}
 	@media (prefers-reduced-motion: no-preference) {
