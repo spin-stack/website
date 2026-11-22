@@ -7,10 +7,10 @@ import (
 
 const versionsYAML = `- name: spin-machine
   kind: download
-  source: https://github.com/spin-stack/spin-machine/releases/download/{version}/spin-machine-{version}-linux-x86_64.tar.gz
+  source: https://github.com/spin-stack/machine/releases/download/{version}/spin-machine-{version}-linux-x86_64.tar.gz
   version: v20261014.01
   pin: 10b1685e82b8b3e34785e0a7a17d618bac711aa9edee5f13856d1586e345a44e
-  track: github-release https://github.com/spin-stack/spin-machine
+  track: github-release https://github.com/spin-stack/machine
 `
 
 // The machine of a release is the one spin's versions.yaml pins at that release's tag, and a
@@ -37,7 +37,7 @@ func TestTheReleasePageNamesEachPart(t *testing.T) {
 	page := string(pages["release.md"])
 	for _, want := range []string{
 		"An installation runs Spinbox `v20261019.02`",
-		"[`v20261014.01`](https://github.com/spin-stack/spin-machine/releases/tag/v20261014.01) | spin's `versions.yaml` at `v20261019.02`",
+		"[`v20261014.01`](https://github.com/spin-stack/machine/releases/tag/v20261014.01) | spin's `versions.yaml` at `v20261019.02`",
 		"[`v20261024.01`](https://github.com/spin-stack/spin-terraform-aws/releases/tag/v20261024.01)",
 		"| `us-east-1` | `ami-1` | `ami-2` | `ami-3` |",
 	} {

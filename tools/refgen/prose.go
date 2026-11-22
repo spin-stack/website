@@ -166,7 +166,7 @@ func stateTable(docs, spin string, check bool) ([]string, error) {
 // when the site is. spin-stack/ami is not among them: an installation boots the images it
 // publishes, and a reader has no use for its source.
 var publicRepos = map[string]bool{
-	"spin": true, "spin-terraform-aws": true, "spin-machine": true, "qboot": true, "website": true,
+	"spin": true, "spin-terraform-aws": true, "machine": true, "qboot": true, "website": true,
 }
 
 var repoLink = regexp.MustCompile(`github\.com/spin-stack/([A-Za-z0-9_.-]+)`)

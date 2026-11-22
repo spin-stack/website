@@ -51,7 +51,7 @@ manifest does not describe byte for byte.
 
 ## The machine a workspace runs
 
-[spin-machine](https://github.com/spin-stack/spin-machine) builds QEMU, the guest kernel and the
+[spin-machine](https://github.com/spin-stack/machine) builds QEMU, the guest kernel and the
 base image. A release of Spinbox pins the machine's release by version and digest. Each machine
 release lists every upstream source with its version, URL and SHA-256, and every package in the
 base image with its exact version.
