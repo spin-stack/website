@@ -25,6 +25,19 @@ vars:
   GID:
     sh: id -g
 
+# versions, bump, lint:workflows, release and consumers are go-tools' (its cmd/task/tasks.yml),
+# the same in every spin-stack repository. No vars: the site cuts no release and nobody copies
+# from it, so release and consumers refuse here. The file is outside the tree, so what it reads
+# of versions.yaml is named here for the gate in tools/sources/repo_test.go, which reads this
+# line: lint:workflows runs actionlint at `versions version actionlint`.
+#
+# bump moves any one pin and nothing else. A source's pin (spin, spin-terraform-aws, brand) moves
+# with sources:bump, which also refuses a release the site cannot take yet and fetches it.
+includes:
+  common:
+    taskfile: "{{.GO_TOOLS_TASKS}}"
+    flatten: true
+
 tasks:
   # The images are versions.yaml's (versions args). GITHUB_TOKEN, when set, is what sfw downloads
   # the firewall with: anonymous downloads are the first GitHub sheds under load. A secret, so it
@@ -143,7 +156,7 @@ tasks:
       - go run ./tools/linkcheck -external dist
 
   gate:
-    desc: What CI runs - every install through the firewall and every workflow step a task, the install, vet and the tools' tests, Biome and astro check, the reference against the public sources, the build, every link, and no Pages Function.
+    desc: What CI runs - every install through the firewall and every workflow step a task, the workflows linted, the install, vet and the tools' tests, Biome and astro check, the reference against the public sources, the build, every link, and no Pages Function.
     cmds:
       - sfw check
       # The Task running this one, which taskgate asks for the task names a workflow step runs.
@@ -151,6 +164,7 @@ tasks:
       # AGENTS.md is loaded into every session of an agent's: a path or a task it names that the
       # tree does not have is an instruction to do what cannot be done.
       - refs -task {{.TASK_EXE}}
+      - task: lint:workflows
       - task: install
       - go vet ./...
       - go test ./...

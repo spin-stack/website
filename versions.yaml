@@ -49,6 +49,15 @@
     The Task `go tool task` runs (go-tools' cmd/task), for every platform a person or a runner
     works on: no repository compiles it.
 
+- name: actionlint
+  kind: module
+  source: github.com/rhysd/actionlint/cmd/actionlint
+  version: v1.7.12
+  track: github-release https://github.com/rhysd/actionlint
+  note: >-
+    What `task lint:workflows` (go-tools' shared task) lints the workflows with, run by `go run`
+    at this version.
+
 - name: node
   kind: image
   source: mirror.gcr.io/library/node
