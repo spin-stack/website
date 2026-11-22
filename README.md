@@ -25,8 +25,11 @@ laptop builds with the Node CI does. The install there goes through the firewall
 host - the image builds go-tools' `sfw` at the version `go.mod` pins - and `task dev` mounts the
 source and runs as your user, with `node_modules` from the image. Go stays on the host: refgen
 builds spin's CLI, and every check but the build runs there. `task check` is what CI runs: the reference against its sources, then `task
-gate`, which fails first on an install that skips the firewall (`sfw check`) or a workflow step
-that is not one task (`taskgate`).
+gate`, which fails first on an install that skips the firewall (`sfw check`), a workflow step
+that is not one task (`taskgate`), or a workflow actionlint refuses or that uses an action by a
+tag (`task lint:workflows`). That task, `versions` (which pins are behind) and `bump NAME=<entry>`
+are go-tools' own, the same in every spin-stack repository: the Taskfile includes them and
+defines none. A source's pin moves with `task sources:bump`, below, not with `bump`.
 
 - **The sources are pinned** in `versions.yaml`, go-tools' versions format, held by
   `tools/sources/repo_test.go` as every spin-stack repository is: spin, spin-terraform-aws and
