@@ -25,16 +25,21 @@ vars:
   GID:
     sh: id -g
 
-# versions, bump, lint:workflows, release and consumers are go-tools' (its cmd/task/tasks.yml),
-# the same in every spin-stack repository. No vars: the site cuts no release and nobody copies
-# from it, so release and consumers refuse here.
+# versions, bump, lint:workflows, release and consumers are go-tools' (its
+# internal/tasks/tasks.yml), the same in every spin-stack repository. Nobody copies from the
+# site, so consumers refuses here.
 #
-# bump moves any one pin and nothing else. A source's pin (spin, spin-terraform-aws, brand) moves
-# with sources:bump, which also refuses a release the site cannot take yet and fetches it.
+# bump moves any one pin but a source's. spin, spin-terraform-aws and brand say in versions.yaml
+# (bump:) that sources:bump moves them, which also refuses a release the site cannot take yet
+# and fetches it; bump refuses them and names it.
 includes:
   common:
     taskfile: "{{.GO_TOOLS_TASKS}}"
     flatten: true
+    vars:
+      RELEASE:
+        map:
+          none: "pages.yml uploads every push to main to Cloudflare Pages, so the site is deployed and no tag or release names a version of it"
 
 tasks:
   # The images are versions.yaml's (versions args). GITHUB_TOKEN, when set, is what sfw downloads

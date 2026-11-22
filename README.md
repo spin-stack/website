@@ -29,7 +29,8 @@ gate`, which fails first on an install that skips the firewall (`sfw check`), a 
 that is not one task (`taskgate`), or a workflow actionlint refuses or that uses an action by a
 tag (`task lint:workflows`). That task, `versions` (which pins are behind) and `bump NAME=<entry>`
 are go-tools' own, the same in every spin-stack repository: the Taskfile includes them and
-defines none. A source's pin moves with `task sources:bump`, below, not with `bump`.
+defines none. A source's pin moves with `task sources:bump`, below: its entry in `versions.yaml`
+says so (`bump:`), and `bump` refuses it.
 
 - **The sources are pinned** in `versions.yaml`, go-tools' versions format, held by
   `tools/sources/repo_test.go` as every spin-stack repository is: spin, spin-terraform-aws and

@@ -10,6 +10,7 @@
   version: v20261114.01
   pin: 51f7e0dea53e6f85aa855753766b688634487168
   track: github-release
+  bump: go tool task sources:bump
   note: >-
     The release the site documents (D2: the newest, exactly). The daily sync moves it to the next
     release, never back to an older one; spin main past it is in spin's "Site vs spin main"
@@ -21,6 +22,7 @@
   version: v20261027.02
   pin: 358445c95280923876ef3e95658fe45e367462a1
   track: github-release
+  bump: go tool task sources:bump
   note: >-
     The module the AWS pages describe and pin, and images.json, the releases an installation can
     run. Fetched with its tags: a page names the newest release the commit holds.
@@ -31,6 +33,7 @@
   version: main
   pin: c84791b70202e4ad1fe79fadef3217b13d5daf14
   track: branch
+  bump: go tool task sources:bump
   note: >-
     The palette and the logos. brand cuts no releases, so its main is what it has to say. The
     dashboard's screenshots are not brand's: they are spin's release's, site-shots.tar.gz.
