@@ -14,10 +14,10 @@ An installation runs Spinbox `v20261027.01`, the newest release spin-terraform-a
 | Part | Release | Read from |
 |---|---|---|
 | spin: the control plane, the runner, the proxy and the CLI | `v20261027.01` | spin-terraform-aws's `images.json` |
-| spin-machine: QEMU, the guest kernel, the firmware and the base image a workspace boots, as one artefact | [`v20261026.01`](https://github.com/spin-stack/spin-machine/releases/tag/v20261026.01) | spin's `versions.yaml` at `v20261027.01` |
+| spin-machine: QEMU, the guest kernel, the firmware and the base image a workspace boots, as one artefact | [`v20261026.01`](https://github.com/spin-stack/machine/releases/tag/v20261026.01) | spin's `versions.yaml` at `v20261027.01` |
 | The OpenTofu module, spin-terraform-aws | [`v20261027.02`](https://github.com/spin-stack/spin-terraform-aws/releases/tag/v20261027.02) | its newest release tag |
 
-The versions of QEMU and the guest kernel in spin-machine `v20261026.01` are its own [`versions.yaml`](https://github.com/spin-stack/spin-machine/blob/v20261026.01/versions.yaml) at that tag. The host's kernel is the Spin OS image's: none of the sources this site is generated from records its version.
+The versions of QEMU and the guest kernel in spin-machine `v20261026.01` are its own [`versions.yaml`](https://github.com/spin-stack/machine/blob/v20261026.01/versions.yaml) at that tag. The host's kernel is the Spin OS image's: none of the sources this site is generated from records its version.
 
 ## Spin OS images
 

@@ -116,12 +116,12 @@ func TestChainReportsEachLinkAndWhatItCouldNotRead(t *testing.T) {
 	gh := api(t, map[string]string{
 		"/repos/spin-stack/spin/contents/versions.yaml?ref=main": `- name: spin-machine
   kind: download
-  source: https://github.com/spin-stack/spin-machine/releases/download/{version}/spin-machine-{version}-linux-x86_64.tar.gz
+  source: https://github.com/spin-stack/machine/releases/download/{version}/spin-machine-{version}-linux-x86_64.tar.gz
   version: v20261014.01
   pin: 10b1685e82b8b3e34785e0a7a17d618bac711aa9edee5f13856d1586e345a44e
-  track: github-release https://github.com/spin-stack/spin-machine
+  track: github-release https://github.com/spin-stack/machine
 `,
-		"/repos/spin-stack/spin-machine/releases/latest":                                           `{"tag_name": "v20261023.01"}`,
+		"/repos/spin-stack/machine/releases/latest":                                           `{"tag_name": "v20261023.01"}`,
 		"/repos/spin-stack/spin-terraform-aws/contents/images.json?ref=main":                       `{"v20261019.9": {}, "v20261019.10": {}, "v20261018.01": {}}`,
 		"/repos/spin-stack/spin/releases/latest":                                                   `{"tag_name": "v20261025.01"}`,
 		"/repos/spin-stack/spin/actions/workflows/machine.yml/runs?per_page=1":                     `{"workflow_runs": [{"created_at": "2026-10-14T09:00:00Z", "status": "completed", "conclusion": "success", "html_url": "https://github.com/spin-stack/spin/actions/runs/1"}]}`,

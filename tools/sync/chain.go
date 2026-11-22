@@ -50,7 +50,7 @@ func chain(ctx context.Context, gh *github.Client) (report string, behind []stri
 		Tag string `json:"tag_name"`
 	}
 	if err == nil {
-		err = gh.Get(ctx, "/repos/spin-stack/spin-machine/releases/latest", &latest)
+		err = gh.Get(ctx, "/repos/spin-stack/machine/releases/latest", &latest)
 	}
 	switch {
 	case err != nil:

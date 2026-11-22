@@ -43,9 +43,9 @@ func releasePage(r reference, tf string) (map[string][]byte, error) {
 	fmt.Fprintf(&b, "An installation runs Spinbox `%s`, the newest release spin-terraform-aws's `images.json` has images of. It is made of:\n\n", r.Spin.Installs)
 	b.WriteString("| Part | Release | Read from |\n|---|---|---|\n")
 	fmt.Fprintf(&b, "| spin: the control plane, the runner, the proxy and the CLI | `%s` | spin-terraform-aws's `images.json` |\n", r.Spin.Installs)
-	fmt.Fprintf(&b, "| spin-machine: QEMU, the guest kernel, the firmware and the base image a workspace boots, as one artefact | [`%s`](https://github.com/spin-stack/spin-machine/releases/tag/%s) | spin's `versions.yaml` at `%s` |\n", r.Spin.Machine, r.Spin.Machine, r.Spin.Installs)
+	fmt.Fprintf(&b, "| spin-machine: QEMU, the guest kernel, the firmware and the base image a workspace boots, as one artefact | [`%s`](https://github.com/spin-stack/machine/releases/tag/%s) | spin's `versions.yaml` at `%s` |\n", r.Spin.Machine, r.Spin.Machine, r.Spin.Installs)
 	fmt.Fprintf(&b, "| The OpenTofu module, spin-terraform-aws | [`%s`](https://github.com/spin-stack/spin-terraform-aws/releases/tag/%s) | its newest release tag |\n\n", r.Terraform.Release, r.Terraform.Release)
-	fmt.Fprintf(&b, "The versions of QEMU and the guest kernel in spin-machine `%s` are its own [`versions.yaml`](https://github.com/spin-stack/spin-machine/blob/%s/versions.yaml) at that tag. "+
+	fmt.Fprintf(&b, "The versions of QEMU and the guest kernel in spin-machine `%s` are its own [`versions.yaml`](https://github.com/spin-stack/machine/blob/%s/versions.yaml) at that tag. "+
 		"The host's kernel is the Spin OS image's: none of the sources this site is generated from records its version.\n\n", r.Spin.Machine, r.Spin.Machine)
 	fmt.Fprintf(&b, "## Spin OS images\n\nEach machine boots the image of its role, in a region that has all three ([Spin OS images](/reference/terraform/images/)):\n\n%s", images)
 	return map[string][]byte{"release.md": []byte(b.String())}, nil
