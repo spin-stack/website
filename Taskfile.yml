@@ -27,9 +27,7 @@ vars:
 
 # versions, bump, lint:workflows, release and consumers are go-tools' (its cmd/task/tasks.yml),
 # the same in every spin-stack repository. No vars: the site cuts no release and nobody copies
-# from it, so release and consumers refuse here. The file is outside the tree, so what it reads
-# of versions.yaml is named here for the gate in tools/sources/repo_test.go, which reads this
-# line: lint:workflows runs actionlint at `versions version actionlint`.
+# from it, so release and consumers refuse here.
 #
 # bump moves any one pin and nothing else. A source's pin (spin, spin-terraform-aws, brand) moves
 # with sources:bump, which also refuses a release the site cannot take yet and fetches it.
