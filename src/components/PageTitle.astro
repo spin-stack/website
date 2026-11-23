@@ -9,10 +9,12 @@ const twin = `${base}${twinPath(Astro.locals.starlightRoute.id)}`;
 // The API reference's tables (field, type, what it is) are laid out row by row on a phone:
 // custom.css finds them by this mark.
 const apiReference = Astro.locals.starlightRoute.id.startsWith('reference/api/');
+// The status page's proofs carry an icon of what each links to: custom.css finds them by this.
+const status = Astro.locals.starlightRoute.id === 'reference/status';
 ---
 
 <Default />
-<div class="page-actions" data-pagefind-ignore data-api-reference={apiReference || undefined}>
+<div class="page-actions" data-pagefind-ignore data-api-reference={apiReference || undefined} data-status={status || undefined}>
 	<button type="button" class="copy" data-twin={twin}>Copy as Markdown</button>
 	<a href={twin}>View Markdown</a>
 </div>

@@ -91,7 +91,9 @@ func TestTheStatusPageShowsWhatChecksEachBuiltRowEndToEnd(t *testing.T) {
 		"| Feature | Exists | End to end |",
 		// A go: test linked where its directory declares it, a pw: test by its spec and title,
 		// one a line.
-		"[`TestE2E_WorkspaceCRUD`](" + blob + "cmd/cli/e2e_test.go#L397)<br/>[`auth.spec.ts`](" + blob + "dashboard/e2e/auth.spec.ts#L19): the CLI's device page stands alone, and keeps its code |",
+		"[Workspace CRUD](" + blob + "cmd/cli/e2e_test.go#L397 \"cmd/cli.TestE2E_WorkspaceCRUD\")<br/>[the CLI's device page stands alone, and keeps its code](" + blob + "dashboard/e2e/auth.spec.ts#L19 \"auth.spec.ts\") |",
+		// An e2e: proof by what it checks, its name the link's title.
+		"[A workspace boots a real guest](" + blob + "internal/e2e/vm_test.go#L167 \"internal/e2e.TestAWorkspaceBootsARealGuest\")",
 		"| not yet: memory lent and taken back |",
 		// A built row's note is on the page.
 		"| VS Code over SSH<br/>*spin code itself is run by its unit tests only.* |",
@@ -132,5 +134,32 @@ func TestAProofLinksAProcedureOnlyWhereTheAPIHasPages(t *testing.T) {
 		if got := proof(p); got != want {
 			t.Errorf("proof(%q) = %s, want %s", p, got, want)
 		}
+	}
+}
+
+// A test's name is the sentence it checks, and the caption says it so: the prefixes a lane runs
+// its tests by are not words of it, and an acronym stays one.
+func TestATestIsCaptionedByTheSentenceItsNameIs(t *testing.T) {
+	for name, want := range map[string]string{
+		"TestAWorkspaceBootsARealGuest":                     "A workspace boots a real guest",
+		"TestE2E_APIKeyCRUD":                                "API key CRUD",
+		"TestE2E_AURLOpensTheWorkspaceItNames":              "A URL opens the workspace it names",
+		"TestHostsAMoveTakesARunningWorkspaceToAnotherHost": "A move takes a running workspace to another host",
+		"TestTheCarriedVSCodeServerRunsOffline":             "The carried VS Code server runs offline",
+		"TestHTTP2ToABrokeredNameIsTheRealHosts":            "HTTP/2 to a brokered name is the real hosts",
+		"TestTheAgentCLIsAreOnPath":                         "The agent CLIs are on path",
+	} {
+		if got, ok := testCaption(name); !ok || got != want {
+			t.Errorf("testCaption(%q) = %q, %v; want %q", name, got, ok, want)
+		}
+	}
+}
+
+// A capital run that is no known acronym fails the page rather than reading as letters.
+func TestTheStatusPageFailsOnATestNameItCannotRead(t *testing.T) {
+	row := feature{Area: "A", Name: "oidc", State: "built", Proof: "cli:x", EndToEnd: []string{"go:internal/e2e.TestAnOIDCLogin"}}
+	tests := tests{goTests: map[string]string{"internal/e2e.TestAnOIDCLogin": "internal/e2e/x_test.go#L1"}}
+	if _, err := statusPage([]feature{row}, tests, fixtureCommit); err == nil {
+		t.Error("statusPage took TestAnOIDCLogin")
 	}
 }
