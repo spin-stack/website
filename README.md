@@ -176,7 +176,7 @@ says so (`bump:`), and `bump` refuses it.
   trail back to the landing page, from its topic in `nav.mjs`.
 - **A link's preview** is the page's card: `src/pages/cards/` draws one for every page, the
   generated ones included, from its topic in `nav.mjs`, its title and its description, in brand's
-  colours and IBM Plex (`src/lib/card.ts`, with satori), and `Head.astro` names it as the page's
+  colours and faces (`src/lib/card.ts`, with satori), and `Head.astro` names it as the page's
   `og:image`. Nobody draws one by hand; the landing page's is its hero, the title beside the
   terminal's session (`src/pages/og.png.ts`). A hundred cards add
   some two seconds to the build.
@@ -193,7 +193,7 @@ says so (`bump:`), and `bump` refuses it.
   `task reference:check` fails on a picture that is not the release's, and on a record of
   another release than the site documents. A release without the asset fails `task sources`,
   saying to give it one: `gh workflow run site-shots.yml -R spin-stack/spin -f tag=<tag>`.
-  IBM Plex is served from the site, and the hero types a session spin printed: a snapshot, the
+  Inter and JetBrains Mono are served from the site, and the hero types a session spin printed: a snapshot, the
   disk removed from inside, the machine restored (`src/components/Hero.astro`, `Undo.astro`). `task links` fails a page that loads a
   script, a stylesheet, a font or an image from another site.
 - The site is served at `SITE_URL` + `BASE_PATH`, by default `https://docs.spinbox.dev` and `/`.

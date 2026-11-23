@@ -6,13 +6,13 @@
 import { getCollection } from 'astro:content';
 import { GA_ID } from 'astro:env/server';
 import Default from '@astrojs/starlight/components/Head.astro';
-import mono400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
-import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2?url';
 // The faces the first screen sets, fetched with the page: found late, through the stylesheet, a
 // face swaps in after the first paint and the notice and the hero move with it (a layout shift of
 // 0.23 on a phone, measured).
-import sans400 from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2?url';
-import sans600 from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2?url';
+import sans400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
+import sans600 from '@fontsource/inter/files/inter-latin-600-normal.woff2?url';
+import mono400 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url';
+import mono600 from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2?url';
 import { graph } from '../lib/jsonld';
 import { twinPath } from '../lib/twin';
 
