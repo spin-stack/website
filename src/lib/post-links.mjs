@@ -9,7 +9,7 @@ import record from '../data/posts.json' with { type: 'json' };
 export function postHref(slug, { blog, posts } = record) {
 	const post = posts.find((p) => p.slug === slug);
 	if (!post) throw new Error(`post: the blog has published no post ${JSON.stringify(slug)} (src/data/posts.json; task posts reads the feed)`);
-	return { href: `${blog}/posts/${slug}/`, post };
+	return { href: `${blog}${post.path}`, post };
 }
 
 export function rehypePostLinks() {
