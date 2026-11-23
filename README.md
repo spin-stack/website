@@ -210,6 +210,11 @@ says so (`bump:`), and `bump` refuses it.
   is public, as the repository is. `task deploy` builds and uploads from a checkout, and `task
   cf:setup` made the project once. Both need `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`,
   which CI has as secrets.
+- **What a page may run** is its Content-Security-Policy, a `<meta>` Astro writes with a hash of
+  every script and style it emits (`security` in `astro.config.mjs`): Starlight's inline scripts
+  are hashed from its own components (`src/lib/csp.mjs`), and the build fails on an inline script
+  a page's policy does not allow. Stylesheets are files, never inlined. `public/_headers` adds
+  what a `<meta>` cannot say: HSTS, no framing, and no indexing of the pages.dev copies.
 - **The site stays static, which is what keeps it free**: Pages serves static files without charge
   or limit, and bills a Function's requests as Workers requests. `task static`, in the gate and
   before every upload, fails on a `functions/` directory or a `_worker.js` in `dist/`.
