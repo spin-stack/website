@@ -6,10 +6,13 @@ import { twinPath } from '../lib/twin';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const twin = `${base}${twinPath(Astro.locals.starlightRoute.id)}`;
+// The API reference's tables (field, type, what it is) are laid out row by row on a phone:
+// custom.css finds them by this mark.
+const apiReference = Astro.locals.starlightRoute.id.startsWith('reference/api/');
 ---
 
 <Default />
-<div class="page-actions" data-pagefind-ignore>
+<div class="page-actions" data-pagefind-ignore data-api-reference={apiReference || undefined}>
 	<button type="button" class="copy" data-twin={twin}>Copy as Markdown</button>
 	<a href={twin}>View Markdown</a>
 </div>
