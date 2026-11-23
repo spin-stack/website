@@ -30,13 +30,16 @@
 - name: brand
   kind: git
   source: https://github.com/spin-stack/brand
-  version: main
-  pin: c84791b70202e4ad1fe79fadef3217b13d5daf14
-  track: branch
+  version: v20261122.01
+  pin: 591ae52460634d893e04410b75dd432f1fad5da3
+  track: github-release
   bump: go tool task sources:bump
   note: >-
-    The palette and the logos. brand cuts no releases, so its main is what it has to say. The
-    dashboard's screenshots are not brand's: they are spin's release's, site-shots.tar.gz.
+    The palette, the faces and the logos, at the release the blog pins too, so both sites draw
+    from one brand. After a bump: `task reference` copies what brand/consumers.toml lists for the
+    website, the two @fontsource packages in package.json move to the versions brand's
+    versions.yaml names, and the site is looked at in both themes. The dashboard's screenshots are
+    not brand's: they are spin's release's, site-shots.tar.gz.
 
 - name: task
   kind: download

@@ -45,7 +45,7 @@ says so (`bump:`), and `bump` refuses it.
   `refgen -only terraform,brand -check`, which builds no CLI and keeps what the site says of spin
   as `reference.json` has it.
 - **The sync** is `.github/workflows/sync.yml`, every day: `task sources:bump` moves the pins to
-  the newest releases (spin only to one that holds the commit pinned, brand to its main), `task
+  the newest releases (spin only to one that holds the commit pinned), `task
   reference` regenerates, and the sync App force-pushes branch `sync/sources` and opens or
   updates its one pull request, which a person reviews; nothing merges it. spin is private and
   this repository public, so the pull request lists the pins that moved and the files that

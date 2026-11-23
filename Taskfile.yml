@@ -70,7 +70,7 @@ tasks:
       - go run ./tools/sources spin spin-terraform-aws brand
 
   sources:bump:
-    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned, brand to its main - and fetch them, and rewrite the prices and the blog's posts. Then task reference.
+    desc: Move the pins to the newest releases - spin only to one that holds the commit pinned - and fetch them, and rewrite the prices and the blog's posts. Then task reference.
     cmds:
       - go run ./tools/sources -bump spin spin-terraform-aws brand
       - task: pricing

@@ -59,7 +59,7 @@ func bumpFile(ctx context.Context, file string, names []string, gh *github.Clien
 // next is the version a source moves to from where check found it, "" when it stays. holds says
 // whether a release tag holds the commit pinned.
 //
-//   - A branch (brand's main) moves when the branch did: the newest of it is what it has to say.
+//   - A branch moves when the branch did: the newest of it is what it has to say.
 //   - A release moves only to a newer release, never back.
 //   - A commit of main, pinned until a release holds it, moves to the newest release only once
 //     that release holds the commit: the release before it documents less than the site does,
