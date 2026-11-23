@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spin-stack/go-tools/catalog"
 	"github.com/spin-stack/go-tools/versions"
 )
 
@@ -29,8 +30,8 @@ func machineOf(spin, release string) (string, error) {
 // releasePage is what the release an installation runs is made of, each part with where the site
 // read it: the reader who asks what QEMU or which images an installation has is answered from
 // the records the build used, not from a list someone keeps.
-func releasePage(r reference, tf string) (map[string][]byte, error) {
-	images, err := imagesTable(tf, r.Spin.Installs)
+func releasePage(r reference, v catalog.Verified) (map[string][]byte, error) {
+	images, err := imagesTable(v)
 	if err != nil {
 		return nil, err
 	}
@@ -38,11 +39,11 @@ func releasePage(r reference, tf string) (map[string][]byte, error) {
 		return nil, fmt.Errorf("reference.json names no spin-machine of %s: run task reference with a spin checkout", r.Spin.Installs)
 	}
 	var b strings.Builder
-	b.WriteString(frontmatter("spin-terraform-aws:images.json", "What this release is made of", "What this release is made of: spin, images, module",
+	b.WriteString(frontmatter("spin-terraform-aws:catalog", "What this release is made of", "What this release is made of: spin, images, module",
 		"The parts of the Spinbox release an installation runs: spin, its machine, the Spin OS images by region and the OpenTofu module.", 0))
-	fmt.Fprintf(&b, "An installation runs Spinbox `%s`, the newest release spin-terraform-aws's `images.json` has images of. It is made of:\n\n", r.Spin.Installs)
+	fmt.Fprintf(&b, "An installation runs Spinbox `%s`, the release of spin this site is generated from, which spin-terraform-aws's image catalog has images of. It is made of:\n\n", r.Spin.Installs)
 	b.WriteString("| Part | Release | Read from |\n|---|---|---|\n")
-	fmt.Fprintf(&b, "| spin: the control plane, the runner, the proxy and the CLI | `%s` | spin-terraform-aws's `images.json` |\n", r.Spin.Installs)
+	fmt.Fprintf(&b, "| spin: the control plane, the runner, the proxy and the CLI | `%s` | the site's `versions.yaml`, its pin of spin |\n", r.Spin.Installs)
 	fmt.Fprintf(&b, "| spin-machine: QEMU, the guest kernel, the firmware and the base image a workspace boots, as one artefact | [`%s`](https://github.com/spin-stack/machine/releases/tag/%s) | spin's `versions.yaml` at `%s` |\n", r.Spin.Machine, r.Spin.Machine, r.Spin.Installs)
 	fmt.Fprintf(&b, "| The OpenTofu module, spin-terraform-aws | [`%s`](https://github.com/spin-stack/spin-terraform-aws/releases/tag/%s) | its newest release tag |\n\n", r.Terraform.Release, r.Terraform.Release)
 	fmt.Fprintf(&b, "The versions of QEMU and the guest kernel in spin-machine `%s` are its own [`versions.yaml`](https://github.com/spin-stack/machine/blob/%s/versions.yaml) at that tag. "+

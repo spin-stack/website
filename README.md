@@ -100,8 +100,9 @@ says so (`bump:`), and `bump` refuses it.
   fails on a record a month old or of other machines than the module's defaults at its pin. The
   daily sync rewrites it.
 - **What the site documents** is `src/data/reference.json`, written by `task reference`. Two
-  things it keeps apart: the spin release an installation runs (`spin.installs`, the newest
-  release `images.json` has images of), and the spin commit the reference is generated from
+  things it keeps apart: the spin release an installation runs (`spin.installs`, the release
+  `versions.yaml` pins spin at, which spin-terraform-aws's image catalog must have signed images
+  of, or `task reference` fails), and the spin commit the reference is generated from
   (`spin.commit`, with `spin.tag` empty when no release is cut from it, so the site says
   "generated from spin main at <commit>, not released"). With them, the commits of
   spin-terraform-aws and brand, and the feature board's counts, which the landing page shows.
@@ -161,7 +162,9 @@ says so (`bump:`), and `bump` refuses it.
   (`spin:<file>#<Constant> = 15m`), which `task reference:check` reads and holds the line to; with the text of a file
   that decides it where no constant does (`spin:<file> has "<text>"`); or with why nothing holds it. A figure with no line fails, and so does a line its page no longer says.
 - **What a release is made of**, `reference/release.md`, is written from spin's `versions.yaml` at
-  the release installations run (its spin-machine), images.json and the module's newest release.
+  the release installations run (its spin-machine), that release's file in the image catalog on
+  spin-terraform-aws's `catalog` branch - read and its signatures checked with go-tools' `catalog`,
+  as the module's spin provider reads it - and the module's newest release.
 - **Diagrams** are the ones spin and spin-terraform-aws draw beside their sources (`.dot`, `.d2`):
   `task reference` copies each into `src/assets/diagrams` and writes its words to
   `src/data/figures.json`, which a Markdown twin carries in the picture's place. The site draws
