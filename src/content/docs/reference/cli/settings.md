@@ -1,6 +1,7 @@
 ---
 title: "spin settings"
-description: "spin settings: Manage user settings."
+metaTitle: "spin settings: Manage user settings | Spinbox CLI"
+description: "spin settings: Manage user settings. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

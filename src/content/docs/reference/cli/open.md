@@ -1,6 +1,7 @@
 ---
 title: "spin open"
-description: "spin open: Open a repository, branch, commit or pull request from its URL."
+metaTitle: "spin open: usage and flags | Spinbox CLI"
+description: "spin open: Open a repository, branch, commit or pull request from its URL. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

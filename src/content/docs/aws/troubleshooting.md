@@ -1,5 +1,6 @@
 ---
 title: Troubleshooting
+metaTitle: "Troubleshooting an installation on AWS"
 description: Where to look when an installation does not come up, a workspace waits for a host, a start fails, or a workspace cannot reach something.
 reads:
   - "spin-terraform-aws:outputs.tf@v20261027.02"

@@ -1,5 +1,6 @@
 ---
 title: Quickstart
+metaTitle: "Spinbox quickstart: workspace, snapshot, diff, rollback"
 description: Sign in to an installation, create a workspace, take a snapshot, change something, see the diff, and go back.
 reads:
   - "spin:cmd/cli/cmd/auth.go@v20261114.01"

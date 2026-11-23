@@ -32,8 +32,9 @@ func handPages(docs string, fn func(path string, raw []byte) error) error {
 }
 
 // maxDescription is the longest a page's description may be: it is the page's one line in
-// llms.txt, and the line a search result shows.
-const maxDescription = 160
+// llms.txt, and the line a search result shows before cutting it. The content schema
+// (src/content.config.ts) holds every page to it at build.
+const maxDescription = 155
 
 var description = regexp.MustCompile(`(?m)^description: (.*)$`)
 

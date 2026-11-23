@@ -12,7 +12,8 @@ import (
 
 // tfModule is one module of spin-terraform-aws the site has a page of.
 type tfModule struct {
-	dir, slug, title, what string
+	// metaTitle is the page's title in a search result, where "bootstrap" alone says too little.
+	dir, slug, title, metaTitle, what string
 	// source is the file the page links as its source: the one its variables are declared in, or
 	// main.tf where several files declare them.
 	source string
@@ -20,10 +21,10 @@ type tfModule struct {
 
 // The modules an installation is made of, in the order a reader meets them.
 var tfModules = []tfModule{
-	{".", "root", "The installation module", "the module an installation uses: every variable it takes and every output it gives", "variables.tf"},
-	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf"},
-	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own", "modules/runners/variables.tf"},
-	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/main.tf"},
+	{".", "root", "The installation module", "The OpenTofu module: every variable and output", "the module an installation uses: every variable it takes and every output it gives", "variables.tf"},
+	{"modules/controlplane", "controlplane", "modules/controlplane", "modules/controlplane: variables and outputs", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf"},
+	{"modules/runners", "runners", "modules/runners", "modules/runners: the runners' autoscaling group", "the runners' autoscaling group, used on its own: every variable it takes and every output it gives", "modules/runners/variables.tf"},
+	{"bootstrap", "bootstrap", "bootstrap", "bootstrap: the account's state bucket and CI roles", "the once-per-account state bucket and key, and CI's roles", "bootstrap/main.tf"},
 }
 
 // terraformPages reads each module's variables and outputs as OpenTofu would, so a variable
@@ -37,7 +38,7 @@ func terraformPages(tf, release string) (map[string][]byte, error) {
 			return nil, fmt.Errorf("reading %s: %w", m.dir, diags.Err())
 		}
 		var b strings.Builder
-		b.WriteString(frontmatter("spin-terraform-aws:"+m.source, m.title, "spin-terraform-aws, "+m.what+".", i+1))
+		b.WriteString(frontmatter("spin-terraform-aws:"+m.source, m.title, m.metaTitle, "spin-terraform-aws, "+m.what+".", i+1))
 		src := "github.com/spin-stack/spin-terraform-aws"
 		if m.dir != "." {
 			src += "//" + m.dir

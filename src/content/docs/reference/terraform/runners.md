@@ -1,6 +1,7 @@
 ---
 title: "modules/runners"
-description: "spin-terraform-aws, the runners' autoscaling group, used on its own."
+metaTitle: "modules/runners: the runners' autoscaling group"
+description: "spin-terraform-aws, the runners' autoscaling group, used on its own: every variable it takes and every output it gives."
 source: "spin-terraform-aws:modules/runners/variables.tf"
 editUrl: false
 sidebar:

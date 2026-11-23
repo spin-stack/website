@@ -1,5 +1,6 @@
 ---
 title: The CLI
+metaTitle: "Install and use the spin CLI"
 description: Install the spin CLI, sign in, use profiles for several installations, and get JSON output for scripts.
 reads:
   - "spin:cmd/cli/cmd/root.go@v20261114.01"

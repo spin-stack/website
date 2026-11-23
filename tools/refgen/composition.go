@@ -38,7 +38,7 @@ func releasePage(r reference, tf string) (map[string][]byte, error) {
 		return nil, fmt.Errorf("reference.json names no spin-machine of %s: run task reference with a spin checkout", r.Spin.Installs)
 	}
 	var b strings.Builder
-	b.WriteString(frontmatter("spin-terraform-aws:images.json", "What this release is made of",
+	b.WriteString(frontmatter("spin-terraform-aws:images.json", "What this release is made of", "What this release is made of: spin, images, module",
 		"The parts of the Spinbox release an installation runs: spin, its machine, the Spin OS images by region and the OpenTofu module.", 0))
 	fmt.Fprintf(&b, "An installation runs Spinbox `%s`, the newest release spin-terraform-aws's `images.json` has images of. It is made of:\n\n", r.Spin.Installs)
 	b.WriteString("| Part | Release | Read from |\n|---|---|---|\n")

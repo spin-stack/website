@@ -1,5 +1,6 @@
 ---
 title: Limitations
+metaTitle: "Spinbox limitations: what to know before relying on it"
 description: Where Spinbox runs and the limits to know before you rely on it. What is built and what is not is on the status page.
 ---
 

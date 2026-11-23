@@ -1,5 +1,6 @@
 ---
 title: Workspaces
+metaTitle: "Workspaces: states, resources and lifecycle"
 description: What a workspace is, its states, its resources and disk, what runs inside it, and how it is started, stopped, suspended and recovered.
 reads:
   - "spin:cmd/cli/cmd/workspace.go@v20261114.01"

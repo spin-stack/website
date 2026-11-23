@@ -1,5 +1,6 @@
 ---
 title: Projects and repositories
+metaTitle: "Projects: open a repository's workspace from a URL"
 description: How a project ties a repository to the shape of its workspace, and how you open one from a URL, prebuild its refs and connect your GitHub account.
 reads:
   - "spin:cmd/cli/cmd/project.go@v20261114.01"

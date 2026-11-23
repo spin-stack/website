@@ -1,6 +1,7 @@
 ---
 title: "spin mcp"
-description: "spin mcp: Serve the Model Context Protocol on stdin and stdout, for an agent to work in workspaces."
+metaTitle: "spin mcp: usage and flags | Spinbox CLI"
+description: "spin mcp: Serve the Model Context Protocol on stdin and stdout, for an agent to work in workspaces. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

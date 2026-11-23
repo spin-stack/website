@@ -1,6 +1,7 @@
 ---
 title: "PasskeyService"
-description: "spin.v1.PasskeyService: each procedure, its request and its response."
+metaTitle: "PasskeyService: procedures and fields | Spinbox API"
+description: "spin.v1.PasskeyService, 4 procedures of the control plane's API: what each takes and returns, field by field."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false
 sidebar:

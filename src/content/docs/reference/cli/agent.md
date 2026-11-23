@@ -1,6 +1,7 @@
 ---
 title: "spin agent"
-description: "spin agent: Run T3 Code in a workspace and use it from this computer."
+metaTitle: "spin agent: usage and flags | Spinbox CLI"
+description: "spin agent: Run T3 Code in a workspace and use it from this computer. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

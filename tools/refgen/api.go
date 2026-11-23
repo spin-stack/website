@@ -93,7 +93,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 
 	pages := map[string][]byte{}
 	var index strings.Builder
-	index.WriteString(frontmatter("spin:"+openAPIPath, "API", "The control plane's API, spin.v1: every service and procedure, generated from its OpenAPI document.", 0))
+	index.WriteString(frontmatter("spin:"+openAPIPath, "API", "The control plane's API, spin.v1: services and types", "The control plane's API, spin.v1: every service and procedure, generated from its OpenAPI document.", 0))
 	fmt.Fprintf(&index, "%s\n\n", prose(oneLine(doc.Info.Description)))
 	index.WriteString("Every installation serves the document this reference is made from at " +
 		"`https://app.<domain>/openapi.json`, and an index of it for a model at `/llms.txt`. " +
@@ -117,7 +117,8 @@ func apiPages(spin string) (map[string][]byte, error) {
 		fmt.Fprintf(&index, "- [%s](/reference/api/%s/): %s\n", tag.Name, slug, prose(what))
 
 		var b strings.Builder
-		b.WriteString(frontmatter("spin:"+openAPIPath, tag.Name, fmt.Sprintf("spin.v1.%s: each procedure, its request and its response.", tag.Name), i+1))
+		b.WriteString(frontmatter("spin:"+openAPIPath, tag.Name, tag.Name+": procedures and fields | Spinbox API",
+			fmt.Sprintf("spin.v1.%s, %s of the control plane's API: what each takes and returns, field by field.", tag.Name, count(len(procs), "procedure")), i+1))
 		if tag.Description != "" {
 			fmt.Fprintf(&b, "%s\n\n", prose(sentences(tag.Description)))
 		}
@@ -149,7 +150,7 @@ func apiPages(spin string) (map[string][]byte, error) {
 	pages[filepath.Join("api", "index.md")] = []byte(index.String())
 
 	var t strings.Builder
-	t.WriteString(frontmatter("spin:"+openAPIPath, "Types", "Every message and enum the spin.v1 procedures name, with their fields and values.", len(doc.Tags)+1))
+	t.WriteString(frontmatter("spin:"+openAPIPath, "Types", "spin.v1 types: every message and enum | Spinbox API", "Every message and enum the spin.v1 procedures name, with their fields and values.", len(doc.Tags)+1))
 	for _, name := range names {
 		s := doc.Components.Schemas[name]
 		fmt.Fprintf(&t, "## %s\n\n", short(name))
@@ -166,6 +167,14 @@ func apiPages(spin string) (map[string][]byte, error) {
 	}
 	pages[filepath.Join("api", "types.md")] = []byte(t.String())
 	return pages, nil
+}
+
+// count is n of a thing, in words a sentence takes: "1 procedure", "3 procedures".
+func count(n int, thing string) string {
+	if n == 1 {
+		return "1 " + thing
+	}
+	return fmt.Sprintf("%d %ss", n, thing)
 }
 
 // fields writes a message's fields as a table, in the order the schema declares them.

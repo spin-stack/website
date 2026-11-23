@@ -1,6 +1,7 @@
 ---
 title: "spin ssh-key"
-description: "spin ssh-key: Manage SSH keys."
+metaTitle: "spin ssh-key: Manage SSH keys | Spinbox CLI"
+description: "spin ssh-key: Manage SSH keys. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

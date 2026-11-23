@@ -1,6 +1,7 @@
 ---
 title: "spin share"
-description: "spin share: Manage snapshot sharing."
+metaTitle: "spin share: Manage snapshot sharing | Spinbox CLI"
+description: "spin share: Manage snapshot sharing. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

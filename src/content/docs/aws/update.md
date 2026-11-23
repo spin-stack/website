@@ -1,5 +1,6 @@
 ---
 title: "Update"
+metaTitle: "Update an installation to a new release"
 description: "Move an installation to a new release, and what happens to its machines and workspaces while it rolls out."
 source: "spin-terraform-aws:README.md"
 editUrl: false

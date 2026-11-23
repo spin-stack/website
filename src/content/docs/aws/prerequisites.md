@@ -1,5 +1,6 @@
 ---
 title: Before you start
+metaTitle: "Before installing on AWS: tools, account and quota"
 description: The tools, AWS account, region, domain and spot quota you need before installing Spinbox on AWS.
 reads:
   - "spin-terraform-aws:modules/controlplane/dns.tf@v20261027.02"

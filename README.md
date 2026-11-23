@@ -66,7 +66,9 @@ says so (`bump:`), and `bump` refuses it.
   `src/assets`, brand's stylesheets, `public/`) is not linted, and nor is `pnpm-workspace.yaml`,
   which pnpm writes. `pnpm exec biome check --write .` in the image fixes what Biome can.
 - **Pages** are Markdown under `src/content/docs/`. Every page needs a `description`: it is its
-  line in `llms.txt`. A page must be in `src/lib/nav.mjs`, or the build fails. Each group there
+  line in `llms.txt` and its meta description, and the build fails on one under 70 characters or
+  over 155. Its `<title>` is its `metaTitle`, or its title, with "| Spinbox" after unless it names
+  Spinbox, and the build fails on one under 30 characters or over 65 (`Head.astro`). A page must be in `src/lib/nav.mjs`, or the build fails. Each group there
   belongs to a topic - Docs, Install and operate, Security, Reference - and the sidebar shows one
   topic's groups at a time (`starlight-sidebar-topics`). Images and diagrams zoom in place
   (`starlight-image-zoom`), and every page title offers its Markdown twin, copied or opened.
@@ -88,7 +90,7 @@ says so (`bump:`), and `bump` refuses it.
   read is a file, the narrowest whose change would make the page wrong; a page with none fails,
   but for the two whose every claim another check holds (`unsealed` in `tools/refgen/reads.go`).
   The sync's issue in spin lists the commits that touched each read under its page.
-- **Prose held to spin's own lists**: a page's description is one line of at most 160
+- **Prose held to spin's own lists**: a page's description is one line of at most 155
   characters (it is its line in `llms.txt`), every `SPIN_` variable a page names is one spin's
   `hack/env-catalog.txt` lists, and the table of states in `concepts/workspaces.md` is the API's
   `WorkspaceState`, both ways. `task reference:check` fails on each.

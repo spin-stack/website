@@ -1,5 +1,6 @@
 ---
 title: What is Spinbox
+metaTitle: "What is Spinbox: VM workspaces in your AWS account"
 description: What Spinbox is, who it is for, what it lets you do, how to evaluate it, and the projects an installation is made of.
 reads:
   - "spin:internal/features/features.go@v20261114.01"

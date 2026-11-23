@@ -1,5 +1,6 @@
 ---
 title: Install
+metaTitle: "Install Spinbox on AWS, step by step"
 description: Install Spinbox in an AWS account step by step, from the state bucket to the first sign-in and the first workspace.
 reads:
   - "spin-terraform-aws:outputs.tf@v20261027.02"

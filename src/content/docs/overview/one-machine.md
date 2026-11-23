@@ -1,5 +1,6 @@
 ---
 title: Try it on one machine
+metaTitle: "Try Spinbox on one Linux machine with KVM"
 description: The development stack on a single Linux host with KVM - from git clone to a running workspace and a command in it. Not an installation.
 reads:
   - "spin:taskfiles/e2e.yml@v20261110.01"

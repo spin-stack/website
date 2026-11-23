@@ -1,6 +1,7 @@
 ---
 title: "spin api-key"
-description: "spin api-key: Manage API keys."
+metaTitle: "spin api-key: Manage API keys | Spinbox CLI"
+description: "spin api-key: Manage API keys. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

@@ -1,6 +1,7 @@
 ---
 title: "spin snapshot"
-description: "spin snapshot: Take, list and delete a workspace's snapshots."
+metaTitle: "spin snapshot: usage and flags | Spinbox CLI"
+description: "spin snapshot: Take, list and delete a workspace's snapshots. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

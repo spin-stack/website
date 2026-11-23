@@ -1,5 +1,6 @@
 ---
 title: Users and teams
+metaTitle: "Users and teams: sign-in, roles, API keys and audit"
 description: How people sign in, who may register, administrators, teams and their roles, API keys, and the audit log.
 reads:
   - "spin:internal/controlplane/settings/registry.go@v20261114.01"

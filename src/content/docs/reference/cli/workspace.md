@@ -1,6 +1,7 @@
 ---
 title: "spin workspace"
-description: "spin workspace: Manage workspaces."
+metaTitle: "spin workspace: Manage workspaces | Spinbox CLI"
+description: "spin workspace: Manage workspaces. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

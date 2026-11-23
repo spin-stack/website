@@ -32,7 +32,9 @@ exist.** Everything below follows from that.
   site owes its readers; it shrinks by pages being written, and a line is added only for a row
   the same pull request does not have a page for yet.
 - **A new page is in the sidebar's list** (`nav.mjs`, under `src/lib/`), has a `description` of one sentence, and names its
-  `reads`.
+  `reads`. Its `<title>` is its `metaTitle`, or its title, with "| Spinbox" after unless it names
+  Spinbox: give it a `metaTitle` where the title alone ("Cost") would not tell a search result what
+  the page is.
 - **Branch `sync/sources` is written over every day** by `.github/workflows/sync.yml`. A fix to
   a hand-written page that the sync's pull request needs rides that pull request and merges
   before the next run, or goes to `main` first.

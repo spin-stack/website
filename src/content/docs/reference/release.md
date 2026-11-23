@@ -1,5 +1,6 @@
 ---
 title: "What this release is made of"
+metaTitle: "What this release is made of: spin, images, module"
 description: "The parts of the Spinbox release an installation runs: spin, its machine, the Spin OS images by region and the OpenTofu module."
 source: "spin-terraform-aws:images.json"
 editUrl: false

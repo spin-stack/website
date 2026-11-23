@@ -1,5 +1,6 @@
 ---
 title: Reporting a vulnerability
+metaTitle: "Reporting a vulnerability in Spinbox"
 description: How to report a security problem in Spinbox privately, and what to include.
 reads:
   - "spin:SECURITY.md@v20261108.01"

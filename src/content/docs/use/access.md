@@ -1,5 +1,6 @@
 ---
 title: "Who gets into your workspaces"
+metaTitle: "Who gets into your workspaces: passkeys, keys, guests"
 description: "Who logs in to a workspace, the passkey that adds a key or a guest, and what a workspace applies of your settings."
 source: "spin:docs/access.md"
 editUrl: false

@@ -1,6 +1,7 @@
 ---
 title: "spin code"
-description: "spin code: Open a workspace in your editor over SSH."
+metaTitle: "spin code: usage and flags | Spinbox CLI"
+description: "spin code: Open a workspace in your editor over SSH. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

@@ -15,9 +15,21 @@ import { twinPath } from '../lib/twin';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 // The link preview a chat shows, by its absolute address: the page's card (src/pages/cards/), or
 // for the landing page and the 404, which have none, the landing page's (src/pages/og.png.ts).
-const { id } = Astro.locals.starlightRoute;
+const route = Astro.locals.starlightRoute;
+const { id } = route;
 const hasCard = !['', 'index', '404'].includes(id);
 const image = new URL(`${base}${hasCard ? `/cards/${id.replace(/\/$/, '')}.png` : '/og.png'}`, Astro.site).href;
+
+// What a search result and a tab show: the page's metaTitle, or its title, and the brand once.
+// Starlight's own is "<title> | Spinbox", which made the landing page "Spinbox | Spinbox" and
+// most others under 30 characters, too little for a result to say what the page is.
+const { title, metaTitle } = route.entry.data as { title: string; metaTitle?: string };
+const named = metaTitle ?? title;
+const full = id === '404' ? 'Page not found | Spinbox' : named.includes('Spinbox') ? named : `${named} | Spinbox`;
+if (id !== '404' && (full.length < 30 || full.length > 65)) {
+	throw new Error(`${id}: its <title> "${full}" is ${full.length} characters; give it a metaTitle that makes it 30 to 65`);
+}
+for (const tag of route.head) if (tag.tag === 'title') tag.content = full;
 ---
 
 <Default />

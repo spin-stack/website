@@ -34,12 +34,12 @@ func cliPages(bin, home string) (map[string][]byte, error) {
 	}
 	pages := map[string][]byte{}
 	var index strings.Builder
-	index.WriteString(frontmatter("spin:cmd/cli", "CLI", "Every command of the spin CLI, as its own --help says it: workspaces, snapshots, ports, keys, teams and administration.", 0))
+	index.WriteString(frontmatter("spin:cmd/cli", "CLI", "The spin CLI: every command, as its --help says it", "Every command of the spin CLI, as its own --help says it: workspaces, snapshots, ports, keys, teams and administration.", 0))
 	index.WriteString("The `spin` command line, one page per command. Each page is the command's own `--help`, " +
 		"and the help of every command under it.\n\n```\n" + top.text + "```\n\n")
 	for i, c := range top.subs {
 		var b strings.Builder
-		b.WriteString(frontmatter("spin:cmd/cli", "spin "+c.name, "spin "+c.name+": "+c.short+".", i+1))
+		b.WriteString(frontmatter("spin:cmd/cli", "spin "+c.name, cliMetaTitle(c), cliDescription(c), i+1))
 		if err := walk(bin, home, []string{c.name}, &b, 1); err != nil {
 			return nil, err
 		}
@@ -48,6 +48,26 @@ func cliPages(bin, home string) (map[string][]byte, error) {
 	}
 	pages[filepath.Join("cli", "index.md")] = []byte(index.String())
 	return pages, nil
+}
+
+// cliMetaTitle is a command's title in a search result: what its help says it does, or, where
+// that is a sentence too long for one, what the page holds.
+func cliMetaTitle(c command) string {
+	t := "spin " + c.name + ": " + c.short
+	if len(t) > 50 {
+		t = "spin " + c.name + ": usage and flags"
+	}
+	return t + " | Spinbox CLI"
+}
+
+// cliDescription is a command's line in llms.txt and in a search result: its help's own short
+// line, and what the page holds when there is room for it.
+func cliDescription(c command) string {
+	d := "spin " + c.name + ": " + c.short + "."
+	if more := " Its usage and flags, from the CLI's own help."; len(d+more) <= maxDescription {
+		d += more
+	}
+	return d
 }
 
 // walk writes a command's help, and under it each command below it with a heading a level

@@ -1,6 +1,7 @@
 ---
 title: "ExecService"
-description: "spin.v1.ExecService: each procedure, its request and its response."
+metaTitle: "ExecService: procedures and fields | Spinbox API"
+description: "spin.v1.ExecService, 3 procedures of the control plane's API: what each takes and returns, field by field."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false
 sidebar:

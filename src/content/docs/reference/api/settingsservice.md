@@ -1,6 +1,7 @@
 ---
 title: "SettingsService"
-description: "spin.v1.SettingsService: each procedure, its request and its response."
+metaTitle: "SettingsService: procedures and fields | Spinbox API"
+description: "spin.v1.SettingsService, 6 procedures of the control plane's API: what each takes and returns, field by field."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false
 sidebar:

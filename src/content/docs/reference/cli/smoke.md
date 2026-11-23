@@ -1,6 +1,7 @@
 ---
 title: "spin smoke"
-description: "spin smoke: Check an installation does what its API promises, with a workspace of its own."
+metaTitle: "spin smoke: usage and flags | Spinbox CLI"
+description: "spin smoke: Check an installation does what its API promises, with a workspace of its own. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

@@ -1,6 +1,7 @@
 ---
 title: "spin version"
-description: "spin version: Print version information."
+metaTitle: "spin version: Print version information | Spinbox CLI"
+description: "spin version: Print version information. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

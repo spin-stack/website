@@ -1,5 +1,6 @@
 ---
 title: Editors and SSH
+metaTitle: "Editors and SSH: VS Code, ssh, scp and rsync"
 description: Connect to a workspace with spin ssh, plain ssh, scp and rsync, VS Code Remote-SSH, or the terminal in the dashboard.
 reads:
   - "spin:cmd/cli/cmd/ssh.go@v20261114.01"

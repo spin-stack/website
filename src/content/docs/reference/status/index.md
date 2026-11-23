@@ -1,5 +1,6 @@
 ---
 title: "Status"
+metaTitle: "Status: what Spinbox does today and what proves it"
 description: "What Spinbox does today with what proves each, what is partly there, what is not built, and its limits."
 source: "spin:internal/features/features.go"
 editUrl: false

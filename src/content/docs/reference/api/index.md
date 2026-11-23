@@ -1,5 +1,6 @@
 ---
 title: "API"
+metaTitle: "The control plane's API, spin.v1: services and types"
 description: "The control plane's API, spin.v1: every service and procedure, generated from its OpenAPI document."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false

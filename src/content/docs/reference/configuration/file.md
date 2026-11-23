@@ -1,5 +1,6 @@
 ---
 title: "Installation config file"
+metaTitle: "The installation config file: settings and policies"
 description: "The installation's config file: settings, registration, workspace presets and network policies, with the comment on each."
 source: "spin:configs/spin-example.yaml"
 editUrl: false

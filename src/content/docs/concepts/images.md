@@ -1,6 +1,7 @@
 ---
 title: Images
-description: What an image is in Spinbox, the default image, how an administrator publishes and retires images, and how to build your own starting point from a snapshot.
+metaTitle: "Images: the default, publishing and your own"
+description: "What an image is, the default image, how an administrator publishes and retires images, and how to build your own starting point from a snapshot."
 reads:
   - "spin:docs/storage/README.md@v20261114.01"
   - "spin:cmd/cli/cmd/admin_storage.go@v20261114.01"

@@ -1,5 +1,6 @@
 ---
 title: An agent without keys
+metaTitle: "Run a coding agent without its provider key on disk"
 description: "Run a coding agent that needs a provider key inside a workspace, with the key never on its disk: a brokered policy, a team secret and a tag."
 reads:
   - "spin:internal/runner/egressproxy/inject.go@v20261114.01"

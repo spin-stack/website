@@ -1,6 +1,7 @@
 ---
 title: "spin login"
-description: "spin login: Authenticate with the platform."
+metaTitle: "spin login: Authenticate with the platform | Spinbox CLI"
+description: "spin login: Authenticate with the platform. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

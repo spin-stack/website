@@ -1,5 +1,6 @@
 ---
 title: "modules/controlplane"
+metaTitle: "modules/controlplane: variables and outputs"
 description: "spin-terraform-aws, the network, bucket, database, control plane and proxy, used on its own."
 source: "spin-terraform-aws:modules/controlplane/variables.tf"
 editUrl: false

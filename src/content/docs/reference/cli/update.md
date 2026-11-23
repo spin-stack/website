@@ -1,6 +1,7 @@
 ---
 title: "spin update"
-description: "spin update: Install the CLI of the release your installation runs."
+metaTitle: "spin update: usage and flags | Spinbox CLI"
+description: "spin update: Install the CLI of the release your installation runs. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:
