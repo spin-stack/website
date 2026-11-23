@@ -26,14 +26,17 @@ import (
 type Record struct {
 	// Generated is the day the feed was last read, UTC; empty until it first is.
 	Generated string `json:"generated"`
-	// Blog is the blog's address: a post is at Blog + /posts/<slug>/.
+	// Blog is the blog's address: a post is at Blog + its Path.
 	Blog  string `json:"blog"`
 	Posts []Post `json:"posts"`
 }
 
 // Post is one published post, the oldest first.
 type Post struct {
-	Slug  string `json:"slug"`
+	Slug string `json:"slug"`
+	// Path is where the blog serves it, /<section>/<slug>/, as its feed links it: the section is
+	// the blog's to choose by the post's track, so it is read, not made here.
+	Path  string `json:"path"`
 	Title string `json:"title"`
 	Date  string `json:"date"`
 }
@@ -87,8 +90,8 @@ func fetch(url string) ([]byte, error) {
 	return io.ReadAll(resp.Body)
 }
 
-// postPath is a post's address on the blog, as the feed links it: /posts/<slug>/.
-var postPath = regexp.MustCompile(`^/posts/([a-z0-9-]+)/$`)
+// postPath is a post's address on the blog, as the feed links it: /<section>/<slug>/.
+var postPath = regexp.MustCompile(`^/[a-z0-9-]+/([a-z0-9-]+)/$`)
 
 // parse reads the feed's items as the blog writes them (src/pages/rss.xml.ts there): a link to
 // the post, its title and its date. An item that is not a post of the blog's fails: the feed's
@@ -117,7 +120,7 @@ func parse(feed []byte, blog string) ([]Post, error) {
 				return nil, fmt.Errorf("the feed dates %s %q: %w", m[1], it.PubDate, err)
 			}
 		}
-		posts = append(posts, Post{Slug: m[1], Title: it.Title, Date: date.UTC().Format(time.DateOnly)})
+		posts = append(posts, Post{Slug: m[1], Path: m[0], Title: it.Title, Date: date.UTC().Format(time.DateOnly)})
 	}
 	sort.SliceStable(posts, func(i, j int) bool { return posts[i].Date < posts[j].Date })
 	return posts, nil

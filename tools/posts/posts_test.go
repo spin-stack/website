@@ -63,7 +63,7 @@ func TestTheRecordIsTheFeedsPosts(t *testing.T) {
 
 	var blog string
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(feed(blog+"/posts/the-second/", blog+"/posts/the-first/")))
+		_, _ = w.Write([]byte(feed(blog+"/kitchen/the-second/", blog+"/spinbox/the-first/")))
 	}))
 	t.Cleanup(s.Close)
 	blog = s.URL
@@ -73,9 +73,9 @@ func TestTheRecordIsTheFeedsPosts(t *testing.T) {
 	r := read(t, out)
 	var slugs []string
 	for _, p := range r.Posts {
-		slugs = append(slugs, p.Slug+" "+p.Date)
+		slugs = append(slugs, p.Slug+" "+p.Path+" "+p.Date)
 	}
-	if want := []string{"the-first 2026-11-24", "the-second 2026-11-25"}; !slices.Equal(slugs, want) {
+	if want := []string{"the-first /spinbox/the-first/ 2026-11-24", "the-second /kitchen/the-second/ 2026-11-25"}; !slices.Equal(slugs, want) {
 		t.Errorf("posts %v, want %v", slugs, want)
 	}
 	if r.Generated == "" || r.Blog != blog {
