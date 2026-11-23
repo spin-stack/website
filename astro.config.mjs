@@ -64,10 +64,6 @@ export default defineConfig({
 		starlight({
 			title: 'Spinbox',
 			description: 'Workspaces in your own AWS account, each its own virtual machine, with snapshots that keep memory, rollback, and a diff of what changed.',
-			// The organization's own mark (spin-stack/brand), clear in both: in dark with its shadow drawn
-			// for the navy page (mark-dark), where the tile read as a box on the header. No alt: the name is
-			// written beside it.
-			logo: { dark: './src/assets/logo.png', light: './src/assets/logo-light.png', alt: '' },
 			favicon: '/favicon.png',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/spin-stack' }],
 			customCss: ['./src/styles/brand-tokens.css', './src/styles/brand-starlight.css', './src/styles/custom.css'],
