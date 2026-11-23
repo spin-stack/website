@@ -110,7 +110,16 @@ func testFiles(spin string) (tests, error) {
 // built, and the platform's limits. Every test a row names links to where spin declares it at
 // the documented commit, and refgen fails on a test the tree does not have.
 func statusPage(rows []feature, t tests, commit string) (map[string][]byte, error) {
-	var missing []string
+	var missing, unread []string
+	// testLink is a test as the page shows it: what it checks, in words, linked to where spin
+	// declares it, with its name as the link's title for a reader who searches spin for it.
+	testLink := func(name, href, title string) string {
+		caption, ok := testCaption(name)
+		if !ok {
+			unread = append(unread, name)
+		}
+		return fmt.Sprintf("[%s](%s %q)", cell(caption), href, title)
+	}
 	blob := func(at string) string {
 		return fmt.Sprintf("https://github.com/spin-stack/spin/blob/%s/%s", commit, at)
 	}
@@ -124,7 +133,7 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 			missing = append(missing, p)
 			return proof(p)
 		}
-		return fmt.Sprintf("[`%s`](%s), a test of `%s`", what, blob(at), e2eDir)
+		return testLink(what, blob(at), e2eDir+"."+what)
 	}
 	endToEnd := func(r feature) string {
 		if len(r.EndToEnd) == 0 {
@@ -142,7 +151,7 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 					out = append(out, "`"+e+"`")
 					continue
 				}
-				out = append(out, fmt.Sprintf("[`%s`](%s)", what[i+1:], blob(at)))
+				out = append(out, testLink(what[i+1:], blob(at), what))
 			case "pw":
 				spec, title, _ := strings.Cut(what, ":")
 				at, ok := t.pw[what]
@@ -151,7 +160,7 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 					out = append(out, "`"+e+"`")
 					continue
 				}
-				out = append(out, fmt.Sprintf("[`%s`](%s): %s", spec, blob(at), cell(title)))
+				out = append(out, fmt.Sprintf("[%s](%s %q)", cell(title), blob(at), spec))
 			default:
 				missing = append(missing, e)
 				out = append(out, "`"+e+"`")
@@ -231,6 +240,9 @@ func statusPage(rows []feature, t tests, commit string) (map[string][]byte, erro
 	}
 	if len(missing) > 0 {
 		return nil, fmt.Errorf("the board names tests spin does not have: %v", missing)
+	}
+	if len(unread) > 0 {
+		return nil, fmt.Errorf("test names with a capital run testCaption cannot read (add it to acronyms): %v", unread)
 	}
 	return map[string][]byte{filepath.Join("status", "index.md"): []byte(b.String())}, nil
 }
@@ -329,3 +341,70 @@ func section(raw []byte, heading string) []byte {
 	}
 	return after
 }
+
+// acronyms are the capital runs a test name may hold, each as the caption writes it. A run not
+// here is one testCaption cannot split: "AURL" is an article and a word only when URL is a word.
+var acronyms = []struct{ name, words string }{
+	{"VSCode", "VS Code"},
+	{"HTTP2", "HTTP/2"},
+	{"CLIs", "CLIs"},
+	{"CRUD", "CRUD"},
+	{"API", "API"},
+	{"CLI", "CLI"},
+	{"MCP", "MCP"},
+	{"SSH", "SSH"},
+	{"URL", "URL"},
+	{"WebSocket", "WebSocket"},
+}
+
+// testCaption is a test's name as the sentence it is: TestAWorkspaceBootsARealGuest is "A
+// workspace boots a real guest". The prefixes a lane selects its tests by (E2E_, Hosts) are not
+// words of it. ok is false on a capital run that is no acronym.
+func testCaption(name string) (caption string, ok bool) {
+	s := strings.TrimPrefix(name, "Test")
+	s = strings.TrimPrefix(s, "E2E_")
+	if rest, cut := strings.CutPrefix(s, "Hosts"); cut && rest != "" && isUpper(rest[0]) {
+		s = rest
+	}
+	s = strings.ReplaceAll(s, "_", "")
+	ok = true
+	var words []string
+	for s != "" {
+		if a, found := acronymAt(s); found {
+			words = append(words, a.words)
+			s = s[len(a.name):]
+			continue
+		}
+		n := 1
+		for n < len(s) && !isUpper(s[n]) {
+			n++
+		}
+		w := s[:n]
+		if n == 1 && w != "A" && w != "I" && len(s) > 1 && isUpper(s[1]) {
+			ok = false
+		}
+		if w != "I" {
+			w = strings.ToLower(w)
+		}
+		words = append(words, w)
+		s = s[n:]
+	}
+	if len(words) == 0 {
+		return name, false
+	}
+	words[0] = strings.ToUpper(words[0][:1]) + words[0][1:]
+	return strings.Join(words, " "), ok
+}
+
+// acronymAt is the acronym s starts with, where what follows it starts a word of its own.
+func acronymAt(s string) (struct{ name, words string }, bool) {
+	for _, a := range acronyms {
+		rest, found := strings.CutPrefix(s, a.name)
+		if found && (rest == "" || isUpper(rest[0])) {
+			return a, true
+		}
+	}
+	return struct{ name, words string }{}, false
+}
+
+func isUpper(c byte) bool { return 'A' <= c && c <= 'Z' }
