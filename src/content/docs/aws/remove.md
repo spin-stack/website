@@ -21,15 +21,14 @@ laptop either. Removing one is said first, applied, and only then destroyed:
    tofu apply   # with decommission = true in module "spin"
    ```
 
-2. Lift every legal hold. spin holds what each image is rebuilt from, and the provider's destroy
-   (hashicorp/aws 6.66) lifts a hold and then deletes that version without the bypass, which the
-   retention refuses: the destroy stops on the volumes' bucket.
+2. Lift every legal hold, all of them in the volumes' bucket. spin holds what each image is rebuilt
+   from, and the provider's destroy (hashicorp/aws 6.66) lifts a hold and then deletes that version
+   without the bypass, which the retention refuses: the destroy stops on that bucket.
 
    ```bash
-   for b in $(tofu show -json | jq -r '.. | objects | select(.mode? == "managed" and .type? == "aws_s3_bucket" and .values.object_lock_enabled? == true) | .values.bucket'); do
-     aws s3api list-object-versions --bucket $b --output json | jq -r '(.Versions // [])[] | [.Key, .VersionId] | @tsv' |
-       while IFS=$'\t' read -r key id; do aws s3api put-object-legal-hold --bucket $b --key "$key" --version-id "$id" --legal-hold Status=OFF; done
-   done
+   b=$(tofu show -json | jq -r 'first(.. | objects | select(.mode? == "managed" and .type? == "aws_s3_bucket" and .name? == "volumes")) | .values.bucket')
+   aws s3api list-object-versions --bucket $b --output json | jq -r '(.Versions // [])[] | [.Key, .VersionId] | @tsv' |
+     while IFS=$'\t' read -r key id; do aws s3api put-object-legal-hold --bucket $b --key "$key" --version-id "$id" --legal-hold Status=OFF; done
    ```
 
 3. The KMS keys - the encryption key's, the volumes' and the identity's - and the CA refuse to be
@@ -51,13 +50,11 @@ named that the destroy already removed would be made again. Its plan is those bu
 `force_destroy` turned on and their policies removed, and nothing else; then step 2 again:
 
 ```bash
-tofu apply $(tofu state list | grep -E '\.aws_s3_bucket(_policy)?\.[a-z]+(\[0\])?$' | sed 's/^/-target=/')
+tofu apply $(tofu state list | grep -E '\.aws_s3_bucket(_policy)?\.[^.]+$' | sed 's/^/-target=/')
 # step 2's loop
 tofu destroy
 ```
 
 What is left are the keys, scheduled for deletion in seven days. The state bucket and its key
 (`bootstrap/`) are every installation's in the account and region, and are removed apart, after
-the last of them. `.github/workflows/fresh-install.yml` in spin-terraform-aws runs all of it every
-week - bootstrap, an installation, its first sign-in and this removal - in an account of its own,
-and says what that account needs.
+the last of them.

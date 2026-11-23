@@ -79,8 +79,7 @@
 		"note": "A loan refused while the host is full has no test against the stack: the budget is the host's own cores and half its memory, which no lane's workspaces fill.",
 		"endToEnd": [
 			"go:internal/e2e.TestABusyWorkspaceIsLentCoresAndGivesThemBack",
-			"go:internal/e2e.TestABusyWorkspaceIsLentMemoryAndGivesItBack",
-			"go:internal/e2e.TestAnEditorAtTheFloorIsNotKilledForMemory"
+			"go:internal/e2e.TestABusyWorkspaceIsLentMemoryAndGivesItBack"
 		]
 	},
 	{
@@ -453,6 +452,16 @@
 	},
 	{
 		"area": "Access",
+		"name": "A computer's key is added as it signs in, with the passkey that authorizes it, and as it first connects",
+		"state": "built",
+		"proof": "rpc:spin.v1.AuthService/GetDeviceLogin",
+		"note": "spin code and spin ssh adding a key not listed are the CLI's tests against a control plane they stand in for: no lane runs a CLI that waits on a browser's passkey.",
+		"endToEnd": [
+			"pw:device-key.spec.ts:a device's key is added with the passkey that authorizes its login"
+		]
+	},
+	{
+		"area": "Access",
 		"name": "API keys for scripts and agents",
 		"state": "built",
 		"proof": "cli:api-key create",
@@ -701,9 +710,12 @@
 		"name": "Prebuilds of a project's refs, as the floor of the workspaces that open them",
 		"state": "built",
 		"proof": "e2e:TestAProjectOpensAsItsPrebuildMadeIt",
-		"note": "",
+		"note": "A build silent for an hour, a snapshot that fails to publish and a scan that cannot read the whole disk fail by the prebuilds job's unit tests: no lane can make a guest or a host do those on cue.",
 		"endToEnd": [
-			"go:internal/e2e.TestAProjectOpensAsItsPrebuildMadeIt"
+			"go:internal/e2e.TestAProjectOpensAsItsPrebuildMadeIt",
+			"go:internal/e2e.TestAPrebuildEndsAsItsRepositorySays",
+			"go:internal/e2e.TestWhatIsAskedOfPrebuildsAndRefused",
+			"pw:prebuilds.spec.ts:its page says what the scan found, and its build's records open from it"
 		]
 	},
 	{

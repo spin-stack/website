@@ -298,6 +298,12 @@ EmailSettings is the SMTP server the installation sends its notifications throug
 | `passwordSet` | boolean |  |
 | `from` | string | The address mail is sent from, as the server allows this account to send. |
 
+## EnsureOutcome
+
+What EnsureAgentWorkspace did to have a workspace to answer with. - `ENSURE_OUTCOME_REUSED`: One of the caller's that runs or is on its way up. - `ENSURE_OUTCOME_RESUMED`: The newest of the caller's that was stopped, started again. - `ENSURE_OUTCOME_CREATED`: A new one, made as CreateWorkspace makes a project's.
+
+One of: `ENSURE_OUTCOME_UNSPECIFIED`, `ENSURE_OUTCOME_REUSED`, `ENSURE_OUTCOME_RESUMED`, `ENSURE_OUTCOME_CREATED`.
+
 ## ExposedPort
 
 | Field | Type | What it is |
@@ -645,6 +651,9 @@ HostPolicy is what an installation decides about one host. An unset field is the
 | `runningRevision` | string | running_revision is what the host last said, empty where it has not said or is not connected. Different from revision is a policy still on its way, which is normal for the seconds after a write and a fault after that. |
 | `maxWorkspaceIoMbPerSecond` | integer or null (int32) | What one machine may read and write per second here, in MiB and in operations, for the machines it starts afterwards. Unset is no bound. |
 | `maxWorkspaceIoOpsPerSecond` | integer or null (int32) |  |
+| `pooledBootMachines` | integer or null (int32) | Machines this host keeps launched ahead of the workspaces that will claim them, held for a boot and for a checkpoint; unset or zero keeps none. Each costs the host its QEMU at rest. |
+| `pooledRestoreMachines` | integer or null (int32) |  |
+| `fastLoad` | boolean or null | Resume a checkpoint as its guest touches its memory; unset is off, which reached the first login sooner on the bench. |
 
 ## HostRemoval
 
@@ -1078,6 +1087,7 @@ A prebuild: one build of a project's ref at a commit, and the snapshot it left.
 | `storedBytes` | string or null (int64) | What it keeps in the object store, as storage-gc last read it; unset before a reading counted it. |
 | `buildWorkspaceId` | string | The workspace that ran its build (workspaces.prebuild_id), while its row is kept, and whose it is: its events, logs and traces are its owner's to read, and no list of workspaces shows it. |
 | `buildWorkspaceOwnerId` | string |  |
+| `steps` | list of [PrebuildStep](/reference/api/types/#prebuildstep) | What its build has done and is doing, in the order each began (GetPrebuild only): its guest's clone and create tasks, then the control plane's snapshot, publish, scan and share. |
 
 ## PrebuildRefNotFound
 
@@ -1093,6 +1103,23 @@ A prebuild ref the project's forge has not.
 - `PREBUILD_STATE_RETIRED`: Superseded and given back: its snapshot is being deleted.
 
 One of: `PREBUILD_STATE_UNSPECIFIED`, `PREBUILD_STATE_BUILDING`, `PREBUILD_STATE_READY`, `PREBUILD_STATE_FAILED`, `PREBUILD_STATE_RETIRED`.
+
+## PrebuildStep
+
+One step of a prebuild's build.
+
+| Field | Type | What it is |
+|---|---|---|
+| `kind` | [PrebuildStepKind](/reference/api/types/#prebuildstepkind) |  |
+| `startedAt` | `Timestamp` |  |
+| `finishedAt` | `Timestamp` | Unset while it runs, and for one its build never finished: a failed prebuild's error is why. |
+| `error` | string | Why it failed; empty for one that did not. |
+
+## PrebuildStepKind
+
+The steps of a prebuild's build. They run clone, keep, create, snapshot, publish, scan, share; keep is numbered last because it was added last, and a step's number is what is stored. - `PREBUILD_STEP_KIND_CLONE`: The guest's checkout of the repository at the build's commit. - `PREBUILD_STEP_KIND_CREATE`: The guest's run of the checkout's create task (.spin.yaml); none for a checkout without one. - `PREBUILD_STEP_KIND_SNAPSHOT`: The control plane's snapshot of the build's disk, once its guest said it was done. - `PREBUILD_STEP_KIND_PUBLISH`: The snapshot reaching the object store. - `PREBUILD_STEP_KIND_SCAN`: The scan of the snapshot for credentials, which nothing a member clones may carry. - `PREBUILD_STEP_KIND_SHARE`: The snapshot shared with the teams the project is shared with. - `PREBUILD_STEP_KIND_KEEP`: The control plane's snapshot of the checkout, published before the guest runs create: what the scan compares the build against, so what the repository commits is not refused.
+
+One of: `PREBUILD_STEP_KIND_UNSPECIFIED`, `PREBUILD_STEP_KIND_CLONE`, `PREBUILD_STEP_KIND_CREATE`, `PREBUILD_STEP_KIND_SNAPSHOT`, `PREBUILD_STEP_KIND_PUBLISH`, `PREBUILD_STEP_KIND_SCAN`, `PREBUILD_STEP_KIND_SHARE`, `PREBUILD_STEP_KIND_KEEP`.
 
 ## PrebuildsKept
 
@@ -1171,7 +1198,7 @@ A project: a repository and the shape of the workspace that opens it.
 | `updatedAt` | `Timestamp` |  |
 | `prebuildRefs` | list of string | The refs it prebuilds (spin#480 §3): none is none. Each is built as it moves, and opening the project at one clones its newest ready prebuild. |
 | `prebuildRebaseEvery` | integer (int32) | Every how many prebuilds of a ref one is built from the image again, rather than on the one before: a clone is a layer deeper than what it is cloned from. |
-| `prebuildOwnerId` | string | Who the builds run as, for what they use: the project admin who last named the refs. |
+| `prebuildOwnerId` | string | Who the builds run as, for what they use: the project admin who last named the refs (or the repository). Saving anything else leaves them as they are. |
 | `sharedWithEveryone` | boolean | Seen by everybody signed in; otherwise by its admins and shares. |
 | `administers` | boolean | Whether the caller may change, share and delete it. |
 | `adminIds` | list of string | Its admins and whom it is shared with: shown to its admins, empty to everybody else. |
@@ -1180,6 +1207,7 @@ A project: a repository and the shape of the workspace that opens it.
 | `readyPrebuildCount` | integer (int32) | In ListProjects: how many of its prebuilds are ready to open from. |
 | `prebuildKeep` | integer (int32) | How many of each ref's newest ready prebuilds are kept when no workspace was opened from them. |
 | `timeToReady` | [ProjectTimeToReady](/reference/api/types/#projecttimetoready) | In GetProject: how long its workspaces took to be ready. Unset where none has been. |
+| `prebuildOwnerName` | string | The name of who the builds run as (prebuild_owner_id), so the page says whose forge credentials they use. |
 
 ## ProjectTimeToReady
 
@@ -1222,6 +1250,7 @@ A workspace open on a project, as the project's admins read it: whose it is and 
 | `protocol` | string | "tcp", "udp", "icmp", or the protocol's number. |
 | `port` | integer | For tcp and udp; zero otherwise. |
 | `packets` | string (int64) |  |
+| `allowedBy` | list of string | The network policies the workspace does not run under, and could, that let it through: the installation's and its team's, read as a host reads them. The control plane's, not the host's; empty where none would, and for what is not tcp. |
 
 ## RefusedVolume
 
@@ -1444,6 +1473,7 @@ A snapshot is a rotation of a workspace's volume, published as a commit. It has 
 | `state` | [SnapshotState](/reference/api/types/#snapshotstate) |  |
 | `withMemory` | boolean | with_memory: the snapshot also kept the running machine's memory, so restoring it resumes the processes where they were instead of booting the disk. The memory is on the host the workspace ran on. |
 | `parentSnapshotId` | string | The snapshot the disk this one was taken of had been cloned from. A restore gives the workspace a new disk cloned from the snapshot restored, so the snapshots with one parent are one disk's, and one whose parent is not ListSnapshotsResponse.base_snapshot_id was taken on a disk a restore left detached. Empty for a disk that was not cloned. |
+| `sharedBy` | string | Who it is from, where its owner shared it with the caller by name (ListSharedSnapshots): they chose to give it, so saying who did is no leak. Empty for one reached only as public, which names nobody, and for the caller's own. |
 
 ## SnapshotAccessType
 
@@ -1509,9 +1539,9 @@ What the installation cost on its last billed day before the reading with nobody
 
 ## StatusDisagreementKind
 
-- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`: The control plane says the workspace runs and the supervisor has gone quiet for longer than several heartbeat intervals. - `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`: The control plane says the workspace runs and no supervisor ever reported. - `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`: The host holding this workspace is not ACTIVE, or has stopped heartbeating. - `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`: The volume under the workspace is refusing to serve. - `STATUS_DISAGREEMENT_KIND_UNHEALTHY`: The supervisor reports a failing health check.
+- `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`: The control plane says the workspace runs and the supervisor has gone quiet for longer than several heartbeat intervals. - `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`: The control plane says the workspace runs and no supervisor ever reported. - `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`: The host holding this workspace is not ACTIVE, or has stopped heartbeating. - `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`: The volume under the workspace is refusing to serve. - `STATUS_DISAGREEMENT_KIND_UNHEALTHY`: The supervisor reports a failing health check. - `STATUS_DISAGREEMENT_KIND_CREDENTIAL_MISSING`: A policy the workspace runs under brokers a name with a credential its team does not hold (InjectionStatus.held false): the policy says the workspace may reach it, and every request there is refused.
 
-One of: `STATUS_DISAGREEMENT_KIND_UNSPECIFIED`, `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`, `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`, `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`, `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`, `STATUS_DISAGREEMENT_KIND_UNHEALTHY`.
+One of: `STATUS_DISAGREEMENT_KIND_UNSPECIFIED`, `STATUS_DISAGREEMENT_KIND_SUPERVISOR_STALE`, `STATUS_DISAGREEMENT_KIND_SUPERVISOR_ABSENT`, `STATUS_DISAGREEMENT_KIND_HOST_UNREACHABLE`, `STATUS_DISAGREEMENT_KIND_VOLUME_REFUSING`, `STATUS_DISAGREEMENT_KIND_UNHEALTHY`, `STATUS_DISAGREEMENT_KIND_CREDENTIAL_MISSING`.
 
 ## StorageSettings
 
@@ -1757,6 +1787,25 @@ One of: `TIMELINE_SOURCE_UNSPECIFIED`, `TIMELINE_SOURCE_AUDIT`, `TIMELINE_SOURCE
 | `defaultEnv` | map of string to string | Environment variables |
 | `updatedAt` | `Timestamp` |  |
 
+## UserWorkspace
+
+UserWorkspace is a workspace as an administrator lists it: where it is and whose, and nothing its owner put in it - no environment, ports, secrets or disk.
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string |  |
+| `name` | string |  |
+| `ownerId` | string |  |
+| `ownerEmail` | string |  |
+| `ownerName` | string |  |
+| `teamId` | string |  |
+| `teamName` | string |  |
+| `state` | [WorkspaceState](/reference/api/types/#workspacestate) |  |
+| `hostId` | string | The runner its disk is on; empty for one placed nowhere yet. |
+| `hostName` | string |  |
+| `createdAt` | `Timestamp` |  |
+| `trashedUntil` | `Timestamp` | Set only for one in the trash: when it is erased, unless its owner undeletes it first. |
+
 ## VSCodeServerPublish
 
 VSCodeServerPublish is this control plane's publish: the last one, or the one under way.
@@ -1935,9 +1984,9 @@ Timeline event for workspace state changes
 
 ## WorkspaceEventType
 
-- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back - `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published - `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner - `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why - `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause "guest", with the kills and their victims), its host found it short at its ceiling for a while (cause "ceiling"), or its host killed the machine (cause "host"). Its details say what it held, its grant and its ceiling. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half its own, and a smaller preset would fit what it used. Its details say what it used, what it holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.
+- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back - `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published - `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner - `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why - `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause "guest", with the kills and their victims), its host found it short at its ceiling for a while (cause "ceiling"), or its host killed the machine (cause "host"). Its details say what it held, its grant and its ceiling. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half its own, and a smaller preset would fit what it used. Its details say what it used, what it holds, and that preset. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline: its processes are lost, and it comes back from its disk as last published. Its details say when that was, how long before the deadline, and why the memory was not saved.
 
-One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`, `WORKSPACE_EVENT_TYPE_REHOMED`, `WORKSPACE_EVENT_TYPE_HELD`, `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`, `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`, `WORKSPACE_EVENT_TYPE_OVERSIZED`.
+One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`, `WORKSPACE_EVENT_TYPE_REHOMED`, `WORKSPACE_EVENT_TYPE_HELD`, `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`, `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`, `WORKSPACE_EVENT_TYPE_OVERSIZED`, `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`.
 
 ## WorkspaceFailure
 

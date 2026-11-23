@@ -140,6 +140,7 @@ Available Commands:
   list        List team members
   remove      Remove a member from a team
   role        Update a member's role
+  transfer    Hand the team to another member
 
 Flags:
   -h, --help[=true|false]   help for member
@@ -218,6 +219,26 @@ Usage:
 
 Flags:
   -h, --help[=true|false]   help for role
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+### spin team member transfer
+
+```
+Make another member the team's owner; you stay in it as an admin.
+
+Only the owner hands a team over, and a personal team is never handed over.
+
+Usage:
+  spin team member transfer <team> <user-id> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for transfer
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
