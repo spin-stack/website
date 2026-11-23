@@ -170,6 +170,10 @@ says so (`bump:`), and `bump` refuses it.
   `llms-full.txt` (every page's Markdown) and a `.md` twin of each page, all from the same
   content (`src/pages/`). The build fails on a twin that still carries MDX: a component, an
   expression or a directive `src/lib/pages.ts` does not translate.
+- **For search engines**, every page carries one JSON-LD graph (`src/lib/jsonld.ts`): the
+  person and the organization under the blog's own `@id`s, the site, Spinbox as software and its
+  public repositories, and on every page but the landing page a `TechArticle` of its own and the
+  trail back to the landing page, from its topic in `nav.mjs`.
 - **A link's preview** is the page's card: `src/pages/cards/` draws one for every page, the
   generated ones included, from its topic in `nav.mjs`, its title and its description, in brand's
   colours and IBM Plex (`src/lib/card.ts`, with satori), and `Head.astro` names it as the page's
