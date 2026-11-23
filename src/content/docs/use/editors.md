@@ -3,11 +3,11 @@ title: Editors and SSH
 metaTitle: "Editors and SSH: VS Code, ssh, scp and rsync"
 description: Connect to a workspace with spin ssh, plain ssh, scp and rsync, VS Code Remote-SSH, or the terminal in the dashboard.
 reads:
-  - "spin:cmd/cli/cmd/ssh.go@v20261114.01"
-  - "spin:cmd/cli/cmd/sshconfig.go@v20261114.01"
-  - "spin:cmd/cli/cmd/code.go@v20261114.01"
-  - "spin:cmd/cli/cmd/exec.go@v20261114.01"
-  - "spin:cmd/cli/remote/openssh.go@v20261114.01"
+  - "spin:cmd/cli/cmd/ssh.go@v20261121.03"
+  - "spin:cmd/cli/cmd/sshconfig.go@v20261121.03"
+  - "spin:cmd/cli/cmd/code.go@v20261121.03"
+  - "spin:cmd/cli/cmd/exec.go@v20261121.03"
+  - "spin:cmd/cli/remote/openssh.go@v20261121.03"
 ---
 
 Every way into a workspace goes through the installation's relay. You never need network access
@@ -16,7 +16,10 @@ to the runner or to the workspace, only to `https://app.<domain>`.
 ## A key that logs in as you
 
 Everything below - `spin ssh`, plain `ssh`, `spin exec`, VS Code - [logs in with an SSH key you
-added once, with your passkey](<feature:A key logs in only once its person adds it with a passkey: their own for good, a browser's for twelve hours>):
+added once, with your passkey](<feature:A key logs in only once its person adds it with a passkey: their own for good, a browser's for twelve hours>).
+[A computer's key is added as it signs in, and as it first connects](<feature:A computer's key is added as it signs in, with the passkey that authorizes it, and as it first connects>):
+`spin login` offers it, and the page that confirms the login adds it with your passkey. Any other
+key is added the same way from a terminal:
 
 ```bash
 spin ssh-key add laptop ~/.ssh/id_ed25519.pub
@@ -59,7 +62,9 @@ is useless minutes later; what lasts is the key itself, which stays on your mach
 
 It uses the key you name with `-i`, or the first key this machine holds that you have added:
 `~/.ssh`'s, a FIDO2 key's among them, then `ssh-agent`'s. If the machine has none, the CLI makes
-one of its own and says how to add it. The private half never leaves your machine: the control
+one of its own. `spin ssh`, `spin exec` and `spin code` add a key they settle on that you have not added before
+they connect, opening the page where your passkey confirms it; a key named with `-i`, or one on a
+session signed in with an API key, is not added, and the workspace refuses it. The private half never leaves your machine: the control
 plane signs a short certificate for the public half, per connection.
 
 ## VS Code

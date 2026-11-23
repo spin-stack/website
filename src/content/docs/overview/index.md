@@ -3,8 +3,8 @@ title: What is Spinbox
 metaTitle: "What is Spinbox: VM workspaces in your AWS account"
 description: What Spinbox is, who it is for, what it lets you do, how to evaluate it, and the projects an installation is made of.
 reads:
-  - "spin:internal/features/features.go@v20261114.01"
-  - "spin-terraform-aws:README.md@v20261027.02"
+  - "spin:internal/features/features.go@v20261121.03"
+  - "spin-terraform-aws:README.md@v20261123.01"
 ---
 
 Spinbox runs **workspaces**: virtual machines that a person or a program uses to run code. You

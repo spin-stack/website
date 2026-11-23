@@ -2,14 +2,14 @@
 title: "NitroTPM: how a machine proves its build"
 description: How OpenTofu, NitroTPM, AWS STS and KMS make a runner prove both its AWS identity and the image it booted before it is trusted.
 reads:
-  - "spin:internal/installation/provider/aws/machine.go@v20261114.01"
-  - "spin:internal/installation/provider/aws/awscp/join.go@v20261114.01"
-  - "spin:internal/installation/provider/aws/attestedkey/attestedkey.go@v20261114.01"
-  - "spin:docs/security/README.md@v20261114.01"
-  - "spin-terraform-aws:modules/controlplane/config.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/identity.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/volume_keys.tf@v20261027.02"
+  - "spin:internal/installation/provider/aws/machine.go@v20261121.03"
+  - "spin:internal/installation/provider/aws/awscp/join.go@v20261121.03"
+  - "spin:internal/installation/provider/aws/attestedkey/attestedkey.go@v20261121.03"
+  - "spin:docs/security/README.md@v20261121.03"
+  - "spin-terraform-aws:modules/controlplane/config.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/identity.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/volume_keys.tf@v20261123.01"
 ---
 
 A runner needs to prove two independent facts before the control plane trusts it:
@@ -35,8 +35,9 @@ environment. The module instead declares the evidence it will accept:
 | The runner's instance role and the installation audience | STS identifies the caller and binds its signed request to this installation and host. |
 | KMS key policies conditioned on `kms:RecipientAttestation:NitroTPMPCR*` | KMS releases an answer only to a machine whose attestation document carries an allowed complete PCR set. |
 
-The image measurements come from the release's `measurements.json`, or from `image_measurements`
-when an installation uses its own images. A release is built again when what is under spin
+The image measurements come from the image catalog, which answers a release's builds only as
+its release workflow signed them, or from `image_measurements` when an installation uses its own
+images. A release is built again when what is under spin
 moves, and each build is a revision of it. The module accepts every revision of the installed
 release that is not revoked, so a machine of an earlier build goes on until it is replaced, but a
 build removed from that set can no longer join as a runner.

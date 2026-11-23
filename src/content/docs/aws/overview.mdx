@@ -3,9 +3,9 @@ title: Install on AWS
 metaTitle: "Install Spinbox on AWS: what the module creates"
 description: What an installation on AWS is made of, what the OpenTofu module creates in your account, and the choices it makes for you.
 reads:
-  - "spin-terraform-aws:README.md@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
+  - "spin-terraform-aws:README.md@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261123.01"
 ---
 
 import Figure from '../../../components/Figure.astro';
@@ -22,8 +22,8 @@ module, [spin-terraform-aws](https://github.com/spin-stack/spin-terraform-aws):
 
 ```hcl
 module "spin" {
-  source       = "github.com/spin-stack/spin-terraform-aws?ref=v20261027.02"
-  spin_version = "v20261027.01"
+  source       = "github.com/spin-stack/spin-terraform-aws?ref=v20261123.01"
+  spin_version = "v20261121.03"
   domain       = "spin.example.com"
 }
 ```
@@ -40,8 +40,9 @@ Pin `ref` to one of the module's tags, which are dated like Spinbox's releases
 - **The control plane**, on one machine ([`instance_type`](/reference/terraform/controlplane/#instance_type)), in an autoscaling group of one. It also
   runs the installation's PostgreSQL 18 and its log and metric stores.
 - **The proxy**, on one machine ([`proxy_instance_type`](/reference/terraform/controlplane/#proxy_instance_type)) with an elastic IP, in an autoscaling group of one.
-- **The runners**, an autoscaling group of large spot machines with local NVMe ([`runner_instance_types`](/reference/terraform/root/#runner_instance_types)), which
-  the control plane sizes from zero.
+- **The runners**, large spot machines with local NVMe ([`runner_instance_types`](/reference/terraform/root/#runner_instance_types)),
+  started from the module's launch template in autoscaling groups the control plane makes, one per
+  host class, and sizes from zero.
 - **S3 buckets, each with one owner**: the volumes, with versioning and Object Lock; the
   database's archive, under Object Lock too; logs, traces and metric backups; the proxy's
   certificates; and what each machine starts from.

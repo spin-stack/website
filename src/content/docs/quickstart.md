@@ -3,10 +3,10 @@ title: Quickstart
 metaTitle: "Spinbox quickstart: workspace, snapshot, diff, rollback"
 description: Sign in to an installation, create a workspace, take a snapshot, change something, see the diff, and go back.
 reads:
-  - "spin:cmd/cli/cmd/auth.go@v20261114.01"
-  - "spin:cmd/cli/cmd/sshkey.go@v20261114.01"
-  - "spin:cmd/cli/cmd/snapshot.go@v20261114.01"
-  - "spin:cmd/cli/cmd/port.go@v20261114.01"
+  - "spin:cmd/cli/cmd/auth.go@v20261121.03"
+  - "spin:cmd/cli/cmd/sshkey.go@v20261121.03"
+  - "spin:cmd/cli/cmd/snapshot.go@v20261121.03"
+  - "spin:cmd/cli/cmd/port.go@v20261121.03"
 ---
 
 This page uses an installation that already exists. To make one, see
@@ -36,7 +36,9 @@ spin login --endpoint https://app.<domain>
 ```
 
 The CLI prints a page's address and a code, and opens the page in your browser where it can. Sign
-in there, from this machine or any other, enter the code, and the CLI is signed in. `spin whoami` shows who you are, and [`spin smoke` checks the installation does](<feature:A smoke test of what an installation's API promises, with a workspace of its own>)
+in there, from this machine or any other, enter the code, and the CLI is signed in. The page also
+[adds this computer's SSH key with your passkey](<feature:A computer's key is added as it signs in, with the passkey that authorizes it, and as it first connects>),
+registering your first passkey if you have none. `spin whoami` shows who you are, and [`spin smoke` checks the installation does](<feature:A smoke test of what an installation's API promises, with a workspace of its own>)
 what this page expects, with a workspace of its own that it erases.
 
 ## 3. Create a workspace
@@ -49,13 +51,10 @@ The workspace starts from the installation's default image, with its default CPU
 disk. If no runner is up, it is `WAITING` (*Waiting for a host* in the dashboard) for the
 few minutes one takes to start; `--wait` waits for it.
 
-A workspace lets you in with an SSH key you added with your passkey. Add one once, from this
-machine: the command opens the page where your passkey confirms it, and waits. See
+A workspace lets you in with an SSH key you added with your passkey: the one this machine offered
+as you signed in. A key it connects with that you have not added is added the first time it
+connects, with your passkey in the browser, and `spin ssh-key add` adds any other. See
 [Who gets into your workspaces](/use/access/).
-
-```bash
-spin ssh-key add laptop ~/.ssh/id_ed25519.pub
-```
 
 ```bash
 spin workspace list

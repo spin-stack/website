@@ -3,17 +3,18 @@ title: Runners and hosts
 metaTitle: "Runners and hosts: placement, scaling and loss"
 description: What a runner is, how it joins, how workspaces are placed on it, how runners scale from zero, and what happens when one is lost.
 reads:
-  - "spin:docs/runners.md@v20261114.01"
-  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261114.01"
-  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261114.01"
-  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
+  - "spin:docs/runners.md@v20261121.03"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261121.03"
+  - "spin:internal/controlplane/domain/hostclass/hostclass.go@v20261121.03"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261123.01"
 ---
 
 import Value from '../../../components/Value.astro';
 
 A **runner** is a machine that runs workspaces. In the dashboard and the API a runner is also
-called a **host**. On AWS, runners are an autoscaling group of large EC2 machines with local
-NVMe disks and nested virtualization, spot by default.
+called a **host**. On AWS, runners are autoscaling groups of large EC2 machines with local
+NVMe disks and nested virtualization, spot by default: one group per host class, which the control
+plane makes.
 
 ## What a runner does
 
@@ -29,13 +30,13 @@ A runner opens every connection it has. It has no inbound rule at all.
 
 ## Joining
 
-A runner in the installation's autoscaling group joins **by who it is**: it signs an AWS request
+A runner in one of the installation's groups joins **by who it is**: it signs an AWS request
 with its instance role, which the control plane has AWS check, and sends a NitroTPM document that
 says which build of Spin OS it booted, which the control plane checks against the builds it
 allows. There is no token to create, store or rotate. [NitroTPM](/security/nitrotpm/#how-a-runner-is-admitted)
 is the whole of it.
 
-A machine outside the group can join with a one-time registration token from Admin → Runners.
+A machine outside the groups can join with a one-time registration token from Admin → Runners.
 
 A runner must run the control plane's release. One of any other, older or newer, is refused when it
 registers, and the refusal says which release to run.
@@ -48,26 +49,27 @@ pile onto one machine. A runner whose local disk is more than 70% full stops tak
 workspaces until it is back under 65%.
 
 A preset may name a **host class**, a kind of runner, and its workspaces are placed only on
-runners of that class. An installation the module's current release makes has one class,
-`default`, and every runner is of it. A spot class can be set to fall back: when AWS refuses spot
+runners of that class. The module seeds one class,
+`default`, from its `runner_*` variables, beside any the installation file declares; the dashboard
+changes them after that. A spot class can be set to fall back: when AWS refuses spot
 capacity for its group, the control plane runs the group on demand for 30 minutes, then tries spot
 again.
 
 ## Scaling from zero
 
-On AWS [the control plane sizes the runners' group itself](<feature:Runners start when a workspace waits for one and stop when nothing runs>). It knows what nothing else does: that
+On AWS [the control plane sizes the runners' groups itself](<feature:Runners start when a workspace waits for one and stop when nothing runs>). It knows what nothing else does: that
 a workspace is waiting, and when the last one stopped.
 
 - With no runner up, the first workspace to start waits in *Waiting for a host* while the control
   plane asks for one. It is placed on the runner as soon as it registers.
 - If a workspace has waited ten minutes, and no runner was added in that time, the control plane
   adds one.
-- When nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it scales the group back to
+- When nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it scales the groups back to
   none. During the installation's `quiet_hours`, it does so as soon as nothing is running.
 - It never asks for more than `max_runners`.
 
 While workspaces run and none waits, a runner that holds nothing only it has, for as long as
-`runner_idle_minutes`, is emptied and given back to the group, one at a time.
+`runner_idle_minutes`, is emptied and given back to its group, one at a time.
 
 ## When a runner goes away
 
@@ -76,7 +78,8 @@ memory, to the bucket, and each one resumes on another runner from where it was.
 when:
 
 - [AWS reclaims a spot runner](<feature:A cloud's reclaim warning empties the host before the machine goes>) (about two minutes' notice),
-- the autoscaling group removes a runner (the group holds it for `drain_seconds`),
+- its autoscaling group removes a runner (the group holds it for
+  [`runner_drain_seconds`](/reference/terraform/controlplane/#runner_drain_seconds)),
 - a release is rolled out and runners are replaced.
 
 A runner restarting its own process is not a drain: the virtual machines keep running, and the
@@ -100,10 +103,10 @@ had not yet uploaded.
   spin workspace recover api --accept-data-loss   # moves it
   ```
 
-- An administrator can let the control plane move workspaces on its own, after a runner has
-  been silent for `rehome_after_seconds`, when no more than `rehome_max_unpublished_bytes` would
-  be lost: [the workspace is moved, and its owner is told when it waits for them instead](<feature:A workspace whose host never comes back is moved when little would be lost, and its owner is told when it waits for them>).
-  This is off by default.
+- The control plane moves workspaces on its own, after a runner has been silent for
+  `rehome_after_seconds`, when no more than `rehome_max_unpublished_bytes` would be lost: [the workspace is moved, and its owner is told when it waits for them instead](<feature:A workspace whose host never comes back is moved when little would be lost, and its owner is told when it waits for them>).
+  By default it moves one only when nothing would be lost, and `rehome_after_seconds` set to 0
+  turns this off.
 
 [The owner is told by email](<feature:A workspace's owner is told by email when it waits for them or something happened to it, each event switchable>):
 when a workspace is held after its host was lost, when a stop could not be taken, when it was

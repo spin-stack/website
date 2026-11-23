@@ -3,10 +3,10 @@ title: Identity and access
 metaTitle: "Identity and access: how every request is authorized"
 description: How users, API keys, runners and machines prove who they are, how every request is authorized, and what limits each machine's cloud role.
 reads:
-  - "spin:docs/security/README.md@v20261114.01"
-  - "spin:internal/controlplane/server/middleware/scopes.go@v20261114.01"
-  - "spin:docs/security/traffic.md@v20261114.01"
-  - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261027.02"
+  - "spin:docs/security/README.md@v20261121.03"
+  - "spin:internal/controlplane/server/middleware/scopes.go@v20261121.03"
+  - "spin:docs/security/traffic.md@v20261121.03"
+  - "spin-terraform-aws:modules/controlplane/boundary.tf@v20261123.01"
 ---
 
 ## Users
@@ -39,7 +39,9 @@ of the workspace's team, unless the port is public.
 An administrator acts on a workspace that is not theirs only through the procedures that say so,
 each from a session and audited with whose workspace it was: holding it in quarantine, bounding its
 bandwidth, re-keying its disk, stopping it, moving it off a host that is gone (with a reason its
-owner reads on the workspace's history), and reading where it sends. Being an administrator opens
+owner reads on the workspace's history), and reading where it sends. Listing a person's or a
+runner's workspaces, to find the one to act on, shows each one's name, state and place, and
+nothing in it. Being an administrator opens
 no session or command in it, no snapshot of its disk and no say over who logs in.
 
 ## API keys
@@ -78,13 +80,15 @@ A runner outside the group joins with a one-time registration token from an admi
 Every IAM role the module creates carries **one permissions boundary**. Whatever policy is
 attached later, by mistake or from a machine that was taken, no role can:
 
-- write IAM or pass a role,
-- assume a role other than the runners' credentials,
+- write IAM, or pass a role but the runners', which only the control plane passes, to EC2,
+- assume a role other than those the control plane works under: the runners' credentials,
+  volumes' keys, the identity key and teams' secrets,
 - change the VPC's network or a security group,
 - write a parameter in SSM,
 - run a command or open a session on another machine,
 - lift the bucket's Object Lock, bypass a retention, or rewrite the bucket's policy,
-- delete logs or flow logs, or touch CloudTrail.
+- delete logs or flow logs, change CloudTrail, or touch the alarms that report a role doing what
+  it should not.
 
 **Only the control plane's role reads the installation's secrets**: the CA's key, the first
 password and the installation's configuration. The encryption key is not among them: nothing

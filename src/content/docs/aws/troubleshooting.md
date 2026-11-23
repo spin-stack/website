@@ -3,10 +3,10 @@ title: Troubleshooting
 metaTitle: "Troubleshooting an installation on AWS"
 description: Where to look when an installation does not come up, a workspace waits for a host, a start fails, or a workspace cannot reach something.
 reads:
-  - "spin-terraform-aws:outputs.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
-  - "spin:cmd/cli/cmd/status.go@v20261114.01"
-  - "spin:docs/runbook.md@v20261114.01"
+  - "spin-terraform-aws:outputs.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261123.01"
+  - "spin:cmd/cli/cmd/status.go@v20261121.03"
+  - "spin:docs/runbook.md@v20261121.03"
 ---
 
 ## A machine does not come up
@@ -67,7 +67,8 @@ A workspace waits in *Waiting for a host* while no runner has room for it, and s
 - **No runner is up.** The control plane has asked for one. The first runner takes a few
   minutes to boot and register.
 - **The runner cannot start.** The account's spot vCPU quota is too low, or spot has no capacity
-  for the types named. `describe-scaling-activities` on `<name>-runners` says which. See
+  for the types named. `describe-scaling-activities` on the host class's group,
+  `<name>-runners-<class>` (the default class's is the `runners_group` output), says which. See
   [Before you start](/aws/prerequisites/#room-for-runners).
 - **Every runner takes no new workspace.** A runner that was drained stays drained until it is
   activated:

@@ -3,10 +3,10 @@ title: How it works
 metaTitle: "How Spinbox works: control plane, proxy and runners"
 description: The pieces of an installation (control plane, proxy, runners, database, bucket), how they connect, and how a workspace comes to run.
 reads:
-  - "spin:docs/reconciliation.md@v20261114.01"
-  - "spin:docs/storage/README.md@v20261114.01"
-  - "spin:internal/pgserver/server.go@v20261114.01"
-  - "spin:docs/releases.md@v20261114.01"
+  - "spin:docs/reconciliation.md@v20261121.03"
+  - "spin:docs/storage/README.md@v20261121.03"
+  - "spin:internal/pgserver/server.go@v20261121.03"
+  - "spin:docs/releases.md@v20261121.03"
 ---
 
 import Figure from '../../../components/Figure.astro';
@@ -23,8 +23,8 @@ bucket** holds every workspace's disk.
 **Control plane.** Answers the API and the dashboard, which are reached through the proxy, decides which runner each workspace runs
 on, and tells each runner what it should be running. It is the only thing that writes to the
 database. Only one control plane leads at a time: before it writes, it claims a *term*, and a
-control plane whose term has been taken stops. On AWS it also sizes the runners' autoscaling
-group.
+control plane whose term has been taken stops. On AWS it also makes and sizes the runners' autoscaling
+groups, one per host class.
 
 **Proxy.** [Caddy](https://caddyserver.com), with certificates from Let's Encrypt. It is the
 only machine the internet can reach, on ports 80 and 443. It serves the dashboard at
@@ -75,11 +75,12 @@ workspace stops ([Disks and storage](/concepts/volumes/#layers)). Each layer is 
 own key, and uploaded before the pointer to it moves.
 
 This means a runner that disappears takes with it only what was written since its last
-upload, and nothing moves its workspaces without asking: [When a runner is lost](/concepts/runners/#when-a-runner-is-lost).
+upload, and its workspaces are moved without asking only when that gives up no more than the
+installation allows, by default nothing: [When a runner is lost](/concepts/runners/#when-a-runner-is-lost).
 
 ## How runners come and go
 
-On AWS, runners are an autoscaling group that the control plane sizes. It asks for one runner
+On AWS, runners are autoscaling groups, one per host class, that the control plane makes and sizes. It asks for one runner
 when a workspace is waiting and none is up, adds another if a workspace has waited ten minutes
 ([Runners](/concepts/runners/#scaling-from-zero)), and goes back to none when nothing has run for `runner_idle_minutes`.
 
@@ -88,7 +89,7 @@ control plane asks AWS whose signature it is. With it goes a NitroTPM document t
 build of Spin OS the machine booted, and the control plane admits only a build it allows (see
 [NitroTPM](/security/nitrotpm/)). No token is created, stored or rotated.
 
-When AWS takes a spot runner back, or the group removes one, the runner **drains**: it
+When AWS takes a spot runner back, or its group removes one, the runner **drains**: it
 suspends each workspace, with its memory, to the bucket. Each resumes on another runner where
 it left off.
 

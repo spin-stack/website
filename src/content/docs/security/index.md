@@ -3,7 +3,7 @@ title: Security model
 metaTitle: "Spinbox security model: what it protects, and how"
 description: "What Spinbox protects, from whom, and how: isolation, network, data, identity and supply chain, and where to read about each."
 reads:
-  - "spin:docs/security/README.md@v20261114.01"
+  - "spin:docs/security/README.md@v20261121.03"
 ---
 
 Spinbox runs code its operators do not fully trust, on machines in their own account. Its security

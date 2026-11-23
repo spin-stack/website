@@ -3,9 +3,9 @@ title: Install
 metaTitle: "Install Spinbox on AWS, step by step"
 description: Install Spinbox in an AWS account step by step, from the state bucket to the first sign-in and the first workspace.
 reads:
-  - "spin-terraform-aws:outputs.tf@v20261027.02"
-  - "spin-terraform-aws:examples/complete/main.tf@v20261027.02"
-  - "spin-terraform-aws:bootstrap/main.tf@v20261027.02"
+  - "spin-terraform-aws:outputs.tf@v20261123.01"
+  - "spin-terraform-aws:examples/complete/main.tf@v20261123.01"
+  - "spin-terraform-aws:bootstrap/main.tf@v20261123.01"
 ---
 
 Read [Before you start](/aws/prerequisites/) first: the region must be one the release has
@@ -40,16 +40,21 @@ $(tofu -chdir=../../bootstrap output -raw init)
 That runs `tofu init` against the state bucket. Then write `terraform.tfvars`:
 
 ```hcl
-spin_version = "v20261027.01"
+spin_version = "v20261121.03"
 domain       = "spin.example.com"
 # name   = "spin"        # a prefix for every resource; one installation per name
 # region = "us-west-2"   # the region bootstrap was applied in
+# runner_spot = false    # on-demand runners, when the region has no spot machine of their types
 ```
+
+`spin_version` is a release, or a channel: `stable`, a release a person promoted, or `edge`, every
+release once its images are published and checked. An installation on a channel moves to the
+release the channel names at its next plan.
 
 The example exports `dashboard` and `next_steps`, and the two you will want when you
 [update](/aws/update/): `update_status` and `boot_log`.
 
-The example also sets the runners' idle time, quiet hours and the most runners at once. Every
+The example also sets the runners' idle time, quiet hours, the most runners at once, and whether they are spot. Every
 variable is in the [module reference](/reference/terraform/root/). The ones most installations
 change:
 

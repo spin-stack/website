@@ -3,9 +3,9 @@ title: Network
 metaTitle: "The installation's network on AWS: what reaches what"
 description: What the internet can reach in an installation, which machine talks to which on what port, and how to close the installation to your own networks.
 reads:
-  - "spin-terraform-aws:modules/controlplane/network.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/logging.tf@v20261027.02"
-  - "spin:docs/security/traffic.md@v20261114.01"
+  - "spin-terraform-aws:modules/controlplane/network.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/logging.tf@v20261123.01"
+  - "spin:docs/security/traffic.md@v20261121.03"
 ---
 
 import Figure from '../../../components/Figure.astro';
@@ -64,8 +64,8 @@ outside the VPC.
 ## What crossed the network is kept
 
 The VPC's flow log goes to CloudWatch for <Value name="logRetentionDays" /> (`log_retention_days`); `flow_logs = false`
-turns it off, and `dns_query_logs = true` turns on Route 53 Resolver's query log. The three are
-variables of the control plane's module, which the root module leaves at their defaults.
+turns it off, and `dns_query_logs = true` turns on Route 53 Resolver's query log, the only record of the names workspaces look up: the
+flow log does not see DNS.
 
 A workspace's own traffic is controlled separately, by its network policies, on the runner. See
 [Network and egress](/concepts/network/).
