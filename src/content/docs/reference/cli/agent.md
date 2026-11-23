@@ -54,7 +54,7 @@ Global Flags:
 Use "spin agent [command] --help" for more information about a command.
 ```
 
-### spin agent home
+## spin agent home
 
 ```
 An agent's home is a volume of its own, mounted at /home/spin-agent-t3 in the workspace: what
@@ -82,7 +82,7 @@ Global Flags:
 Use "spin agent home [command] --help" for more information about a command.
 ```
 
-#### spin agent home delete
+### spin agent home delete
 
 ```
 Erase an agent home no workspace mounts: its chats, its key and its bytes
@@ -100,7 +100,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin agent home list
+### spin agent home list
 
 ```
 Your agent homes, and which workspace mounts each

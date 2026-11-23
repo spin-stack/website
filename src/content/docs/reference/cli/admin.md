@@ -44,7 +44,7 @@ Global Flags:
 Use "spin admin [command] --help" for more information about a command.
 ```
 
-### spin admin costs
+## spin admin costs
 
 ```
 What the installation cost in a month, as its cloud's bill says, by service; what the month
@@ -71,7 +71,7 @@ Global Flags:
 Use "spin admin costs [command] --help" for more information about a command.
 ```
 
-#### spin admin costs by
+### spin admin costs by
 
 ```
 A month of the bill shared out: the runners by what each workspace held of them - cores and
@@ -94,7 +94,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin health
+## spin admin health
 
 ```
 Each part of the installation as the control plane knows it - its database and the
@@ -115,7 +115,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin jobs
+## spin admin jobs
 
 ```
 The control plane's periodic work, and running a job now
@@ -140,7 +140,7 @@ Global Flags:
 Use "spin admin jobs [command] --help" for more information about a command.
 ```
 
-#### spin admin jobs list
+### spin admin jobs list
 
 ```
 Every job, how often it runs and how its last run went
@@ -158,7 +158,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin jobs run
+### spin admin jobs run
 
 ```
 Run a job now rather than when it is next due. It is not waited for: spin admin jobs list
@@ -177,7 +177,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin logs
+## spin admin logs
 
 ```
 Search what the control plane, the proxy and the runners logged, newest first.
@@ -204,7 +204,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin runner
+## spin admin runner
 
 ```
 Manage registered runners
@@ -233,7 +233,7 @@ Global Flags:
 Use "spin admin runner [command] --help" for more information about a command.
 ```
 
-#### spin admin runner activate
+### spin admin runner activate
 
 ```
 Let a drained or cordoned runner take new workspaces again.
@@ -253,7 +253,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin runner drain
+### spin admin runner drain
 
 ```
 Stop a runner taking new workspaces, until it is activated (spin admin runner activate).
@@ -281,7 +281,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin runner list
+### spin admin runner list
 
 ```
 List all runners
@@ -299,7 +299,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin runner policy
+### spin admin runner policy
 
 ```
 Show or set what this installation decides about one runner.
@@ -339,7 +339,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin runner remove
+### spin admin runner remove
 
 ```
 Take a runner that is a machine of an autoscaling group out of the fleet.
@@ -375,7 +375,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin runner revoke
+### spin admin runner revoke
 
 ```
 Revoke a runner's access to the platform: for a machine being replaced, or one that may
@@ -404,7 +404,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin settings
+## spin admin settings
 
 ```
 The installation's settings: read them, and change one
@@ -429,7 +429,7 @@ Global Flags:
 Use "spin admin settings [command] --help" for more information about a command.
 ```
 
-#### spin admin settings get
+### spin admin settings get
 
 ```
 Every setting as it is in force - what the installation says, or its default - with where it is
@@ -449,7 +449,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin settings set
+### spin admin settings set
 
 ```
 Change one setting, checked as the dashboard's save is: a number within its bounds, true or
@@ -469,7 +469,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin shell
+## spin admin shell
 
 ```
 A root shell on a runner, for a while, with a reason.
@@ -505,7 +505,7 @@ Global Flags:
 Use "spin admin shell [command] --help" for more information about a command.
 ```
 
-#### spin admin shell approve
+### spin admin shell approve
 
 ```
 Approve a root shell another administrator asked for: its runner is emptied at once
@@ -523,7 +523,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin shell close
+### spin admin shell close
 
 ```
 End a root shell: one not yet approved is refused; any other ends, and its runner is retired
@@ -541,7 +541,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin shell list
+### spin admin shell list
 
 ```
 The installation's root shells on runners, newest first: every runner's, or one's
@@ -559,7 +559,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin shell open
+### spin admin shell open
 
 ```
 Ask for a root shell on a runner - or take the one asked for already - wait until it is open,
@@ -587,7 +587,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin shell recording
+### spin admin shell recording
 
 ```
 What a root shell's sessions recorded, asciicast v2: each session's in turn, on standard output.
@@ -607,7 +607,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin storage
+## spin admin storage
 
 ```
 What the object store holds, and taking out what nothing needs
@@ -634,7 +634,7 @@ Global Flags:
 Use "spin admin storage [command] --help" for more information about a command.
 ```
 
-#### spin admin storage explain
+### spin admin storage explain
 
 ```
 What one key in the store is, and whose: a key copied off the bucket's console, or the
@@ -654,7 +654,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin storage list
+### spin admin storage list
 
 ```
 Every volume in the store, whose it is and whether it may be removed, as storage-gc last
@@ -673,7 +673,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin storage remove
+### spin admin storage remove
 
 ```
 Remove an image, an extension release, an unclaimed volume or an orphan from the store:
@@ -696,7 +696,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin storage untag-image
+### spin admin storage untag-image
 
 ```
 Take a ref off the image it names: no new workspace is given it by that ref, and the next
@@ -716,7 +716,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin token
+## spin admin token
 
 ```
 Manage runner registration tokens
@@ -742,7 +742,7 @@ Global Flags:
 Use "spin admin token [command] --help" for more information about a command.
 ```
 
-#### spin admin token create
+### spin admin token create
 
 ```
 Create a token for registering a new runner: one-time, or with --reusable a pool's.
@@ -794,7 +794,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin token list
+### spin admin token list
 
 ```
 List registration tokens
@@ -813,7 +813,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin token revoke
+### spin admin token revoke
 
 ```
 Revoke a registration token
@@ -831,7 +831,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin versions
+## spin admin versions
 
 ```
 What is running where: this control plane, each runner and its machine
@@ -849,7 +849,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin volume
+## spin admin volume
 
 ```
 Re-key a workspace's disk, and list the disks hosts refuse
@@ -875,7 +875,7 @@ Global Flags:
 Use "spin admin volume [command] --help" for more information about a command.
 ```
 
-#### spin admin volume refused
+### spin admin volume refused
 
 ```
 List every disk its host refuses to serve, with why, the workspace that cannot run for it
@@ -894,7 +894,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin volume rekey
+### spin admin volume rekey
 
 ```
 Copy a workspace's disk, whole, under a key of its own, point the workspace at the copy and
@@ -918,7 +918,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin volume rekeys
+### spin admin volume rekeys
 
 ```
 The disks being re-keyed, and the ones a revoked host's keys marked for it
@@ -936,7 +936,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin admin workspace
+## spin admin workspace
 
 ```
 Stop, recover or read the egress of a workspace that is somebody else's
@@ -962,7 +962,7 @@ Global Flags:
 Use "spin admin workspace [command] --help" for more information about a command.
 ```
 
-#### spin admin workspace egress
+### spin admin workspace egress
 
 ```
 List every destination a running workspace that is not yours has been allowed to reach,
@@ -983,7 +983,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin workspace recover
+### spin admin workspace recover
 
 ```
 Move a workspace that is not yours to another host after the one it was on died, as its
@@ -1009,7 +1009,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin admin workspace stop
+### spin admin workspace stop
 
 ```
 Stop a workspace that is not yours, as its owner's 'spin workspace stop' does: what to do

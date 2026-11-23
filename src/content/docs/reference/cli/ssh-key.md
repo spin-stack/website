@@ -38,7 +38,7 @@ Global Flags:
 Use "spin ssh-key [command] --help" for more information about a command.
 ```
 
-### spin ssh-key add
+## spin ssh-key add
 
 ```
 Add an SSH public key you log in to your workspaces with, from then on.
@@ -65,7 +65,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin ssh-key delete
+## spin ssh-key delete
 
 ```
 Delete an SSH key from your account
@@ -84,7 +84,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin ssh-key list
+## spin ssh-key list
 
 ```
 List the SSH keys you log in with

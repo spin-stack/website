@@ -37,7 +37,7 @@ Global Flags:
 Use "spin api-key [command] --help" for more information about a command.
 ```
 
-### spin api-key create
+## spin api-key create
 
 ```
 Create a new API key for programmatic access.
@@ -84,7 +84,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin api-key list
+## spin api-key list
 
 ```
 List your API keys
@@ -102,7 +102,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin api-key revoke
+## spin api-key revoke
 
 ```
 Revoke an API key

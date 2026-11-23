@@ -37,7 +37,7 @@ Global Flags:
 Use "spin snapshot [command] --help" for more information about a command.
 ```
 
-### spin snapshot create
+## spin snapshot create
 
 ```
 Snapshot a running workspace's disk. The snapshot is usable once it is published: the
@@ -61,7 +61,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin snapshot delete
+## spin snapshot delete
 
 ```
 Delete a snapshot
@@ -80,7 +80,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin snapshot diff
+## spin snapshot diff
 
 ```
 List every file added (A), removed (D), modified (M) or changed type (T) between two of a
@@ -108,7 +108,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin snapshot list
+## spin snapshot list
 
 ```
 List a workspace's snapshots, including those of disks it was restored away from

@@ -36,7 +36,7 @@ Global Flags:
 Use "spin port [command] --help" for more information about a command.
 ```
 
-### spin port access
+## spin port access
 
 ```
 Change who may reach a published port.
@@ -61,7 +61,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin port expose
+## spin port expose
 
 ```
 Expose a TCP port on a workspace to make it reachable through the proxy.
@@ -99,7 +99,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin port grant
+## spin port grant
 
 ```
 Let another user reach a published port.
@@ -123,7 +123,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin port list
+## spin port list
 
 ```
 List all exposed ports for a workspace.
@@ -146,7 +146,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin port revoke
+## spin port revoke
 
 ```
 Stop another user reaching a published port.
@@ -167,7 +167,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin port unexpose
+## spin port unexpose
 
 ```
 Remove port exposure from a workspace.

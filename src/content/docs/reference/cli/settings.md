@@ -37,7 +37,7 @@ Global Flags:
 Use "spin settings [command] --help" for more information about a command.
 ```
 
-### spin settings dotfiles
+## spin settings dotfiles
 
 ```
 Configure a dotfiles repository that will be cloned into new workspaces.
@@ -64,7 +64,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin settings get
+## spin settings get
 
 ```
 View your current settings
@@ -82,7 +82,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin settings set
+## spin settings set
 
 ```
 Update a user setting.
@@ -110,7 +110,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin settings taskfile
+## spin settings taskfile
 
 ```
 Configure a startup Taskfile that runs when workspaces start.
