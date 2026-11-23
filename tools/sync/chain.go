@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"regexp"
 	"slices"
@@ -28,7 +27,7 @@ var (
 )
 
 // chain is the release-chain report: spin-machine as spin main pins it against its newest
-// release, the newest spin release images.json has an image of against spin's newest, when each
+// release, the newest spin release the image catalog has images of against spin's newest, when each
 // link's workflow last ran and how, and what spinbox.dev runs. Each line says
 // what it could not read rather than stopping the report: it is advice, and the rest of it holds.
 //
@@ -63,13 +62,13 @@ func chain(ctx context.Context, gh *github.Client) (report string, behind []stri
 
 	switch imaged, newest, err := images(ctx, gh); {
 	case err != nil:
-		lags("images.json", "could not read: "+err.Error())
+		lags("image catalog", "could not read: "+err.Error())
 	case imaged == newest:
-		row("images.json", fmt.Sprintf("has an image of spin's newest release, %s", newest))
+		row("image catalog", fmt.Sprintf("has images of spin's newest release, %s", newest))
 	default:
 		// The installation pages name the newest release with an image: until this one has its
 		// own, the site documents a release nobody can install.
-		lags("images.json", fmt.Sprintf("the newest release with an image is %s; spin's newest is **%s**, which spin-stack/ami's `release.yml` builds one of", imaged, newest))
+		lags("image catalog", fmt.Sprintf("the newest release with images is %s; spin's newest is **%s**, which spin-stack/ami's `release.yml` builds one of", imaged, newest))
 	}
 
 	for _, r := range runs {
@@ -129,25 +128,23 @@ func machinePin(ctx context.Context, gh *github.Client) (string, error) {
 
 var release = regexp.MustCompile(`^v(\d{8})\.(\d+)$`)
 
-// images is the newest spin release spin-terraform-aws's images.json has an image of, and spin's
-// newest release.
+// images is the newest spin release spin-terraform-aws's image catalog has images of - a file of
+// its own on the catalog branch - and spin's newest release.
 func images(ctx context.Context, gh *github.Client) (string, string, error) {
-	raw, err := gh.File(ctx, "spin-stack/spin-terraform-aws", "images.json", "main")
-	if err != nil {
+	var files []struct {
+		Name string `json:"name"`
+	}
+	if err := gh.Get(ctx, "/repos/spin-stack/spin-terraform-aws/contents/releases?ref=catalog", &files); err != nil {
 		return "", "", err
 	}
-	var byRelease map[string]json.RawMessage
-	if err := json.Unmarshal(raw, &byRelease); err != nil {
-		return "", "", fmt.Errorf("images.json: %w", err)
-	}
 	var have []string
-	for r := range byRelease {
-		if release.MatchString(r) {
+	for _, f := range files {
+		if r, ok := strings.CutSuffix(f.Name, ".json"); ok && release.MatchString(r) {
 			have = append(have, r)
 		}
 	}
 	if len(have) == 0 {
-		return "", "", fmt.Errorf("images.json names no release")
+		return "", "", fmt.Errorf("the image catalog has no release")
 	}
 	var latest struct {
 		Tag string `json:"tag_name"`
