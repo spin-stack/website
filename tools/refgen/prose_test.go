@@ -119,3 +119,17 @@ func TestFlagsOfReadsEveryFormAFlagIsPrintedIn(t *testing.T) {
 		}
 	}
 }
+
+// An address in a comment is shown as code, not linked: Markdown would link an example that
+// leads nowhere.
+func TestProseShowsAnAddressAsCode(t *testing.T) {
+	for in, want := range map[string]string{
+		"The issuer its tokens name, https://id.<domain>, where the key set is.": "The issuer its tokens name, `https://id.<domain>`, where the key set is.",
+		"Output only: computed URL (e.g., https://3000-dev.ws.spinbox.dev)":      "Output only: computed URL (e.g., `https://3000-dev.ws.spinbox.dev`)",
+		"A *.ws. name on https://<host>/api/v3.":                                 `A \*.ws. name on https://&lt;host>/api/v3.`,
+	} {
+		if got := prose(in); got != want {
+			t.Errorf("prose(%q) = %q, want %q", in, got, want)
+		}
+	}
+}

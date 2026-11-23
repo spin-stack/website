@@ -281,7 +281,7 @@ One of: `DEVICE_LOGIN_STATUS_UNSPECIFIED`, `DEVICE_LOGIN_STATUS_PENDING`, `DEVIC
 
 | Field | Type | What it is |
 |---|---|---|
-| `repo` | string | Git URL: https://github.com/user/dotfiles |
+| `repo` | string | Git URL: `https://github.com/user/dotfiles` |
 | `branch` | string | Branch to clone (default: main) |
 | `installCommand` | string | Command to run after clone (default: ./install.sh) |
 
@@ -307,7 +307,7 @@ EmailSettings is the SMTP server the installation sends its notifications throug
 | `httpsBackend` | boolean | The proxy speaks TLS to this port without verifying its certificate, and only under the {port}s- hostname: 3000-ws and 3000s-ws are different names, and one refuses. |
 | `description` | string |  |
 | `createdAt` | `Timestamp` |  |
-| `url` | string | Output only: computed URL (e.g., https://3000-dev.ws.spinbox.dev) |
+| `url` | string | Output only: computed URL (e.g., `https://3000-dev.ws.spinbox.dev`) |
 | `access` | [PortAccess](/reference/api/types/#portaccess) |  |
 | `grants` | list of [PortGrant](/reference/api/types/#portgrant) | Who this port is granted to, when access is WHITELIST. Output only, and populated only for the workspace's owner - who a port is shared with is the owner's business and not the grantees'. |
 
