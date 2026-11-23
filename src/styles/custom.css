@@ -1,12 +1,12 @@
 /* Spinbox's look on Starlight. Every color is spin-stack/brand's (brand-tokens.css and
    brand-starlight.css, which `task reference` copies and holds to brand's); this file says only
-   how the site's parts use them. IBM Plex is served from the site itself. */
-@import "@fontsource/ibm-plex-sans/400.css";
-@import "@fontsource/ibm-plex-sans/500.css";
-@import "@fontsource/ibm-plex-sans/600.css";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
-@import "@fontsource/ibm-plex-mono/600.css";
+   how the site's parts use them. Inter and JetBrains Mono are served from the site itself. */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/600.css";
 
 /* Headings in the mono (spin-stack/brand's type.display): a site about machines, set like their
    consoles, at the display's tight tracking and with its word gaps closed - a mono's own spacing

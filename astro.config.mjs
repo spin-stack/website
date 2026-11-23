@@ -54,6 +54,9 @@ export default defineConfig({
 	// Every stylesheet a file, never a <style>: 'self' covers a file, and Astro can't hash the
 	// styles of a component an MDX page imports.
 	build: { inlineStylesheets: 'never' },
+	// Nor is a face inlined as a data: URL, which the policy's default-src refuses: JetBrains Mono's
+	// Greek and Vietnamese files are under Vite's 4 KiB limit, and each page logged a refused font.
+	vite: { build: { assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined) } },
 	env: { schema: { GA_ID: envField.string({ context: 'server', access: 'public', optional: true }) } },
 	markdown: { rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [

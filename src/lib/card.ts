@@ -26,13 +26,13 @@ function token(name: string, from = tokens): string {
 }
 const c = { page: token('page'), text: token('text'), muted: token('muted'), accent: token('accent-text'), dim: token('border-strong') };
 
-// IBM Plex as the site serves it. satori reads WOFF, not the WOFF2 the pages load.
+// Inter and JetBrains Mono as the site serves them. satori reads WOFF, not the WOFF2 the pages load.
 const face = (pkg: string, weight: 400 | 600) => readFileSync(`node_modules/@fontsource/${pkg}/files/${pkg}-latin-${weight}-normal.woff`);
 const fonts = [
-	{ name: 'Plex Sans', data: face('ibm-plex-sans', 400), weight: 400 as const },
-	{ name: 'Plex Sans', data: face('ibm-plex-sans', 600), weight: 600 as const },
-	{ name: 'Plex Mono', data: face('ibm-plex-mono', 400), weight: 400 as const },
-	{ name: 'Plex Mono', data: face('ibm-plex-mono', 600), weight: 600 as const },
+	{ name: 'Inter', data: face('inter', 400), weight: 400 as const },
+	{ name: 'Inter', data: face('inter', 600), weight: 600 as const },
+	{ name: 'JetBrains Mono', data: face('jetbrains-mono', 400), weight: 400 as const },
+	{ name: 'JetBrains Mono', data: face('jetbrains-mono', 600), weight: 600 as const },
 ];
 // The organization's mark drawn for the navy page, as the header has it.
 const mark = `data:image/png;base64,${readFileSync('src/assets/logo.png').toString('base64')}`;
@@ -52,11 +52,11 @@ export interface Card {
 }
 
 export async function card({ topic, title, description, site }: Card): Promise<Buffer> {
-	const mono = { fontFamily: 'Plex Mono', fontWeight: 600, letterSpacing: 1.5 };
+	const mono = { fontFamily: 'JetBrains Mono', fontWeight: 600, letterSpacing: 1.5 };
 	const column = W - 2 * PAD;
 	// The column has its size written out: satori grows a padded box by its padding, and the
 	// last line fell off the card.
-	const tree = el('div', { width: W, height: H, display: 'flex', background: c.page, fontFamily: 'Plex Sans' }, [
+	const tree = el('div', { width: W, height: H, display: 'flex', background: c.page, fontFamily: 'Inter' }, [
 		el('div', { width: column, height: H - 2 * PAD, margin: PAD, display: 'flex', flexDirection: 'column' }, [
 			el('div', { display: 'flex', alignItems: 'center', fontSize: 22, ...mono }, [
 				el('img', { width: 64, height: 64, marginRight: 20 }, undefined, { src: mark, width: 64, height: 64 }),
@@ -100,7 +100,7 @@ export async function landing({ lead, rest, session, site }: Landing): Promise<B
 		bad: token('terminal-red'),
 		edge: c.dim,
 	};
-	const mono = { fontFamily: 'Plex Mono' };
+	const mono = { fontFamily: 'JetBrains Mono' };
 	const left = 470;
 	const term = W - 2 * PAD - left - 48;
 	const row = (line: Line) =>
@@ -111,7 +111,7 @@ export async function landing({ lead, rest, session, site }: Landing): Promise<B
 					{ display: 'flex', width: term - 50, color: line.tone === 'ok' ? t.ok : line.tone === 'bad' ? t.bad : line.tone === 'dim' ? t.muted : t.text },
 					line.out,
 				);
-	const tree = el('div', { width: W, height: H, display: 'flex', background: l.page, fontFamily: 'Plex Sans' }, [
+	const tree = el('div', { width: W, height: H, display: 'flex', background: l.page, fontFamily: 'Inter' }, [
 		el('div', { width: W - 2 * PAD, height: H - 2 * PAD, margin: PAD, display: 'flex', alignItems: 'center' }, [
 			el('div', { width: left, height: H - 2 * PAD, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }, [
 				el('div', { display: 'flex', alignItems: 'center', fontSize: 22, ...mono, fontWeight: 600, letterSpacing: 1.5 }, [
