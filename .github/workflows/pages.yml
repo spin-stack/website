@@ -42,6 +42,9 @@ jobs:
       # an if, its presence can.
       SOURCES_APP: ${{ secrets.SOURCES_APP_KEY != '' }}
       CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+      # Google Analytics' measurement ID, a repository variable, for production's build alone: a
+      # preview's has no analytics. Unset, no build has any.
+      GA_ID: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.GA_ID || '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

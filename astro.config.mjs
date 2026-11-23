@@ -1,6 +1,6 @@
 // @ts-check
 import starlight from '@astrojs/starlight';
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import starlightImageZoom from 'starlight-image-zoom';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 import { rehypeBaseLinks } from './src/lib/base-links.mjs';
@@ -14,6 +14,15 @@ import { rehypePostLinks } from './src/lib/post-links.mjs';
 // rehypeBaseLinks puts it in front.
 const site = process.env.SITE_URL || 'https://docs.spinbox.dev';
 const base = process.env.BASE_PATH || '/';
+// Google Analytics' measurement ID: given to production's build alone (pages.yml), and with none
+// the site has no analytics script and its policy names none of Google's addresses.
+const ga = process.env.GA_ID
+	? {
+			script: ['https://www.googletagmanager.com'],
+			img: ' https://*.google-analytics.com https://*.googletagmanager.com',
+			connect: ' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com',
+		}
+	: { script: [], img: '', connect: '' };
 
 export default defineConfig({
 	site,
@@ -29,14 +38,14 @@ export default defineConfig({
 		csp: {
 			directives: [
 				"default-src 'self'",
-				"img-src 'self' data:",
-				"connect-src 'self' https://cloudflareinsights.com",
+				`img-src 'self' data:${ga.img}`,
+				`connect-src 'self' https://cloudflareinsights.com${ga.connect}`,
 				"base-uri 'self'",
 				"form-action 'self'",
 				"object-src 'none'",
 			],
 			scriptDirective: {
-				resources: ["'self'", "'wasm-unsafe-eval'", 'https://static.cloudflareinsights.com'],
+				resources: ["'self'", "'wasm-unsafe-eval'", 'https://static.cloudflareinsights.com', ...ga.script],
 				hashes: starlightInlineHashes(),
 			},
 			styleDirective: { resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }] },
@@ -45,6 +54,7 @@ export default defineConfig({
 	// Every stylesheet a file, never a <style>: 'self' covers a file, and Astro can't hash the
 	// styles of a component an MDX page imports.
 	build: { inlineStylesheets: 'never' },
+	env: { schema: { GA_ID: envField.string({ context: 'server', access: 'public', optional: true }) } },
 	markdown: { rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [
 		cspCheck(),

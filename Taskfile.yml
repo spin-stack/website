@@ -135,12 +135,12 @@ tasks:
       - go run ./tools/pricing -terraform .sources/spin-terraform-aws -check
 
   build:
-    desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page - the Dockerfile's build stage, after the build's own tests. SITE_URL and BASE_PATH are where it is served.
+    desc: Build the site into dist/, with llms.txt, llms-full.txt and a .md twin of every page - the Dockerfile's build stage, after the build's own tests. SITE_URL and BASE_PATH are where it is served, GA_ID the Google Analytics measurement ID production's build is given.
     cmds:
       - rm -rf dist
       - >-
         docker build --target dist $(versions args golang node) --secret id=github_token,env=GITHUB_TOKEN
-        --build-arg SITE_URL={{.SITE_URL}} --build-arg BASE_PATH={{.BASE_PATH}}
+        --build-arg SITE_URL={{.SITE_URL}} --build-arg BASE_PATH={{.BASE_PATH}} --build-arg GA_ID={{.GA_ID}}
         --output type=local,dest=dist .
 
   lint:

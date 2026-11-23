@@ -215,6 +215,12 @@ says so (`bump:`), and `bump` refuses it.
   are hashed from its own components (`src/lib/csp.mjs`), and the build fails on an inline script
   a page's policy does not allow. Stylesheets are files, never inlined. `public/_headers` adds
   what a `<meta>` cannot say: HSTS, no framing, and no indexing of the pages.dev copies.
+- **Analytics**: Cloudflare's Web Analytics beacon, which Cloudflare adds at the edge, and, when
+  the repository variable `GA_ID` holds a Google Analytics measurement ID, Google Analytics 4 in
+  production's build alone (`pages.yml` gives it to a push to `main`). `public/ga.js` denies every
+  kind of consent before gtag.js loads, so it sets no cookie and sends only Consent Mode's
+  cookieless pings. With no ID the build has no script of Google's and its policy names none of
+  Google's addresses.
 - **The site stays static, which is what keeps it free**: Pages serves static files without charge
   or limit, and bills a Function's requests as Workers requests. `task static`, in the gate and
   before every upload, fails on a `functions/` directory or a `_worker.js` in `dist/`.
