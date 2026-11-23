@@ -1,7 +1,7 @@
 ---
 title: "TeamService"
 metaTitle: "TeamService: procedures and fields | Spinbox API"
-description: "spin.v1.TeamService, 19 procedures of the control plane's API: what each takes and returns, field by field."
+description: "spin.v1.TeamService, 20 procedures of the control plane's API: what each takes and returns, field by field."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false
 sidebar:
@@ -306,6 +306,25 @@ A team's secrets: what a brokered network rule has the host's egress proxy add t
 **Response**
 
 No fields: `{}`.
+
+## TransferOwnership
+
+`POST /spin.v1.TeamService/TransferOwnership`
+
+Hand the team to another of its members: they become its owner and the owner who asked an admin, in one change, so the team has one owner throughout. Its owner's alone (or an instance admin's); a personal team is its person's and is never handed over.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+| `userId` | string | The member who becomes the owner. |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `owner` | [TeamMember](/reference/api/types/#teammember) | The new owner, as a member now. |
 
 ## UpdateIdentityProvider
 

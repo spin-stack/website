@@ -1,5 +1,12 @@
 {
-	"generated": "2026-11-21",
+	"generated": "2026-11-23",
 	"blog": "https://blog.spinbox.dev",
-	"posts": []
+	"posts": [
+		{
+			"slug": "soon",
+			"path": "/spinbox/soon/",
+			"title": "Soon",
+			"date": "2026-11-23"
+		}
+	]
 }

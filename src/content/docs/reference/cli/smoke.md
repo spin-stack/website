@@ -13,7 +13,8 @@ sidebar:
 ```
 Run the public contract against the installation this login is to - SPIN_ENDPOINT and
 SPIN_TOKEN, or the profile: create a workspace and sign its access, run a command in it, check
-it cannot reach the cloud's metadata service (and reaches --reach, when given), suspend it and
+it cannot reach the cloud's metadata service by any route a guest has - its address, IMDSv2's
+token, IPv6, its names, and --metadata-name when given - (and reaches --reach, when given), suspend it and
 resume it where it was, and erase it whatever happened before.
 
 It runs as the person the token is: a key they registered must be held here, as for
@@ -30,12 +31,13 @@ Usage:
   spin smoke [flags]
 
 Flags:
-  -h, --help[=true|false]     help for smoke
-      --image string          The image to start from (default: the installation's)
-      --network-tag strings   Network policy to run under, by name (repeatable)
-      --preset string         The preset it is sized by (default: the installation's)
-      --reach string          A URL the workspace's policies let it reach, checked to be reached
-      --timeout duration      How long the scenarios may take, not counting the erase (default 15m0s)
+  -h, --help[=true|false]      help for smoke
+      --image string           The image to start from (default: the installation's)
+      --metadata-name string   A name that resolves publicly to the metadata service's address, checked not to be reached
+      --network-tag strings    Network policy to run under, by name (repeatable)
+      --preset string          The preset it is sized by (default: the installation's)
+      --reach string           A URL the workspace's policies let it reach, checked to be reached
+      --timeout duration       How long the scenarios may take, not counting the erase (default 15m0s)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)
