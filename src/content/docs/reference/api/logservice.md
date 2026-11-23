@@ -158,7 +158,7 @@ SearchPlatformLogs is what the installation's own processes logged - the control
 
 | Field | Type | What it is |
 |---|---|---|
-| `query` | string | Quickwit's query language (https://quickwit.io/docs/reference/query-language). Empty is every record in the window. |
+| `query` | string | Quickwit's query language (`https://quickwit.io/docs/reference/query-language`). Empty is every record in the window. |
 | `from` | `Timestamp` | The window, both ends included. Unset `to` is now; unset `from` is an hour before `to`. |
 | `to` | `Timestamp` |  |
 | `limit` | integer (int32) | How many records: 1 to 1000, 100 when unset. |

@@ -398,7 +398,7 @@ Who the workspace is outside spin: the identity its tokens and signatures carry,
 |---|---|---|
 | `spiffeId` | string | The workspace's SPIFFE ID, spiffe://&lt;domain>/t/&lt;team>/w/&lt;workspace>: every subject in it is under it - the user's at /u, each agent's at /a/&lt;name> - so a relying party names the workspace by it as a prefix. |
 | `userSubject` | string | The workspace user's subject, what its tokens and signatures carry. |
-| `issuer` | string | The issuer its tokens name, https://id.&lt;domain>, where the key set and the allowed signers are. |
+| `issuer` | string | The issuer its tokens name, `https://id.<domain>`, where the key set and the allowed signers are. |
 | `parentSnapshotId` | string | What the workspace was cloned from: the snapshot, and the workspace whose disk it was when that is still there and of the same team. A workspace made from an image is cloned from the image's snapshot, and no workspace's: the snapshot is named and the workspace is empty. |
 | `parentWorkspaceId` | string |  |
 | `audiences` | list of string | Who the installation gives identities for; empty is anybody. |

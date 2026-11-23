@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -121,7 +122,21 @@ func cell(s string) string {
 }
 
 // prose makes a description safe to put in Markdown as text: `<domain>` would otherwise be read
-// as a tag and vanish, and `*.ws.` would open an emphasis.
+// as a tag and vanish, and `*.ws.` would open an emphasis. An address is code, since Markdown
+// would link it and a comment's address is as often an example as a page: https://id.<domain>,
+// github.com/user/dotfiles and 3000-dev.ws.spinbox.dev were links that led nowhere.
 func prose(s string) string {
-	return strings.NewReplacer("<", "&lt;", "*", `\*`).Replace(strings.TrimSpace(s))
+	s = strings.TrimSpace(s)
+	escape := strings.NewReplacer("<", "&lt;", "*", `\*`)
+	var b strings.Builder
+	last := 0
+	for _, m := range address.FindAllStringIndex(s, -1) {
+		end := m[0] + len(strings.TrimRight(s[m[0]:m[1]], ".,;:)"))
+		b.WriteString(escape.Replace(s[last:m[0]]) + "`" + s[m[0]:end] + "`")
+		last = end
+	}
+	return b.String() + escape.Replace(s[last:])
 }
+
+// address is a URL Markdown would link: a scheme, and a host that starts with a letter or digit.
+var address = regexp.MustCompile(`https?://[A-Za-z0-9][^\s|` + "`" + `]*`)
