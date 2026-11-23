@@ -1,7 +1,8 @@
 // The Content-Security-Policy's two halves that are not a list of addresses. Astro hashes the
 // scripts it bundles, but not one written is:inline, and Starlight writes five (the theme before
 // the first paint, the search shortcut, the sidebar's scroll), so their hashes are read from
-// Starlight's own components, whatever version is installed. cspCheck fails the build on an
+// Starlight's own components, whatever version is installed: a script's text between its tags, or
+// in a set:html template, as ThemeSelect writes its own since 0.43. cspCheck fails the build on an
 // inline script in a page that its policy does not allow, which a browser would refuse to run.
 import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -16,8 +17,9 @@ export function starlightInlineHashes() {
 	const hashes = new Set();
 	for (const file of readdirSync(dist, { recursive: true })) {
 		if (!String(file).endsWith('.astro')) continue;
-		for (const m of readFileSync(join(dist, String(file)), 'utf8').matchAll(/<script is:inline[^>]*>([\s\S]*?)<\/script>/g)) {
-			hashes.add(sha256(m[1]));
+		const source = readFileSync(join(dist, String(file)), 'utf8');
+		for (const m of source.matchAll(/<script\s+is:inline(?:\s+set:html=\{`([^`]*)`\}[^>]*>|[^>]*>([\s\S]*?)<\/script>)/g)) {
+			hashes.add(sha256(m[1] ?? m[2]));
 		}
 	}
 	return [...hashes];
