@@ -3,9 +3,9 @@ title: Before you start
 metaTitle: "Before installing on AWS: tools, account and quota"
 description: The tools, AWS account, region, domain and spot quota you need before installing Spinbox on AWS.
 reads:
-  - "spin-terraform-aws:modules/controlplane/dns.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/variables.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/quota.tf@v20261027.02"
+  - "spin-terraform-aws:modules/controlplane/dns.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/variables.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/quota.tf@v20261123.01"
 ---
 
 ## Tools
@@ -31,8 +31,7 @@ zone in Route 53, and you point the domain's nameservers at it. The installation
 |---|---|
 | `app.<domain>` | The dashboard and the API |
 | `tunnel.app.<domain>` | The relay runners connect to |
-| `term.<domain>` | The browser terminal: an SSH client for a workspace, in the browser, that signs in with a passkey |
-| `agents.<domain>` | The agent's client the browser terminal opens a workspace's agent in |
+| `agents.<domain>` | The agent's client, which the dashboard frames |
 | `id.<domain>` | The identity issuer: what a system outside Spinbox verifies a workspace's identity token, or a commit it signed, with |
 | `*.ws.<domain>` | Workspaces' ports |
 

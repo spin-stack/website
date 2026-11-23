@@ -3,11 +3,11 @@ title: Backups and recovery
 metaTitle: "Backups and recovery of an installation"
 description: What an installation's durable state is, how each part is backed up, and what can be recovered after losing a runner, a machine, or the database.
 reads:
-  - "spin:internal/pgserver/server.go@v20261114.01"
-  - "spin:cmd/controlplane/cmd/databasecmd.go@v20261114.01"
-  - "spin-terraform-aws:modules/controlplane/database_bucket.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/bucket.tf@v20261027.02"
+  - "spin:internal/pgserver/server.go@v20261121.03"
+  - "spin:cmd/controlplane/cmd/databasecmd.go@v20261121.03"
+  - "spin-terraform-aws:modules/controlplane/database_bucket.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/attested_key.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/bucket.tf@v20261123.01"
 ---
 
 An installation's durable state is in three places:

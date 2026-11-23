@@ -3,9 +3,9 @@ title: Workspaces
 metaTitle: "Workspaces: states, resources and lifecycle"
 description: What a workspace is, its states, its resources and disk, what runs inside it, and how it is started, stopped, suspended and recovered.
 reads:
-  - "spin:cmd/cli/cmd/workspace.go@v20261114.01"
-  - "spin:docs/reconciliation.md@v20261114.01"
-  - "spin:docs/workspace-filesystem.md@v20261114.01"
+  - "spin:cmd/cli/cmd/workspace.go@v20261121.03"
+  - "spin:docs/reconciliation.md@v20261121.03"
+  - "spin:docs/workspace-filesystem.md@v20261121.03"
 ---
 
 A workspace is a virtual machine that belongs to a person, or to a team. It has its own
@@ -111,5 +111,6 @@ image's own systemd. Nothing else of Spinbox's lives on the disk:
 ## When a runner is lost
 
 If the runner a workspace was on disappears, the workspace keeps what reached the bucket and
-loses what did not, and nothing moves it without asking: [When a runner is lost](/concepts/runners/#when-a-runner-is-lost)
-says how its owner moves it.
+loses what did not. It is moved without asking only when that gives up no more than the
+installation allows, by default nothing: [When a runner is lost](/concepts/runners/#when-a-runner-is-lost)
+says how, and how its owner moves it otherwise.

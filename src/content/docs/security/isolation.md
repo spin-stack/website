@@ -3,8 +3,8 @@ title: Isolation
 metaTitle: "Workspace isolation: the VM, confined QEMU and disks"
 description: "What keeps a workspace from the runner, other workspaces and the cloud: the virtual machine, its confined QEMU, and how disk bytes are parsed."
 reads:
-  - "spin:docs/security/README.md@v20261114.01"
-  - "spin:docs/network/README.md@v20261114.01"
+  - "spin:docs/security/README.md@v20261121.03"
+  - "spin:docs/network/README.md@v20261121.03"
 ---
 
 ## A virtual machine per workspace

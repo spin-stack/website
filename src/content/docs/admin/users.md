@@ -3,9 +3,9 @@ title: Users and teams
 metaTitle: "Users and teams: sign-in, roles, API keys and audit"
 description: How people sign in, who may register, administrators, teams and their roles, API keys, and the audit log.
 reads:
-  - "spin:internal/controlplane/settings/registry.go@v20261114.01"
-  - "spin:cmd/cli/cmd/team.go@v20261114.01"
-  - "spin:cmd/cli/cmd/apikey.go@v20261114.01"
+  - "spin:internal/controlplane/settings/registry.go@v20261121.03"
+  - "spin:cmd/cli/cmd/team.go@v20261121.03"
+  - "spin:cmd/cli/cmd/apikey.go@v20261121.03"
 ---
 
 ## Signing in
@@ -47,7 +47,7 @@ adds.
 
 | Role | Can |
 |---|---|
-| [Owner](<feature:Teams, with owner, admin and member>) | Everything, including deleting the team. One per team. |
+| [Owner](<feature:Teams, with owner, admin and member>) | Everything, including deleting the team. One per team, who can hand it to another member. |
 | Admin | Manage members and the team's settings |
 | Member | Have workspaces in the team |
 
@@ -56,6 +56,7 @@ spin team create platform --description "Platform team"
 spin team create api --parent platform
 spin team member add <team-id> ana@example.com --role member
 spin team member list <team-id>
+spin team member transfer <team-id> <user-id>   # the new owner; you stay as an admin
 ```
 
 Teams can be nested under a parent team. A person must have signed in once before they can be

@@ -3,10 +3,10 @@ title: The CLI
 metaTitle: "Install and use the spin CLI"
 description: Install the spin CLI, sign in, use profiles for several installations, and get JSON output for scripts.
 reads:
-  - "spin:cmd/cli/cmd/root.go@v20261114.01"
-  - "spin:cmd/cli/cmd/auth.go@v20261114.01"
-  - "spin:cmd/cli/cmd/errcode.go@v20261114.01"
-  - "spin:taskfiles/release.yml@v20261114.01"
+  - "spin:cmd/cli/cmd/root.go@v20261121.03"
+  - "spin:cmd/cli/cmd/auth.go@v20261121.03"
+  - "spin:cmd/cli/cmd/errcode.go@v20261121.03"
+  - "spin:taskfiles/release.yml@v20261121.03"
 ---
 
 `spin` is one binary. It does everything the dashboard does for a user, and the
@@ -20,7 +20,7 @@ Each release publishes `spin-linux-amd64`, `spin-linux-arm64`, `spin-darwin-arm6
 `PATH` as `spin`. Each is also in the release's public package, under a tag of its own:
 
 ```bash
-oras pull ghcr.io/spin-stack/spin-release:v20261027.01-spin-linux-amd64
+oras pull ghcr.io/spin-stack/spin-release:v20261121.03-spin-linux-amd64
 ```
 
 `spin version` prints the release it was built from, and the CLI says it on every request. An
@@ -35,7 +35,9 @@ spin login --endpoint https://app.<domain>
 
 The CLI prints a URL and a code, and opens the URL in your browser when it can. Sign in there,
 from this machine or any other, and enter the code; the CLI waits until you have, then keeps the
-session in `~/.spin/config.yaml`. Nothing listens on your machine while it waits, and
+session in `~/.spin/config.yaml`. The login offers the SSH key this machine connects with, and the
+page adds it with your passkey: see [A key that logs in as you](/use/editors/#a-key-that-logs-in-as-you).
+Nothing listens on your machine while it waits, and
 `--no-browser` leaves opening the URL to you. `spin whoami` shows who you are, and
 `spin logout` forgets the token.
 

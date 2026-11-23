@@ -3,8 +3,8 @@ title: Your settings
 metaTitle: "Your settings: what every workspace of yours applies"
 description: What you set once with spin settings and every workspace of yours applies, and when a workspace is given none of it.
 reads:
-  - "spin:cmd/cli/cmd/settings.go@v20261114.01"
-  - "spin:docs/access.md@v20261114.01"
+  - "spin:cmd/cli/cmd/settings.go@v20261121.03"
+  - "spin:docs/access.md@v20261121.03"
 ---
 
 Your settings are yours, not a workspace's. You save them once, and

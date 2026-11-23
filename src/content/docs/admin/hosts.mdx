@@ -3,10 +3,10 @@ title: Operating runners
 metaTitle: "Operating runners: drain, activate, revoke, replace"
 description: Drain, activate and revoke runners, see what runs where, replace a runner's machine, and add a runner outside the autoscaling group.
 reads:
-  - "spin:docs/runners.md@v20261114.01"
-  - "spin:cmd/cli/cmd/admin.go@v20261114.01"
-  - "spin:cmd/cli/cmd/admin_shell.go@v20261114.01"
-  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
+  - "spin:docs/runners.md@v20261121.03"
+  - "spin:cmd/cli/cmd/admin.go@v20261121.03"
+  - "spin:cmd/cli/cmd/admin_shell.go@v20261121.03"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261123.01"
 ---
 
 import Value from '../../../components/Value.astro';
@@ -52,8 +52,8 @@ behind, what a revoke refuses, and how the capacity comes back.
 
 ## Replacing a runner's machine on AWS
 
-A runner of the group that should go for good is given back to it, which terminates the machine
-and is asked for one less. It drains as it goes, and one that is the only home of a workspace's
+A runner that should go for good is given back to its group, which terminates the machine and is
+asked for one less. It drains as it goes, and one that is the only home of a workspace's
 disk is refused, naming them:
 
 ```bash
@@ -66,12 +66,13 @@ before its group is asked anything, and every disk whose key it was given is mar
 as a revoke does. With `--leave-workspaces` as well, it goes even where workspaces' disks are only
 there; each of those runs again only once it is recovered onto another runner.
 
-After a revoke, or when a runner is wedged, terminate its instance without lowering the group's
-size. The group starts another, which joins by its role:
+After a revoke, or when a runner is wedged, terminate its instance without lowering its group's
+size. The group starts another, which joins by its role. The control plane makes one group per
+[host class](/concepts/runners/#placement), each named `<name>-runners-<class>`:
 
 ```bash
 aws autoscaling describe-auto-scaling-instances \
-  --query 'AutoScalingInstances[?AutoScalingGroupName==`<name>-runners`].[InstanceId,LifecycleState,HealthStatus]' \
+  --query 'AutoScalingInstances[?starts_with(AutoScalingGroupName, `<name>-runners-`)].[AutoScalingGroupName,InstanceId,LifecycleState,HealthStatus]' \
   --output table
 aws autoscaling terminate-instance-in-auto-scaling-group \
   --instance-id <i-...> --no-should-decrement-desired-capacity
@@ -89,7 +90,7 @@ The thresholds that let the control plane move them on its own are in the
 
 ## A runner outside the group
 
-A machine that is not in the autoscaling group joins with a registration token:
+A machine that is not in one of the runners' groups joins with a registration token:
 
 ```bash
 spin admin token create --description "lab machine" --expires 1h

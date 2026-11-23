@@ -3,9 +3,9 @@ title: Observability
 metaTitle: "Observability: logs, traces and metrics"
 description: The logs, traces and metrics an installation keeps about itself and its workspaces, where they are kept, how long, and how administrators read them.
 reads:
-  - "spin:internal/metricstore/metricstore.go@v20261114.01"
-  - "spin-terraform-aws:modules/controlplane/telemetry.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/logging.tf@v20261027.02"
+  - "spin:internal/metricstore/metricstore.go@v20261121.03"
+  - "spin-terraform-aws:modules/controlplane/telemetry.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/logging.tf@v20261123.01"
 ---
 
 An installation keeps its own logs, traces and metrics. Nothing is sent outside it, and there is

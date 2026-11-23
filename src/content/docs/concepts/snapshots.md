@@ -3,9 +3,9 @@ title: Snapshots and rollback
 metaTitle: "Snapshots and rollback: memory, diff and clone"
 description: Disk and memory snapshots, restoring and resetting a workspace, diffing two snapshots, cloning, and sharing a snapshot with others.
 reads:
-  - "spin:cmd/cli/cmd/snapshot.go@v20261114.01"
-  - "spin:cmd/cli/cmd/share.go@v20261114.01"
-  - "spin:docs/storage/README.md@v20261114.01"
+  - "spin:cmd/cli/cmd/snapshot.go@v20261121.03"
+  - "spin:cmd/cli/cmd/share.go@v20261121.03"
+  - "spin:docs/storage/README.md@v20261121.03"
 ---
 
 A snapshot is a point in a workspace's life that you can come back to. It is read-only and
@@ -20,11 +20,13 @@ spin snapshot create api --with-memory --wait
 
 Both are built features with the tests that prove them: [disk snapshots](<feature:Snapshots of a running workspace's disk>) and [snapshots with memory](<feature:Snapshots with memory, resumed with their processes>).
 
-A snapshot is taken of a **running** workspace. The runner seals the disk at that moment and
-uploads what changed since the last snapshot. It is usable once it is *published*; `--wait`
+A snapshot is taken of a **running** workspace. The workspace is first asked to write what it
+holds in memory to its disk; then the runner seals the disk and uploads what changed since the last
+snapshot. It is usable once it is *published*; `--wait`
 returns then.
 
-- **Disk only** (the default): the files, as they were at that moment.
+- **Disk only** (the default): the files, as the workspace had just saved them. A workspace that
+  does not answer in time is snapshotted anyway, as a power cut would leave its disk.
 - **With memory** (`--with-memory`): the disk and the machine's memory together. The guest
   pauses for a few tens of milliseconds. Resuming it brings back every process as it was.
 

@@ -3,15 +3,15 @@ title: Cost
 metaTitle: "What Spinbox costs on AWS, and how to read the bill"
 description: "What an installation costs on AWS: the part that runs all the time, the runners while workspaces run, the bytes a stopped one keeps, and reading the bill."
 reads:
-  - "spin-terraform-aws:variables.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/variables.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/variables.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/bucket.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/budget.tf@v20261027.02"
-  - "spin-terraform-aws:bootstrap/cost.tf@v20261027.02"
-  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261114.01"
-  - "spin:internal/controlplane/domain/finops/rate.go@v20261114.01"
-  - "spin:internal/controlplane/domain/bill/job.go@v20261114.01"
+  - "spin-terraform-aws:variables.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/variables.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/variables.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/bucket.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/budget.tf@v20261123.01"
+  - "spin-terraform-aws:bootstrap/cost.tf@v20261123.01"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261121.03"
+  - "spin:internal/controlplane/domain/finops/rate.go@v20261121.03"
+  - "spin:internal/controlplane/domain/bill/job.go@v20261121.03"
 ---
 
 import Scenarios from '../../../components/Scenarios.astro';
@@ -99,11 +99,11 @@ at these prices an hour, against the on-demand list:
 | m8id.8xlarge | $2.09 | $0.72 ($0.47 to $1.32) | $0.75 ($0.62 to $1.05) |
 | r8id.8xlarge | $2.66 | $1.00 ($0.67 to $2.13) | $1.02 ($0.77 to $1.43) |
 
-The group asks for all six types the defaults match (the four above, and m8id and r8id 12xlarge), with the price-capacity-optimized strategy, in every
+The control plane makes a group for each host class, and the default class's asks for all six types the defaults match (the four above, and m8id and r8id 12xlarge), with the price-capacity-optimized strategy, in every
 zone the installation has a subnet in (up to
 [`availability_zones`](/reference/terraform/controlplane/#availability_zones)), and with Capacity
 Rebalancing on; a runner it takes away is held for
-[`drain_seconds`](/reference/terraform/runners/#drain_seconds) while it empties. On 2026-11-19,
+[`runner_drain_seconds`](/reference/terraform/controlplane/#runner_drain_seconds) while it empties. On 2026-11-19,
 AWS's spot placement score for those six types together was 9 of 10 for one runner in both
 regions, and in 5 of the 9 zones asked one zone at a time. For more runners it held in us-west-2
 (9 at 10 and at 20 runners) and fell in us-east-1 (5 at 10, 2 at 20). AWS gives a low score to
@@ -169,5 +169,5 @@ when it is passed.
 | `runner_spot = false` | On-demand runners: more expensive, never reclaimed |
 | `runner_instance_types`, `runner_vcpus` | Smaller or larger runners |
 | `instance_type`, `proxy_instance_type` | The size of the control plane and the proxy |
-| `flow_logs`, `log_retention_days` | What is kept in CloudWatch. Variables of the control plane's module, which the root module leaves at their defaults. |
+| `flow_logs`, `dns_query_logs`, `log_retention_days` | What is kept in CloudWatch: the flow log is on by default, the DNS query log off |
 | `monthly_budget_usd` | A budget and its alerts; it stops nothing |

@@ -3,13 +3,13 @@ title: Profiles
 metaTitle: "Profiles: the module set for one person to a hundred"
 description: "How to set the module for one person, one person with agents, a small team, a team of twenty and a hundred people, and what each choice trades."
 reads:
-  - "spin-terraform-aws:variables.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/variables.tf@v20261027.02"
-  - "spin-terraform-aws:modules/runners/main.tf@v20261027.02"
-  - "spin-terraform-aws:modules/controlplane/variables.tf@v20261027.02"
-  - "spin-terraform-aws:examples/complete/main.tf@v20261027.02"
-  - "spin:internal/controlplane/settings/registry.go@v20261114.01"
-  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261114.01"
+  - "spin-terraform-aws:variables.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/variables.tf@v20261123.01"
+  - "spin-terraform-aws:modules/runners/main.tf@v20261123.01"
+  - "spin-terraform-aws:modules/controlplane/variables.tf@v20261123.01"
+  - "spin-terraform-aws:examples/complete/main.tf@v20261123.01"
+  - "spin:internal/controlplane/settings/registry.go@v20261121.03"
+  - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261121.03"
 ---
 
 The module's defaults are a small installation: at most one runner
@@ -21,8 +21,15 @@ been tried. [Cost](/aws/cost/) says what each part is billed at; this page does 
 
 The settings are arguments of `module "spin"`, in your copy of `examples/complete` (its `main.tf`,
 which already sets `runner_idle_minutes`, `quiet_hours`, `time_zone` and `max_runners`). Its
-`terraform.tfvars` takes only the example's own variables, such as `spin_version` and `domain`.
-Every argument, with its default, is in the [module reference](/reference/terraform/root/).
+`terraform.tfvars` takes only the example's own variables, such as `spin_version`, `domain` and
+`runner_spot`. Every argument, with its default, is in the [module reference](/reference/terraform/root/).
+
+Some arguments seed the installation when it is made: `runner_instance_types`, `runner_vcpus` and
+`runner_spot` its default host class (Admin → Runners), and `max_runners`, `runner_idle_minutes`
+and the quiet hours its settings.
+On an installation already running, a change to one of them in the module is
+[a proposal an administrator applies or dismisses](/admin/configuration/#the-config-file-seeds),
+not a change by itself.
 
 Two things no profile changes yet. How many workspaces fit on one runner has not been measured, so
 every `max_runners` below is a starting point to correct against what you see. And the control
@@ -82,7 +89,7 @@ cores of work, and the parts that run all the time. A runner of 8 vCPUs would cu
   runner_vcpus = { min = 8, max = 8 }
 ```
 
-The module accepts it, and the group then asks for the 2xlarge sizes of the default families with
+The module accepts it, and the default class's group then asks for the 2xlarge sizes of the default families with
 local NVMe. In the model above, it takes one person from about $165 to about $100 a month. **No installation has run runners that small.** A preset as large as the runner leaves
 nothing for the host itself, so keep presets well under it
 ([Installation settings](/admin/configuration/)); and with `max_runners` still one, a workspace
