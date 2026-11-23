@@ -2,6 +2,8 @@
 // Starlight's head, and the page's Markdown twin announced in it: a model that lands on a page
 // finds the same content as Markdown without guessing the address. linkcheck fails one that
 // does not resolve.
+
+import { getCollection } from 'astro:content';
 import Default from '@astrojs/starlight/components/Head.astro';
 import mono400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2?url';
@@ -10,6 +12,7 @@ import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-nor
 // 0.23 on a phone, measured).
 import sans400 from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2?url';
 import sans600 from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2?url';
+import { graph } from '../lib/jsonld';
 import { twinPath } from '../lib/twin';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -30,6 +33,11 @@ if (id !== '404' && (full.length < 30 || full.length > 65)) {
 	throw new Error(`${id}: its <title> "${full}" is ${full.length} characters; give it a metaTitle that makes it 30 to 65`);
 }
 for (const tag of route.head) if (tag.tag === 'title') tag.content = full;
+
+const ids = new Set((await getCollection('docs')).map((d) => d.id));
+const home = new URL(`${base}/`, Astro.site).href;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const jsonld = graph({ id, title, description: route.entry.data.description ?? '', lastUpdated: route.lastUpdated, image }, url, home, ids);
 ---
 
 <Default />
@@ -38,4 +46,5 @@ for (const tag of route.head) if (tag.tag === 'title') tag.content = full;
 <meta property="og:image:height" content="630" />
 <meta name="twitter:image" content={image} />
 <link rel="alternate" type="text/markdown" href={`${base}${twinPath(id)}`} />
+<script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
 {[sans400, sans600, mono400, mono600].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
