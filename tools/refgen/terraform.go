@@ -12,7 +12,8 @@ import (
 // tfModule is one module of spin-terraform-aws the site has a page of.
 type tfModule struct {
 	dir, slug, title, what string
-	// source is the file the page links as its source: the one its variables are declared in.
+	// source is the file the page links as its source: the one its variables are declared in, or
+	// main.tf where several files declare them.
 	source string
 }
 
@@ -21,7 +22,7 @@ var tfModules = []tfModule{
 	{".", "root", "The installation module", "the module an installation uses: every variable it takes and every output it gives", "variables.tf"},
 	{"modules/controlplane", "controlplane", "modules/controlplane", "the network, bucket, database, control plane and proxy, used on its own", "modules/controlplane/variables.tf"},
 	{"modules/runners", "runners", "modules/runners", "the runners' autoscaling group, used on its own", "modules/runners/variables.tf"},
-	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/variables.tf"},
+	{"bootstrap", "bootstrap", "bootstrap", "the once-per-account state bucket and key, and CI's roles", "bootstrap/main.tf"},
 }
 
 // terraformPages reads each module's variables and outputs as OpenTofu would, so a variable

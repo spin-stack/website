@@ -43,6 +43,18 @@ var viewBox = regexp.MustCompile(`viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)
 var svgText = regexp.MustCompile(`(?s)<text\b[^>]*>(.*?)</text>`)
 var svgTag = regexp.MustCompile(`<[^>]+>`)
 
+// drawnFrom is the file beside a rendered diagram it is drawn from, which its figure links: a
+// link to the name without its extension is a page GitHub does not have.
+func drawnFrom(root, svg string) (string, error) {
+	for _, ext := range []string{".d2", ".dot"} {
+		source := strings.TrimSuffix(svg, ".svg") + ext
+		if _, err := os.Stat(filepath.Join(root, source)); err == nil {
+			return source, nil
+		}
+	}
+	return "", fmt.Errorf("no .d2 or .dot beside it to link as its source")
+}
+
 // checkout is a source repository as refgen reads it: where it is, and the commit it is at.
 type checkout struct{ root, commit string }
 
@@ -97,9 +109,13 @@ func diagramFiles(from map[string]checkout, assets, data string, check bool) ([]
 		if _, err := fmt.Sscan(string(vb[1]), &width); err != nil {
 			return nil, err
 		}
+		source, err := drawnFrom(root, d.path)
+		if err != nil {
+			return nil, fmt.Errorf("%s/%s: %w", d.repo, d.path, err)
+		}
 		figures[d.name] = figure{
 			Width:  int(width * d.scale),
-			Source: fmt.Sprintf("https://github.com/spin-stack/%s/blob/%s/%s", d.repo, commit, strings.TrimSuffix(d.path, ".svg")),
+			Source: fmt.Sprintf("https://github.com/spin-stack/%s/blob/%s/%s", d.repo, commit, source),
 			Words:  words,
 		}
 		path := filepath.Join(assets, d.name+".svg")

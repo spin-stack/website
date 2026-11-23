@@ -55,6 +55,9 @@ func TestDiagramsOfARepositoryNotReadKeepTheirFigures(t *testing.T) {
 	if err := os.WriteFile(svg, []byte(`<svg viewBox="0 0 800 400"><text>control plane</text></svg>`), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	if err := os.WriteFile(filepath.Join(tf, "docs", "diagrams", "installation.d2"), []byte("control plane"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 	figuresPath := filepath.Join(dir, "figures.json")
 	old := map[string]figure{}
 	for _, d := range diagrams {
@@ -73,7 +76,7 @@ func TestDiagramsOfARepositoryNotReadKeepTheirFigures(t *testing.T) {
 	if err := json.Unmarshal(raw, &got); err != nil {
 		t.Fatal(err)
 	}
-	if f := got["installation"]; f.Source != "https://github.com/spin-stack/spin-terraform-aws/blob/new/docs/diagrams/installation" || len(f.Words) != 1 || f.Words[0] != "control plane" {
+	if f := got["installation"]; f.Source != "https://github.com/spin-stack/spin-terraform-aws/blob/new/docs/diagrams/installation.d2" || len(f.Words) != 1 || f.Words[0] != "control plane" {
 		t.Errorf("installation = %+v, want it drawn again from the checkout", f)
 	}
 	if f := got["traffic"]; f.Source != old["traffic"].Source || f.Words[0] != "old" {
