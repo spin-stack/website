@@ -28,6 +28,19 @@ h1#_top {
 	font-weight: 600;
 	color: var(--sl-color-white);
 }
+/* The organization's own mark (spin-stack/brand) beside the name: in dark with its shadow drawn
+   for the navy page (mark-dark), where the tile read as a box on the header. Decoration, so a
+   background rather than Starlight's logo, an image a crawler asks alt text of. */
+.site-title::before {
+	content: "";
+	flex: none;
+	height: calc(var(--sl-nav-height) - 2 * var(--sl-nav-pad-y));
+	aspect-ratio: 1;
+	background: url("../assets/logo.png") center / contain no-repeat;
+}
+:root[data-theme="light"] .site-title::before {
+	background-image: url("../assets/logo-light.png");
+}
 
 /* The experimental notice: one line, quiet, never a second hero. */
 .sl-banner {
