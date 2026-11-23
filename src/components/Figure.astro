@@ -8,11 +8,19 @@ import figures from '../data/figures.json';
 interface Props {
 	name: keyof typeof figures;
 	caption: string;
+	// What a reader with no picture is told it is, where the caption is longer than that needs:
+	// the caption follows it anyway.
+	alt?: string;
 }
-const { name, caption } = Astro.props;
+const { name, caption, alt = caption } = Astro.props;
 const files = import.meta.glob<string>('../assets/diagrams/*.svg', { query: '?url', import: 'default', eager: true });
 const url = files[`../assets/diagrams/${name}.svg`];
 if (!url) throw new Error(`Figure: no diagram ${name} in src/assets/diagrams`);
+// Its proportions, from its own viewBox, so the page keeps the room for it before it loads.
+const svgs = import.meta.glob<string>('../assets/diagrams/*.svg', { query: '?raw', import: 'default', eager: true });
+const box = svgs[`../assets/diagrams/${name}.svg`]?.match(/viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)/);
+if (!box) throw new Error(`Figure: ${name}.svg has no viewBox`);
+const [w, h] = [Math.round(Number(box[1])), Math.round(Number(box[2]))];
 const { source, width } = figures[name];
 // The size refgen chose for it (tools/refgen/diagrams.go): a wide one scrolls rather than
 // shrinking its words into a smudge, and 0 fits the column.
@@ -22,7 +30,7 @@ const style = width ? `width: max(100%, ${width}px)` : 'width: 100%';
 <figure class="spin-figure">
 	<div class="frame">
 		<starlight-image-zoom-zoomable>
-			<img src={url} alt={caption} loading="lazy" {style} />
+			<img src={url} {alt} width={w} height={h} loading="lazy" {style} />
 			<button type="button" aria-label={`Zoom image: ${caption}`} class="starlight-image-zoom-control">
 				<svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><use href="#starlight-image-zoom-icon-zoom"></use></svg>
 			</button>
