@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import starlightImageZoom from 'starlight-image-zoom';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 import { rehypeBaseLinks } from './src/lib/base-links.mjs';
+import { cspCheck, starlightInlineHashes } from './src/lib/csp.mjs';
 import { rehypeFeatureLinks } from './src/lib/feature-links.mjs';
 import { sidebarTopics } from './src/lib/nav.mjs';
 import { rehypePostLinks } from './src/lib/post-links.mjs';
@@ -18,8 +19,35 @@ export default defineConfig({
 	site,
 	base,
 	trailingSlash: 'always',
+	// A Content-Security-Policy in a <meta> on every page: Astro hashes the scripts and styles it
+	// emits, Starlight's inline scripts are hashed from its components (src/lib/csp.mjs), and
+	// nothing else runs. Pagefind, the search, compiles WebAssembly. Cloudflare adds its Web
+	// Analytics beacon at the edge, hence its script and the endpoint it reports to. Expressive
+	// Code colours code and a figure sizes itself with style attributes, which a hash can't cover
+	// and which can't run anything. What a <meta> can't say (frame-ancestors) is in public/_headers.
+	security: {
+		csp: {
+			directives: [
+				"default-src 'self'",
+				"img-src 'self' data:",
+				"connect-src 'self' https://cloudflareinsights.com",
+				"base-uri 'self'",
+				"form-action 'self'",
+				"object-src 'none'",
+			],
+			scriptDirective: {
+				resources: ["'self'", "'wasm-unsafe-eval'", 'https://static.cloudflareinsights.com'],
+				hashes: starlightInlineHashes(),
+			},
+			styleDirective: { resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }] },
+		},
+	},
+	// Every stylesheet a file, never a <style>: 'self' covers a file, and Astro can't hash the
+	// styles of a component an MDX page imports.
+	build: { inlineStylesheets: 'never' },
 	markdown: { rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [
+		cspCheck(),
 		starlight({
 			title: 'Spinbox',
 			description: 'Workspaces in your own AWS account, each its own virtual machine, with snapshots that keep memory, rollback, and a diff of what changed.',
