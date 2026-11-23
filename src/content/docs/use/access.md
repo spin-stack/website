@@ -14,9 +14,7 @@ The one API key that runs commands in your workspaces is one you made with your 
 `workspace:exec` scope, for a program to use (`spin.v1.ExecService`); every call it makes is in
 the audit log. Give it `keys:delegate` and it makes keys of its own for the agents it starts
 (`spin mcp` serves them the API): each holds no more than it does - its scopes, team, projects,
-end, and how many workspaces and cores all of them hold - and goes when you revoke it. Why, and
-what it trades, is
-[ADR-0031](https://github.com/spin-stack/spin/blob/51f7e0dea53e6f85aa855753766b688634487168/docs/decisions/ADR-0031-a-passkey-buys-a-key-the-control-plane-certifies.md).
+end, and how many workspaces and cores all of them hold - and goes when you revoke it.
 
 The control plane decides who logs in, at every session: it certifies a key of yours, for five
 minutes, into a workspace you own or are a guest of. It also holds what it needs to serve you: your

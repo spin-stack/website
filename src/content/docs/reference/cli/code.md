@@ -35,7 +35,8 @@ publishes is Microsoft's, licensed for an organization's own use.
 An editor that runs spin itself - the Spinbox extension - names its own commit with
 --vscode-commit and --no-open: no local 'code' is looked for, the workspace is given that
 commit's server as above, the SSH config is written, and nothing is opened. With -o json the
-answer is JSON Lines: a {"preparing": {...}} line for each step of a server being prepared, then
+answer is JSON Lines: a {"confirming_key": {...}} line while this computer's key waits for the
+person's passkey in the browser, a {"preparing": {...}} line for each step of a server being prepared, then
 the result, whose not_given says why the workspace was not given one.
 
 Examples:

@@ -1,42 +1,46 @@
 /* Written by `task palette` from palette.toml (spin-stack/brand). Edit palette.toml, not this file. */
 :root {
-	--sl-color-accent-low: #123049;
-	--sl-color-accent: #1B7DB4;
-	--sl-color-accent-high: #A9D9F0;
-	--sl-color-white: #F5F7FA;
-	--sl-color-gray-1: #EEF1F6;
-	--sl-color-gray-2: #E6EBF2;
-	--sl-color-gray-3: #9AA5B8;
-	--sl-color-gray-4: #6B7894;
-	--sl-color-gray-5: #34405A;
-	--sl-color-gray-6: #161E2F;
-	--sl-color-black: #0E1421;
-	--sl-color-banner-bg: #17334C;
-	--sl-color-banner-text: #E6EBF2;
+	--sl-color-accent-low: #113F57;
+	--sl-color-accent: #26BDED;
+	--sl-color-accent-high: #9FE0F6;
+	--sl-color-white: #F7F9FB;
+	--sl-color-gray-1: #F0F4F9;
+	--sl-color-gray-2: #EAF0F6;
+	--sl-color-gray-3: #9AA7BB;
+	--sl-color-gray-4: #697997;
+	--sl-color-gray-5: #313E5A;
+	--sl-color-gray-6: #121A2E;
+	--sl-color-hairline-light: #192237;
+	--sl-color-black: #09101F;
+	--sl-color-banner-bg: #163E58;
+	--sl-color-banner-text: #EAF0F6;
 }
 :root[data-theme='light'] {
-	--sl-color-accent-low: #BDD8E6;
-	--sl-color-accent: #0A6FA3;
-	--sl-color-accent-high: #0C3957;
+	--sl-color-accent-low: #BFC1C5;
+	--sl-color-accent: #111827;
+	--sl-color-accent-high: #0A3449;
 	--sl-color-white: #0A0E17;
 	--sl-color-gray-1: #0E131F;
 	--sl-color-gray-2: #111827;
-	--sl-color-gray-3: #525D72;
-	--sl-color-gray-4: #77829A;
-	--sl-color-gray-5: #C4CCD8;
-	--sl-color-gray-6: #E1E7F0;
+	--sl-color-gray-3: #515C72;
+	--sl-color-gray-4: #748099;
+	--sl-color-gray-5: #C4CCD9;
+	--sl-color-gray-6: #E0E6F1;
+	--sl-color-hairline-light: #E3E6ED;
 	--sl-color-black: #FFFFFF;
-	--sl-color-banner-bg: #BED7E6;
+	--sl-color-banner-bg: #C0C4CB;
 	--sl-color-banner-text: #111827;
 	--sl-color-gray-7: #F1F4F9;
+	--sl-color-text-accent: #024F6A;
 }
 :root {
-	--sl-font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-	--sl-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+	--sl-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--sl-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 :root {
 	--sl-text-h1: clamp(1.75rem, 1.421rem + 1.348vw, 2.5rem);
 	--sl-text-h2: clamp(1.375rem, 1.156rem + 0.8989vw, 1.875rem);
 	--sl-text-h3: clamp(1.125rem, 1.015rem + 0.4494vw, 1.375rem);
 	--sl-text-h4: clamp(1rem, 0.9452rem + 0.2247vw, 1.125rem);
+	--sl-sidebar-width: 17rem;
 }

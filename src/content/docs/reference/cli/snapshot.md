@@ -40,9 +40,11 @@ Use "spin snapshot [command] --help" for more information about a command.
 ### spin snapshot create
 
 ```
-Snapshot a running workspace's disk. The snapshot is usable once it is published: the
-host seals the disk at this moment and uploads what changed since the last snapshot. --wait
-returns once it is.
+Snapshot a running workspace's disk. The workspace is asked to write what it holds in
+memory to the disk first, so the snapshot has what was saved just before; then the host seals the
+disk and uploads what changed since the last snapshot. The snapshot is usable once it is
+published; --wait returns once it is. If the workspace does not answer within a few seconds the
+snapshot is taken anyway, as a power cut would leave the disk; --with-memory keeps everything.
 
 Usage:
   spin snapshot create <workspace> [flags]

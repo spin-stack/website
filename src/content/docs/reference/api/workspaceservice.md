@@ -237,6 +237,28 @@ Compare two of a workspace's snapshots file by file.
 | `changes` | list of [FileChange](/reference/api/types/#filechange) | Every change from one snapshot to the other, a directory before what is under it. |
 | `truncated` | boolean | truncated says there are more changes than one answer carries. |
 
+## EnsureAgentWorkspace
+
+`POST /spin.v1.WorkspaceService/EnsureAgentWorkspace`
+
+A workspace of a project for the caller's agent to work in: the one of theirs that runs or is on its way up, else the newest of theirs that is stopped - started again - else a new one, made as CreateWorkspace makes a project's, from its prebuild where one is ready. fresh asks for a new one whatever there is: a task kept apart. Answers once it is chosen, started or made; how its start goes is the workspace's progress, as for any other.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `projectId` | string | A project the caller sees, as CreateWorkspace's project_id. |
+| `fresh` | boolean | A new workspace whatever the caller has of the project: a task kept apart from the others. |
+| `teamId` | string | The team a new one is made in, the caller's personal team when empty; one chosen or started is the caller's own in any team. |
+| `requestId` | string | As CreateWorkspace's: a retry after an answer never got is answered with the workspace the first attempt made, rather than a second one. |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspace` | [Workspace](/reference/api/types/#workspace) |  |
+| `outcome` | [EnsureOutcome](/reference/api/types/#ensureoutcome) |  |
+
 ## ExposePort
 
 `POST /spin.v1.WorkspaceService/ExposePort`
@@ -982,6 +1004,7 @@ Change which egress policies a workspace runs under, while it runs.
 |---|---|---|
 | `workspace` | [Workspace](/reference/api/types/#workspace) |  |
 | `droppedConnections` | integer (int32) | dropped_connections is how many of the machine's open connections were cut, because the change took a policy away and what a policy no longer allows must not survive in a socket that was opened before it. Zero when the change only added. |
+| `notApplied` | string | Empty when the machine runs under the new policies now. Otherwise why it does not yet - its host is not connected, did not answer, or refused - while the change is recorded and carried by the workspace's next start: the change was made, and this says it has not reached the machine. |
 
 ## SetWorkspaceNetworkWatch
 
@@ -1106,6 +1129,7 @@ Update workspace properties (name, env)
 | `name` | string | Optional: new name |
 | `env` | map of string to string | Optional: replace environment variables |
 | `wakeOnAccess` | boolean or null | Note: resource changes require stop/start Optional: Workspace.wake_on_access |
+| `replaceEnv` | boolean | env replaces the variables even when it is empty, which is how the last one is taken away; without it an empty env leaves them as they are. |
 
 **Response**
 

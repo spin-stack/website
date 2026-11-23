@@ -306,6 +306,25 @@ A team's secrets: what a brokered network rule has the host's egress proxy add t
 
 No fields: `{}`.
 
+## TransferOwnership
+
+`POST /spin.v1.TeamService/TransferOwnership`
+
+Hand the team to another of its members: they become its owner and the owner who asked an admin, in one change, so the team has one owner throughout. Its owner's alone (or an instance admin's); a personal team is its person's and is never handed over.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+| `userId` | string | The member who becomes the owner. |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `owner` | [TeamMember](/reference/api/types/#teammember) | The new owner, as a member now. |
+
 ## UpdateIdentityProvider
 
 `POST /spin.v1.TeamService/UpdateIdentityProvider`
