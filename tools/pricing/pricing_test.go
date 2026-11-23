@@ -12,7 +12,7 @@ import (
 )
 
 // module is a spin-terraform-aws checkout with the defaults the record prices: runnerTypes as
-// instance_types' list, and dataVolume as data_volume_gb's.
+// runner_instance_types' list, and dataVolume as runner_data_volume_gb's.
 func module(t *testing.T, runnerTypes, dataVolume string) string {
 	t.Helper()
 	root := t.TempDir()
@@ -25,11 +25,11 @@ func module(t *testing.T, runnerTypes, dataVolume string) string {
 			t.Fatal(err)
 		}
 	}
-	write("modules/controlplane/variables.tf", "variable \"domain\" {\n  type = string\n}\n\nvariable \"instance_type\" {\n  description = \"The machine.\"\n  type        = string\n  default     = \"t8i.medium\"\n}\n\nvariable \"proxy_instance_type\" {\n  default     = \"t8i.micro\"\n}\n")
-	write("modules/runners/variables.tf", "variable \"instance_types\" {\n  type    = list(string)\n  default = ["+runnerTypes+"]\n}\n\n"+
-		"variable \"vcpus\" {\n  type    = object({ min = number, max = number })\n  default = { min = 32, max = 48 }\n}\n\n"+
-		"variable \"data_volume_gb\" {\n  type    = number\n  default = "+dataVolume+"\n}\n\n"+
-		"variable \"max_hosts\" {\n  type    = number\n  default = 3\n}\n")
+	write("modules/controlplane/variables.tf", "variable \"domain\" {\n  type = string\n}\n\nvariable \"instance_type\" {\n  description = \"The machine.\"\n  type        = string\n  default     = \"t8i.medium\"\n}\n\nvariable \"proxy_instance_type\" {\n  default     = \"t8i.micro\"\n}\n\n"+
+		"variable \"runner_instance_types\" {\n  type    = list(string)\n  default = ["+runnerTypes+"]\n}\n\n"+
+		"variable \"runner_vcpus\" {\n  type    = object({ min = number, max = number })\n  default = { min = 32, max = 48 }\n}\n\n"+
+		"variable \"runner_data_volume_gb\" {\n  type    = number\n  default = "+dataVolume+"\n}\n\n"+
+		"variable \"max_runners\" {\n  type    = number\n  default = 3\n}\n")
 	return root
 }
 

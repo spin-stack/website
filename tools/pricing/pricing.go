@@ -57,9 +57,9 @@ type Record struct {
 }
 
 // Machines is what the module starts by default, at the commit the site pins: the control
-// plane's and the proxy's machine, what a runner's type is drawn from - the names and patterns
-// of instance_types, within vcpus, with a local NVMe while data_volume_gb is 0 - and the most
-// runners at once.
+// plane's and the proxy's machine, what a runner's type is drawn from - the names and patterns of
+// runner_instance_types, within runner_vcpus, with a local NVMe while runner_data_volume_gb is 0 -
+// and the most runners at once.
 type Machines struct {
 	ControlPlane    string   `json:"controlPlane"`
 	Proxy           string   `json:"proxy"`
@@ -125,16 +125,12 @@ var (
 	rangeValue  = regexp.MustCompile(`(?m)^\s*default\s*=\s*\{\s*min\s*=\s*(\d+)\s*,\s*max\s*=\s*(\d+)\s*\}`)
 )
 
-// defaults reads what the module starts by default: the control plane's and the proxy's
-// instance type from modules/controlplane, and from modules/runners what a runner's type is
-// drawn from and the most runners (max_hosts, which the root calls max_runners). A variable
-// without a default is a mistake here, not a value to guess.
+// defaults reads what the module starts by default, all from modules/controlplane, which seeds the
+// default host class: the control plane's and the proxy's instance type, what a runner's type is
+// drawn from and the most runners. A variable without a default is a mistake here, not a value to
+// guess.
 func defaults(terraform string) (Machines, error) {
 	cp, err := os.ReadFile(filepath.Join(terraform, "modules", "controlplane", "variables.tf"))
-	if err != nil {
-		return Machines{}, err
-	}
-	runners, err := os.ReadFile(filepath.Join(terraform, "modules", "runners", "variables.tf"))
 	if err != nil {
 		return Machines{}, err
 	}
@@ -145,13 +141,13 @@ func defaults(terraform string) (Machines, error) {
 	if m.Proxy, err = stringDefault(cp, "proxy_instance_type"); err != nil {
 		return Machines{}, err
 	}
-	block, err := variableBlock(runners, "instance_types")
+	block, err := variableBlock(cp, "runner_instance_types")
 	if err != nil {
 		return Machines{}, err
 	}
 	l := listValue.FindSubmatch(block)
 	if l == nil {
-		return Machines{}, errors.New("modules/runners instance_types: no list default")
+		return Machines{}, errors.New("modules/controlplane runner_instance_types: no list default")
 	}
 	for _, item := range strings.Split(string(l[1]), ",") {
 		if item = strings.Trim(strings.TrimSpace(item), `"`); item != "" {
@@ -159,28 +155,28 @@ func defaults(terraform string) (Machines, error) {
 		}
 	}
 	if len(m.RunnerTypes) == 0 {
-		return Machines{}, errors.New("modules/runners instance_types: an empty default")
+		return Machines{}, errors.New("modules/controlplane runner_instance_types: an empty default")
 	}
-	block, err = variableBlock(runners, "vcpus")
+	block, err = variableBlock(cp, "runner_vcpus")
 	if err != nil {
 		return Machines{}, err
 	}
 	v := rangeValue.FindSubmatch(block)
 	if v == nil {
-		return Machines{}, errors.New("modules/runners vcpus: no { min, max } default")
+		return Machines{}, errors.New("modules/controlplane runner_vcpus: no { min, max } default")
 	}
 	m.RunnerVCPUs[0], _ = strconv.Atoi(string(v[1])) // digits, by the expression
 	m.RunnerVCPUs[1], _ = strconv.Atoi(string(v[2]))
-	if m.RunnerLocalDisk, err = zeroDefault(runners, "data_volume_gb"); err != nil {
+	if m.RunnerLocalDisk, err = zeroDefault(cp, "runner_data_volume_gb"); err != nil {
 		return Machines{}, err
 	}
-	block, err = variableBlock(runners, "max_hosts")
+	block, err = variableBlock(cp, "max_runners")
 	if err != nil {
 		return Machines{}, err
 	}
 	n := intValue.FindSubmatch(block)
 	if n == nil {
-		return Machines{}, errors.New("modules/runners max_hosts: no number default")
+		return Machines{}, errors.New("modules/controlplane max_runners: no number default")
 	}
 	m.MaxRunners, _ = strconv.Atoi(string(n[1])) // digits, by the expression
 	return m, nil
