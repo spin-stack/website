@@ -9,6 +9,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -16,6 +17,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/spin-stack/go-tools/catalog"
 )
 
 func main() {
@@ -42,6 +45,7 @@ func run() error {
 	assets := flag.String("diagrams", "src/assets/diagrams", "where the diagrams the source repositories draw are copied")
 	figuresData := flag.String("figures", "src/data/figures.json", "each diagram's source and words, for its Markdown twin")
 	pinned := flag.String("versions", "versions.yaml", "what the sources are pinned at, which reference.json must record")
+	catalogURL := flag.String("catalog", catalog.BranchURL, "the Spin OS image catalog, which has the images of the release the site documents")
 	check := flag.Bool("check", false, "write nothing; fail if a page on disk differs from what the sources say")
 	reviewed := flag.String("reviewed", "", "a hand-written page just read against what it reads: stamp its reads with the checkouts as they are, and do nothing else")
 	flag.Parse()
@@ -91,7 +95,7 @@ func run() error {
 		*spin = ""
 	}
 	installs := r.Spin.Installs
-	if err := publicData(&r, *tf, *brand); err != nil {
+	if err := publicData(&r, *tf, *brand, *pinned); err != nil {
 		return err
 	}
 	if withSpin {
@@ -100,7 +104,11 @@ func run() error {
 		}
 	} else if r.Spin.Installs != installs {
 		// What the release is made of is read from spin at its tag.
-		bad = append(bad, fmt.Sprintf("images.json's newest release is %s, and %s says %s: run task reference with a spin checkout", r.Spin.Installs, *data, installs))
+		bad = append(bad, fmt.Sprintf("%s pins spin at %s, and %s says %s: run task reference with a spin checkout", *pinned, r.Spin.Installs, *data, installs))
+	}
+	images, err := catalogRelease(context.Background(), *catalogURL, r.Spin.Installs)
+	if err != nil {
+		return err
 	}
 	if err := terraformConstants(&c, *tf); err != nil {
 		return err
@@ -111,8 +119,8 @@ func run() error {
 	}
 	for _, gen := range []func() (map[string][]byte, error){
 		func() (map[string][]byte, error) { return terraformPages(*tf, r.Terraform.Release) },
-		func() (map[string][]byte, error) { return imagesPage(*tf, r.Spin.Installs) },
-		func() (map[string][]byte, error) { return releasePage(r, *tf) },
+		func() (map[string][]byte, error) { return imagesPage(images) },
+		func() (map[string][]byte, error) { return releasePage(r, images) },
 	} {
 		p, err := gen()
 		if err != nil {

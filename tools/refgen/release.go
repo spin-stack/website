@@ -11,6 +11,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/spin-stack/go-tools/versions"
 )
 
 // reference is what the site says it documents, written to src/data/reference.json for the pages
@@ -27,10 +29,10 @@ type reference struct {
 }
 
 // spinRef keeps apart two things one label once said: the release an installation runs, which
-// the install pages name and images.json must have images of, and the tree the reference is
-// generated from, which can be main ahead of every release.
+// the install pages name and the image catalog must have images of, and the tree the reference
+// is generated from, which can be main ahead of every release.
 type spinRef struct {
-	// Installs is the newest release images.json has images of: what `spin_version` names.
+	// Installs is the release versions.yaml pins spin at: what `spin_version` names.
 	Installs string `json:"installs"`
 	// Commit is the commit the reference is generated from.
 	Commit string `json:"commit"`
@@ -122,27 +124,22 @@ func spinData(r *reference, spin string, rows []feature) error {
 }
 
 // publicData is the half of reference.json read from the public repositories, which -only
-// terraform,brand writes with no spin checkout: the release an installation runs, the commit of
-// spin-terraform-aws and its newest release, and brand's commit.
-func publicData(r *reference, tf, brand string) error {
-	raw, err := os.ReadFile(filepath.Join(tf, "images.json"))
+// terraform,brand writes with no spin checkout: the release an installation runs, which is the
+// release versions.yaml pins spin at, the commit of spin-terraform-aws and its newest release, and
+// brand's commit.
+func publicData(r *reference, tf, brand, pinned string) error {
+	v, err := versions.Load(pinned)
 	if err != nil {
 		return err
 	}
-	var all map[string]json.RawMessage
-	if err := json.Unmarshal(raw, &all); err != nil {
-		return fmt.Errorf("images.json: %w", err)
+	e, err := v.Get("spin")
+	if err != nil {
+		return err
 	}
-	releases := make([]string, 0, len(all))
-	for k := range all {
-		releases = append(releases, k)
+	if !releaseParts.MatchString(e.Version) {
+		return fmt.Errorf("%s pins spin at %q, which is no release an installation can run", pinned, e.Version)
 	}
-	if r.Spin.Installs, err = newest(releases); err != nil {
-		return fmt.Errorf("images.json: %w", err)
-	}
-	if r.Spin.Installs == "" {
-		return fmt.Errorf("images.json has no release")
-	}
+	r.Spin.Installs = e.Version
 	if r.Terraform.Commit, err = git(tf, "rev-parse", "HEAD"); err != nil {
 		return err
 	}
@@ -214,7 +211,7 @@ var pinned = regexp.MustCompile("\\?ref=([A-Za-z0-9._/-]*)(<[^>\\s`\"]*>?)?|\\bv
 
 // pinReleases holds every release a hand-written page names to the one it must be: a page that
 // tells people to install an older one is wrong the day a release ships, one that names a spin
-// release images.json has no images of tells them to install what cannot boot, and a module ref
+// release the image catalog has no images of tells them to install what cannot boot, and a module ref
 // that is no tag of spin-terraform-aws fails at init. Written, it rewrites them; checked, each is
 // a line to fix with `task reference`.
 func pinReleases(docs, release, module string, check bool) ([]string, error) {

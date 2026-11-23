@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// The release an installation runs is the newest images.json has, by date and then by number,
+// The newest of a repository's release tags is by date and then by number,
 // not by the strings' order.
 func TestNewestIsByDateThenNumber(t *testing.T) {
 	for _, c := range []struct {

@@ -3,6 +3,8 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"github.com/spin-stack/go-tools/catalog"
 )
 
 const versionsYAML = `- name: spin-machine
@@ -30,7 +32,12 @@ func TestTheMachineIsTheReleasesPin(t *testing.T) {
 // the regions that have every role's.
 func TestTheReleasePageNamesEachPart(t *testing.T) {
 	r := reference{Spin: spinRef{Installs: "v20261019.02", Machine: "v20261014.01"}, Terraform: moduleRef{Release: "v20261024.01"}}
-	pages, err := releasePage(r, fixtureTF)
+	images := catalog.Verified{Release: "v20261019.02", Roles: map[string]catalog.VerifiedRole{
+		"control-plane": booting(map[string]string{"us-east-1": "ami-1", "eu-west-1": "ami-9"}),
+		"proxy":         booting(map[string]string{"us-east-1": "ami-2"}),
+		"runner":        booting(map[string]string{"us-east-1": "ami-3"}),
+	}}
+	pages, err := releasePage(r, images)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +56,11 @@ func TestTheReleasePageNamesEachPart(t *testing.T) {
 		t.Errorf("release.md lists a region without every role's image:\n%s", page)
 	}
 	r.Spin.Machine = ""
-	if _, err := releasePage(r, fixtureTF); err == nil {
+	if _, err := releasePage(r, images); err == nil {
 		t.Error("a release with no machine was written")
 	}
+}
+
+func booting(images map[string]string) catalog.VerifiedRole {
+	return catalog.VerifiedRole{Newest: catalog.VerifiedBuild{Revision: "r1", Build: catalog.Build{Images: images}}}
 }
