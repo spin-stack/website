@@ -46,9 +46,10 @@ a[data-feature="built"] {
 	display: none;
 }
 /* Buttons are spin-stack/brand's (its laboratory's Buttons): the control's height and small
-   corner, the accent solid with a white label for the one primary action, a quiet fill and a
-   hairline for the rest, and the hover and pressed fills brand derives and checks. Starlight's
-   primary was the accent's light tint with dark text: the loudest thing on every page. */
+   corner, the accent solid under its own label for the one primary action (the mark's cyan under
+   navy in dark, the navy under white in light), a quiet fill outlined in the control's border for
+   the rest, and the hover and pressed fills brand derives and checks. Starlight's primary was the
+   accent's light tint with dark text: the loudest thing on every page. */
 .sl-link-button {
 	border-radius: var(--spin-radius-sm);
 	min-height: var(--spin-control-lg);
@@ -74,7 +75,7 @@ a[data-feature="built"] {
 }
 .sl-link-button.secondary {
 	background: var(--spin-control);
-	border-color: var(--spin-border);
+	border-color: var(--spin-control-border);
 	color: var(--spin-text);
 }
 .sl-link-button.secondary:hover {
@@ -96,12 +97,13 @@ a[data-feature="built"] {
 	color: var(--sl-color-gray-2);
 }
 
-/* The sidebar's current page: the accent as a tint, not a block of it. */
+/* The sidebar's current page: the accent as a tint, not a block of it, and the accent's line
+   colour as its label, which is what says it is selected where light's tint is a grey. */
 .sidebar-content a[aria-current="page"],
 .sidebar-content a[aria-current="page"]:hover,
 .sidebar-content a[aria-current="page"]:focus {
 	background-color: var(--sl-color-accent-low);
-	color: var(--sl-color-accent-high);
+	color: var(--spin-accent-text);
 	font-weight: 600;
 }
 

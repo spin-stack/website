@@ -120,7 +120,7 @@ const plain = lines.map((l) => ('cmd' in l ? `$ ${l.cmd}` : l.out)).join('\n');
 		border-color: var(--spin-accent);
 	}
 	.ctl:focus-visible {
-		outline: 2px solid var(--spin-accent);
+		outline: 2px solid var(--spin-accent-text);
 		outline-offset: 1px;
 	}
 	/* Hidden lines keep their room, so the page under it stays put while it types. */
