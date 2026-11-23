@@ -208,3 +208,64 @@ a[data-feature="built"] {
 .sl-markdown-content .expressive-code pre[data-language="plaintext"] .ec-line .code span.indent {
 	white-space: pre;
 }
+
+/* On a phone, the API reference's tables (field, type, what it is) are read row by row: the field
+   and its type on one line, what it is under them at the full width. As a table, the first two
+   columns took the width and left the description a word a line. The header stays for screen
+   readers. Other tables keep their columns and scroll. */
+@media (max-width: 50rem) {
+	main:has([data-api-reference]) .sl-markdown-content table {
+		display: block;
+		overflow: visible;
+		border: 0;
+	}
+	main:has([data-api-reference]) .sl-markdown-content thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+	main:has([data-api-reference]) .sl-markdown-content :is(tbody, tr) {
+		display: block;
+	}
+	main:has([data-api-reference]) .sl-markdown-content tr {
+		padding-block: 0.6rem;
+		border-bottom: 1px solid var(--sl-color-hairline-light);
+	}
+	main:has([data-api-reference]) .sl-markdown-content td {
+		display: inline;
+		padding: 0;
+		border: 0;
+	}
+	main:has([data-api-reference]) .sl-markdown-content td:nth-child(2) {
+		margin-inline-start: 0.5rem;
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+	}
+	main:has([data-api-reference]) .sl-markdown-content td:nth-child(3) {
+		display: block;
+		margin-top: 0.3rem;
+	}
+	main:has([data-api-reference]) .sl-markdown-content td:nth-child(3):empty {
+		display: none;
+	}
+}
+
+/* Expressive Code shows its copy button at all times where there is no hover, at the frame's top
+   right, over the first line. On a phone it sits in the terminal's title bar, and an editor frame
+   keeps its first line clear of it. */
+@media (max-width: 50rem) {
+	.sl-markdown-content .expressive-code .frame.is-terminal .copy {
+		inset-block-start: 0;
+		block-size: calc(var(--ec-uiPadBlk) * 2 + 1.5em);
+		align-items: center;
+	}
+	.sl-markdown-content .expressive-code .frame.is-terminal .copy button {
+		inline-size: 1.75rem;
+		block-size: 1.75rem;
+	}
+	.sl-markdown-content .expressive-code .frame:not(.is-terminal) pre {
+		padding-block-start: 2.75rem;
+	}
+}
