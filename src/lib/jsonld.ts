@@ -37,7 +37,6 @@ export function graph(page: Page, url: string, home: string, ids: Set<string>): 
 		{
 			...author,
 			image: 'https://github.com/aledbf.png',
-			jobTitle: 'Founder',
 			description: 'Engineer who started ingress-nginx, spent almost five years at Gitpod, and builds Spinbox and Construct Linux.',
 			knowsAbout: ['Linux', 'Kubernetes', 'ingress-nginx', 'QEMU', 'virtual machines', 'sandboxing', 'developer environments'],
 			worksFor: { '@id': `${blog}#organization` },
