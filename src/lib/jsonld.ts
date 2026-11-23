@@ -7,6 +7,9 @@ import { nav, topics } from './nav.mjs';
 
 const blog = 'https://blog.spinbox.dev/';
 
+/** The author as an article names them: whole, so a reader that does not resolve @ids still has a name. */
+const author = { '@type': 'Person', '@id': `${blog}#person`, name: 'Manuel de Brito Fontes', url: `${blog}about/` };
+
 /** The public repositories the pages document, each with the language GitHub reads it as. */
 const repositories = [
 	{ name: 'spin', language: 'Go', what: 'The control plane, the runner, the proxy and the CLI.' },
@@ -32,10 +35,12 @@ export function graph(page: Page, url: string, home: string, ids: Set<string>): 
 	const id = (name: string) => ({ '@id': `${home}#${name}` });
 	const nodes: object[] = [
 		{
-			'@type': 'Person',
-			'@id': `${blog}#person`,
-			name: 'Manuel de Brito Fontes',
-			url: `${blog}about/`,
+			...author,
+			image: 'https://github.com/aledbf.png',
+			jobTitle: 'Founder',
+			description: 'Engineer who started ingress-nginx, spent almost five years at Gitpod, and builds Spinbox and Construct Linux.',
+			knowsAbout: ['Linux', 'Kubernetes', 'ingress-nginx', 'QEMU', 'virtual machines', 'sandboxing', 'developer environments'],
+			worksFor: { '@id': `${blog}#organization` },
 			sameAs: ['https://github.com/aledbf', 'https://x.com/aledbf', 'https://www.linkedin.com/in/aledbf/'],
 		},
 		{
@@ -95,7 +100,7 @@ export function graph(page: Page, url: string, home: string, ids: Set<string>): 
 		articleSection: steps[0]?.name,
 		about: id('software'),
 		isPartOf: id('website'),
-		author: { '@id': `${blog}#person` },
+		author,
 		publisher: { '@id': `${blog}#organization` },
 	});
 	const crumbs = [{ name: 'Spinbox docs', path: '/' }, ...steps, { name: page.title, path: `/${page.id}/` }];
