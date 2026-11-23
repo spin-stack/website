@@ -46,7 +46,8 @@ RUN pnpm exec biome ci . && pnpm exec astro check
 FROM deps AS build
 ARG SITE_URL
 ARG BASE_PATH
-ENV SITE_URL=$SITE_URL BASE_PATH=$BASE_PATH
+ARG GA_ID
+ENV SITE_URL=$SITE_URL BASE_PATH=$BASE_PATH GA_ID=$GA_ID
 COPY . .
 # The few rules the build keeps in JavaScript, with node's own runner: no dependency.
 RUN node --test 'src/lib/*.test.mjs' && pnpm build

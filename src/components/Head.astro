@@ -4,6 +4,7 @@
 // does not resolve.
 
 import { getCollection } from 'astro:content';
+import { GA_ID } from 'astro:env/server';
 import Default from '@astrojs/starlight/components/Head.astro';
 import mono400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 import mono600 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2?url';
@@ -47,4 +48,5 @@ const jsonld = graph({ id, title, description: route.entry.data.description ?? '
 <meta name="twitter:image" content={image} />
 <link rel="alternate" type="text/markdown" href={`${base}${twinPath(id)}`} />
 <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+{GA_ID && <script is:inline async src={`${base}/ga.js`} data-id={GA_ID} />}
 {[sans400, sans600, mono400, mono600].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
