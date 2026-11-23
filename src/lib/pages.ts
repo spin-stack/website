@@ -116,7 +116,7 @@ export function toMarkdown(d: Doc, base: string): string {
 		(_, name: string, caption: string, lang = 'text') => `${caption}:\n\n\`\`\`${lang}\n${output(name)}\n\`\`\``,
 	);
 	// A diagram is its caption, its words in the order the picture has them, and where it is drawn.
-	body = body.replace(/<Figure\s+name="([\w-]+)"\s+caption="([^"]*)"\s*\/>/g, (_, name: string, caption: string) => {
+	body = body.replace(/<Figure\s+name="([\w-]+)"(?:\s+alt="[^"]*")?\s+caption="([^"]*)"\s*\/>/g, (_, name: string, caption: string) => {
 		const f = (figures as Record<string, { source: string; words: string[] }>)[name];
 		if (!f) throw new Error(`${d.id}: <Figure name="${name}"> is no diagram in src/data/figures.json`);
 		return `*Diagram: ${caption}* Its labels: ${f.words.join(' · ')}. ([source](${f.source}))`;
