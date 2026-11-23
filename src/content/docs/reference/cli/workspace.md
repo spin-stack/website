@@ -65,7 +65,7 @@ Global Flags:
 Use "spin workspace [command] --help" for more information about a command.
 ```
 
-### spin workspace bandwidth
+## spin workspace bandwidth
 
 ```
 Set what a workspace's network carries each way, in megabits a second; 0 lifts the limit
@@ -89,7 +89,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace clone
+## spin workspace clone
 
 ```
 Clone a running workspace: a snapshot of its disk is taken and published, and a workspace
@@ -117,7 +117,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace console
+## spin workspace console
 
 ```
 Show the tail of a workspace's serial console: the kernel, then the guest's init,
@@ -142,7 +142,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace create
+## spin workspace create
 
 ```
 Create a new workspace from an image or a snapshot. An image is a published starting disk
@@ -194,7 +194,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace delete
+## spin workspace delete
 
 ```
 Delete a workspace. Where the installation keeps a trash, the workspace goes there with
@@ -217,7 +217,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace deleted
+## spin workspace deleted
 
 ```
 List your workspaces in the trash
@@ -235,7 +235,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace denials
+## spin workspace denials
 
 ```
 The egress a workspace's policy refused, as its supervisor reported it, newest first:
@@ -256,7 +256,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace egress
+## spin workspace egress
 
 ```
 List every destination a running workspace's machine has been allowed to reach, with the
@@ -280,7 +280,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace get
+## spin workspace get
 
 ```
 Get workspace details
@@ -298,7 +298,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace grant
+## spin workspace grant
 
 ```
 Give a workspace more cores and memory of its own, while it runs: its host sets them aside
@@ -336,7 +336,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace guests
+## spin workspace guests
 
 ```
 A guest logs in to a workspace with any key of their own, as root, as its owner does. Letting
@@ -363,7 +363,7 @@ Global Flags:
 Use "spin workspace guests [command] --help" for more information about a command.
 ```
 
-#### spin workspace guests add
+### spin workspace guests add
 
 ```
 Let a person in, confirmed with your passkey in the browser
@@ -382,7 +382,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin workspace guests list
+### spin workspace guests list
 
 ```
 The guests of a workspace
@@ -400,7 +400,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin workspace guests remove
+### spin workspace guests remove
 
 ```
 The next session they ask for is refused, and the one they hold ends with its certificate,
@@ -419,7 +419,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace history
+## spin workspace history
 
 ```
 Show workspace state change history
@@ -438,7 +438,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace keep
+## spin workspace keep
 
 ```
 Answer the question asked ten minutes before a suspension: for the duration given - 2h, 90m,
@@ -460,7 +460,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace list
+## spin workspace list
 
 ```
 List your workspaces
@@ -479,7 +479,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace logs
+## spin workspace logs
 
 ```
 Search the workspace's console as the installation kept it, newest first: every run
@@ -507,7 +507,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace move
+## spin workspace move
 
 ```
 Move a running workspace to another host, holding what it holds: it is suspended where it
@@ -532,7 +532,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace policies
+## spin workspace policies
 
 ```
 List the network policies the hosts report they enforce, by name: these are the words
@@ -556,7 +556,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace quarantine
+## spin workspace quarantine
 
 ```
 Hold a workspace in quarantine: an administrator's decision, and until one releases it
@@ -579,7 +579,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace recover
+## spin workspace recover
 
 ```
 Move a workspace to another host after the one it was on died.
@@ -604,7 +604,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace release
+## spin workspace release
 
 ```
 Give back the cores and memory a workspace was granted: it holds what its preset started it
@@ -624,7 +624,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace reset
+## spin workspace reset
 
 ```
 Put a stopped workspace's disk back to the snapshot it was created from: the image, or
@@ -650,7 +650,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace restore
+## spin workspace restore
 
 ```
 Put a stopped workspace's disk back to one of its snapshots. Without a snapshot, the
@@ -679,7 +679,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace retag
+## spin workspace retag
 
 ```
 Replace the network policies a workspace runs under, while it runs. The host is told
@@ -712,7 +712,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace start
+## spin workspace start
 
 ```
 Start a stopped workspace on its disk, or resume a suspended one from the memory it kept.
@@ -737,7 +737,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace status
+## spin workspace status
 
 ```
 Show what each party believes about a workspace, and where they disagree.
@@ -760,7 +760,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace stop
+## spin workspace stop
 
 ```
 Stop a running workspace. Its disk is kept for the next start.
@@ -784,7 +784,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace suspend
+## spin workspace suspend
 
 ```
 Checkpoint a running workspace's memory and disk and stop its machine. Its next start
@@ -811,7 +811,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace threads
+## spin workspace threads
 
 ```
 The agent's threads - T3 Code's chats - as the workspace's supervisor last reported them,
@@ -831,7 +831,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace undelete
+## spin workspace undelete
 
 ```
 Take a workspace out of the trash, stopped, with its disk. It keeps its name unless another
@@ -851,7 +851,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace unquarantine
+## spin workspace unquarantine
 
 ```
 Release a quarantined workspace: back to stopped, where it was held from, with its disk
@@ -873,7 +873,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace update
+## spin workspace update
 
 ```
 Update workspace properties such as name and environment variables.
@@ -902,7 +902,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin workspace watch
+## spin workspace watch
 
 ```
 Have the workspace's host record where it connects: each name it looks up, each

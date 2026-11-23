@@ -40,7 +40,7 @@ Global Flags:
 Use "spin git [command] --help" for more information about a command.
 ```
 
-### spin git connect
+## spin git connect
 
 ```
 Connect your account on a forge through this installation's app. The control plane asks the
@@ -65,7 +65,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin git disconnect
+## spin git disconnect
 
 ```
 Forget your account on a forge, and have the forge revoke the token this installation held: your
@@ -85,7 +85,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin git list
+## spin git list
 
 ```
 List your connected accounts
@@ -103,7 +103,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin git repos
+## spin git repos
 
 ```
 List the repositories your account reaches, or those whose name has query in it

@@ -40,7 +40,7 @@ func cliPages(bin, home string) (map[string][]byte, error) {
 	for i, c := range top.subs {
 		var b strings.Builder
 		b.WriteString(frontmatter("spin:cmd/cli", "spin "+c.name, "spin "+c.name+": "+c.short+".", i+1))
-		if err := walk(bin, home, []string{c.name}, &b, 2); err != nil {
+		if err := walk(bin, home, []string{c.name}, &b, 1); err != nil {
 			return nil, err
 		}
 		pages[filepath.Join("cli", c.name+".md")] = []byte(b.String())
@@ -50,12 +50,14 @@ func cliPages(bin, home string) (map[string][]byte, error) {
 	return pages, nil
 }
 
+// walk writes a command's help, and under it each command below it with a heading a level
+// deeper: the page's title is the top command, so the commands under it are its sections (h2).
 func walk(bin, home string, path []string, b *strings.Builder, depth int) error {
 	h, err := help(bin, home, path)
 	if err != nil {
 		return err
 	}
-	if depth > 2 {
+	if depth > 1 {
 		fmt.Fprintf(b, "%s spin %s\n\n", strings.Repeat("#", depth), strings.Join(path, " "))
 	}
 	fmt.Fprintf(b, "```\n%s```\n\n", h.text)

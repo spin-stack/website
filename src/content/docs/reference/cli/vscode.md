@@ -31,7 +31,7 @@ Global Flags:
 Use "spin vscode [command] --help" for more information about a command.
 ```
 
-### spin vscode install
+## spin vscode install
 
 ```
 Install the Spinbox extension (spin-stack.spinbox) into VS Code, from the release of

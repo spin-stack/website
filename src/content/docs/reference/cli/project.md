@@ -45,7 +45,7 @@ Global Flags:
 Use "spin project [command] --help" for more information about a command.
 ```
 
-### spin project create
+## spin project create
 
 ```
 Make a project: its repository, the ref it opens at, and the shape of the workspace that opens
@@ -79,7 +79,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin project delete
+## spin project delete
 
 ```
 Delete a project; one with a workspace open on it is refused
@@ -98,7 +98,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin project list
+## spin project list
 
 ```
 List the projects you see
@@ -116,7 +116,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin project prebuild
+## spin project prebuild
 
 ```
 Build one of a project's prebuild refs now, at the commit its forge says it is at, rather than at
@@ -136,7 +136,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin project prebuilds
+## spin project prebuilds
 
 ```
 List a project's prebuilds: each build of one of its prebuild refs at a commit, what became of it,
@@ -155,7 +155,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin project share
+## spin project share
 
 ```
 Say who sees a project and who administers it: everybody (--everyone), or the people (--user,
@@ -182,7 +182,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin project update
+## spin project update
 
 ```
 Save a project whole: what each flag says is what the project becomes, and a flag not given

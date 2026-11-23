@@ -40,7 +40,7 @@ Global Flags:
 Use "spin share [command] --help" for more information about a command.
 ```
 
-### spin share add
+## spin share add
 
 ```
 Share a snapshot with a user
@@ -59,7 +59,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin share browse
+## spin share browse
 
 ```
 List snapshots shared with you
@@ -78,7 +78,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin share list
+## spin share list
 
 ```
 List users who have access to a snapshot
@@ -96,7 +96,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin share private
+## spin share private
 
 ```
 Make a snapshot private
@@ -114,7 +114,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin share public
+## spin share public
 
 ```
 Make a snapshot public
@@ -133,7 +133,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin share remove
+## spin share remove
 
 ```
 Remove a user's access to a snapshot

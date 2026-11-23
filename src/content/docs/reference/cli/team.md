@@ -40,7 +40,7 @@ Global Flags:
 Use "spin team [command] --help" for more information about a command.
 ```
 
-### spin team create
+## spin team create
 
 ```
 Create a new team. Use --parent to nest under an existing team.
@@ -66,7 +66,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin team delete
+## spin team delete
 
 ```
 Delete a team. Only team owners can delete teams.
@@ -87,7 +87,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin team get
+## spin team get
 
 ```
 Get team details
@@ -105,7 +105,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin team list
+## spin team list
 
 ```
 List teams
@@ -125,7 +125,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin team member
+## spin team member
 
 ```
 Manage team members
@@ -152,7 +152,7 @@ Global Flags:
 Use "spin team member [command] --help" for more information about a command.
 ```
 
-#### spin team member add
+### spin team member add
 
 ```
 Add a member to a team
@@ -171,7 +171,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team member list
+### spin team member list
 
 ```
 List team members
@@ -189,7 +189,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team member remove
+### spin team member remove
 
 ```
 Remove a member from a team
@@ -207,7 +207,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team member role
+### spin team member role
 
 ```
 Update a member's role
@@ -225,7 +225,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin team policy
+## spin team policy
 
 ```
 A team's network policies are named allowlists, declared by its admins where the
@@ -254,7 +254,7 @@ Global Flags:
 Use "spin team policy [command] --help" for more information about a command.
 ```
 
-#### spin team policy delete
+### spin team policy delete
 
 ```
 Delete a team's network policy no workspace runs under
@@ -273,7 +273,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team policy list
+### spin team policy list
 
 ```
 List a team's network policies and what each allows
@@ -291,7 +291,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team policy set
+### spin team policy set
 
 ```
 Make a team's policy, or replace what it allows, whole. Each --rule is destinations, then
@@ -316,7 +316,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-### spin team secret
+## spin team secret
 
 ```
 A team's secrets are what a brokered network rule has the host's egress proxy add to a
@@ -346,7 +346,7 @@ Global Flags:
 Use "spin team secret [command] --help" for more information about a command.
 ```
 
-#### spin team secret delete
+### spin team secret delete
 
 ```
 Delete a team's secret
@@ -365,7 +365,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team secret list
+### spin team secret list
 
 ```
 List a team's secrets, by name
@@ -383,7 +383,7 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
-#### spin team secret set
+### spin team secret set
 
 ```
 Set a team's secret to what standard input holds, and the hosts it may be sent to, replacing
