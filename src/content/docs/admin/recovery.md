@@ -1,5 +1,6 @@
 ---
 title: Backups and recovery
+metaTitle: "Backups and recovery of an installation"
 description: What an installation's durable state is, how each part is backed up, and what can be recovered after losing a runner, a machine, or the database.
 reads:
   - "spin:internal/pgserver/server.go@v20261114.01"

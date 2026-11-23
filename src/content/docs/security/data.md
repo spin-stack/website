@@ -1,5 +1,6 @@
 ---
 title: Data and encryption
+metaTitle: "Data and encryption: keys, snapshots and deletes"
 description: How disks, memory snapshots and the installation's secrets are encrypted, where each key lives, and what each kind of delete destroys.
 reads:
   - "spin:docs/security/README.md@v20261114.01"

@@ -1,5 +1,6 @@
 ---
 title: Supply chain
+metaTitle: "Supply chain: signed releases and Spin OS"
 description: How a release is built, signed and verified, how Spin OS makes every machine run exactly what the release signed, and what each image is made of.
 reads:
   - "spin:docs/releases.md@v20261114.01"

@@ -1,5 +1,6 @@
 ---
 title: Profiles
+metaTitle: "Profiles: the module set for one person to a hundred"
 description: "How to set the module for one person, one person with agents, a small team, a team of twenty and a hundred people, and what each choice trades."
 reads:
   - "spin-terraform-aws:variables.tf@v20261027.02"

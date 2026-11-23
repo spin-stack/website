@@ -1,6 +1,7 @@
 ---
 title: "spin port"
-description: "spin port: Manage exposed ports for workspaces."
+metaTitle: "spin port: Manage exposed ports for workspaces | Spinbox CLI"
+description: "spin port: Manage exposed ports for workspaces. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

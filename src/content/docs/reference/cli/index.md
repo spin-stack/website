@@ -1,5 +1,6 @@
 ---
 title: "CLI"
+metaTitle: "The spin CLI: every command, as its --help says it"
 description: "Every command of the spin CLI, as its own --help says it: workspaces, snapshots, ports, keys, teams and administration."
 source: "spin:cmd/cli"
 editUrl: false

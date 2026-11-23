@@ -1,5 +1,6 @@
 ---
 title: "bootstrap"
+metaTitle: "bootstrap: the account's state bucket and CI roles"
 description: "spin-terraform-aws, the once-per-account state bucket and key, and CI's roles."
 source: "spin-terraform-aws:bootstrap/main.tf"
 editUrl: false

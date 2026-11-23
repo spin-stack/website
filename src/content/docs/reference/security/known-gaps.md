@@ -1,5 +1,6 @@
 ---
 title: "Known gaps"
+metaTitle: "Security known gaps: what is not enforced yet"
 description: "The parts of Spinbox's security model that are not enforced yet, each a design change rather than a patch."
 source: "spin:docs/security/README.md"
 editUrl: false

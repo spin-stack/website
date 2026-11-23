@@ -1,5 +1,6 @@
 ---
 title: Ports and sharing
+metaTitle: "Ports and sharing: reach a workspace's services"
 description: How to reach a service running in a workspace over HTTPS, who can reach it, and how to share it with other users or make it public.
 reads:
   - "spin:cmd/cli/cmd/port.go@v20261114.01"

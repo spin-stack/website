@@ -1,6 +1,7 @@
 ---
 title: "spin admin"
-description: "spin admin: Administrative commands."
+metaTitle: "spin admin: Administrative commands | Spinbox CLI"
+description: "spin admin: Administrative commands. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

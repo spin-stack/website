@@ -1,6 +1,7 @@
 ---
 title: "spin project"
-description: "spin project: Manage projects: a repository and the workspace that opens it."
+metaTitle: "spin project: usage and flags | Spinbox CLI"
+description: "spin project: Manage projects: a repository and the workspace that opens it. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

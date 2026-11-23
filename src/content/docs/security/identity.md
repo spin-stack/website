@@ -1,5 +1,6 @@
 ---
 title: Identity and access
+metaTitle: "Identity and access: how every request is authorized"
 description: How users, API keys, runners and machines prove who they are, how every request is authorized, and what limits each machine's cloud role.
 reads:
   - "spin:docs/security/README.md@v20261114.01"

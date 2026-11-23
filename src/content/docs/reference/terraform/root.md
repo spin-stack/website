@@ -1,5 +1,6 @@
 ---
 title: "The installation module"
+metaTitle: "The OpenTofu module: every variable and output"
 description: "spin-terraform-aws, the module an installation uses: every variable it takes and every output it gives."
 source: "spin-terraform-aws:variables.tf"
 editUrl: false

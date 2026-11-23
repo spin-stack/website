@@ -1,6 +1,7 @@
 ---
 title: "spin whoami"
-description: "spin whoami: Show current user info."
+metaTitle: "spin whoami: Show current user info | Spinbox CLI"
+description: "spin whoami: Show current user info. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

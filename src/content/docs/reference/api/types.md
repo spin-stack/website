@@ -1,5 +1,6 @@
 ---
 title: "Types"
+metaTitle: "spin.v1 types: every message and enum | Spinbox API"
 description: "Every message and enum the spin.v1 procedures name, with their fields and values."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false

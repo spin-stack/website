@@ -1,6 +1,7 @@
 ---
 title: "spin ssh"
-description: "spin ssh: SSH into a workspace."
+metaTitle: "spin ssh: SSH into a workspace | Spinbox CLI"
+description: "spin ssh: SSH into a workspace. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

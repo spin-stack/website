@@ -1,6 +1,7 @@
 ---
 title: "spin team"
-description: "spin team: Manage teams."
+metaTitle: "spin team: Manage teams | Spinbox CLI"
+description: "spin team: Manage teams. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

@@ -1,6 +1,7 @@
 ---
 title: "spin git"
-description: "spin git: Your accounts on forges: GitHub, connected through this installation's app."
+metaTitle: "spin git: usage and flags | Spinbox CLI"
+description: "spin git: Your accounts on forges: GitHub, connected through this installation's app. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

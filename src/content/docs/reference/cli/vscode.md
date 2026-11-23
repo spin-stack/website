@@ -1,6 +1,7 @@
 ---
 title: "spin vscode"
-description: "spin vscode: The Spinbox extension for VS Code."
+metaTitle: "spin vscode: The Spinbox extension for VS Code | Spinbox CLI"
+description: "spin vscode: The Spinbox extension for VS Code. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

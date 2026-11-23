@@ -1,5 +1,6 @@
 ---
 title: Installation settings
+metaTitle: "Installation settings: the file and the dashboard"
 description: "How an installation is configured: the file that seeds it, the dashboard that edits it, and how a changed file becomes a proposal."
 reads:
   - "spin:configs/spin-example.yaml@v20261114.01"

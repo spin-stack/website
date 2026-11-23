@@ -1,6 +1,7 @@
 ---
 title: "spin exec"
-description: "spin exec: Run a command in a workspace."
+metaTitle: "spin exec: Run a command in a workspace | Spinbox CLI"
+description: "spin exec: Run a command in a workspace. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

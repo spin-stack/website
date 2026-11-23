@@ -1,5 +1,6 @@
 ---
 title: "Spin OS images"
+metaTitle: "Spin OS images by region for this release"
 description: "The Spin OS images the module boots for the release this site documents, by region, from images.json."
 source: "spin-terraform-aws:images.json"
 editUrl: false

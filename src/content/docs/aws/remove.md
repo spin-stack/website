@@ -1,5 +1,6 @@
 ---
 title: "Remove"
+metaTitle: "Remove a Spinbox installation from AWS"
 description: "Delete an installation on purpose: what refuses to be destroyed, why, and the steps to remove it anyway."
 source: "spin-terraform-aws:README.md"
 editUrl: false

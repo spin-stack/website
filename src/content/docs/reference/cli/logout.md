@@ -1,6 +1,7 @@
 ---
 title: "spin logout"
-description: "spin logout: End the profile's session and forget its login."
+metaTitle: "spin logout: usage and flags | Spinbox CLI"
+description: "spin logout: End the profile's session and forget its login. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

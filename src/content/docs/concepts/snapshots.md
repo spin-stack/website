@@ -1,5 +1,6 @@
 ---
 title: Snapshots and rollback
+metaTitle: "Snapshots and rollback: memory, diff and clone"
 description: Disk and memory snapshots, restoring and resetting a workspace, diffing two snapshots, cloning, and sharing a snapshot with others.
 reads:
   - "spin:cmd/cli/cmd/snapshot.go@v20261114.01"

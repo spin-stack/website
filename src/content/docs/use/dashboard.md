@@ -1,5 +1,6 @@
 ---
 title: The dashboard
+metaTitle: "The dashboard, in screenshots of a real installation"
 description: What the dashboard shows, in screenshots spin's own dashboard suite takes of a real installation.
 source: "spin:dashboard/e2e/site.spec.ts"
 editUrl: false

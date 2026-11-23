@@ -1,6 +1,7 @@
 ---
 title: "spin cp"
-description: "spin cp: Copy files to or from a workspace."
+metaTitle: "spin cp: Copy files to or from a workspace | Spinbox CLI"
+description: "spin cp: Copy files to or from a workspace. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:

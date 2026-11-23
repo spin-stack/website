@@ -1,5 +1,6 @@
 ---
 title: "Rules and their gates"
+metaTitle: "Security rules and the gate that holds each one"
 description: "The rules every entry point of Spinbox must keep, and the test or lint that fails the build when one is broken."
 source: "spin:docs/security/README.md"
 editUrl: false

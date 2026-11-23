@@ -1,6 +1,7 @@
 ---
 title: "spin ssh-config"
-description: "spin ssh-config: Make every workspace reachable with plain ssh, as the host spin.<workspace>."
+metaTitle: "spin ssh-config: usage and flags | Spinbox CLI"
+description: "spin ssh-config: Make every workspace reachable with plain ssh, as the host spin.<workspace>. Its usage and flags, from the CLI's own help."
 source: "spin:cmd/cli"
 editUrl: false
 sidebar:
