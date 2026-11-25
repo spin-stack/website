@@ -1,5 +1,6 @@
 ---
 title: Jobs, workspaces, the bill and the store
+metaTitle: "Spinbox administration: jobs, billing and the store"
 description: What an administrator runs and reads beyond runners, from the control plane's jobs and the month's bill to the store, disk keys and a root shell.
 reads:
   - "spin:cmd/cli/cmd/admin_jobs.go@v20261114.01"
