@@ -1,6 +1,6 @@
 // @ts-check
 import starlight from '@astrojs/starlight';
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig, envField, sharpImageService } from 'astro/config';
 import starlightImageZoom from 'starlight-image-zoom';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 import { rehypeBaseLinks } from './src/lib/base-links.mjs';
@@ -28,6 +28,9 @@ export default defineConfig({
 	site,
 	base,
 	trailingSlash: 'always',
+	// Screenshots re-encode at WebP 75: at Sharp's default (80) they weigh a fifth more, with no difference
+	// visible at the width a page shows them.
+	image: { service: sharpImageService({ webp: { quality: 75, effort: 6 } }) },
 	// A Content-Security-Policy in a <meta> on every page: Astro hashes the scripts and styles it
 	// emits, Starlight's inline scripts are hashed from its components (src/lib/csp.mjs), and
 	// nothing else runs. Pagefind, the search, compiles WebAssembly. Cloudflare adds its Web
@@ -48,7 +51,14 @@ export default defineConfig({
 				resources: ["'self'", "'wasm-unsafe-eval'", 'https://static.cloudflareinsights.com', ...ga.script],
 				hashes: starlightInlineHashes(),
 			},
-			styleDirective: { resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }] },
+			styleDirective: {
+				// 'self' scoped to elements: an attribute has no address for it to match, and Astro warns when
+				// style-src names it beside style-src-attr.
+				resources: [
+					{ resource: "'self'", kind: 'element' },
+					{ resource: "'unsafe-inline'", kind: 'attribute' },
+				],
+			},
 		},
 	},
 	// Every stylesheet a file, never a <style>: 'self' covers a file, and Astro can't hash the
@@ -58,7 +68,9 @@ export default defineConfig({
 	// Greek and Vietnamese files are under Vite's 4 KiB limit, and each page logged a refused font.
 	vite: { build: { assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined) } },
 	env: { schema: { GA_ID: envField.string({ context: 'server', access: 'public', optional: true }) } },
-	markdown: { rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
+	// Starlight colours code with Expressive Code; Astro's own Shiki colours nothing here, and with it on
+	// Astro warns about CSP on every build.
+	markdown: { syntaxHighlight: false, rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
 	integrations: [
 		cspCheck(),
 		starlight({
