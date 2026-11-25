@@ -40,7 +40,7 @@ if (source) {
 		<a class="legal" href="https://blog.spinbox.dev/privacy/">Privacy</a>
 		{
 			GTM_ID && (
-				<a class="legal" href="https://blog.spinbox.dev/privacy/" data-cc="show-preferencesModal" data-consent-open hidden>
+				<a class="legal" href="https://blog.spinbox.dev/privacy/" data-cc="show-preferencesModal">
 					Cookie preferences
 				</a>
 			)
@@ -48,20 +48,6 @@ if (source) {
 	</p>
 </div>
 <Default />
-{
-	GTM_ID && (
-		<section id="consent" class="consent" aria-label="Cookies" hidden>
-			<p>
-				This site uses Google Analytics to see which pages get read. It sets cookies only if you say yes.{' '}
-				<a href="https://blog.spinbox.dev/privacy/">Privacy</a>
-			</p>
-			<div class="choices">
-				<button type="button" data-consent="denied">No, thanks</button>
-				<button type="button" data-consent="granted">Accept</button>
-			</div>
-		</section>
-	)
-}
 
 <style>
 	.provenance {
@@ -75,49 +61,5 @@ if (source) {
 	}
 	.legal {
 		margin-left: 0.5rem;
-	}
-	.legal[hidden] {
-		display: none;
-	}
-	/* The cookie banner: over the page's foot, so nothing moves when it shows; No and Yes weigh the same. */
-	.consent {
-		position: fixed;
-		inset: auto 1rem 1rem;
-		z-index: 100;
-		max-width: 40rem;
-		margin-inline: auto;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.75rem 1.25rem;
-		padding: 0.9rem 1.1rem;
-		background: var(--sl-color-bg-nav);
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: 0.5rem;
-		font-size: var(--sl-text-sm);
-		color: var(--sl-color-white);
-	}
-	.consent[hidden] {
-		display: none;
-	}
-	.consent p {
-		flex: 1 1 18rem;
-		margin: 0;
-	}
-	.consent .choices {
-		display: flex;
-		gap: 0.5rem;
-	}
-	.consent button {
-		font: inherit;
-		padding: 0.4rem 0.9rem;
-		color: var(--sl-color-white);
-		background: var(--sl-color-bg);
-		border: 1px solid var(--sl-color-gray-4);
-		border-radius: 0.35rem;
-		cursor: pointer;
-	}
-	.consent button:hover {
-		background: var(--sl-color-gray-6);
 	}
 </style>
