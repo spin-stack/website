@@ -48,5 +48,7 @@ const jsonld = graph({ id, title, description: route.entry.data.description ?? '
 <meta name="twitter:image" content={image} />
 <link rel="alternate" type="text/markdown" href={`${base}${twinPath(id)}`} />
 <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+{GTM_ID && <link rel="stylesheet" href={`${base}/cookieconsent.css`} />}
+{GTM_ID && <script is:inline defer src={`${base}/cookieconsent.umd.js`} />}
 {GTM_ID && <script is:inline defer src={`${base}/consent.js`} data-id={GTM_ID} />}
 {[sans400, sans600, mono400, mono600].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
