@@ -2,6 +2,7 @@
 // Starlight's footer, with where the page comes from: the release an installation runs and the
 // tree the reference is generated from on every page, the source a generated page is written
 // from at the commit it was written at, and the page's Markdown twin.
+import { GTM_ID } from 'astro:env/server';
 import Default from '@astrojs/starlight/components/Footer.astro';
 import reference from '../data/reference.json';
 import { generatedFrom } from '../lib/reference';
@@ -36,9 +37,21 @@ if (source) {
 		Installations run Spinbox <code>{reference.spin.installs}</code>; the reference is generated from{' '}
 		<Fragment set:html={generatedFrom.replace(/`([^`]+)`/g, '<code>$1</code>')} />.{' '}
 		<a href={`${base}${twinPath(id)}`}>This page as Markdown</a>, for a model or a terminal.
+		{GTM_ID && <button type="button" class="cookies" data-consent-open hidden>Cookies</button>}
 	</p>
 </div>
 <Default />
+{
+	GTM_ID && (
+		<section id="consent" class="consent" aria-label="Cookies" hidden>
+			<p>This site uses Google Analytics to see which pages get read. It sets cookies only if you say yes.</p>
+			<div class="choices">
+				<button type="button" data-consent="denied">No, thanks</button>
+				<button type="button" data-consent="granted">Accept</button>
+			</div>
+		</section>
+	)
+}
 
 <style>
 	.provenance {
@@ -49,5 +62,59 @@ if (source) {
 	}
 	.provenance p + p {
 		margin-top: 0.25rem;
+	}
+	.cookies {
+		font: inherit;
+		padding: 0;
+		margin-left: 0.5rem;
+		color: var(--sl-color-gray-3);
+		background: none;
+		border: 0;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+	.cookies[hidden] {
+		display: none;
+	}
+	/* The cookie banner: over the page's foot, so nothing moves when it shows; No and Yes weigh the same. */
+	.consent {
+		position: fixed;
+		inset: auto 1rem 1rem;
+		z-index: 100;
+		max-width: 40rem;
+		margin-inline: auto;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1.25rem;
+		padding: 0.9rem 1.1rem;
+		background: var(--sl-color-bg-nav);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-white);
+	}
+	.consent[hidden] {
+		display: none;
+	}
+	.consent p {
+		flex: 1 1 18rem;
+		margin: 0;
+	}
+	.consent .choices {
+		display: flex;
+		gap: 0.5rem;
+	}
+	.consent button {
+		font: inherit;
+		padding: 0.4rem 0.9rem;
+		color: var(--sl-color-white);
+		background: var(--sl-color-bg);
+		border: 1px solid var(--sl-color-gray-4);
+		border-radius: 0.35rem;
+		cursor: pointer;
+	}
+	.consent button:hover {
+		background: var(--sl-color-gray-6);
 	}
 </style>

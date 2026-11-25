@@ -4,7 +4,7 @@
 // does not resolve.
 
 import { getCollection } from 'astro:content';
-import { GA_ID } from 'astro:env/server';
+import { GTM_ID } from 'astro:env/server';
 import Default from '@astrojs/starlight/components/Head.astro';
 // The faces the first screen sets, fetched with the page: found late, through the stylesheet, a
 // face swaps in after the first paint and the notice and the hero move with it (a layout shift of
@@ -48,5 +48,5 @@ const jsonld = graph({ id, title, description: route.entry.data.description ?? '
 <meta name="twitter:image" content={image} />
 <link rel="alternate" type="text/markdown" href={`${base}${twinPath(id)}`} />
 <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
-{GA_ID && <script is:inline async src={`${base}/ga.js`} data-id={GA_ID} />}
+{GTM_ID && <script is:inline defer src={`${base}/consent.js`} data-id={GTM_ID} />}
 {[sans400, sans600, mono400, mono600].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
