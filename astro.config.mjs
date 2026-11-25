@@ -14,9 +14,9 @@ import { rehypePostLinks } from './src/lib/post-links.mjs';
 // rehypeBaseLinks puts it in front.
 const site = process.env.SITE_URL || 'https://docs.spinbox.dev';
 const base = process.env.BASE_PATH || '/';
-// Google Analytics' measurement ID: given to production's build alone (pages.yml), and with none
-// the site has no analytics script and its policy names none of Google's addresses.
-const ga = process.env.GA_ID
+// Google Tag Manager's container ID: given to production's build alone (pages.yml), and with none
+// the site has no script of Google's and its policy names none of Google's addresses.
+const ga = process.env.GTM_ID
 	? {
 			script: ['https://www.googletagmanager.com'],
 			img: ' https://*.google-analytics.com https://*.googletagmanager.com',
@@ -67,7 +67,7 @@ export default defineConfig({
 	// Nor is a face inlined as a data: URL, which the policy's default-src refuses: JetBrains Mono's
 	// Greek and Vietnamese files are under Vite's 4 KiB limit, and each page logged a refused font.
 	vite: { build: { assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined) } },
-	env: { schema: { GA_ID: envField.string({ context: 'server', access: 'public', optional: true }) } },
+	env: { schema: { GTM_ID: envField.string({ context: 'server', access: 'public', optional: true }) } },
 	// Starlight colours code with Expressive Code; Astro's own Shiki colours nothing here, and with it on
 	// Astro warns about CSP on every build.
 	markdown: { syntaxHighlight: false, rehypePlugins: [rehypeFeatureLinks, rehypePostLinks, [rehypeBaseLinks, { base }]] },
