@@ -1,12 +1,18 @@
 {
-	"generated": "2026-11-23",
+	"generated": "2026-11-25",
 	"blog": "https://blog.spinbox.dev",
 	"posts": [
 		{
-			"slug": "soon",
-			"path": "/spinbox/soon/",
-			"title": "Soon",
-			"date": "2026-11-23"
+			"slug": "a-desktop-from-server-parts",
+			"path": "/construct/a-desktop-from-server-parts/",
+			"title": "A desktop from server parts",
+			"date": "2026-11-25"
+		},
+		{
+			"slug": "workspaces-from-parts-that-already-exist",
+			"path": "/spinbox/workspaces-from-parts-that-already-exist/",
+			"title": "Workspaces for people and agents, from parts that already exist",
+			"date": "2026-11-25"
 		}
 	]
 }
