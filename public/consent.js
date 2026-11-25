@@ -1,7 +1,7 @@
 // Google Tag Manager, only after a reader says yes. Head.astro loads this file in production builds
 // with the container's ID (data-id). Nothing from Google loads, and no cookie is set, until the
 // banner's Accept (Footer.astro): then Consent Mode is told analytics may store, and gtm.js loads. The answer is
-// kept in localStorage; "Cookies" in the footer asks again, and a No after a Yes takes the
+// kept in localStorage; "Cookie preferences" in the footer asks again, and a No after a Yes takes the
 // consent back and clears Google's cookies. A file, not an inline script, so the
 // Content-Security-Policy names it with 'self'.
 (() => {
