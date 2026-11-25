@@ -28,3 +28,6 @@ pnpm-debug.log*
 # ui-hill-climb: the captures and the council sets are evidence, not source
 ui-hill-climb/rounds/
 _output/
+
+# derived from the brand marks on every build and dev run (tools/marks.mjs)
+src/assets/logo*.webp

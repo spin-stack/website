@@ -36,10 +36,10 @@ h1#_top {
 	flex: none;
 	height: calc(var(--sl-nav-height) - 2 * var(--sl-nav-pad-y));
 	aspect-ratio: 1;
-	background: url("../assets/logo.png") center / contain no-repeat;
+	background: url("../assets/logo.webp") center / contain no-repeat;
 }
 :root[data-theme="light"] .site-title::before {
-	background-image: url("../assets/logo-light.png");
+	background-image: url("../assets/logo-light.webp");
 }
 
 /* The experimental notice: one line, quiet, never a second hero. */
