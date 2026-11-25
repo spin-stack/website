@@ -62,7 +62,7 @@ tasks:
         -v "$PWD":/app -v /app/node_modules
         -p {{.HOST}}:{{.PORT}}:4321
         {{.IMAGE}}:deps
-        pnpm dev --port 4321 --host 0.0.0.0
+        sh -c 'node tools/marks.mjs && pnpm dev --port 4321 --host 0.0.0.0'
 
   sources:
     desc: Fetch spin, spin-terraform-aws and brand into .sources/, each at the commit versions.yaml pins, and spin's release's screenshots (site-shots.tar.gz) beside them. spin is private - SOURCES_TOKEN, or git's own credentials, reads it.

@@ -50,7 +50,7 @@ ARG GA_ID
 ENV SITE_URL=$SITE_URL BASE_PATH=$BASE_PATH GA_ID=$GA_ID
 COPY . .
 # The few rules the build keeps in JavaScript, with node's own runner: no dependency.
-RUN node --test 'src/lib/*.test.mjs' && pnpm build
+RUN node --test 'src/lib/*.test.mjs' && node tools/marks.mjs && pnpm build
 
 FROM scratch AS dist
 COPY --from=build /app/dist/ /
