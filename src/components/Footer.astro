@@ -37,14 +37,24 @@ if (source) {
 		Installations run Spinbox <code>{reference.spin.installs}</code>; the reference is generated from{' '}
 		<Fragment set:html={generatedFrom.replace(/`([^`]+)`/g, '<code>$1</code>')} />.{' '}
 		<a href={`${base}${twinPath(id)}`}>This page as Markdown</a>, for a model or a terminal.
-		{GTM_ID && <button type="button" class="cookies" data-consent-open hidden>Cookies</button>}
+		<a class="legal" href="https://blog.spinbox.dev/privacy/">Privacy</a>
+		{
+			GTM_ID && (
+				<a class="legal" href="#" data-cc="show-preferencesModal" data-consent-open hidden>
+					Cookie preferences
+				</a>
+			)
+		}
 	</p>
 </div>
 <Default />
 {
 	GTM_ID && (
 		<section id="consent" class="consent" aria-label="Cookies" hidden>
-			<p>This site uses Google Analytics to see which pages get read. It sets cookies only if you say yes.</p>
+			<p>
+				This site uses Google Analytics to see which pages get read. It sets cookies only if you say yes.{' '}
+				<a href="https://blog.spinbox.dev/privacy/">Privacy</a>
+			</p>
 			<div class="choices">
 				<button type="button" data-consent="denied">No, thanks</button>
 				<button type="button" data-consent="granted">Accept</button>
@@ -63,17 +73,10 @@ if (source) {
 	.provenance p + p {
 		margin-top: 0.25rem;
 	}
-	.cookies {
-		font: inherit;
-		padding: 0;
+	.legal {
 		margin-left: 0.5rem;
-		color: var(--sl-color-gray-3);
-		background: none;
-		border: 0;
-		text-decoration: underline;
-		cursor: pointer;
 	}
-	.cookies[hidden] {
+	.legal[hidden] {
 		display: none;
 	}
 	/* The cookie banner: over the page's foot, so nothing moves when it shows; No and Yes weigh the same. */
