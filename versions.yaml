@@ -77,7 +77,7 @@
   kind: image
   source: mirror.gcr.io/library/golang
   version: 1.27.4-bookworm
-  pin: sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea
+  pin: sha256:ce59b41415e2524ae99926fe1f37ce48ba8c194dcbd2a56a65436cdcefa2bd34
   track: go
   note: >-
     What the Dockerfile builds go-tools' sfw with, the firewall the install in the image goes
