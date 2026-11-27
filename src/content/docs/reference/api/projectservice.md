@@ -26,7 +26,7 @@ ProjectService is the installation's projects (spin#720): a repository and the s
 | `repository` | string |  |
 | `ref` | string |  |
 | `image` | string |  |
-| `preset` | string |  |
+| `size` | string |  |
 | `networkTags` | list of string |  |
 | `prebuildRefs` | list of string |  |
 | `prebuildRebaseEvery` | integer (int32) | Zero is the installation's default |
@@ -217,7 +217,7 @@ Changed, shared and deleted by its admins. A project with a workspace open on it
 | `repository` | string |  |
 | `ref` | string |  |
 | `image` | string |  |
-| `preset` | string |  |
+| `size` | string |  |
 | `networkTags` | list of string |  |
 | `prebuildRefs` | list of string |  |
 | `prebuildRebaseEvery` | integer (int32) |  |

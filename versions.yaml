@@ -7,8 +7,8 @@
 - name: spin
   kind: git
   source: https://github.com/spin-stack/spin
-  version: v20261121.03
-  pin: 89c5eb5ea9f218d3c2a184c68205560cb7d3886d
+  version: v20261125.01
+  pin: 40ba7e572a0041719cba3d5c5eae8ae1563a3817
   track: github-release
   bump: go tool task sources:bump
   note: >-

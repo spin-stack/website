@@ -11,15 +11,12 @@ editUrl: false
 A workspace lets in you, its owner, and the guests you let in, each with a key that logs in as
 them. A key logs in as you only once you add it with your **passkey**: somebody with your session,
 an agent or an API key cannot add one, and so gets no shell in your workspace and lets nobody in.
-The one API key that runs commands in your workspaces is one you made with your passkey and the
-`workspace:exec` scope, for a program to use (`spin.v1.ExecService`); every call it makes is in
-the audit log. Give it `keys:delegate` and it makes keys of its own for the agents it starts
-(`spin mcp` serves them the API): each holds no more than it does - its scopes, team, projects,
-end, and how many workspaces and cores all of them hold - and goes when you revoke it.
+The one API key that runs commands in your workspaces is one you made with your passkey, for a
+program to use; [Agents](/use/agents/) says how.
 
 The control plane decides who logs in, at every session: it certifies a key of yours, for five
 minutes, into a workspace you own or are a guest of. It also holds what it needs to serve you: your
-token on a forge, within what its app may do, and your team's secrets. `docs/security/README.md`
+token on a forge, within what its app may do, and your team's secrets. [Known gaps](/reference/security/known-gaps/)
 says what this does not protect. Protect a repository's branches on the forge, and keep a team's
 secrets as references, which your cloud's own log records the reading of.
 
@@ -43,6 +40,10 @@ sign-in. Nothing you made is lost: your keys and workspaces are your account's.
   where your passkey confirms it, and waits.
 - **This browser's key.** The browser's terminal and editor make a key of their own, one no script
   can read out, and your passkey adds it for twelve hours. Until then they ask you nothing.
+
+Inside a workspace you logged in to, `spin` acts as you for twelve hours at most and only while a
+session of yours is open on your computer. It runs and trashes your workspaces and reads the rest,
+and it does nothing your passkey is asked for and nothing that cannot be undone.
 
 `spin ssh-key list` shows both, with when a browser's runs out. A key you delete logs in nowhere
 from the next session; one already open goes on until it ends.

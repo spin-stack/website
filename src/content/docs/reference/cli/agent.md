@@ -15,12 +15,14 @@ Run T3 Code in a workspace, on the repository at path, and use its web UI from t
 
 T3 Code is the server that drives Claude Code and Codex from a browser: threads, checkpoints,
 and switching between them. The workspace's supervisor runs it on demand - the same server the
-dashboard's Agent tab opens - as the workspace's agent user, spin-agent-t3: no capability, its
+dashboard's Agents opens - as the workspace's agent user, spin-agent-t3: no capability, its
 egress brokered and marked, given only path. It listens on the workspace's loopback alone, and
 your own SSH session forwards it here, so the UI is at http://127.0.0.1:3773 and
 the link printed pairs your browser with it. Closing the session, with Ctrl-C, ends the
 forwarding; the server goes on for half an hour with nothing asked of it and no chat running,
-then stops, and its threads stay in the agent's home on the disk.
+then stops, and its threads stay in the agent's home on the disk. A workspace whose size
+includes the agent serves it from boot and keeps it serving while it runs, so this opens the
+server already there.
 
 path defaults to the project's checkout, /workspace/<repository>, and to /workspace in a
 workspace with no project.

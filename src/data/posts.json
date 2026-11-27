@@ -1,5 +1,5 @@
 {
-	"generated": "2026-11-25",
+	"generated": "2026-11-27",
 	"blog": "https://blog.spinbox.dev",
 	"posts": [
 		{
@@ -13,6 +13,24 @@
 			"path": "/spinbox/workspaces-from-parts-that-already-exist/",
 			"title": "Workspaces for people and agents, from parts that already exist",
 			"date": "2026-11-25"
+		},
+		{
+			"slug": "the-kitchen",
+			"path": "/kitchen/the-kitchen/",
+			"title": "How the work moves, on one subscription",
+			"date": "2026-11-27"
+		},
+		{
+			"slug": "changing-a-light-bulb",
+			"path": "/spinbox/changing-a-light-bulb/",
+			"title": "Changing a light bulb",
+			"date": "2026-11-27"
+		},
+		{
+			"slug": "a-machine-without-spin",
+			"path": "/spinbox/a-machine-without-spin/",
+			"title": "A machine without spin",
+			"date": "2026-11-27"
 		}
 	]
 }
