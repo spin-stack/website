@@ -54,7 +54,7 @@ release the channel names at its next plan.
 The example exports `dashboard` and `next_steps`, and the two you will want when you
 [update](/aws/update/): `update_status` and `boot_log`.
 
-The example also sets the runners' idle time, quiet hours, the most runners at once, and whether they are spot. Every
+The example also sets the runners' idle time, the most runners at once, and whether they are spot. Every
 variable is in the [module reference](/reference/terraform/root/). The ones most installations
 change:
 
@@ -63,8 +63,8 @@ change:
 | `installation_config` | The installation's config file: policies, presets, limits. See [Installation settings](/admin/configuration/). |
 | `admin_email` | Who the first administrator is. `admin@<domain>` if unset. |
 | `proxy_allowed_cidrs` | Where users may reach the installation from. Anywhere if unset. |
-| `runner_idle_minutes`, `quiet_hours`, `time_zone` | When runners go back to none. |
-| `max_runners` | The most runners at once. |
+| `runner_idle_minutes` | When runners go back to none. |
+| `max_runners` | The most runners at once, 2 by default. |
 | `runner_instance_types`, `runner_spot` | What runners are. |
 
 ## 3. Apply

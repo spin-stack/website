@@ -80,8 +80,8 @@ installation allows, by default nothing: [When a runner is lost](/concepts/runne
 
 ## How runners come and go
 
-On AWS, runners are autoscaling groups, one per host class, that the control plane makes and sizes. It asks for one runner
-when a workspace is waiting and none is up, adds another if a workspace has waited ten minutes
+On AWS, runners are autoscaling groups, one per host class, that the control plane makes and sizes. When workspaces wait,
+it asks at once for every runner they need, up to `max_runners`
 ([Runners](/concepts/runners/#scaling-from-zero)), and goes back to none when nothing has run for `runner_idle_minutes`.
 
 A runner joins by proving who it is: it signs an AWS request with its instance role, and the

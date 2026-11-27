@@ -12,21 +12,27 @@ reads:
   - "spin:internal/controlplane/domain/autoscale/autoscale.go@v20261121.03"
 ---
 
-The module's defaults are a small installation: at most one runner
+The module's defaults are a small installation: at most two runners
 ([`max_runners`](/reference/terraform/root/#max_runners)), of 32 to 48 vCPUs
 ([`runner_vcpus`](/reference/terraform/root/#runner_vcpus)), on spot, given back once nothing has
-run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes). Each profile below
+run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes). The control plane
+asks at once for every runner the waiting workspaces need, up to `max_runners`
+([Scaling from zero](/concepts/runners/#scaling-from-zero)), so the number is a ceiling. It trades
+the wait once every runner is full against the spot vCPUs `request_quota` asks AWS for, two of
+`runner_vcpus`' maximum, 96 with the defaults. While nobody works there are no runners, whatever
+it is. Two also leaves room for a spot rebalance to start a runner's replacement while one runner
+is up. Each profile below
 says who it is for, what to change from those defaults and why, what that trades, and what has not
 been tried. [Cost](/aws/cost/) says what each part is billed at; this page does not repeat it.
 
 The settings are arguments of `module "spin"`, in your copy of `examples/complete` (its `main.tf`,
-which already sets `runner_idle_minutes`, `quiet_hours`, `time_zone` and `max_runners`). Its
+which already sets `runner_idle_minutes` and `max_runners`). Its
 `terraform.tfvars` takes only the example's own variables, such as `spin_version`, `domain` and
 `runner_spot`. Every argument, with its default, is in the [module reference](/reference/terraform/root/).
 
 Some arguments seed the installation when it is made: `runner_instance_types`, `runner_vcpus` and
-`runner_spot` its default host class (Admin → Runners), and `max_runners`, `runner_idle_minutes`
-and the quiet hours its settings.
+`runner_spot` its default host class (Admin → Runners), and `max_runners` and
+`runner_idle_minutes` its settings.
 On an installation already running, a change to one of them in the module is
 [a proposal an administrator applies or dismisses](/admin/configuration/#the-config-file-seeds),
 not a change by itself.
@@ -66,21 +72,20 @@ The defaults fit. What is worth setting:
 ```hcl
 module "spin" {
   # ...
-  quiet_hours        = "20:00-07:00"
-  time_zone          = "Europe/Madrid"
   monthly_budget_usd = 200
   budget_emails      = ["you@example.com"]
 }
 ```
 
-- `quiet_hours` and `time_zone`: at night the runner goes as soon as nothing runs, instead of
-  after `runner_idle_minutes`.
 - `monthly_budget_usd` and `budget_emails`: a mail when the month passes 80% or 100% of it, or is
   forecast to. It stops nothing.
 
-**Trades.** The first workspace after the runner has gone waits while a new one starts
+**Trades.** The runner goes once nothing has run for `runner_idle_minutes`, at night as by day:
+no setting gives it back sooner at certain hours, so each evening it stays up that long after the
+last workspace stops. The first workspace after the runner has gone waits while a new one starts
 (*Waiting for a host*). A lower `runner_idle_minutes` saves runner hours and makes that wait more
-frequent.
+frequent. A buffer on the host class (Admin → Runners) would take the wait away and keep a runner
+up all night; the default class keeps none.
 
 **A smaller runner.** Most of one person's bill is a runner of 32 vCPUs or more kept up for a few
 cores of work, and the parts that run all the time. A runner of 8 vCPUs would cut the first:
@@ -92,8 +97,8 @@ cores of work, and the parts that run all the time. A runner of 8 vCPUs would cu
 The module accepts it, and the default class's group then asks for the 2xlarge sizes of the default families with
 local NVMe. In the model above, it takes one person from about $165 to about $100 a month. **No installation has run runners that small.** A preset as large as the runner leaves
 nothing for the host itself, so keep presets well under it
-([Installation settings](/admin/configuration/)); and with `max_runners` still one, a workspace
-that does not fit waits for room.
+([Installation settings](/admin/configuration/)); with `max_runners` at its default, a workspace
+that does not fit on the first runner starts another, and once both are full it waits for room.
 
 ## One person with agents
 
@@ -110,9 +115,9 @@ module "spin" {
 }
 ```
 
-- `max_runners = 2`: if the agents' workspaces do not fit on one runner, the next one can go to
-  another runner instead of waiting for room on the first. The control plane adds a runner only when a workspace
-  has waited ten minutes ([Scaling from zero](/concepts/runners/#scaling-from-zero)).
+- `max_runners = 2`, the default, written out: if the agents' workspaces do not fit on one
+  runner, the control plane asks for another as soon as one waits, instead of it waiting for room
+  on the first ([Scaling from zero](/concepts/runners/#scaling-from-zero)).
 - `runner_rollout = "rolling"`: with the default, `idle`, a new release reaches the runners only
   once the fleet empties, which a fleet with a workspace that never stops does not. Rolling
   replaces them at an update, each workspace suspended and resumed on the new host
@@ -150,8 +155,6 @@ been measured.
 module "spin" {
   # ...
   max_runners        = 2
-  quiet_hours        = "20:00-07:00"
-  time_zone          = "America/New_York"
   monthly_budget_usd = 400
   budget_emails      = ["ops@example.com"]
 }
@@ -159,10 +162,12 @@ module "spin" {
 
 - `max_runners = 2`: at the density assumed above, five people fit on one runner; another covers
   being wrong about it, and busy days.
-- `quiet_hours` in the team's time zone: the runner goes as soon as the last person stops.
+- The runners go once nothing has run for `runner_idle_minutes` after the last person stops.
 
-**Trades.** The next runner starts only after a workspace has waited ten minutes, so on a busy
-morning someone waits. Once every runner is up, a workspace that does not fit waits for room.
+**Trades.** On a busy morning the second runner is asked for as soon as a workspace does not fit
+on the first, and that workspace waits while it starts. Once every runner is up, a workspace that
+does not fit waits for room. A buffer of a workspace or two on the host class (Admin → Runners)
+would take away the first wait, and keep a runner up through the night.
 
 **Not tried.** How many workspaces fit on a runner. [The bill](/admin/operations/#the-bill) shows
 what each workspace held, and the runners' capacity nobody held, which is the measure to correct
@@ -176,8 +181,6 @@ what each workspace held, and the runners' capacity nobody held, which is the me
 module "spin" {
   # ...
   max_runners        = 6
-  quiet_hours        = "22:00-06:00"
-  time_zone          = "Europe/Berlin"
   monthly_budget_usd = 1500
   budget_emails      = ["ops@example.com"]
 }
@@ -186,13 +189,16 @@ module "spin" {
 - `max_runners = 6`: what the model needs at its busiest hour at eight workspaces a runner. At four
   it would need eleven, at sixteen three. `request_quota` (on by default) asks AWS for the spot
   vCPUs that many runners of `runner_vcpus`' maximum take ([Before you start](/aws/prerequisites/)).
-- `quiet_hours` only over the hours neither time zone works, or none: inside the window a gap
-  between two people empties the fleet, and the next one waits for a runner.
+- Runners go once nothing has run for `runner_idle_minutes`, at any hour: a gap between the two
+  time zones shorter than that keeps them up, and a longer one empties the fleet, so the next
+  person waits for a runner.
 - Keep `runner_instance_types` broad: each type and zone it matches is one more spot pool to start
   from ([Spot](/aws/cost/#spot)).
 
-**Trades.** Runners are given back one at a time, once a runner has held nothing only it holds
-for `runner_idle_minutes`; a lower value gives runners back sooner and starts them more often.
+**Trades.** When the morning's workspaces wait, the control plane asks for every runner they need
+at once, up to six. Runners are given back one at a time, once a runner has held nothing only it
+holds for `runner_idle_minutes`; a lower value gives runners back sooner and starts them more
+often.
 
 **Not tried.** Density, as above, and twenty people on one installation.
 
@@ -221,7 +227,6 @@ module "spin" {
   it. These two values are a guess, not a measurement: watch its machine
   ([Observability](/admin/observability/)) and size it from that. A change replaces the machine,
   as an [update](/aws/update/) does.
-- Without quiet hours: someone is always working.
 
 **Trades.** Spot capacity for many runners at once is less sure than for one: AWS's placement
 score for the default types fell at 20 runners in us-east-1 and held in us-west-2 on the day it was

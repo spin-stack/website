@@ -34,7 +34,6 @@ aws/cost.mdx | six hours | spin:internal/controlplane/domain/bill/job.go#Interva
 aws/network.mdx | ten-second | spin-terraform-aws:modules/controlplane/dns.tf has "internal_record_ttl = 10"
 aws/profiles.md | 30-day | not held: the window of AWS's spot price history the cost model priced runners at, on 2026-11-19
 aws/profiles.md | a month | not a figure: the unit the cost model's estimates add up to
-aws/profiles.md | ten minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#GrowAfter = 10m
 aws/profiles.md | 12 hours | spin:internal/controlplane/settings/registry.go has "Key: WorkspaceMaxRunningMinutes, Type: spinv1.SettingType_SETTING_TYPE_INT, Default: "720""
 aws/profiles.md | a week | spin:internal/controlplane/settings/registry.go has "const maxSuspendMinutes = 7 * 24 * 60"
 aws/setup.md | a few minutes | not a figure: an estimate of how long Let's Encrypt issuance takes
@@ -46,7 +45,6 @@ concepts/network.mdx | two minutes | spin:internal/runner/network/nft/resolved.g
 concepts/network.mdx | an hour | spin:internal/runner/network/nft/resolved.go#resolvedCeiling = 1h
 concepts/network.mdx | six hours | spin:internal/runner/network/nft/observe.go#observeWindow = 6h
 concepts/runners.mdx | 30 minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#OnDemandFor = 30m
-concepts/runners.mdx | ten minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#GrowAfter = 10m
 concepts/runners.mdx | two minutes | not held: an AWS fact, the spot interruption notice (read from instance metadata in internal/runner/preempt/clouds.go)
 concepts/volumes.mdx | 5 minutes | spin:internal/controlplane/settings/registry.go#DefaultVolumeRPOSeconds = 300
 concepts/volumes.mdx | 30 days | not held: Terraform variable object_lock_days default 30 in modules/controlplane/variables.tf of spin-terraform-aws
@@ -71,5 +69,3 @@ use/agents.mdx | a year | spin:internal/controlplane/server/authserver/apikeys.g
 use/agents.mdx | ten attempts | not a figure: an illustration of cloning one snapshot many times
 use/editors.md | five minutes | spin:internal/controlplane/sshca/sshca.go#DefaultCertValidity = 5m
 use/editors.md | 220 MB | not held: a third-party fact (the VS Code server's download size), a literal in the message strings of cmd/cli/cmd/code.go
-overview/how-it-works.mdx | ten minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#GrowAfter = 10m
-aws/cost.mdx | ten minutes | spin:internal/controlplane/domain/autoscale/autoscale.go#GrowAfter = 10m
