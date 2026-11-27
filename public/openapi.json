@@ -314,14 +314,14 @@
         }
       }
     },
-    "/spin.v1.AdminService/CreateResourcePreset": {
+    "/spin.v1.AdminService/CreateSize": {
       "post": {
         "tags": [
           "AdminService"
         ],
-        "summary": "CreateResourcePreset",
-        "description": "Create a resource preset",
-        "operationId": "spin.v1.AdminService.CreateResourcePreset",
+        "summary": "CreateSize",
+        "description": "Create a size",
+        "operationId": "spin.v1.AdminService.CreateSize",
         "parameters": [
           {
             "name": "Connect-Protocol-Version",
@@ -346,7 +346,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/spin.v1.CreateResourcePresetRequest"
+                "$ref": "#/components/schemas/spin.v1.CreateSizeRequest"
               }
             }
           },
@@ -368,7 +368,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/spin.v1.CreateResourcePresetResponse"
+                  "$ref": "#/components/schemas/spin.v1.CreateSizeResponse"
                 }
               }
             }
@@ -561,14 +561,14 @@
         }
       }
     },
-    "/spin.v1.AdminService/DeleteResourcePreset": {
+    "/spin.v1.AdminService/DeleteSize": {
       "post": {
         "tags": [
           "AdminService"
         ],
-        "summary": "DeleteResourcePreset",
-        "description": "Delete a resource preset",
-        "operationId": "spin.v1.AdminService.DeleteResourcePreset",
+        "summary": "DeleteSize",
+        "description": "Delete a size",
+        "operationId": "spin.v1.AdminService.DeleteSize",
         "parameters": [
           {
             "name": "Connect-Protocol-Version",
@@ -593,7 +593,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/spin.v1.DeleteResourcePresetRequest"
+                "$ref": "#/components/schemas/spin.v1.DeleteSizeRequest"
               }
             }
           },
@@ -615,7 +615,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/spin.v1.DeleteResourcePresetResponse"
+                  "$ref": "#/components/schemas/spin.v1.DeleteSizeResponse"
                 }
               }
             }
@@ -2296,68 +2296,6 @@
         }
       }
     },
-    "/spin.v1.AdminService/ListResourcePresets": {
-      "post": {
-        "tags": [
-          "AdminService"
-        ],
-        "summary": "ListResourcePresets",
-        "description": "List resource presets",
-        "operationId": "spin.v1.AdminService.ListResourcePresets",
-        "parameters": [
-          {
-            "name": "Connect-Protocol-Version",
-            "in": "header",
-            "description": "Define the version of the Connect protocol",
-            "schema": {
-              "$ref": "#/components/schemas/connect-protocol-version"
-            },
-            "example": 1
-          },
-          {
-            "name": "Connect-Timeout-Ms",
-            "in": "header",
-            "description": "Define the timeout, in ms",
-            "schema": {
-              "$ref": "#/components/schemas/connect-timeout-header"
-            },
-            "example": 1000
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/spin.v1.ListResourcePresetsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/connect.error"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/spin.v1.ListResourcePresetsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/spin.v1.AdminService/ListRunbooks": {
       "post": {
         "tags": [
@@ -2413,6 +2351,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListRunbooksResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/ListSizes": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListSizes",
+        "description": "List sizes",
+        "operationId": "spin.v1.AdminService.ListSizes",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListSizesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListSizesResponse"
                 }
               }
             }
@@ -2661,6 +2661,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/spin.v1.ListUsersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spin.v1.AdminService/ListVulnerabilities": {
+      "post": {
+        "tags": [
+          "AdminService"
+        ],
+        "summary": "ListVulnerabilities",
+        "description": "What the supply-vulnerabilities job's last finished scan found: the vulnerabilities OSV knows\n in the packages this control plane's machine carries, by its SBOMs, each with the SBOMs that\n name it, and those the release's list ignores with why. UNAVAILABLE where this control plane runs no\n scan.",
+        "operationId": "spin.v1.AdminService.ListVulnerabilities",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListVulnerabilitiesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListVulnerabilitiesResponse"
                 }
               }
             }
@@ -3658,14 +3720,14 @@
         }
       }
     },
-    "/spin.v1.AdminService/UpdateResourcePreset": {
+    "/spin.v1.AdminService/UpdateSize": {
       "post": {
         "tags": [
           "AdminService"
         ],
-        "summary": "UpdateResourcePreset",
-        "description": "Update a resource preset",
-        "operationId": "spin.v1.AdminService.UpdateResourcePreset",
+        "summary": "UpdateSize",
+        "description": "Update a size",
+        "operationId": "spin.v1.AdminService.UpdateSize",
         "parameters": [
           {
             "name": "Connect-Protocol-Version",
@@ -3690,7 +3752,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/spin.v1.UpdateResourcePresetRequest"
+                "$ref": "#/components/schemas/spin.v1.UpdateSizeRequest"
               }
             }
           },
@@ -3712,7 +3774,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/spin.v1.UpdateResourcePresetResponse"
+                  "$ref": "#/components/schemas/spin.v1.UpdateSizeResponse"
                 }
               }
             }
@@ -10211,6 +10273,67 @@
         }
       }
     },
+    "/spin.v1.TeamService/DeleteModelKey": {
+      "post": {
+        "tags": [
+          "TeamService"
+        ],
+        "summary": "DeleteModelKey",
+        "operationId": "spin.v1.TeamService.DeleteModelKey",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.DeleteTeamModelKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.DeleteTeamModelKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.TeamService/DeleteNetworkPolicy": {
       "post": {
         "tags": [
@@ -10643,6 +10766,67 @@
         }
       }
     },
+    "/spin.v1.TeamService/ListModelKeys": {
+      "post": {
+        "tags": [
+          "TeamService"
+        ],
+        "summary": "ListModelKeys",
+        "operationId": "spin.v1.TeamService.ListModelKeys",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.ListTeamModelKeysRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.ListTeamModelKeysResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.TeamService/ListSecrets": {
       "post": {
         "tags": [
@@ -10827,6 +11011,68 @@
         }
       }
     },
+    "/spin.v1.TeamService/SetModelKey": {
+      "post": {
+        "tags": [
+          "TeamService"
+        ],
+        "summary": "SetModelKey",
+        "description": "A team's model keys: the key its workspaces' agents reach a model provider with, so Claude\n Code and Codex run without signing in workspace by workspace. The host's egress proxy sets it\n on the agent's requests where a brokered rule injects the provider's model_key; the workspace\n is told only the URL. Set and deleted by the team's admins, listed to its members with the key\n a team above gives where the team gives none; a key is never answered with again.",
+        "operationId": "spin.v1.TeamService.SetModelKey",
+        "parameters": [
+          {
+            "name": "Connect-Protocol-Version",
+            "in": "header",
+            "description": "Define the version of the Connect protocol",
+            "schema": {
+              "$ref": "#/components/schemas/connect-protocol-version"
+            },
+            "example": 1
+          },
+          {
+            "name": "Connect-Timeout-Ms",
+            "in": "header",
+            "description": "Define the timeout, in ms",
+            "schema": {
+              "$ref": "#/components/schemas/connect-timeout-header"
+            },
+            "example": 1000
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/spin.v1.SetTeamModelKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connect.error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/spin.v1.SetTeamModelKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/spin.v1.TeamService/SetNetworkPolicy": {
       "post": {
         "tags": [
@@ -10895,7 +11141,7 @@
           "TeamService"
         ],
         "summary": "SetSecret",
-        "description": "A team's secrets: what a brokered network rule has the host's egress proxy add to a request,\n so a workspace of the team uses a key it never holds. Set and deleted by the team's admins,\n listed by name to its members; a value is never answered with again.",
+        "description": "A team's secrets: what a brokered network rule has the host's egress proxy add to a request,\n so a workspace of the team uses a key it never holds. Set and deleted by the team's admins,\n listed by name to its members with the one a team above gives where the team gives none; a\n value is never answered with again.",
         "operationId": "spin.v1.TeamService.SetSecret",
         "parameters": [
           {
@@ -12628,7 +12874,7 @@
           "WorkspaceService"
         ],
         "summary": "GrantWorkspaceResources",
-        "description": "Give a workspace more cores and memory of its own, up to its preset's ceiling: its host\n reserves them and its machine is grown while it runs. The grant lasts until it is released\n or the workspace is deleted.",
+        "description": "Give a workspace more cores and memory of its own, up to its size's ceiling: its host\n reserves them and its machine is grown while it runs. The grant lasts until it is released\n or the workspace is deleted.",
         "operationId": "spin.v1.WorkspaceService.GrantWorkspaceResources",
         "parameters": [
           {
@@ -15254,6 +15500,23 @@
         "title": "AffectedWorkspace",
         "additionalProperties": false
       },
+      "spin.v1.AgentActivity": {
+        "type": "string",
+        "title": "AgentActivity",
+        "enum": [
+          "AGENT_ACTIVITY_UNSPECIFIED",
+          "AGENT_ACTIVITY_IDLE",
+          "AGENT_ACTIVITY_WORKING",
+          "AGENT_ACTIVITY_WAITING"
+        ],
+        "description": "AgentActivity is what an agent's thread is doing. Numbered by how much it asks of its owner,\n so the highest of a workspace's threads is the workspace's (Workspace.agent).\n\n- `AGENT_ACTIVITY_IDLE`: Nothing runs and nothing waits on its owner.\n- `AGENT_ACTIVITY_WORKING`: A turn runs. Only in a machine that runs: one reported working by a workspace stopped since\n  is answered IDLE.\n- `AGENT_ACTIVITY_WAITING`: A card waits on its owner: an approval or a question in a turn, or one left open after the\n  turn ended, which the owner can still answer.",
+        "x-enum-descriptions": [
+          "",
+          "Nothing runs and nothing waits on its owner.",
+          "A turn runs. Only in a machine that runs: one reported working by a workspace stopped since\n is answered IDLE.",
+          "A card waits on its owner: an approval or a question in a turn, or one left open after the\n turn ended, which the owner can still answer."
+        ]
+      },
       "spin.v1.AgentThread": {
         "type": "object",
         "properties": {
@@ -15285,6 +15548,24 @@
           "archived": {
             "type": "boolean",
             "title": "archived"
+          },
+          "activity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.AgentActivity"
+              }
+            ],
+            "title": "activity",
+            "description": "activity is what the thread is doing now, as T3 Code's own client shows it. Never\n UNSPECIFIED in an answer."
+          },
+          "wait": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.AgentWait"
+              }
+            ],
+            "title": "wait",
+            "description": "wait is what the thread waits on its owner for while activity is WAITING, and UNSPECIFIED\n otherwise."
           }
         },
         "title": "AgentThread",
@@ -15325,6 +15606,35 @@
         "title": "AgentVolume",
         "additionalProperties": false,
         "description": "AgentVolume is one agent home of the caller's."
+      },
+      "spin.v1.AgentWait": {
+        "type": "string",
+        "title": "AgentWait",
+        "enum": [
+          "AGENT_WAIT_UNSPECIFIED",
+          "AGENT_WAIT_COMMAND",
+          "AGENT_WAIT_FILE_CHANGE",
+          "AGENT_WAIT_FILE_READ",
+          "AGENT_WAIT_PERMISSION",
+          "AGENT_WAIT_QUESTION",
+          "AGENT_WAIT_SIGN_IN",
+          "AGENT_WAIT_SECRET",
+          "AGENT_WAIT_LINK",
+          "AGENT_WAIT_OTHER"
+        ],
+        "description": "AgentWait is what a waiting thread waits on its owner for: T3 Code's kinds of request, said\n once here so a client words them and shows nothing of the request itself.\n\n- `AGENT_WAIT_COMMAND`: To run a command.\n- `AGENT_WAIT_FILE_CHANGE`: To change files.\n- `AGENT_WAIT_FILE_READ`: To read a file.\n- `AGENT_WAIT_PERMISSION`: A permission the agent's tool asks for.\n- `AGENT_WAIT_QUESTION`: An answer: a question of the agent's, or a form one of its tools sent.\n- `AGENT_WAIT_SIGN_IN`: To sign the agent's provider in again.\n- `AGENT_WAIT_SECRET`: A secret typed into the thread.\n- `AGENT_WAIT_LINK`: A machine to link the thread to.\n- `AGENT_WAIT_OTHER`: A kind of request this release does not name.",
+        "x-enum-descriptions": [
+          "",
+          "To run a command.",
+          "To change files.",
+          "To read a file.",
+          "A permission the agent's tool asks for.",
+          "An answer: a question of the agent's, or a form one of its tools sent.",
+          "To sign the agent's provider in again.",
+          "A secret typed into the thread.",
+          "A machine to link the thread to.",
+          "A kind of request this release does not name."
+        ]
       },
       "spin.v1.Alert": {
         "type": "object",
@@ -15842,23 +16152,6 @@
         "additionalProperties": false,
         "description": "BrokeredRequest is one request the egress proxy read from the workspace's machine to a brokered\n name. No header and no body: what the proxy set is the team's secret, and what the machine\n sent is its own."
       },
-      "spin.v1.BurstMode": {
-        "type": "string",
-        "title": "BurstMode",
-        "enum": [
-          "BURST_MODE_UNSPECIFIED",
-          "BURST_MODE_FIXED",
-          "BURST_MODE_TO_PRESET",
-          "BURST_MODE_TO_HOST"
-        ],
-        "description": "BurstMode is how a workspace of a preset may grow past what it starts with.\n\n- `BURST_MODE_FIXED`: FIXED starts at the preset's size and stays there.\n- `BURST_MODE_TO_PRESET`: TO_PRESET starts at the preset's burst floor and may grow to its size.\n- `BURST_MODE_TO_HOST`: TO_HOST starts at the preset's burst floor and may grow to everything its host has.",
-        "x-enum-descriptions": [
-          "",
-          "FIXED starts at the preset's size and stays there.",
-          "TO_PRESET starts at the preset's burst floor and may grow to its size.",
-          "TO_HOST starts at the preset's burst floor and may grow to everything its host has."
-        ]
-      },
       "spin.v1.ChangePasswordRequest": {
         "type": "object",
         "properties": {
@@ -16307,6 +16600,24 @@
         "title": "CompleteWorkspaceSignInResponse",
         "additionalProperties": false
       },
+      "spin.v1.Compute": {
+        "type": "object",
+        "properties": {
+          "cpuCores": {
+            "type": "integer",
+            "title": "cpu_cores",
+            "format": "int32"
+          },
+          "memoryMb": {
+            "type": "integer",
+            "title": "memory_mb",
+            "format": "int32"
+          }
+        },
+        "title": "Compute",
+        "additionalProperties": false,
+        "description": "Compute is cores and memory: what a workspace holds, or what it may grow to."
+      },
       "spin.v1.ConfigChange": {
         "type": "object",
         "properties": {
@@ -16358,7 +16669,7 @@
           "CONFIG_ITEM_KIND_UNSPECIFIED",
           "CONFIG_ITEM_KIND_SETTING",
           "CONFIG_ITEM_KIND_EMAIL",
-          "CONFIG_ITEM_KIND_PRESET",
+          "CONFIG_ITEM_KIND_SIZE",
           "CONFIG_ITEM_KIND_POLICY",
           "CONFIG_ITEM_KIND_HOST_CLASS"
         ],
@@ -16744,9 +17055,9 @@
             "type": "string",
             "title": "image"
           },
-          "preset": {
+          "size": {
             "type": "string",
-            "title": "preset"
+            "title": "size"
           },
           "networkTags": {
             "type": "array",
@@ -16854,7 +17165,7 @@
         "title": "CreateRegistrationTokenResponse",
         "additionalProperties": false
       },
-      "spin.v1.CreateResourcePresetRequest": {
+      "spin.v1.CreateSizeRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -16865,34 +17176,31 @@
           "description": {
             "type": "string",
             "title": "description",
-            "description": "Optional: description"
+            "description": "Optional: what it runs, in a few words"
           },
-          "cpuCores": {
-            "type": "integer",
-            "title": "cpu_cores",
-            "format": "int32",
-            "description": "Required: CPU cores"
+          "floor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Compute"
+              }
+            ],
+            "title": "floor",
+            "description": "Required: what its workspaces hold"
           },
-          "memoryMb": {
-            "type": "integer",
-            "title": "memory_mb",
-            "format": "int32",
-            "description": "Required: memory in MB"
+          "ceiling": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Compute"
+              }
+            ],
+            "title": "ceiling",
+            "description": "Required: what they may grow to, at least the floor"
           },
           "diskGb": {
             "type": "integer",
             "title": "disk_gb",
             "format": "int32",
             "description": "Required: disk in GB"
-          },
-          "burst": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.BurstMode"
-              }
-            ],
-            "title": "burst",
-            "description": "Required"
           },
           "isDefault": {
             "type": "boolean",
@@ -16902,24 +17210,13 @@
           "enabled": {
             "type": "boolean",
             "title": "enabled",
-            "description": "Optional: enable the preset (default true)"
+            "description": "Optional: enable the size (default true)"
           },
           "sortOrder": {
             "type": "integer",
             "title": "sort_order",
             "format": "int32",
             "description": "Optional: display order"
-          },
-          "burstFloorCpuCores": {
-            "type": "integer",
-            "title": "burst_floor_cpu_cores",
-            "format": "int32",
-            "description": "Required for a burst mode: what its workspaces start with, at most the preset's size."
-          },
-          "burstFloorMemoryMb": {
-            "type": "integer",
-            "title": "burst_floor_memory_mb",
-            "format": "int32"
           },
           "bandwidthMbps": {
             "type": [
@@ -16940,24 +17237,29 @@
             "type": "string",
             "title": "host_class",
             "description": "The host class its workspaces run on; empty is the default."
+          },
+          "includesAgent": {
+            "type": "boolean",
+            "title": "includes_agent",
+            "description": "Its workspaces serve the agent from boot (Size.includes_agent)."
           }
         },
-        "title": "CreateResourcePresetRequest",
+        "title": "CreateSizeRequest",
         "additionalProperties": false
       },
-      "spin.v1.CreateResourcePresetResponse": {
+      "spin.v1.CreateSizeResponse": {
         "type": "object",
         "properties": {
-          "preset": {
+          "size": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.ResourcePreset"
+                "$ref": "#/components/schemas/spin.v1.Size"
               }
             ],
-            "title": "preset"
+            "title": "size"
           }
         },
-        "title": "CreateResourcePresetResponse",
+        "title": "CreateSizeResponse",
         "additionalProperties": false
       },
       "spin.v1.CreateSnapshotRequest": {
@@ -17126,10 +17428,10 @@
             "title": "image",
             "description": "A published image (ListImages); required unless from_snapshot_id is set"
           },
-          "preset": {
+          "size": {
             "type": "string",
-            "title": "preset",
-            "description": "The preset it is sized by, by name (AdminService.ListResourcePresets): its cores, memory,\n disk and how it grows. Empty is the project's preset when project_id names one, otherwise\n the installation's default preset, or with none marked 1 core, 2048 MB and 10 GB free. A\n disabled preset is refused."
+            "title": "size",
+            "description": "The size it is made in, by name (AdminService.ListSizes): the floor it holds, the ceiling it\n may grow to, and its disk. Empty is the project's size when project_id names one, otherwise\n the installation's default size, or with none marked the release's default (Standard). A\n disabled size is refused."
           },
           "env": {
             "type": "object",
@@ -17156,7 +17458,7 @@
           "projectId": {
             "type": "string",
             "title": "project_id",
-            "description": "A project the caller sees: the workspace is the project's - its image and tags, which the\n request then names neither of, and its preset unless preset names another - in team_id, the\n caller's personal team when empty, and its\n guest clones the project's repository at ref, the project's own when empty. Refused while the\n repository is on a forge the installation connects to (ForgeService) and the caller has not\n connected their account there."
+            "description": "A project the caller sees: the workspace is the project's - its image and tags, which the\n request then names neither of, and its size unless size names another - in team_id, the\n caller's personal team when empty, and its\n guest clones the project's repository at ref, the project's own when empty. Refused while the\n repository is on a forge the installation connects to (ForgeService) and the caller has not\n connected their account there."
           },
           "ref": {
             "type": "string",
@@ -17267,7 +17569,7 @@
         },
         "title": "DeleteHostClassRequest",
         "additionalProperties": false,
-        "description": "Refused while a preset or a workspace not deleted runs on it, and for the default. Its group is\n emptied and taken away by the autoscaler."
+        "description": "Refused while a size or a workspace not deleted runs on it, and for the default. Its group is\n emptied and taken away by the autoscaler."
       },
       "spin.v1.DeleteHostClassResponse": {
         "type": "object",
@@ -17330,23 +17632,6 @@
         "title": "DeleteProjectResponse",
         "additionalProperties": false
       },
-      "spin.v1.DeleteResourcePresetRequest": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "id",
-            "description": "Required: preset ID to delete"
-          }
-        },
-        "title": "DeleteResourcePresetRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.DeleteResourcePresetResponse": {
-        "type": "object",
-        "title": "DeleteResourcePresetResponse",
-        "additionalProperties": false
-      },
       "spin.v1.DeleteSSHKeyRequest": {
         "type": "object",
         "properties": {
@@ -17362,6 +17647,23 @@
       "spin.v1.DeleteSSHKeyResponse": {
         "type": "object",
         "title": "DeleteSSHKeyResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteSizeRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id",
+            "description": "Required: size ID to delete"
+          }
+        },
+        "title": "DeleteSizeRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteSizeResponse": {
+        "type": "object",
+        "title": "DeleteSizeResponse",
         "additionalProperties": false
       },
       "spin.v1.DeleteSnapshotRequest": {
@@ -17398,6 +17700,30 @@
       "spin.v1.DeleteTeamIdentityProviderResponse": {
         "type": "object",
         "title": "DeleteTeamIdentityProviderResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteTeamModelKeyRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "title": "team_id"
+          },
+          "provider": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ModelProvider"
+              }
+            ],
+            "title": "provider"
+          }
+        },
+        "title": "DeleteTeamModelKeyRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.DeleteTeamModelKeyResponse": {
+        "type": "object",
+        "title": "DeleteTeamModelKeyResponse",
         "additionalProperties": false
       },
       "spin.v1.DeleteTeamNetworkPolicyRequest": {
@@ -18407,6 +18733,12 @@
             ],
             "title": "on_demand_until",
             "description": "Set while a spot class's group starts on-demand machines because the cloud refused it spot\n (HostClass.fallback_on_demand): until this, and spot again after. Its class still says spot."
+          },
+          "connected": {
+            "type": "integer",
+            "title": "connected",
+            "format": "int32",
+            "description": "The class's hosts connected now, which lags desired by a machine's boot. Of this class only:\n every connected host counted against what the classes asked for read \"1 of 1 runners\n connected\" under a list of two, and counted a host no group launched as one a group did."
           }
         },
         "title": "FleetClass",
@@ -18864,12 +19196,6 @@
             "type": "boolean",
             "title": "autoscaling",
             "description": "False when no fleet is configured: the hosts of this installation are whatever somebody\n registered by hand, and none of the numbers below mean anything."
-          },
-          "connected": {
-            "type": "integer",
-            "title": "connected",
-            "format": "int32",
-            "description": "The hosts that are connected now, of every class, which lags what was asked for by a\n machine's boot."
           },
           "idleMinutes": {
             "type": "integer",
@@ -20452,7 +20778,7 @@
         },
         "title": "GrantWorkspaceResourcesRequest",
         "additionalProperties": false,
-        "description": "SetWorkspaceNetworkTagsRequest is the whole set a workspace should run under, not an\n addition: a request naming one tag leaves it carrying that one. Naming none means what it\n means on a create - the installation's default, and \"offline\" where it declares none - so\n there is one reading of an empty list rather than two nobody would keep straight. To ask for\n a workspace that reaches nothing, name \"offline\".\n\n Who may ask what: the workspace's owner chooses among the policies the installation\n declares, which are the same ones they could have created it with; an administrator may\n name any policy a host reports. Nothing inside the guest can ask at all - a workspace's own\n credential does not reach this, because loosening the egress of the sandbox you are in is\n the first thing something that got in would try.\n GrantWorkspaceResourcesRequest is what the workspace holds of its own from now on: at least its\n floor, and at most its ceiling where its preset has one (to_host has none but its host's room).\n Zero keeps what it holds of that one."
+        "description": "SetWorkspaceNetworkTagsRequest is the whole set a workspace should run under, not an\n addition: a request naming one tag leaves it carrying that one. Naming none means what it\n means on a create - the installation's default, and \"offline\" where it declares none - so\n there is one reading of an empty list rather than two nobody would keep straight. To ask for\n a workspace that reaches nothing, name \"offline\".\n\n Who may ask what: the workspace's owner chooses among the policies the installation\n declares, which are the same ones they could have created it with; an administrator may\n name any policy a host reports. Nothing inside the guest can ask at all - a workspace's own\n credential does not reach this, because loosening the egress of the sandbox you are in is\n the first thing something that got in would try.\n GrantWorkspaceResourcesRequest is what the workspace holds of its own from now on: at least its\n floor, and at most its ceiling.\n Zero keeps what it holds of that one."
       },
       "spin.v1.GrantWorkspaceResourcesResponse": {
         "type": "object",
@@ -20507,11 +20833,16 @@
           "pathPrefix": {
             "type": "string",
             "title": "path_prefix"
+          },
+          "modelKey": {
+            "type": "string",
+            "title": "model_key",
+            "description": "The provider whose key the workspace's team gives (TeamService.SetModelKey) goes in the header:\n \"anthropic\" or \"openai\". Where the team gives none, or one for another host, the request goes\n on with the header the machine sent, so a team that gives no key signs its agents in as before."
           }
         },
         "title": "HeaderInjection",
         "additionalProperties": false,
-        "description": "HeaderInjection is a header the egress proxy sets: header, to prefix and then a value the\n workspace never holds - a team secret's, or a token of the workspace's identity. One of the two."
+        "description": "HeaderInjection is a header the egress proxy sets: header, to prefix and then a value the\n workspace never holds - a team secret's, a token of the workspace's identity, the owner's forge\n token, or the team's model key. One of them."
       },
       "spin.v1.HealthCheck": {
         "type": "object",
@@ -20600,9 +20931,10 @@
           "HEALTH_PART_COLLECTOR",
           "HEALTH_PART_JOBS",
           "HEALTH_PART_HOSTS",
-          "HEALTH_PART_WAITING_WORKSPACES"
+          "HEALTH_PART_WAITING_WORKSPACES",
+          "HEALTH_PART_CONFIG_FILE"
         ],
-        "description": "HealthPart is which part of the installation a check is of.\n\n- `HEALTH_PART_DATABASE`: The control plane's database answers a query.\n- `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base\n  backups are taken by a timer outside the control plane, which records nothing it can read.\n- `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready.\n- `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store\n  (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n  plane is not one of the metric store's readers.\n- `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs).\n- `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet: those whose command stream is not up,\n  and those that answer and fail a check of their own (HostCheck).\n- `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet.",
+        "description": "HealthPart is which part of the installation a check is of.\n\n- `HEALTH_PART_DATABASE`: The control plane's database answers a query.\n- `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base\n  backups are taken by a timer outside the control plane, which records nothing it can read.\n- `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready.\n- `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store\n  (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n  plane is not one of the metric store's readers.\n- `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs).\n- `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet: those whose command stream is not up,\n  and those that answer and fail a check of their own (HostCheck).\n- `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet.\n- `HEALTH_PART_CONFIG_FILE`: What the installation's config file says differently, left unanswered for more than a day\n  (ListConfigChanges): a proposal nobody applied or kept current is a decision nobody made.",
         "x-enum-descriptions": [
           "",
           "The control plane's database answers a query.",
@@ -20611,7 +20943,8 @@
           "The collector sends what it is given: spans to the trace store, samples to the metric store\n (GetTelemetryStatus). It is what says whether the metric store takes writes - the control\n plane is not one of the metric store's readers.",
           "The control plane's periodic work: a job whose last run failed (ListJobs).",
           "The hosts registered and not taken out of the fleet: those whose command stream is not up,\n and those that answer and fail a check of their own (HostCheck).",
-          "Workspaces waiting for a runner, across the whole fleet."
+          "Workspaces waiting for a runner, across the whole fleet.",
+          "What the installation's config file says differently, left unanswered for more than a day\n (ListConfigChanges): a proposal nobody applied or kept current is a decision nobody made."
         ]
       },
       "spin.v1.HealthReport": {
@@ -20851,7 +21184,7 @@
               }
             ],
             "title": "detected",
-            "description": "detected is what the host found it has when it last registered (cores, memory, disk GB),\n beside capacity, which is what it advertises: a HostPolicy capacity holds a machine back by\n saying it has less. Zero for a host that has not registered since it was made."
+            "description": "detected is what the host found it has when it last registered (cores, memory, disk GB),\n beside capacity, which is what it advertises: a HostPolicy capacity holds a machine back by\n saying it has less. Unset for a host that has not said: one that has not registered since\n it was made."
           },
           "streamHeardAt": {
             "allOf": [
@@ -20954,6 +21287,33 @@
             "type": "integer",
             "title": "holder_count",
             "format": "int32"
+          },
+          "cordonReason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostCordonReason"
+              }
+            ],
+            "title": "cordon_reason",
+            "description": "cordon_reason is who cordoned the host, and so who may put it back to work: UNSPECIFIED\n unless state is CORDONED."
+          },
+          "atRiskSince": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "at_risk_since",
+            "description": "at_risk_since is when the host's cloud first said its machine may be taken away, unset when\n it never has. No cloud takes the warning back, so it stays after an administrator puts the\n host back to work: a host taking work with it set is one that can still be reclaimed."
+          },
+          "room": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.HostRoom"
+              }
+            ],
+            "title": "room",
+            "description": "room is what the host's last beat said it holds and has left, held for as long as it is\n connected, like checks; unset for a host that is not connected or has not beaten yet."
           }
         },
         "title": "Host",
@@ -21044,7 +21404,28 @@
         },
         "title": "HostClass",
         "additionalProperties": false,
-        "description": "A kind of runner: the shape of the machines a group of the installation's cloud starts for it,\n which the control plane makes and sizes. What a machine boots is the installation's launch\n template, never this. \"default\" is the class a preset that names none runs on."
+        "description": "A kind of runner: the shape of the machines a group of the installation's cloud starts for it,\n which the control plane makes and sizes. What a machine boots is the installation's launch\n template, never this. \"default\" is the class a size that names none runs on."
+      },
+      "spin.v1.HostCordonReason": {
+        "type": "string",
+        "title": "HostCordonReason",
+        "enum": [
+          "HOST_CORDON_REASON_UNSPECIFIED",
+          "HOST_CORDON_REASON_OPERATOR",
+          "HOST_CORDON_REASON_DEVICE_PRESSURE",
+          "HOST_CORDON_REASON_STALLED_PUBLISH",
+          "HOST_CORDON_REASON_SCALE_IN",
+          "HOST_CORDON_REASON_AT_RISK"
+        ],
+        "description": "HostCordonReason is why a host takes no new workspace while it keeps the ones it has.\n\n- `HOST_CORDON_REASON_OPERATOR`: An administrator; only one puts it back.\n- `HOST_CORDON_REASON_DEVICE_PRESSURE`: Its disk is fuller than the installation lets it take more on; it comes back once it drains.\n- `HOST_CORDON_REASON_STALLED_PUBLISH`: A disk on it is not reaching the object store.\n- `HOST_CORDON_REASON_SCALE_IN`: The fleet is giving the machine back.\n- `HOST_CORDON_REASON_AT_RISK`: Its cloud said the machine may be taken away (a spot rebalance recommendation): what nobody\n  is using is suspended off it while there is time, and it is not given more to lose.",
+        "x-enum-descriptions": [
+          "",
+          "An administrator; only one puts it back.",
+          "Its disk is fuller than the installation lets it take more on; it comes back once it drains.",
+          "A disk on it is not reaching the object store.",
+          "The fleet is giving the machine back.",
+          "Its cloud said the machine may be taken away (a spot rebalance recommendation): what nobody\n is using is suspended off it while there is time, and it is not given more to lose."
+        ]
       },
       "spin.v1.HostDeparture": {
         "type": "object",
@@ -21166,6 +21547,11 @@
               "$ref": "#/components/schemas/spin.v1.NetworkRule"
             },
             "title": "rules"
+          },
+          "asDeclared": {
+            "type": "boolean",
+            "title": "as_declared",
+            "description": "as_declared says the host enforces what the installation declares under the name: every\n field of every rule, in any order, and for offline no rule at all. A name the installation no\n longer declares is enforced as declared nowhere. The one comparison of declared and enforced,\n so every client says the same of a host: two that each compared part of a rule disagreed."
           }
         },
         "title": "HostNetworkPolicy",
@@ -21318,13 +21704,31 @@
             "title": "pooled_restore_machines",
             "format": "int32"
           },
-          "fastLoad": {
+          "reservedCpuCores": {
             "type": [
-              "boolean",
+              "integer",
               "null"
             ],
-            "title": "fast_load",
-            "description": "Resume a checkpoint as its guest touches its memory; unset is off, which reached the first\n login sooner on the bench."
+            "title": "reserved_cpu_cores",
+            "format": "int32",
+            "description": "What the host keeps for itself, which placement never sells: cores for the runner, the volume\n agent and QEMU's I/O threads, memory for the kernel, the runner and the page cache. Unset\n keeps 1 core and 1024 MB plus 4% of its memory capacity, so hosts of one type report one\n allocatable; zero keeps nothing back."
+          },
+          "reservedMemoryMb": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "reserved_memory_mb",
+            "format": "int32"
+          },
+          "machineOverheadMb": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "machine_overhead_mb",
+            "format": "int32",
+            "description": "What each running workspace's machine costs the host beyond its size: QEMU itself. Unset is\n 170 MB, an idle workspace's QEMU as measured (spin-stack/machine#278); zero charges nothing."
           }
         },
         "title": "HostPolicy",
@@ -21347,6 +21751,111 @@
           "A machine of an autoscaling group, connected: RemoveHost gives it back to its group, which\n terminates it and is asked for one less. Revoking it would leave the machine running and\n paid for, in a group that counts it.",
           "A machine of an autoscaling group, not connected: RemoveHost gives back a machine the group\n still has, and forgets the host now rather than once it has been silent for\n host_forget_after_hours."
         ]
+      },
+      "spin.v1.HostRoom": {
+        "type": "object",
+        "properties": {
+          "capacity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "capacity",
+            "description": "capacity is the machine as it is advertised: its HostPolicy capacity, or what it detected."
+          },
+          "allocatable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "allocatable",
+            "description": "allocatable is capacity less what the host keeps for itself (its policy's reserved_cpu_cores\n and reserved_memory_mb): all that placement may sell here."
+          },
+          "sold": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "sold",
+            "description": "sold is the sizes its running workspaces hold - each one's floor, or a grant above it - and the\n disk of every workspace it has."
+          },
+          "overhead": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "overhead",
+            "description": "overhead is what their machines cost the host beyond that: machine_overhead_mb for each\n running workspace."
+          },
+          "loans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.WorkspaceLoan"
+            },
+            "title": "loans",
+            "description": "loans is what each of its running workspaces has borrowed above what it was sold, now: one\n for each workspace that holds a loan, by workspace id. What the host has lent is their sum.\n Each is the memory that workspace's suspend uploads beyond its size, so whose loan it is\n decides whose memory an evacuation reaches."
+          },
+          "coresRefused": {
+            "type": "integer",
+            "title": "cores_refused",
+            "format": "int32",
+            "description": "How many loans of a core, and of memory, the host refused since its previous beat."
+          },
+          "memoryRefused": {
+            "type": "integer",
+            "title": "memory_refused",
+            "format": "int32"
+          },
+          "machineOverhead": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "machine_overhead",
+            "description": "machine_overhead is what one more running machine would cost the host beyond its size, as\n its policy says or its default: what the control plane adds to a size it places here, as\n Kubernetes adds a pod's overhead to its request, so a placement holds its machine too."
+          },
+          "poolLeft": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Resources"
+              }
+            ],
+            "title": "pool_left",
+            "description": "pool_left is what its scalers could still lend now: allocatable less sold, less overhead,\n less its loans for memory, bounded by what the machine has free; allocatable cores less its\n loans for cores. Placement prefers a host with more of it, so a host whose growing workspaces have\n spent its pool stops looking as empty as when they were small."
+          },
+          "memoryPressure": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.MemoryPressure"
+              }
+            ],
+            "title": "memory_pressure",
+            "description": "memory_pressure is set while the host is short of memory, and for five minutes after it stops\n being, as Kubernetes holds a node's MemoryPressure so it does not flap: placement sends it\n nothing, it lends no memory, and each beat takes a loan back. Unset: not under pressure."
+          },
+          "storeBytesPerSecond": {
+            "type": "string",
+            "title": "store_bytes_per_second",
+            "format": "int64",
+            "description": "store_bytes_per_second is the rate the host's volumes upload to the object store: the bytes\n of its uploads of 1 MiB and up over the time any of them was in flight, recent ones weighing\n most. 0 until one has finished."
+          },
+          "saveableMemoryMb": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "title": "saveable_memory_mb",
+            "format": "int32",
+            "description": "saveable_memory_mb is the memory the host could upload at that rate in the time an evacuation\n on its policy's shutdown grace has to suspend its workspaces: that grace less what it keeps to\n stop their machines after, the time the control plane plans the evacuation against\n (internal/departure). It is what of its workspaces' memory would be saved if its cloud took it\n now with that notice. Placement puts no more memory on it than 80% of this. Unset for a host\n its cloud does not take at notice, and for one whose rate is not measured yet."
+          }
+        },
+        "title": "HostRoom",
+        "additionalProperties": false,
+        "description": "HostRoom is a host's cores and memory as its runner counts them on each beat. The runner lends\n from the same count it reports, so what placement reads and what a workspace may borrow agree.\n What placement may still sell is allocatable less sold, less overhead, less what the control\n plane has placed there and not yet heard held."
       },
       "spin.v1.HostShell": {
         "type": "object",
@@ -21599,12 +22108,12 @@
           "from": {
             "type": "string",
             "title": "from",
-            "description": "What the header is set from: a team secret by name, \"\u003cforge\u003e app\", or \"identity for\n \u003caudience\u003e\"."
+            "description": "What the header is set from: a team secret by name, \"\u003cforge\u003e account\", \"identity for\n \u003caudience\u003e\", or \"the team's \u003cprovider\u003e key\"."
           },
           "held": {
             "type": "boolean",
             "title": "held",
-            "description": "Whether the team holds it: the secret is set, the forge app is set, an identity is always\n held. False is a request refused with credentials."
+            "description": "Whether the team holds it: the secret is set, the forge app is set, an identity is always\n held, a model key is given for one of names. False is a request refused with credentials,\n except for a model key, whose request goes on with the machine's own header."
           }
         },
         "title": "InjectionStatus",
@@ -22730,48 +23239,6 @@
         "title": "ListRekeysResponse",
         "additionalProperties": false
       },
-      "spin.v1.ListResourcePresetsRequest": {
-        "type": "object",
-        "properties": {
-          "includeDisabled": {
-            "type": "boolean",
-            "title": "include_disabled",
-            "description": "Include disabled presets (admin only)"
-          },
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.PageRequest"
-              }
-            ],
-            "title": "page"
-          }
-        },
-        "title": "ListResourcePresetsRequest",
-        "additionalProperties": false
-      },
-      "spin.v1.ListResourcePresetsResponse": {
-        "type": "object",
-        "properties": {
-          "presets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/spin.v1.ResourcePreset"
-            },
-            "title": "presets"
-          },
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.PageResponse"
-              }
-            ],
-            "title": "page"
-          }
-        },
-        "title": "ListResourcePresetsResponse",
-        "additionalProperties": false
-      },
       "spin.v1.ListRunbooksRequest": {
         "type": "object",
         "title": "ListRunbooksRequest",
@@ -22870,6 +23337,48 @@
           }
         },
         "title": "ListSharedSnapshotsResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListSizesRequest": {
+        "type": "object",
+        "properties": {
+          "includeDisabled": {
+            "type": "boolean",
+            "title": "include_disabled",
+            "description": "Include disabled sizes (admin only)"
+          },
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PageRequest"
+              }
+            ],
+            "title": "page"
+          }
+        },
+        "title": "ListSizesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListSizesResponse": {
+        "type": "object",
+        "properties": {
+          "sizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Size"
+            },
+            "title": "sizes"
+          },
+          "page": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.PageResponse"
+              }
+            ],
+            "title": "page"
+          }
+        },
+        "title": "ListSizesResponse",
         "additionalProperties": false
       },
       "spin.v1.ListSnapshotSharesRequest": {
@@ -23051,6 +23560,31 @@
           }
         },
         "title": "ListTeamMembersResponse",
+        "additionalProperties": false
+      },
+      "spin.v1.ListTeamModelKeysRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "title": "team_id"
+          }
+        },
+        "title": "ListTeamModelKeysRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListTeamModelKeysResponse": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.TeamModelKey"
+            },
+            "title": "keys"
+          }
+        },
+        "title": "ListTeamModelKeysResponse",
         "additionalProperties": false
       },
       "spin.v1.ListTeamSecretsRequest": {
@@ -23446,6 +23980,42 @@
         "title": "ListUsersResponse",
         "additionalProperties": false
       },
+      "spin.v1.ListVulnerabilitiesRequest": {
+        "type": "object",
+        "title": "ListVulnerabilitiesRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.ListVulnerabilitiesResponse": {
+        "type": "object",
+        "properties": {
+          "scannedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "scanned_at",
+            "description": "When the last scan that finished started; unset until this control plane has finished one."
+          },
+          "sboms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "sboms",
+            "description": "The SBOMs it read, by file name without .cdx.json: spin-controlplane, spin-proxy, spin-boot,\n image. None on a machine not made from a release image."
+          },
+          "vulnerabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.Vulnerability"
+            },
+            "title": "vulnerabilities"
+          }
+        },
+        "title": "ListVulnerabilitiesResponse",
+        "additionalProperties": false
+      },
       "spin.v1.ListWorkspaceGuestsRequest": {
         "type": "object",
         "properties": {
@@ -23827,6 +24397,43 @@
         "title": "LogoutResponse",
         "additionalProperties": false
       },
+      "spin.v1.MemoryPressure": {
+        "type": "object",
+        "properties": {
+          "since": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "since"
+          },
+          "cause": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.MemoryPressureCause"
+              }
+            ],
+            "title": "cause"
+          }
+        },
+        "title": "MemoryPressure",
+        "additionalProperties": false,
+        "description": "MemoryPressure is when a host's memory pressure began and what it was short of."
+      },
+      "spin.v1.MemoryPressureCause": {
+        "type": "string",
+        "title": "MemoryPressureCause",
+        "enum": [
+          "MEMORY_PRESSURE_CAUSE_UNSPECIFIED",
+          "MEMORY_PRESSURE_CAUSE_LOW"
+        ],
+        "description": "MemoryPressureCause is what put a host under memory pressure, the latest while it held.\n\n- `MEMORY_PRESSURE_CAUSE_LOW`: The machine's MemAvailable fell below the floor it keeps free whatever it advertises.",
+        "x-enum-descriptions": [
+          "",
+          "The machine's MemAvailable fell below the floor it keeps free whatever it advertises."
+        ]
+      },
       "spin.v1.MemoryUsagePoint": {
         "type": "object",
         "properties": {
@@ -23862,6 +24469,16 @@
         "title": "MemoryUsagePoint",
         "additionalProperties": false,
         "description": "MemoryUsagePoint is the most the machine used over a step - running out is a peak, not a mean\n - against what it held, as CpuUsagePoint."
+      },
+      "spin.v1.ModelProvider": {
+        "type": "string",
+        "title": "ModelProvider",
+        "enum": [
+          "MODEL_PROVIDER_UNSPECIFIED",
+          "MODEL_PROVIDER_ANTHROPIC",
+          "MODEL_PROVIDER_OPENAI"
+        ],
+        "description": "ModelProvider is whose model API an agent's CLI talks to: Claude Code Anthropic's, Codex\n OpenAI's, directly or through a gateway a team names."
       },
       "spin.v1.MoveWorkspaceRequest": {
         "type": "object",
@@ -25052,6 +25669,15 @@
           "jobTitle": {
             "type": "string",
             "title": "job_title"
+          },
+          "configChange": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ConfigChange"
+              }
+            ],
+            "title": "config_change",
+            "description": "The config file's change the problem is of, as ListConfigChanges gives it: what DecideConfigChange\n is asked with. Unset for a problem that is not one."
           }
         },
         "title": "Problem",
@@ -25255,10 +25881,10 @@
             "title": "image",
             "description": "As CreateWorkspaceRequest.image; empty is the installation's default when opened"
           },
-          "preset": {
+          "size": {
             "type": "string",
-            "title": "preset",
-            "description": "As CreateWorkspaceRequest.preset; empty likewise"
+            "title": "size",
+            "description": "As CreateWorkspaceRequest.size; empty likewise"
           },
           "networkTags": {
             "type": "array",
@@ -25267,11 +25893,11 @@
             },
             "title": "network_tags"
           },
-          "workspaceCount": {
+          "yourWorkspaceCount": {
             "type": "integer",
-            "title": "workspace_count",
+            "title": "your_workspace_count",
             "format": "int32",
-            "description": "Workspaces open on it, the trash included"
+            "description": "The workspaces of it the caller can open: what ListWorkspaces lists of it for them - theirs and\n those they are a guest of, neither deleted (the trash is deleted) nor a prebuild's build. Never\n anybody else's: a list of projects said \"1 open\" of somebody else's workspace (#1437)."
           },
           "createdAt": {
             "allOf": [
@@ -25365,6 +25991,12 @@
             "type": "string",
             "title": "prebuild_owner_name",
             "description": "The name of who the builds run as (prebuild_owner_id), so the page says whose forge\n credentials they use."
+          },
+          "holdingWorkspaceCount": {
+            "type": "integer",
+            "title": "holding_workspace_count",
+            "format": "int32",
+            "description": "In GetProject, UpdateProject and ShareProject, to who administers it: the workspaces that keep it from being deleted (DeleteProject) -\n everybody's, its prebuilds' builds, and the trash, which an owner can still take back. Zero to\n everybody else."
           }
         },
         "title": "Project",
@@ -26212,174 +26844,44 @@
         "title": "ResolverLookup",
         "additionalProperties": false
       },
-      "spin.v1.ResourcePreset": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "id"
-          },
-          "name": {
-            "type": "string",
-            "title": "name",
-            "description": "Display name (e.g., \"Small\", \"Medium\", \"Large\")"
-          },
-          "description": {
-            "type": "string",
-            "title": "description",
-            "description": "Description of the preset"
-          },
-          "cpuCores": {
-            "type": "integer",
-            "title": "cpu_cores",
-            "format": "int32",
-            "description": "Number of CPU cores"
-          },
-          "memoryMb": {
-            "type": "integer",
-            "title": "memory_mb",
-            "format": "int32",
-            "description": "Memory in megabytes"
-          },
-          "diskGb": {
-            "type": "integer",
-            "title": "disk_gb",
-            "format": "int32",
-            "description": "Disk space in gigabytes"
-          },
-          "burst": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.BurstMode"
-              }
-            ],
-            "title": "burst"
-          },
-          "isDefault": {
-            "type": "boolean",
-            "title": "is_default",
-            "description": "This is the default preset"
-          },
-          "enabled": {
-            "type": "boolean",
-            "title": "enabled",
-            "description": "Preset is available for selection"
-          },
-          "sortOrder": {
-            "type": "integer",
-            "title": "sort_order",
-            "format": "int32",
-            "description": "Display order (lower = first)"
-          },
-          "createdAt": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.Timestamp"
-              }
-            ],
-            "title": "created_at"
-          },
-          "updatedAt": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/google.protobuf.Timestamp"
-              }
-            ],
-            "title": "updated_at"
-          },
-          "burstFloorCpuCores": {
-            "type": "integer",
-            "title": "burst_floor_cpu_cores",
-            "format": "int32",
-            "description": "What a workspace of a burst mode starts with; at most cpu_cores and memory_mb."
-          },
-          "burstFloorMemoryMb": {
-            "type": "integer",
-            "title": "burst_floor_memory_mb",
-            "format": "int32"
-          },
-          "bandwidthMbps": {
-            "type": "integer",
-            "title": "bandwidth_mbps",
-            "format": "int32",
-            "description": "What a workspace of it may carry each way, in megabits a second; 0 is unshaped."
-          },
-          "rpoSeconds": {
-            "type": "integer",
-            "title": "rpo_seconds",
-            "format": "int32",
-            "description": "How far behind the object store a workspace of it may fall, in seconds; 0 is the\n installation's (the setting volume_rpo_seconds)."
-          },
-          "hostClass": {
-            "type": "string",
-            "title": "host_class",
-            "description": "The host class its workspaces run on (HostClass)."
-          },
-          "agentMinMemoryMb": {
-            "type": "integer",
-            "title": "agent_min_memory_mb",
-            "format": "int32",
-            "description": "What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset."
-          },
-          "fromConfig": {
-            "type": "boolean",
-            "title": "from_config",
-            "description": "Seeded or applied from the installation's config file (the release's presets where it names\n none); false is one an administrator added. An edit since does not change it."
-          },
-          "minMemoryMb": {
-            "type": "integer",
-            "title": "min_memory_mb",
-            "format": "int32",
-            "description": "The least any preset may start its workspaces at, in MB: memory_mb for a fixed one,\n burst_floor_memory_mb for a burst one. A create or update below it is refused; one written\n before it was asked keeps what it has until an administrator changes it."
-          }
-        },
-        "title": "ResourcePreset",
-        "additionalProperties": false,
-        "description": "ResourcePreset is a class of workspace: its size, and how a workspace of it may grow. Every\n workspace is created from one."
-      },
       "spin.v1.Resources": {
         "type": "object",
         "properties": {
           "cpuCores": {
             "type": "integer",
             "title": "cpu_cores",
-            "format": "int32",
-            "description": "Initial CPU cores at boot (default: 1)"
+            "format": "int32"
           },
           "memoryMb": {
             "type": "integer",
             "title": "memory_mb",
-            "format": "int32",
-            "description": "Initial memory in MB at boot (default: 512)"
+            "format": "int32"
           },
           "diskGb": {
             "type": "integer",
             "title": "disk_gb",
-            "format": "int32",
-            "description": "Disk size in GB (default: 10)"
+            "format": "int32"
           },
           "maxCpuCores": {
             "type": "integer",
             "title": "max_cpu_cores",
-            "format": "int32",
-            "description": "Max CPU cores (0 = unlimited)"
+            "format": "int32"
           },
           "maxMemoryMb": {
             "type": "integer",
             "title": "max_memory_mb",
-            "format": "int32",
-            "description": "Max memory in MB (0 = unlimited)"
+            "format": "int32"
           },
           "bandwidthMbps": {
             "type": "integer",
             "title": "bandwidth_mbps",
             "format": "int32",
-            "description": "What a workspace's network carries each way, in megabits a second (0 = unshaped): its\n preset's, held on its host by a token bucket on each way out of its machine's namespace.\n Its vsock - ssh, the editor, forwarded ports - is not shaped."
+            "description": "What a workspace's network carries each way, in megabits a second (0 = unshaped): its\n size's, held on its host by a token bucket on each way out of its machine's namespace.\n Its vsock - ssh, the editor, forwarded ports - is not shaped."
           }
         },
         "title": "Resources",
         "additionalProperties": false,
-        "description": "Resource allocation for workspaces.\n Initial values (cpu_cores, memory_mb) are used at boot time.\n Max values control scaling limits:\n   - 0 = unlimited (burstable to host capacity)\n   - \u003e0 = hard limit (cannot exceed)"
+        "description": "What a workspace holds of its own (cpu_cores, memory_mb: its size's floor, or a grant above it)\n and the ceiling its host may lend it up to (max_*: its size's), never less than what it holds.\n Its host lends no more than it has."
       },
       "spin.v1.RestoreWorkspaceRequest": {
         "type": "object",
@@ -27401,6 +27903,40 @@
         "title": "SetSnapshotVisibilityResponse",
         "additionalProperties": false
       },
+      "spin.v1.SetTeamModelKeyRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "title": "team_id"
+          },
+          "provider": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ModelProvider"
+              }
+            ],
+            "title": "provider"
+          },
+          "key": {
+            "type": "string",
+            "title": "key",
+            "description": "At most 8 KiB of visible ASCII. Replaces the key the provider held, and its URL."
+          },
+          "url": {
+            "type": "string",
+            "title": "url",
+            "description": "Where the agents reach the provider: https, a host and a path, no port, query or credentials.\n Empty is the provider's own API (https://api.anthropic.com, https://api.openai.com/v1); another\n is a gateway in front of it. Its host is the only name the key is set on."
+          }
+        },
+        "title": "SetTeamModelKeyRequest",
+        "additionalProperties": false
+      },
+      "spin.v1.SetTeamModelKeyResponse": {
+        "type": "object",
+        "title": "SetTeamModelKeyResponse",
+        "additionalProperties": false
+      },
       "spin.v1.SetTeamNetworkPolicyRequest": {
         "type": "object",
         "properties": {
@@ -27817,6 +28353,121 @@
         "additionalProperties": false,
         "description": "Empty whether or not the address has an account: anything else would say which."
       },
+      "spin.v1.Size": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "name",
+            "description": "What people pick it by: Small, Standard, Large"
+          },
+          "description": {
+            "type": "string",
+            "title": "description",
+            "description": "What it runs, in a few words: the create page shows it beside the name"
+          },
+          "floor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Compute"
+              }
+            ],
+            "title": "floor"
+          },
+          "ceiling": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Compute"
+              }
+            ],
+            "title": "ceiling"
+          },
+          "diskGb": {
+            "type": "integer",
+            "title": "disk_gb",
+            "format": "int32",
+            "description": "Disk space in gigabytes"
+          },
+          "isDefault": {
+            "type": "boolean",
+            "title": "is_default",
+            "description": "This is the default size"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "enabled",
+            "description": "Size is available for selection"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "title": "sort_order",
+            "format": "int32",
+            "description": "Display order (lower = first)"
+          },
+          "createdAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "created_at"
+          },
+          "updatedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "updated_at"
+          },
+          "bandwidthMbps": {
+            "type": "integer",
+            "title": "bandwidth_mbps",
+            "format": "int32",
+            "description": "What a workspace of it may carry each way, in megabits a second; 0 is unshaped."
+          },
+          "rpoSeconds": {
+            "type": "integer",
+            "title": "rpo_seconds",
+            "format": "int32",
+            "description": "How far behind the object store a workspace of it may fall, in seconds; 0 is the\n installation's (the setting volume_rpo_seconds)."
+          },
+          "hostClass": {
+            "type": "string",
+            "title": "host_class",
+            "description": "The host class its workspaces run on (HostClass)."
+          },
+          "agentMinMemoryMb": {
+            "type": "integer",
+            "title": "agent_min_memory_mb",
+            "format": "int32",
+            "description": "What a workspace has to hold for its agent to start there, in MB, for whoever picks a size."
+          },
+          "fromConfig": {
+            "type": "boolean",
+            "title": "from_config",
+            "description": "Seeded or applied from the installation's config file (the release's sizes where it names\n none); false is one an administrator added. An edit since does not change it."
+          },
+          "minMemoryMb": {
+            "type": "integer",
+            "title": "min_memory_mb",
+            "format": "int32",
+            "description": "The least floor any size may have, in MB. A create or update below it is refused."
+          },
+          "includesAgent": {
+            "type": "boolean",
+            "title": "includes_agent",
+            "description": "Its workspaces serve the agent from boot and keep it serving while they run, rather than\n starting it when someone opens it: about 0.4 GB while one runs, nothing while it sleeps, and a\n memory checkpoint resumes it serving. Its floor has to hold agent_min_memory_mb for it. Its\n workspaces also sleep while their agent's turn waits on a person, held awake only by a turn\n the agent works."
+          }
+        },
+        "title": "Size",
+        "additionalProperties": false,
+        "description": "Size is a kind of workspace, picked by name when one is made: a floor its workspaces\n hold and are charged for, and a ceiling they may grow to while they run, by borrowing from their\n host (memory and cores plugged in and taken back). The floor is at most the ceiling in each; one\n equal to it is a size that never grows. Every workspace is created from one."
+      },
       "spin.v1.Snapshot": {
         "type": "object",
         "properties": {
@@ -27883,6 +28534,14 @@
             "type": "string",
             "title": "shared_by",
             "description": "Who it is from, where its owner shared it with the caller by name (ListSharedSnapshots): they\n chose to give it, so saying who did is no leak. Empty for one reached only as public, which\n names nobody, and for the caller's own."
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/spin.v1.SnapshotStep"
+            },
+            "title": "timeline",
+            "description": "What happened to it from its request to its publish, in order: each step once, as the control\n plane and the host that took it recorded it. Empty for one reached only by a share, and for an\n image's or a prebuild's, which nobody asked for by hand."
           }
         },
         "title": "Snapshot",
@@ -27963,6 +28622,84 @@
           "Usable: a workspace can be created from it",
           "",
           ""
+        ]
+      },
+      "spin.v1.SnapshotStep": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.SnapshotStepKind"
+              }
+            ],
+            "title": "kind"
+          },
+          "at": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "at"
+          },
+          "tookMs": {
+            "type": "string",
+            "title": "took_ms",
+            "format": "int64",
+            "description": "How long the step took: the guest's flush, the guest stopped, the seal, the upload."
+          },
+          "bytes": {
+            "type": "string",
+            "title": "bytes",
+            "format": "int64",
+            "description": "The bytes it wrote: the memory's state, the disk's changes uploaded."
+          },
+          "retries": {
+            "type": "integer",
+            "title": "retries",
+            "format": "int32",
+            "description": "How many times the upload failed before it landed."
+          },
+          "detail": {
+            "type": "string",
+            "title": "detail",
+            "description": "FAILED's reason, or a flush missed's."
+          }
+        },
+        "title": "SnapshotStep",
+        "additionalProperties": false,
+        "description": "SnapshotStep is one step of a snapshot's way from its request to published, when it happened and\n what it cost. took_ms, bytes and retries are each set where the step has one."
+      },
+      "spin.v1.SnapshotStepKind": {
+        "type": "string",
+        "title": "SnapshotStepKind",
+        "enum": [
+          "SNAPSHOT_STEP_KIND_UNSPECIFIED",
+          "SNAPSHOT_STEP_KIND_REQUESTED",
+          "SNAPSHOT_STEP_KIND_GUEST_FLUSHED",
+          "SNAPSHOT_STEP_KIND_GUEST_FLUSH_MISSED",
+          "SNAPSHOT_STEP_KIND_GUEST_STOPPED",
+          "SNAPSHOT_STEP_KIND_DISK_SEALED",
+          "SNAPSHOT_STEP_KIND_STATE_WRITTEN",
+          "SNAPSHOT_STEP_KIND_GUEST_RUNNING",
+          "SNAPSHOT_STEP_KIND_UPLOADED",
+          "SNAPSHOT_STEP_KIND_PUBLISHED",
+          "SNAPSHOT_STEP_KIND_FAILED"
+        ],
+        "description": "- `SNAPSHOT_STEP_KIND_REQUESTED`: Asked for, by its owner or for a suspension.\n- `SNAPSHOT_STEP_KIND_GUEST_FLUSHED`: A disk snapshot's guest wrote its page cache out before the seal, in took_ms.\n- `SNAPSHOT_STEP_KIND_GUEST_FLUSH_MISSED`: The guest did not answer the flush in time, or failed it: the disk is sealed as a power cut\n  would leave it. detail says which.\n- `SNAPSHOT_STEP_KIND_GUEST_STOPPED`: With its memory: the guest stopped, for took_ms until it ran again.\n- `SNAPSHOT_STEP_KIND_DISK_SEALED`: The disk sealed under the snapshot: the layer it names stops taking writes. took_ms is the seal.\n- `SNAPSHOT_STEP_KIND_STATE_WRITTEN`: With its memory: the machine's whole state written, bytes of the guest's memory.\n- `SNAPSHOT_STEP_KIND_GUEST_RUNNING`: With its memory: the guest running again.\n- `SNAPSHOT_STEP_KIND_UPLOADED`: What the disk changed since the last publish is in object storage: bytes, in took_ms, after\n  retries failed attempts. Zero bytes is a disk with nothing unpublished, which costs nothing.\n- `SNAPSHOT_STEP_KIND_PUBLISHED`: Published: a workspace can be created or restored from it.\n- `SNAPSHOT_STEP_KIND_FAILED`: It will not be published; detail says why.",
+        "x-enum-descriptions": [
+          "",
+          "Asked for, by its owner or for a suspension.",
+          "A disk snapshot's guest wrote its page cache out before the seal, in took_ms.",
+          "The guest did not answer the flush in time, or failed it: the disk is sealed as a power cut\n would leave it. detail says which.",
+          "With its memory: the guest stopped, for took_ms until it ran again.",
+          "The disk sealed under the snapshot: the layer it names stops taking writes. took_ms is the seal.",
+          "With its memory: the machine's whole state written, bytes of the guest's memory.",
+          "With its memory: the guest running again.",
+          "What the disk changed since the last publish is in object storage: bytes, in took_ms, after\n retries failed attempts. Zero bytes is a disk with nothing unpublished, which costs nothing.",
+          "Published: a workspace can be created or restored from it.",
+          "It will not be published; detail says why."
         ]
       },
       "spin.v1.Span": {
@@ -28305,7 +29042,7 @@
           "fromDisk": {
             "type": "boolean",
             "title": "from_disk",
-            "description": "Boot a suspended workspace from its disk, dropping the memory it was suspended with: what is\n left when that memory was taken on a machine no host runs now (WORKSPACE_FAILURE_MACHINE_CHANGED).\n The guest boots as from a power cut. Refused for a workspace that is not suspended."
+            "description": "Boot a suspended workspace from its disk, dropping the memory it was suspended with. A start\n does it on its own when no host will resume the memory; this is how an owner who asked to\n decide (Workspace.ask_before_dropping_memory) does it, or anyone who would rather not wait for\n a host that is away. The guest boots as from a power cut. Refused for a workspace that is not\n suspended."
           }
         },
         "title": "StartWorkspaceRequest",
@@ -28867,6 +29604,39 @@
         "title": "TeamMember",
         "additionalProperties": false
       },
+      "spin.v1.TeamModelKey": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.ModelProvider"
+              }
+            ],
+            "title": "provider"
+          },
+          "url": {
+            "type": "string",
+            "title": "url"
+          },
+          "updatedAt": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/google.protobuf.Timestamp"
+              }
+            ],
+            "title": "updated_at"
+          },
+          "inheritedFrom": {
+            "type": "string",
+            "title": "inherited_from",
+            "description": "The path of the team above this one the key is set on; empty where the key is this team's own,\n the only one DeleteModelKey removes. A path, because this team's own path already spells it out\n to its members, who may be members of no team above it: nothing else of that team is answered."
+          }
+        },
+        "title": "TeamModelKey",
+        "additionalProperties": false,
+        "description": "The key a team's workspaces' agents reach one provider with: the team's own, or the nearest team\n above it that gives one, which its workspaces use until it sets its own."
+      },
       "spin.v1.TeamRole": {
         "type": "string",
         "title": "TeamRole",
@@ -28910,6 +29680,11 @@
             "type": "string",
             "title": "ref",
             "description": "Where the team keeps the value; empty where the control plane does."
+          },
+          "inheritedFrom": {
+            "type": "string",
+            "title": "inherited_from",
+            "description": "The path of the team above this one the secret is set on, which its workspaces use until it\n sets its own; empty where the secret is this team's own, the only one DeleteSecret removes.\n A path and nothing else of that team, as TeamModelKey's."
           }
         },
         "title": "TeamSecret",
@@ -29492,9 +30267,9 @@
             "type": "string",
             "title": "image"
           },
-          "preset": {
+          "size": {
             "type": "string",
-            "title": "preset"
+            "title": "size"
           },
           "networkTags": {
             "type": "array",
@@ -29541,13 +30316,13 @@
         "title": "UpdateProjectResponse",
         "additionalProperties": false
       },
-      "spin.v1.UpdateResourcePresetRequest": {
+      "spin.v1.UpdateSizeRequest": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "title": "id",
-            "description": "Required: preset ID to update"
+            "description": "Required: size ID to update"
           },
           "name": {
             "type": "string",
@@ -29559,32 +30334,28 @@
             "title": "description",
             "description": "Optional: new description"
           },
-          "cpuCores": {
-            "type": "integer",
-            "title": "cpu_cores",
-            "format": "int32",
-            "description": "Optional: new CPU cores"
+          "floor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Compute"
+              }
+            ],
+            "title": "floor",
+            "description": "Optional: a new floor or ceiling, each whole; absent keeps it. Its workspaces made before keep\n theirs."
           },
-          "memoryMb": {
-            "type": "integer",
-            "title": "memory_mb",
-            "format": "int32",
-            "description": "Optional: new memory"
+          "ceiling": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.Compute"
+              }
+            ],
+            "title": "ceiling"
           },
           "diskGb": {
             "type": "integer",
             "title": "disk_gb",
             "format": "int32",
             "description": "Optional: new disk"
-          },
-          "burst": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/spin.v1.BurstMode"
-              }
-            ],
-            "title": "burst",
-            "description": "Optional: new burst mode"
           },
           "isDefault": {
             "type": "boolean",
@@ -29601,18 +30372,6 @@
             "title": "sort_order",
             "format": "int32",
             "description": "Optional: new display order"
-          },
-          "burstFloorCpuCores": {
-            "type": "integer",
-            "title": "burst_floor_cpu_cores",
-            "format": "int32",
-            "description": "Optional: new burst floor"
-          },
-          "burstFloorMemoryMb": {
-            "type": "integer",
-            "title": "burst_floor_memory_mb",
-            "format": "int32",
-            "description": "Optional: new burst floor"
           },
           "bandwidthMbps": {
             "type": [
@@ -29636,24 +30395,32 @@
             "type": "string",
             "title": "host_class",
             "description": "Optional: a new host class; empty keeps it. Its workspaces made before keep theirs."
+          },
+          "includesAgent": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "title": "includes_agent",
+            "description": "Optional: whether its workspaces serve the agent from boot. Present, since false is an answer\n and not \"keep\". Its workspaces made before keep what they were made with."
           }
         },
-        "title": "UpdateResourcePresetRequest",
+        "title": "UpdateSizeRequest",
         "additionalProperties": false
       },
-      "spin.v1.UpdateResourcePresetResponse": {
+      "spin.v1.UpdateSizeResponse": {
         "type": "object",
         "properties": {
-          "preset": {
+          "size": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/spin.v1.ResourcePreset"
+                "$ref": "#/components/schemas/spin.v1.Size"
               }
             ],
-            "title": "preset"
+            "title": "size"
           }
         },
-        "title": "UpdateResourcePresetResponse",
+        "title": "UpdateSizeResponse",
         "additionalProperties": false
       },
       "spin.v1.UpdateStorageSettingsRequest": {
@@ -29968,6 +30735,14 @@
             "type": "boolean",
             "title": "replace_env",
             "description": "env replaces the variables even when it is empty, which is how the last one is taken away;\n without it an empty env leaves them as they are."
+          },
+          "askBeforeDroppingMemory": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "title": "ask_before_dropping_memory",
+            "description": "Optional: Workspace.ask_before_dropping_memory"
           }
         },
         "title": "UpdateWorkspaceRequest",
@@ -30316,6 +31091,52 @@
         "additionalProperties": false,
         "description": "VolumeRekey is a workspace's disk to re-key or being re-keyed."
       },
+      "spin.v1.Vulnerability": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "id",
+            "description": "OSV's id: https://osv.dev/vulnerability/\u003cid\u003e."
+          },
+          "package": {
+            "type": "string",
+            "title": "package",
+            "description": "The package's purl without its version, qualifiers or subpath."
+          },
+          "version": {
+            "type": "string",
+            "title": "version"
+          },
+          "summary": {
+            "type": "string",
+            "title": "summary"
+          },
+          "fixed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "fixed",
+            "description": "The versions that fix it, as OSV's report names them."
+          },
+          "sboms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "sboms",
+            "description": "The SBOMs that name the package."
+          },
+          "ignored": {
+            "type": "string",
+            "title": "ignored",
+            "description": "Why the release's list ignores it; empty where it does not. An ignored one is not counted\n by the job, and so does not fire the alert."
+          }
+        },
+        "title": "Vulnerability",
+        "additionalProperties": false
+      },
       "spin.v1.WaitSnapshotRequest": {
         "type": "object",
         "properties": {
@@ -30511,7 +31332,7 @@
             "type": "integer",
             "title": "floor_cpu_cores",
             "format": "int32",
-            "description": "What its preset started it at. resources.cpu_cores and memory_mb are what it holds now, and\n above these they are a grant (GrantWorkspaceResources)."
+            "description": "What its size started it at. resources.cpu_cores and memory_mb are what it holds now, and\n above these they are a grant (GrantWorkspaceResources)."
           },
           "floorMemoryMb": {
             "type": "integer",
@@ -30590,7 +31411,7 @@
           "memoryMachineGone": {
             "type": "boolean",
             "title": "memory_machine_gone",
-            "description": "memory_machine_gone says it is suspended with memory taken on a machine no host of the\n installation registers now (WORKSPACE_FAILURE_MACHINE_CHANGED): a start cannot resume it, and\n WORKSPACE_ACTION_START_FROM_DISK, which drops the memory, is what is offered instead."
+            "description": "memory_machine_gone says it is suspended with memory taken on a machine no host of the\n installation that takes work runs now, or has been heard from lately\n (WORKSPACE_FAILURE_MACHINE_CHANGED): a start cannot resume it. Its start boots it from its disk,\n unless ask_before_dropping_memory, where WORKSPACE_ACTION_START_FROM_DISK is offered instead."
           },
           "suspendsAt": {
             "allOf": [
@@ -30677,7 +31498,7 @@
           "hostClass": {
             "type": "string",
             "title": "host_class",
-            "description": "host_class is the host class it runs on (HostClass.name), from its preset: placed only on a\n host of it, \"default\" where its preset named none."
+            "description": "host_class is the host class it runs on (HostClass.name), from its size: placed only on a\n host of it, \"default\" where its size named none."
           },
           "attempts": {
             "type": "array",
@@ -30709,6 +31530,25 @@
             "type": "string",
             "title": "without_prebuild",
             "description": "without_prebuild is why a workspace opening a project at a ref it prebuilds started from none\n of its prebuilds, and cloned the repository at its first boot: none ready, the ready one of\n another image, its disk not cloneable yet. Empty with from_prebuild_id set, or for a project\n that prebuilds nothing."
+          },
+          "agent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/spin.v1.AgentThread"
+              }
+            ],
+            "title": "agent",
+            "description": "agent is the agent's thread that most asks for its owner, as its supervisor last reported\n them: one waiting for them, else one at work, else the newest. It is what tells a person,\n wherever the workspace is shown, that its agent waits for them, and which thread to open.\n An archived thread is never it. Answered to its owner alone, by GetWorkspace and\n ListWorkspaces: the agent is theirs. Unset where the agent reported no thread that is not\n archived."
+          },
+          "askBeforeDroppingMemory": {
+            "type": "boolean",
+            "title": "ask_before_dropping_memory",
+            "description": "Suspended with memory no host will resume - its machine run by no host there is, or refused\n by every host that tried - it stays suspended for its owner to start from its disk\n (WORKSPACE_ACTION_START_FROM_DISK). Unset, the default, its next start boots it from that disk\n on its own and records why in its events: waiting gives nobody the memory back."
+          },
+          "memoryNotSaveable": {
+            "type": "boolean",
+            "title": "memory_not_saveable",
+            "description": "memory_not_saveable says its memory would not be saved if its host were taken now with the\n notice its policy expects, at the rate it uploads: it runs on a host its cloud takes at\n notice, and that host's evacuation, which suspends its running workspaces smallest memory\n first, each with its loan, would spend what the host's last beat said it could upload\n (HostRoom.saveable_memory_mb) before reaching it. A shorter notice or a slower store saves\n less. It would start again from its disk as last published (durability). False on a host\n with no such budget, and while it is not running. Answered by GetWorkspace only: a listing\n does not read every host's workspaces."
           }
         },
         "title": "Workspace",
@@ -30727,7 +31567,7 @@
           "WORKSPACE_ACTION_SUSPEND",
           "WORKSPACE_ACTION_START_FROM_DISK"
         ],
-        "description": "WorkspaceAction is an act a person can ask of a workspace.\n\n- `WORKSPACE_ACTION_FORCE_STOP`: Stop without waiting for the guest: also what ends a stop that does not finish.\n- `WORKSPACE_ACTION_SUSPEND`: Put down with its memory, to be resumed where it was.\n- `WORKSPACE_ACTION_START_FROM_DISK`: Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n  offered when that memory's machine is run by no host (Workspace.memory_machine_gone).",
+        "description": "WorkspaceAction is an act a person can ask of a workspace.\n\n- `WORKSPACE_ACTION_FORCE_STOP`: Stop without waiting for the guest: also what ends a stop that does not finish.\n- `WORKSPACE_ACTION_SUSPEND`: Put down with its memory, to be resumed where it was.\n- `WORKSPACE_ACTION_START_FROM_DISK`: Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n  offered in place of a start when that memory's machine is run by no host\n  (Workspace.memory_machine_gone) and its owner asked to decide (Workspace.ask_before_dropping_memory);\n  beside the start to an owner who asked while every host that could resume it has refused it or\n  only its cordoned host can, and to every owner once a resume failed with its machine\n  (WORKSPACE_FAILURE_MACHINE), which the next start may repeat.",
         "x-enum-descriptions": [
           "",
           "",
@@ -30736,7 +31576,7 @@
           "",
           "",
           "Put down with its memory, to be resumed where it was.",
-          "Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n offered when that memory's machine is run by no host (Workspace.memory_machine_gone)."
+          "Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk):\n offered in place of a start when that memory's machine is run by no host\n (Workspace.memory_machine_gone) and its owner asked to decide (Workspace.ask_before_dropping_memory);\n beside the start to an owner who asked while every host that could resume it has refused it or\n only its cordoned host can, and to every owner once a resume failed with its machine\n (WORKSPACE_FAILURE_MACHINE), which the next start may repeat."
         ]
       },
       "spin.v1.WorkspaceAgentThreads": {
@@ -31059,9 +31899,10 @@
           "WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN",
           "WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY",
           "WORKSPACE_EVENT_TYPE_OVERSIZED",
-          "WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED"
+          "WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED",
+          "WORKSPACE_EVENT_TYPE_LIMITED"
         ],
-        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller preset would fit what it used. Its details say what it used, what it\n  holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline:\n  its processes are lost, and it comes back from its disk as last published. Its details say\n  when that was, how long before the deadline, and why the memory was not saved.",
+        "description": "- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created\n- `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started\n- `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken\n- `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot\n- `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted\n- `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed\n- `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot\n- `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory\n- `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted\n- `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released\n- `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from\n- `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there\n- `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it\n- `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash\n- `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted\n- `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own\n- `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on\n- `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them\n- `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it\n- `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it\n- `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back\n- `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published\n- `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner\n- `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why\n- `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n  their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n  host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n  ceiling. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half\n  its own, and a smaller size would fit what it used. Its details say what it used, what it\n  holds, and that size. Said, never acted on: nothing resizes a workspace on its own.\n- `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline:\n  its processes are lost, and it comes back from its disk as last published. Its details say\n  when that was, how long before the deadline, and why the memory was not saved.\n- `WORKSPACE_EVENT_TYPE_LIMITED`: Its host held it at a rate limit: a disk it held because the workspace's IO stalled the\n  others on the host, or the network bandwidth an administrator set. Its details say which\n  limit, on what, the limit and what it used a second, the packets dropped a second, and since\n  when. Said, never acted on, and never told to the guest.",
         "x-enum-descriptions": [
           "",
           "Workspace was created",
@@ -31090,8 +31931,9 @@
           "Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner",
           "An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why",
           "It ran out of memory: its guest's kernel killed a process (cause \"guest\", with the kills and\n their victims), its host found it short at its ceiling for a while (cause \"ceiling\"), or its\n host killed the machine (cause \"host\"). Its details say what it held, its grant and its\n ceiling. Said, never acted on: nothing resizes a workspace on its own.",
-          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller preset would fit what it used. Its details say what it used, what it\n holds, and that preset. Said, never acted on: nothing resizes a workspace on its own.",
-          "Its host was being taken away and its memory could not be saved before the host's deadline:\n its processes are lost, and it comes back from its disk as last published. Its details say\n when that was, how long before the deadline, and why the memory was not saved."
+          "It held far more than it used for a week: the most memory its processes used stayed under half\n its own, and a smaller size would fit what it used. Its details say what it used, what it\n holds, and that size. Said, never acted on: nothing resizes a workspace on its own.",
+          "Its host was being taken away and its memory could not be saved before the host's deadline:\n its processes are lost, and it comes back from its disk as last published. Its details say\n when that was, how long before the deadline, and why the memory was not saved.",
+          "Its host held it at a rate limit: a disk it held because the workspace's IO stalled the\n others on the host, or the network bandwidth an administrator set. Its details say which\n limit, on what, the limit and what it used a second, the packets dropped a second, and since\n when. Said, never acted on, and never told to the guest."
         ]
       },
       "spin.v1.WorkspaceFailure": {
@@ -31113,7 +31955,7 @@
           "WORKSPACE_FAILURE_MACHINE_CHANGED",
           "WORKSPACE_FAILURE_GUEST_PANIC"
         ],
-        "description": "WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a\n person can do about it - and a failure rate split by the repair it needs - is decided by the\n kind rather than by the text of an error. The reason beside it is the detail.\n\n One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a\n person is shown is the one the host named, with no second list to keep in step.\n\n- `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification.\n- `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says\n  why), or what the disk was to be made from is gone.\n- `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named.\n- `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up.\n- `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for.\n- `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot.\n- `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem.\n- `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory\n  cannot be resumed anywhere, and the control plane boots the disk with the newest releases.\n- `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to, and not by a panic of its guest's kernel: its guest\n  reset it, or its QEMU was killed, exited with an error or crashed. The detail says which.\n- `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed.\n- `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n  attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.\n- `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host\n  that is not connected. The control plane's verdict, never a host's.\n- `WORKSPACE_FAILURE_MACHINE_CHANGED`: Its memory was taken on a machine no host of the installation runs now: the machine's\n  contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n  the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n  owner's to choose (StartWorkspaceRequest.from_disk).\n- `WORKSPACE_FAILURE_GUEST_PANIC`: The guest's kernel panicked, which ended its machine. The cause is inside the guest: the\n  detail quotes the console's panic line, and the console has what led to it.",
+        "description": "WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a\n person can do about it - and a failure rate split by the repair it needs - is decided by the\n kind rather than by the text of an error. The reason beside it is the detail.\n\n One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a\n person is shown is the one the host named, with no second list to keep in step.\n\n- `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification.\n- `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says\n  why), or what the disk was to be made from is gone.\n- `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named.\n- `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up.\n- `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for.\n- `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot.\n- `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem.\n- `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory\n  cannot be resumed anywhere, and the control plane boots the disk with the newest releases.\n- `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to, and not by a panic of its guest's kernel: its guest\n  reset it, or its QEMU was killed, exited with an error or crashed. The detail says which.\n- `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed.\n- `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n  attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.\n- `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host\n  that is not connected. The control plane's verdict, never a host's.\n- `WORKSPACE_FAILURE_MACHINE_CHANGED`: A host's machine cannot take the memory itself: it was taken on another machine (the machine's\n  contract moved with a release, or the processor did, and spin-machine refuses it), or the\n  checkpoint does not fit this machine. The detail is the host's words on what differs.\n  The control plane tries the next host that could take the memory, and boots the disk once every\n  one has refused, unless its owner asked to decide (Workspace.ask_before_dropping_memory). A\n  resume that failed for anything else is WORKSPACE_FAILURE_MACHINE, and is tried again.\n- `WORKSPACE_FAILURE_GUEST_PANIC`: The guest's kernel panicked, which ended its machine. The cause is inside the guest: the\n  detail quotes the console's panic line, and the console has what led to it.",
         "x-enum-descriptions": [
           "Not classified. A failure that lands here is a site missing its classification.",
           "Its disk could not be served or made: the host is not serving its volume (its refusal says\n why), or what the disk was to be made from is gone.",
@@ -31127,7 +31969,7 @@
           "The machine could not be stopped or removed.",
           "Its host did not bring a start or a stop to an end before the deadline: unreachable, or its\n attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's.",
           "No host could take it: none came with room while it waited, or its disk is only on a host\n that is not connected. The control plane's verdict, never a host's.",
-          "Its memory was taken on a machine no host of the installation runs now: the machine's\n contract moved (a release that changed it), or the processor did. The memory resumes nowhere;\n the workspace stays suspended, and booting it from its disk, which drops the memory, is its\n owner's to choose (StartWorkspaceRequest.from_disk).",
+          "A host's machine cannot take the memory itself: it was taken on another machine (the machine's\n contract moved with a release, or the processor did, and spin-machine refuses it), or the\n checkpoint does not fit this machine. The detail is the host's words on what differs.\n The control plane tries the next host that could take the memory, and boots the disk once every\n one has refused, unless its owner asked to decide (Workspace.ask_before_dropping_memory). A\n resume that failed for anything else is WORKSPACE_FAILURE_MACHINE, and is tried again.",
           "The guest's kernel panicked, which ended its machine. The cause is inside the guest: the\n detail quotes the console's panic line, and the console has what led to it."
         ]
       },
@@ -31233,6 +32075,28 @@
         "title": "WorkspaceLease",
         "additionalProperties": false,
         "description": "WorkspaceLease is a process in the workspace keeping it awake while it lives."
+      },
+      "spin.v1.WorkspaceLoan": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "title": "workspace_id"
+          },
+          "cpuCores": {
+            "type": "integer",
+            "title": "cpu_cores",
+            "format": "int32"
+          },
+          "memoryMb": {
+            "type": "integer",
+            "title": "memory_mb",
+            "format": "int32"
+          }
+        },
+        "title": "WorkspaceLoan",
+        "additionalProperties": false,
+        "description": "WorkspaceLoan is what one running workspace has borrowed of its host above what it was sold."
       },
       "spin.v1.WorkspaceLogFieldValuesRequest": {
         "type": "object",
@@ -31700,7 +32564,7 @@
     },
     {
       "name": "AdminService",
-      "description": "AdminService manages installation-wide settings, user management, and resource presets\n Only accessible to instance administrators --- Installation Settings ---"
+      "description": "AdminService manages installation-wide settings, user management, and sizes\n Only accessible to instance administrators --- Installation Settings ---"
     },
     {
       "name": "ExecService",

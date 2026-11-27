@@ -25,7 +25,9 @@ There are two ways to authenticate:
    a key on the command line would be readable by every user of the machine.
 
 The server is --endpoint, else SPIN_ENDPOINT, else the one the profile is already logged in
-to, else https://app.spinbox.dev.
+to, else - inside a workspace - the workspace's own installation, else https://app.spinbox.dev.
+A login inside a workspace is how a person acts there in one created from the dashboard, which
+carries no key of its own.
 
 With --no-browser and -o json, the code is written as a first line of JSON before the wait
 ({verification_url, user_code, expires_in}), and the login as a second

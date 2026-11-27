@@ -328,7 +328,7 @@
 	},
 	{
 		"area": "Network",
-		"name": "Brokered names: the host's proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role",
+		"name": "Brokered names: the runner's egress proxy stands in and adds what the workspace never holds - a team secret, a forge token, its identity, a cloud role",
 		"state": "built",
 		"proof": "cli:team secret set",
 		"note": "The team secret's value is read at the origin; the forge token, identity and cloud role injections have no test against the stack.",
@@ -533,7 +533,7 @@
 	},
 	{
 		"area": "Workspaces",
-		"name": "An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the workspace's Agent tab in the dashboard, which frames the client and carries it over a passkey's session",
+		"name": "An agent UI: T3 Code in a workspace as its agent user, over the owner's SSH session - from `spin agent` on the person's computer, or in the dashboard's Agents, one client with every workspace of the person's as an environment, carried over a passkey's session",
 		"state": "built",
 		"proof": "cli:agent --port",
 		"note": "The lane has no provider credential, so no test has a model answer through the brokered egress: the server is reached, as the agent's user, and nothing is asked of it. The browser's test drives the page with a virtual authenticator, which no real passkey's maker vouches for.",
@@ -565,12 +565,32 @@
 	},
 	{
 		"area": "Workspaces",
+		"name": "A team's own model key stands in for signing Claude Code and Codex in: the runner's egress proxy sets it on the agent's requests to the provider or the team's gateway, and the workspace holds a placeholder",
+		"state": "built",
+		"proof": "rpc:spin.v1.TeamService/SetModelKey",
+		"note": "Where a brokered rule of the installation's injects the provider's model_key. The lane drives Claude Code through a gateway it stands in for; Codex's configuration is the unit tests'.",
+		"endToEnd": [
+			"go:internal/e2e.TestAnAgentsCLIReachesItsProviderWithTheTeamsKeyAndNeverHoldsIt"
+		]
+	},
+	{
+		"area": "Workspaces",
 		"name": "The supervisor runs the agent for its owner while it is used: started, paired and listed over the owner's own session on a socket only root opens, and stopped once nobody has used it for half an hour and no chat is at work",
 		"state": "built",
 		"proof": "rpc:spin.vm.v1.AgentService/Start",
 		"note": "That it stops once idle is the sweep's unit test on a clock the test moves: no lane waits half an hour.",
 		"endToEnd": [
 			"go:internal/e2e.TestTheSupervisorRunsTheAgentForItsOwner"
+		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "A size can include the agent: its workspaces serve T3 Code from boot and keep it serving while they run, an open finds it there, and a memory checkpoint resumes it serving",
+		"state": "built",
+		"proof": "e2e:TestAWorkspaceOfASizeThatIncludesTheAgentServesItFromBoot",
+		"note": "That a kept server is never stopped for being idle is the sweep's unit test on a clock the test moves: no lane waits half an hour.",
+		"endToEnd": [
+			"go:internal/e2e.TestAWorkspaceOfASizeThatIncludesTheAgentServesItFromBoot"
 		]
 	},
 	{
@@ -582,6 +602,14 @@
 		"endToEnd": [
 			"go:internal/e2e.TestTheAgentsThreadsAreListed"
 		]
+	},
+	{
+		"area": "Workspaces",
+		"name": "Wherever a workspace is shown - the workspace list, its page, the sidebar's Agents - its agent says whether it is working, waiting for you and on what (an approval, a question, a card left open after its turn), or idle, and opens that thread in one click",
+		"state": "built",
+		"proof": "rpc:spin.v1.WorkspaceService/ListWorkspaces",
+		"note": "",
+		"endToEndGap": "The lane has no provider credential, so no thread of a real agent works or waits: T3 Code's states are read from fixtures of its pinned release's schema by the reader's unit test, and the control plane's and the dashboard's halves by theirs."
 	},
 	{
 		"area": "Workspaces",
@@ -748,12 +776,12 @@
 	},
 	{
 		"area": "Administration",
-		"name": "Resource presets",
+		"name": "Workspace sizes: a floor held, a ceiling grown to",
 		"state": "built",
-		"proof": "rpc:spin.v1.AdminService/CreateResourcePreset",
+		"proof": "rpc:spin.v1.AdminService/CreateSize",
 		"note": "",
 		"endToEnd": [
-			"pw:admin.spec.ts:an admin's preset sizes a person's workspace, and is gone once deleted"
+			"pw:admin.spec.ts:an admin's size is offered for a person's workspace, and is gone once deleted"
 		]
 	},
 	{
@@ -884,10 +912,20 @@
 		"area": "Administration",
 		"name": "A cloud's reclaim warning empties the host before the machine goes",
 		"state": "built",
-		"proof": "e2e:TestACloudsReclaimWarningEmptiesTheHostBeforeAnySignal",
+		"proof": "e2e:TestHostsASpotReclaimLosesNothingAWorkspacePublished",
 		"note": "",
 		"endToEnd": [
-			"go:internal/e2e.TestACloudsReclaimWarningEmptiesTheHostBeforeAnySignal"
+			"go:internal/e2e.TestHostsASpotReclaimLosesNothingAWorkspacePublished"
+		]
+	},
+	{
+		"area": "Administration",
+		"name": "A machine its cloud says is at risk takes nothing new and suspends what nobody uses before any reclaim",
+		"state": "built",
+		"proof": "e2e:TestHostsAMachineAtRiskSuspendsWhatNobodyUsesBeforeAnyReclaim",
+		"note": "",
+		"endToEnd": [
+			"go:internal/e2e.TestHostsAMachineAtRiskSuspendsWhatNobodyUsesBeforeAnyReclaim"
 		]
 	},
 	{
@@ -1022,7 +1060,7 @@
 		"name": "No GPUs",
 		"state": "limit",
 		"proof": "",
-		"note": "A preset names the class of runner its workspaces run on, and no class hands a workspace a GPU."
+		"note": "A size names the class of runner its workspaces run on, and no class hands a workspace a GPU."
 	},
 	{
 		"area": "Workspaces",
@@ -1099,7 +1137,7 @@
 		"name": "Nothing pages the operator",
 		"state": "limit",
 		"proof": "",
-		"note": "Metrics, logs and traces stay inside the installation; alert rules fire in its Grafana and no contact point tells anyone. A workspace's owner is emailed when it waits for them."
+		"note": "Metrics, logs and traces stay inside the installation; an alert rule fires in its Grafana, whose one contact point is the control plane, and the control plane emails the administrators when the installation has an email server set. An alert is an email, nothing louder. A workspace's owner is emailed when it waits for them."
 	},
 	{
 		"area": "Administration",

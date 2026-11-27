@@ -35,8 +35,8 @@ Flags:
       --image string           The image to start from (default: the installation's)
       --metadata-name string   A name that resolves publicly to the metadata service's address, checked not to be reached
       --network-tag strings    Network policy to run under, by name (repeatable)
-      --preset string          The preset it is sized by (default: the installation's)
       --reach string           A URL the workspace's policies let it reach, checked to be reached
+      --size string            The size it is made in (default: the installation's)
       --timeout duration       How long the scenarios may take, not counting the erase (default 15m0s)
 
 Global Flags:

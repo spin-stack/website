@@ -20,7 +20,7 @@ Each release publishes `spin-linux-amd64`, `spin-linux-arm64`, `spin-darwin-arm6
 `PATH` as `spin`. Each is also in the release's public package, under a tag of its own:
 
 ```bash
-oras pull ghcr.io/spin-stack/spin-release:v20261121.03-spin-linux-amd64
+oras pull ghcr.io/spin-stack/spin-release:v20261125.01-spin-linux-amd64
 ```
 
 `spin version` prints the release it was built from, and the CLI says it on every request. An

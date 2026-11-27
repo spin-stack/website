@@ -1,7 +1,7 @@
 ---
 title: "TeamService"
 metaTitle: "TeamService: procedures and fields | Spinbox API"
-description: "spin.v1.TeamService, 20 procedures of the control plane's API: what each takes and returns, field by field."
+description: "spin.v1.TeamService, 23 procedures of the control plane's API: what each takes and returns, field by field."
 source: "spin:internal/controlplane/apidocs/spin.v1.openapi.json"
 editUrl: false
 sidebar:
@@ -83,6 +83,21 @@ Create a new team (can be nested under parent_id)
 | Field | Type | What it is |
 |---|---|---|
 | `id` | string |  |
+
+**Response**
+
+No fields: `{}`.
+
+## DeleteModelKey
+
+`POST /spin.v1.TeamService/DeleteModelKey`
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+| `provider` | [ModelProvider](/reference/api/types/#modelprovider) |  |
 
 **Response**
 
@@ -216,6 +231,22 @@ Member management
 | `members` | list of [TeamMember](/reference/api/types/#teammember) |  |
 | `page` | [PageResponse](/reference/api/types/#pageresponse) |  |
 
+## ListModelKeys
+
+`POST /spin.v1.TeamService/ListModelKeys`
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+
+**Response**
+
+| Field | Type | What it is |
+|---|---|---|
+| `keys` | list of [TeamModelKey](/reference/api/types/#teammodelkey) |  |
+
 ## ListSecrets
 
 `POST /spin.v1.TeamService/ListSecrets`
@@ -269,6 +300,25 @@ List teams (optionally filtered by parent)
 
 No fields: `{}`.
 
+## SetModelKey
+
+`POST /spin.v1.TeamService/SetModelKey`
+
+A team's model keys: the key its workspaces' agents reach a model provider with, so Claude Code and Codex run without signing in workspace by workspace. The host's egress proxy sets it on the agent's requests where a brokered rule injects the provider's model_key; the workspace is told only the URL. Set and deleted by the team's admins, listed to its members with the key a team above gives where the team gives none; a key is never answered with again.
+
+**Request**
+
+| Field | Type | What it is |
+|---|---|---|
+| `teamId` | string |  |
+| `provider` | [ModelProvider](/reference/api/types/#modelprovider) |  |
+| `key` | string | At most 8 KiB of visible ASCII. Replaces the key the provider held, and its URL. |
+| `url` | string | Where the agents reach the provider: https, a host and a path, no port, query or credentials. Empty is the provider's own API (`https://api.anthropic.com`, `https://api.openai.com/v1`); another is a gateway in front of it. Its host is the only name the key is set on. |
+
+**Response**
+
+No fields: `{}`.
+
 ## SetNetworkPolicy
 
 `POST /spin.v1.TeamService/SetNetworkPolicy`
@@ -291,7 +341,7 @@ No fields: `{}`.
 
 `POST /spin.v1.TeamService/SetSecret`
 
-A team's secrets: what a brokered network rule has the host's egress proxy add to a request, so a workspace of the team uses a key it never holds. Set and deleted by the team's admins, listed by name to its members; a value is never answered with again.
+A team's secrets: what a brokered network rule has the host's egress proxy add to a request, so a workspace of the team uses a key it never holds. Set and deleted by the team's admins, listed by name to its members with the one a team above gives where the team gives none; a value is never answered with again.
 
 **Request**
 

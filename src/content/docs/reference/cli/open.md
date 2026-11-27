@@ -18,7 +18,7 @@ its repository among the projects you see; with more than one, --project says wh
 workspace is made in --team, or your personal team. A repository no project has is one to make a
 project of first ('spin project create').
 
-The workspace is the project's shape, sized by its preset unless --preset names another. It ends
+The workspace is the project's shape, sized by its size unless --size names another. It ends
 in 'spin ssh', which logs in with a key you added ('spin ssh-key add'), unless --no-connect.
 
 Examples:
@@ -33,8 +33,8 @@ Flags:
   -h, --help[=true|false]         help for open
       --name string               Workspace name (auto-generated if empty)
       --no-connect[=true|false]   Create the workspace and print it, without connecting
-      --preset string             The preset it is sized by, by name (default: the project's)
       --project string            The project to open, by slug, when more than one has the repository
+      --size string               The size it is made in, by name (default: the project's)
       --team string               The team the workspace is made in, by id, path or me (your personal team if empty)
       --timeout duration          How long --wait waits; by default, until the control plane gives up on it
       --wait[=true|false]         Return once the workspace is running, with --no-connect

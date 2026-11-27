@@ -52,7 +52,9 @@ team, projects, end and bounds - and goes when it is revoked.
 
 Available scopes:
   workspace:read   - Read workspaces, snapshots and ports
-  workspace:write  - Create, start, stop and change workspaces; open a terminal
+  workspace:write  - Create, start, stop, snapshot and resize workspaces; open a terminal
+  workspace:configure - Change a workspace's env and network, publish its ports,
+                     let guests in and share its snapshots
   workspace:delete - Delete workspaces
   workspace:exec   - Run commands and read and write files in workspaces, as root;
                      made with your passkey, in the dashboard
