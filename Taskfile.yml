@@ -102,6 +102,31 @@ tasks:
     cmds:
       - go run ./tools/sync issue -mode '{{.MODE}}' -bot '{{.BOT}}'
 
+  # Only the entries the Gate builds or runs on the pull request: node and golang the image task
+  # check makes, actionlint task gate's lint:workflows. spin, spin-terraform-aws and brand are
+  # sources:bump's, which sync.yml runs every day.
+  refresh:
+    desc: Propose what is behind of the entries the Gate checks (node, golang, actionlint) as one pull request; refresh.yml's step, and it pushes and opens a pull request as GITHUB_TOKEN or GH_TOKEN
+    cmds:
+      - versions refresh -propose node golang actionlint
+
+  # refresh.yml commits and pushes as the sync App, so that its pull request starts the Gate: one
+  # opened with the run's own token starts no workflow.
+  git:app:
+    desc: Make git commit and push as the GitHub App whose token is GH_TOKEN (APP_SLUG= its slug) - a workflow's step, as it writes git's global configuration.
+    requires:
+      vars: [APP_SLUG]
+    preconditions:
+      - sh: test -n "${GITHUB_ACTIONS:-}"
+        msg: git:app rewrites git's global user and credentials; it is for a workflow's runner, not this machine
+    cmds:
+      - |
+        set -e
+        gh auth setup-git
+        id=$(gh api "/users/{{.APP_SLUG}}[bot]" --jq .id)
+        git config --global user.name "{{.APP_SLUG}}[bot]"
+        git config --global user.email "${id}+{{.APP_SLUG}}[bot]@users.noreply.github.com"
+
   reference:
     desc: Write the reference pages (CLI, Terraform, config file, API) and what the site copies from the spin, spin-terraform-aws and brand checkouts.
     cmds:

@@ -1,0 +1,57 @@
+# Every Monday, the versions.yaml entries the Gate is the check of moved to their newest, one commit
+# each, and proposed as one pull request (task refresh): node and golang, the image task check
+# builds, and actionlint. spin, spin-terraform-aws and brand are sync.yml's. Nothing here merges.
+#
+# The pull request is the sync App's (spin-stack-website-sync), so the Gate runs on it: one opened
+# with this run's own token would start none.
+name: Refresh
+
+on:
+  schedule:
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+# go-tools' downloads (versions) ask GitHub with this: anonymous ones are the first it sheds.
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+
+jobs:
+  refresh:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: Iv23liTD5gzpSkUHViuO # spin-stack-website-sync's client ID, public: app-id is deprecated
+          private-key: ${{ secrets.SYNC_APP_KEY }}
+          owner: spin-stack
+          repositories: website
+          permission-contents: write
+          permission-pull-requests: write
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The branch is pushed as the App, below, and not with this run's token.
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: Commit as the App
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+        run: go tool task git:app
+      # versions refresh reads GITHUB_TOKEN before GH_TOKEN, so both are the App's here.
+      - name: Propose what is behind
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.app.outputs.token }}
+        run: go tool task refresh
