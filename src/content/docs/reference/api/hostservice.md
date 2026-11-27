@@ -65,7 +65,6 @@ No fields: `{}`.
 | Field | Type | What it is |
 |---|---|---|
 | `autoscaling` | boolean | False when no fleet is configured: the hosts of this installation are whatever somebody registered by hand, and none of the numbers below mean anything. |
-| `connected` | integer (int32) | The hosts that are connected now, of every class, which lags what was asked for by a machine's boot. |
 | `idleMinutes` | integer (int32) | How long a class's group may be idle before it is emptied, and the window in which it is emptied at once. Empty quiet_hours is none. |
 | `quietHours` | string |  |
 | `timeZone` | string |  |

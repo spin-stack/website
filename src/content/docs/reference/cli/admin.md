@@ -100,8 +100,9 @@ Global Flags:
 ```
 Each part of the installation as the control plane knows it - its database and the
 database's archive, the log store, the collector, its jobs, its runners and the workspaces
-waiting for one - with ok, degraded or failed, why, and as of when. A part the installation
-does not have is not listed. Exits non-zero when any part has failed.
+waiting for one, and what the config file proposes that nobody has answered - with ok, degraded
+or failed, why, and as of when. A part the installation does not have is not listed. Exits
+non-zero when any part has failed.
 
 Usage:
   spin admin health [flags]
@@ -320,8 +321,8 @@ Usage:
 Flags:
       --cpu-cores int32                         cores this runner advertises; unset advertises what it has
       --disk-gb int32                           disk this runner advertises; unset advertises what it has
-      --fast-load[=true|false]                  resume a checkpoint as its guest touches its memory; off reached the first login sooner on the bench
   -h, --help[=true|false]                       help for policy
+      --machine-overhead-mb int32               memory each running workspace's machine costs this runner beyond its size; unset is 170, 0 charges nothing
       --max-workspace-cpu-cores int32           the cores one workspace may grow to there
       --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
       --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
@@ -332,6 +333,8 @@ Flags:
       --preemptible[=true|false]                a stop on this runner is the machine being taken away, not a restart
       --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
+      --reserved-cpu-cores int32                cores this runner keeps for itself, never sold to a workspace; unset keeps 1, 0 keeps none
+      --reserved-memory-mb int32                memory this runner keeps for itself, never sold to a workspace; unset keeps 1024 MB and 4% of its memory, 0 keeps none
       --shutdown-grace duration                 how long this runner stays up after a stop signal so its workspaces can be moved off it
       --writeback-background-bytes int          dirty page cache at which this runner starts writing back (vm.dirty_background_bytes), below the limit
       --writeback-limit-bytes int               dirty page cache this runner holds before a writer waits (vm.dirty_bytes); unset is what it booted with
@@ -776,8 +779,8 @@ Flags:
       --description string                      Description for the token
       --disk-gb int32                           disk each host it registers advertises; unset advertises what it has
       --expires duration                        how long the token registers hosts; unset is the control plane's 24 hours, and at most 30 days
-      --fast-load[=true|false]                  resume a checkpoint as its guest touches its memory; off reached the first login sooner on the bench
   -h, --help[=true|false]                       help for create
+      --machine-overhead-mb int32               memory each running workspace's machine costs each host it registers beyond its size; unset is 170, 0 charges nothing
       --max-workspace-cpu-cores int32           the cores one workspace may grow to there
       --max-workspace-io-mb-per-second int32    MiB one workspace may read, and write, a second there; unset is no bound
       --max-workspace-io-ops-per-second int32   I/O operations one workspace may read, and write, a second there; unset is no bound
@@ -788,6 +791,8 @@ Flags:
       --preemptible[=true|false]                a stop on each host it registers is the machine being taken away, not a restart
       --preemption-metadata-url string          where that cloud's metadata service answers; empty is its own link-local address
       --preemption-source string                the cloud that announces a reclaim: aws, gcp or azure (implies --preemptible)
+      --reserved-cpu-cores int32                cores each host it registers keeps for itself, never sold to a workspace; unset keeps 1, 0 keeps none
+      --reserved-memory-mb int32                memory each host it registers keeps for itself, never sold to a workspace; unset keeps 1024 MB and 4% of its memory, 0 keeps none
       --reusable[=true|false]                   a pool's token: it registers every host that presents it until it expires
       --shutdown-grace duration                 how long each host it registers stays up after a stop signal so its workspaces can be moved off it
       --team string                             The team to scope the runner to, by id, path or me

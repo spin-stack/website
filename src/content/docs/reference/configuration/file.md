@@ -40,7 +40,7 @@ settings:
   # How many days a deleted workspace stays in the trash - its disk, snapshots and keys kept - for
   # its owner to undelete, before it is erased. 0 is no trash: a delete erases at once. At most 90.
   workspace_trash_days: 7
-  # How far behind the object store a workspace's disk may fall, in seconds, where its preset does
+  # How far behind the object store a workspace's disk may fall, in seconds, where its size does
   # not say: what a host lost without warning may lose of a workspace that writes. 300 where left
   # out; 0 commits on size and snapshots alone; otherwise 60 to 86400.
   volume_rpo_seconds: 300
@@ -136,32 +136,36 @@ registration:
     - acme.com
     - contractor@example.com
 
-# What a person may choose when creating a workspace. One preset may be the default. Left out,
-# the installation is given the release's: one, "default", 1 core and 2048 MB that grow to what
-# its host has, on 10 GB. `presets: []` gives it none. A preset starts its workspaces at 2048 MB or
-# more, which an editor's server needs beside what runs in the workspace.
-# burst says how a workspace of it grows: fixed (the default) runs at its size; to_preset
-# starts at the floor (burst_floor_cpu, burst_floor_memory_mb; 1 and 2048 if left out) and
-# grows to its size; to_host starts at the floor and grows to what its host has.
+# The sizes a person picks by name when creating a workspace. One may be the default. Left out,
+# the installation is given the release's: Small, Standard (the default) and Large.
+# `sizes: []` gives it none. The description says what a size runs, in a few words: the create
+# page shows it beside the name, and never the numbers.
+# floor is what its workspaces hold, reserved on their host and charged: 2048 MB or more, which an
+# editor's server needs beside what runs in the workspace. ceiling is what they may grow to while
+# they run, borrowing memory and cores from their host and giving them back; left out, the floor,
+# a size that never grows.
 # bandwidth_mbps is what its network carries each way (left out: 100; 0: unshaped, a bill with
 # no bound that has to be asked for); ssh, the editor and forwarded ports are not held to it.
 # rpo_seconds is how far behind the object store its disk may fall (left out: the installation's
 # volume_rpo_seconds).
-presets:
-  - name: small
-    description: For an agent doing one task at a time
-    cpu: 2
-    memory_mb: 4096
+# includes_agent has its workspaces serve T3 Code from boot and keep it serving while they run
+# (about 0.4 GB), rather than starting it when someone opens it; a memory checkpoint resumes it
+# serving. Its floor has to hold 2048 MB or more for it. Only a turn the agent is working keeps one
+# of them awake: a turn waiting on its person's answer lets it sleep, and goes on after the resume.
+sizes:
+  - name: Small
+    description: An agent doing one task at a time
+    floor: {cpu: 1, memory_mb: 2048}
+    ceiling: {cpu: 2, memory_mb: 4096}
     disk_gb: 20
     bandwidth_mbps: 100
     default: true
-  - name: large
-    cpu: 8
-    memory_mb: 16384
+  - name: Large
+    description: Builds and test suites
+    floor: {cpu: 2, memory_mb: 4096}
+    ceiling: {cpu: 8, memory_mb: 16384}
     disk_gb: 100
-    burst: to_preset
-    burst_floor_cpu: 2
-    burst_floor_memory_mb: 4096
+    includes_agent: true
 
 # Egress policies, by name. A workspace created with --network-tag agent runs under this one.
 #
@@ -202,6 +206,21 @@ network_policies:
           - registry.npmjs.org
         allow:
           - 140.82.112.0/20
+  # Agents reach the model providers with the key their workspace's team gives (Team settings →
+  # Model keys, `spin team model-key set`): the runner's egress proxy stands in for each provider's API for
+  # the agent alone and sets the key; the workspace holds a placeholder. A team that gives no key
+  # has its agents' requests go on as they sent them, signed in workspace by workspace. A team's
+  # gateway is one more rule naming its host, with the key as a bearer token.
+  - name: models
+    rules:
+      - allowNames: [api.anthropic.com]
+        broker: true
+        principal: agent
+        inject: [{header: x-api-key, model_key: anthropic}]
+      - allowNames: [api.openai.com]
+        broker: true
+        principal: agent
+        inject: [{header: authorization, prefix: "Bearer ", model_key: openai}]
   # The web and nothing else: no address at all, so it composes with any other tag.
   - name: web
     rules:

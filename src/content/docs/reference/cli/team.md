@@ -26,6 +26,7 @@ Available Commands:
   get         Get team details
   list        List teams
   member      Manage team members
+  model-key   Manage the keys a team's agents reach Anthropic and OpenAI with
   policy      Manage the network policies a team's workspaces may run under
   secret      Manage the secrets the egress proxy adds for a team's workspaces
 
@@ -247,6 +248,104 @@ Global Flags:
       --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
 ```
 
+## spin team model-key
+
+```
+A team's model key is its own key to Anthropic or OpenAI, or to a gateway in front of either.
+Agents in the team's workspaces use it - Claude Code the Anthropic key, Codex the OpenAI key - and
+nobody signs them in workspace by workspace. The host's egress proxy adds the key to the agents'
+requests where the installation's network policy brokers the provider for them, so no workspace
+ever holds it. A key is set and replaced, and not shown again. Without a key for a provider, each
+workspace signs its agent in as before. A workspace of a sub-team uses the nearest of its teams
+that gives one: list says which team above the key is set on, the sub-team's own key replaces it,
+and delete removes only the team's own.
+
+Usage:
+  spin team model-key [flags]
+  spin team model-key [command]
+
+Available Commands:
+  delete      Delete a team's model key
+  list        List the keys a team's agents use, where, and which team above gives one
+  set         Set a team's model key, read from standard input
+
+Flags:
+  -h, --help[=true|false]   help for model-key
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+
+Use "spin team model-key [command] --help" for more information about a command.
+```
+
+### spin team model-key delete
+
+```
+Delete a team's model key
+
+Usage:
+  spin team model-key delete <team> <anthropic|openai> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for delete
+  -y, --yes[=true|false]    Skip confirmation
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+### spin team model-key list
+
+```
+List the keys a team's agents use, where, and which team above gives one
+
+Usage:
+  spin team model-key list <team> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for list
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
+### spin team model-key set
+
+```
+Set the team's key for a provider to what standard input holds, replacing the key and the URL
+the provider had. Read from standard input and never an argument: an argument is in every process
+listing on the machine.
+
+Without --url the agents reach the provider's own API. With it they reach a gateway in front of
+the provider: https, a host and a path. The URL's host is the only name the key is sent to.
+
+Example:
+  printf %s "$ANTHROPIC_API_KEY" | spin team model-key set engineering anthropic
+  printf %s "$GATEWAY_KEY" | spin team model-key set engineering openai --url https://llm.example.com/v1
+
+Usage:
+  spin team model-key set <team> <anthropic|openai> [flags]
+
+Flags:
+  -h, --help[=true|false]   help for set
+      --url string          A gateway in front of the provider, https://<host>/<path> (default: the provider's own API)
+
+Global Flags:
+      --config string        config file (default is $HOME/.spin/config.yaml)
+  -o, --output string        text for a person, or json: one document of what the API answered, and no prose (default "text")
+      --profile string       named profile to use; SPIN_PROFILE names it when this flag does not (default "default")
+      --traceparent string   the W3C traceparent of the span this command is part of; its own span is sent to the installation unless the profile says telemetry: false
+```
+
 ## spin team policy
 
 ```
@@ -353,7 +452,7 @@ Usage:
 
 Available Commands:
   delete      Delete a team's secret
-  list        List a team's secrets, by name
+  list        List the secrets a team's workspaces use, by name
   set         Set a team's secret, read from standard input or kept in Secrets Manager or Parameter Store
 
 Flags:
@@ -390,7 +489,9 @@ Global Flags:
 ### spin team secret list
 
 ```
-List a team's secrets, by name
+List the secrets a workspace of the team may have injected: the team's own, and those of a
+team above it where the team has none by that name, with that team's path in INHERITED FROM.
+Delete removes only a team's own.
 
 Usage:
   spin team secret list <team> [flags]

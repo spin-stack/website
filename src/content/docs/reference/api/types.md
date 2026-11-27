@@ -36,6 +36,12 @@ sidebar:
 | `name` | string |  |
 | `state` | [WorkspaceState](/reference/api/types/#workspacestate) |  |
 
+## AgentActivity
+
+AgentActivity is what an agent's thread is doing. Numbered by how much it asks of its owner, so the highest of a workspace's threads is the workspace's (Workspace.agent). - `AGENT_ACTIVITY_IDLE`: Nothing runs and nothing waits on its owner. - `AGENT_ACTIVITY_WORKING`: A turn runs. Only in a machine that runs: one reported working by a workspace stopped since is answered IDLE. - `AGENT_ACTIVITY_WAITING`: A card waits on its owner: an approval or a question in a turn, or one left open after the turn ended, which the owner can still answer.
+
+One of: `AGENT_ACTIVITY_UNSPECIFIED`, `AGENT_ACTIVITY_IDLE`, `AGENT_ACTIVITY_WORKING`, `AGENT_ACTIVITY_WAITING`.
+
 ## AgentThread
 
 AgentThread is one of the agent's threads as T3 Code names it: what a person is shown of a chat without opening it.
@@ -48,6 +54,8 @@ AgentThread is one of the agent's threads as T3 Code names it: what a person is 
 | `model` | string |  |
 | `updatedAt` | `Timestamp` |  |
 | `archived` | boolean |  |
+| `activity` | [AgentActivity](/reference/api/types/#agentactivity) | activity is what the thread is doing now, as T3 Code's own client shows it. Never UNSPECIFIED in an answer. |
+| `wait` | [AgentWait](/reference/api/types/#agentwait) | wait is what the thread waits on its owner for while activity is WAITING, and UNSPECIFIED otherwise. |
 
 ## AgentVolume
 
@@ -60,6 +68,12 @@ AgentVolume is one agent home of the caller's.
 | `createdAt` | `Timestamp` |  |
 | `workspaceId` | string | The workspace mounting it, or empty for one no workspace mounts - which a new workspace may. |
 | `workspaceName` | string | The name of the workspace that mounts it, or mounted it last. |
+
+## AgentWait
+
+AgentWait is what a waiting thread waits on its owner for: T3 Code's kinds of request, said once here so a client words them and shows nothing of the request itself. - `AGENT_WAIT_COMMAND`: To run a command. - `AGENT_WAIT_FILE_CHANGE`: To change files. - `AGENT_WAIT_FILE_READ`: To read a file. - `AGENT_WAIT_PERMISSION`: A permission the agent's tool asks for. - `AGENT_WAIT_QUESTION`: An answer: a question of the agent's, or a form one of its tools sent. - `AGENT_WAIT_SIGN_IN`: To sign the agent's provider in again. - `AGENT_WAIT_SECRET`: A secret typed into the thread. - `AGENT_WAIT_LINK`: A machine to link the thread to. - `AGENT_WAIT_OTHER`: A kind of request this release does not name.
+
+One of: `AGENT_WAIT_UNSPECIFIED`, `AGENT_WAIT_COMMAND`, `AGENT_WAIT_FILE_CHANGE`, `AGENT_WAIT_FILE_READ`, `AGENT_WAIT_PERMISSION`, `AGENT_WAIT_QUESTION`, `AGENT_WAIT_SIGN_IN`, `AGENT_WAIT_SECRET`, `AGENT_WAIT_LINK`, `AGENT_WAIT_OTHER`.
 
 ## Alert
 
@@ -156,12 +170,6 @@ BrokeredRequest is one request the egress proxy read from the workspace's machin
 | `refused` | string | Empty for a request passed on. Otherwise why the proxy refused it: credentials (a secret or token the team does not hold), host (a request for another name), upgrade, method (TRACE or TRACK), scope (a method or path the injecting rule does not allow), authority (the cloud principal refused to sign it). |
 | `principal` | string | Who asked: "user" or "agent", by the listener the proxy read it on. |
 
-## BurstMode
-
-BurstMode is how a workspace of a preset may grow past what it starts with. - `BURST_MODE_FIXED`: FIXED starts at the preset's size and stays there. - `BURST_MODE_TO_PRESET`: TO_PRESET starts at the preset's burst floor and may grow to its size. - `BURST_MODE_TO_HOST`: TO_HOST starts at the preset's burst floor and may grow to everything its host has.
-
-One of: `BURST_MODE_UNSPECIFIED`, `BURST_MODE_FIXED`, `BURST_MODE_TO_PRESET`, `BURST_MODE_TO_HOST`.
-
 ## CloudAccess
 
 CloudAccess is a principal on a cloud a brokered rule's requests are authorized as.
@@ -170,6 +178,15 @@ CloudAccess is a principal on a cloud a brokered rule's requests are authorized 
 |---|---|---|
 | `cloud` | string | The cloud: "aws", whose principal is an IAM role's ARN and whose requests are signed with SigV4. |
 | `principal` | string |  |
+
+## Compute
+
+Compute is cores and memory: what a workspace holds, or what it may grow to.
+
+| Field | Type | What it is |
+|---|---|---|
+| `cpuCores` | integer (int32) |  |
+| `memoryMb` | integer (int32) |  |
 
 ## ConfigChange
 
@@ -188,7 +205,7 @@ One thing the config file says differently from the installation.
 
 What one item of the installation's config file is. - `CONFIG_ITEM_KIND_SETTING`: A setting, by its key: registration_mode, default_network_tags, allowed_images... - `CONFIG_ITEM_KIND_EMAIL`: An address or domain registration admits, by itself. - `CONFIG_ITEM_KIND_HOST_CLASS`: A host class, by its name: the shape of a group of runners (HostClass).
 
-One of: `CONFIG_ITEM_KIND_UNSPECIFIED`, `CONFIG_ITEM_KIND_SETTING`, `CONFIG_ITEM_KIND_EMAIL`, `CONFIG_ITEM_KIND_PRESET`, `CONFIG_ITEM_KIND_POLICY`, `CONFIG_ITEM_KIND_HOST_CLASS`.
+One of: `CONFIG_ITEM_KIND_UNSPECIFIED`, `CONFIG_ITEM_KIND_SETTING`, `CONFIG_ITEM_KIND_EMAIL`, `CONFIG_ITEM_KIND_SIZE`, `CONFIG_ITEM_KIND_POLICY`, `CONFIG_ITEM_KIND_HOST_CLASS`.
 
 ## CostEstimate
 
@@ -405,6 +422,7 @@ One host class's group, as the control plane last saw it.
 | `giveBackRefusedAt` | `Timestamp` |  |
 | `capacityRefused` | boolean | launch_failure is the cloud having no machine of the kind the class asks for - no spot capacity, or the spot quota spent - which the class's spot setting, or its fallback, is what changes; false for any other failure, and while there is none. |
 | `onDemandUntil` | `Timestamp` | Set while a spot class's group starts on-demand machines because the cloud refused it spot (HostClass.fallback_on_demand): until this, and spot again after. Its class still says spot. |
+| `connected` | integer (int32) | The class's hosts connected now, which lags desired by a machine's boot. Of this class only: every connected host counted against what the classes asked for read "1 of 1 runners connected" under a list of two, and counted a host no group launched as one a group did. |
 
 ## FleetHostVersion
 
@@ -472,7 +490,7 @@ Grafana is the one the control plane runs over the installation's metrics and se
 
 ## HeaderInjection
 
-HeaderInjection is a header the egress proxy sets: header, to prefix and then a value the workspace never holds - a team secret's, or a token of the workspace's identity. One of the two.
+HeaderInjection is a header the egress proxy sets: header, to prefix and then a value the workspace never holds - a team secret's, a token of the workspace's identity, the owner's forge token, or the team's model key. One of them.
 
 | Field | Type | What it is |
 |---|---|---|
@@ -483,6 +501,7 @@ HeaderInjection is a header the egress proxy sets: header, to prefix and then a 
 | `forge` | string | The forge whose credential goes in the header, whole: "github" is the workspace owner's own token, connected through the installation's OAuth App (ForgeService), which the control plane keeps and refreshes. |
 | `methods` | list of string | The requests the header is set on: these methods, and paths under path_prefix by whole segments. Another request to the rule's names is answered 403. None of either is every request. |
 | `pathPrefix` | string |  |
+| `modelKey` | string | The provider whose key the workspace's team gives (TeamService.SetModelKey) goes in the header: "anthropic" or "openai". Where the team gives none, or one for another host, the request goes on with the header the machine sent, so a team that gives no key signs its agents in as before. |
 
 ## HealthCheck
 
@@ -508,9 +527,9 @@ HealthCheck is one part of the installation as the control plane knows it.
 
 ## HealthPart
 
-HealthPart is which part of the installation a check is of. - `HEALTH_PART_DATABASE`: The control plane's database answers a query. - `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base backups are taken by a timer outside the control plane, which records nothing it can read. - `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready. - `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store (GetTelemetryStatus). It is what says whether the metric store takes writes - the control plane is not one of the metric store's readers. - `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs). - `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet: those whose command stream is not up, and those that answer and fail a check of their own (HostCheck). - `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet.
+HealthPart is which part of the installation a check is of. - `HEALTH_PART_DATABASE`: The control plane's database answers a query. - `HEALTH_PART_DATABASE_ARCHIVE`: The database's continuous archive keeps up: its last WAL file sent and how many wait. Its base backups are taken by a timer outside the control plane, which records nothing it can read. - `HEALTH_PART_LOG_STORE`: The log store (Quickwit) beside the control plane answers that it is ready. - `HEALTH_PART_COLLECTOR`: The collector sends what it is given: spans to the trace store, samples to the metric store (GetTelemetryStatus). It is what says whether the metric store takes writes - the control plane is not one of the metric store's readers. - `HEALTH_PART_JOBS`: The control plane's periodic work: a job whose last run failed (ListJobs). - `HEALTH_PART_HOSTS`: The hosts registered and not taken out of the fleet: those whose command stream is not up, and those that answer and fail a check of their own (HostCheck). - `HEALTH_PART_WAITING_WORKSPACES`: Workspaces waiting for a runner, across the whole fleet. - `HEALTH_PART_CONFIG_FILE`: What the installation's config file says differently, left unanswered for more than a day (ListConfigChanges): a proposal nobody applied or kept current is a decision nobody made.
 
-One of: `HEALTH_PART_UNSPECIFIED`, `HEALTH_PART_DATABASE`, `HEALTH_PART_DATABASE_ARCHIVE`, `HEALTH_PART_LOG_STORE`, `HEALTH_PART_COLLECTOR`, `HEALTH_PART_JOBS`, `HEALTH_PART_HOSTS`, `HEALTH_PART_WAITING_WORKSPACES`.
+One of: `HEALTH_PART_UNSPECIFIED`, `HEALTH_PART_DATABASE`, `HEALTH_PART_DATABASE_ARCHIVE`, `HEALTH_PART_LOG_STORE`, `HEALTH_PART_COLLECTOR`, `HEALTH_PART_JOBS`, `HEALTH_PART_HOSTS`, `HEALTH_PART_WAITING_WORKSPACES`, `HEALTH_PART_CONFIG_FILE`.
 
 ## HealthReport
 
@@ -546,7 +565,7 @@ One of: `HEALTH_STATUS_UNSPECIFIED`, `HEALTH_STATUS_OK`, `HEALTH_STATUS_DEGRADED
 | `checks` | list of [HostCheck](/reference/api/types/#hostcheck) | checks are what the host last found when it asked itself whether a workspace can run on it as it should, as its heartbeat said: held for as long as the host is connected, like going_away, and empty for a host that has said nothing yet. |
 | `hostClass` | string | host_class is the class (HostClass.name) of the group that launched the machine, which ties the host to its FleetClass: "default" for a machine no group launched. |
 | `machineVersion` | string | machine_version is the spin-machine release the host registered (its QEMU, kernel and firmware); empty for a host with no machine. |
-| `detected` | [Resources](/reference/api/types/#resources) | detected is what the host found it has when it last registered (cores, memory, disk GB), beside capacity, which is what it advertises: a HostPolicy capacity holds a machine back by saying it has less. Zero for a host that has not registered since it was made. |
+| `detected` | [Resources](/reference/api/types/#resources) | detected is what the host found it has when it last registered (cores, memory, disk GB), beside capacity, which is what it advertises: a HostPolicy capacity holds a machine back by saying it has less. Unset for a host that has not said: one that has not registered since it was made. |
 | `streamHeardAt` | `Timestamp` | Each channel on its own. stream_heard_at is the command stream's last heartbeat the control plane recorded - unset for a host that never held one - and lease_renewed_at the volume agent's last renewal of the lease its disks are served under, unset for one that never held a lease. A host whose stream is gone while its lease renews serves its disks and can be told nothing. |
 | `leaseRenewedAt` | `Timestamp` |  |
 | `connectedChangedAt` | `Timestamp` | connected_changed_at is when connected last changed, as this control plane saw it: the stream registering while connected, its end while not. Unset where this control plane has seen neither since it started - stream_heard_at then says when the host was last heard. Held in memory, as connected is: a control plane that restarts starts again. |
@@ -563,6 +582,9 @@ One of: `HEALTH_STATUS_UNSPECIFIED`, `HEALTH_STATUS_OK`, `HEALTH_STATUS_DEGRADED
 | `reclaimable` | boolean or null | reclaimable is whether the cloud may take the machine back, as its cloud said of the instance when it joined - a spot machine is, whatever its class says: a group that fell back to on-demand, or one whose class was changed, starts machines its class does not describe. Unset where nothing says: a host that joined with no cloud, or one its cloud named nothing of. |
 | `holders` | list of [HostHolder](/reference/api/types/#hostholder) | holders is what keeps this host in the fleet, from the database: the workspaces whose disk is only here - whichever list of theirs leaves them out, a prebuild's build, a team's, another person's, a failed one - and the volumes still here that are no such workspace's disk, a trashed workspace's or an agent's home, each of which forgetting the host must detach first. At most 10; holder_count is how many there are. |
 | `holderCount` | integer (int32) |  |
+| `cordonReason` | [HostCordonReason](/reference/api/types/#hostcordonreason) | cordon_reason is who cordoned the host, and so who may put it back to work: UNSPECIFIED unless state is CORDONED. |
+| `atRiskSince` | `Timestamp` | at_risk_since is when the host's cloud first said its machine may be taken away, unset when it never has. No cloud takes the warning back, so it stays after an administrator puts the host back to work: a host taking work with it set is one that can still be reclaimed. |
+| `room` | [HostRoom](/reference/api/types/#hostroom) | room is what the host's last beat said it holds and has left, held for as long as it is connected, like checks; unset for a host that is not connected or has not beaten yet. |
 
 ## HostCheck
 
@@ -577,7 +599,7 @@ HostCheck is one thing a host asks itself about, at start and every few minutes:
 
 ## HostClass
 
-A kind of runner: the shape of the machines a group of the installation's cloud starts for it, which the control plane makes and sizes. What a machine boots is the installation's launch template, never this. "default" is the class a preset that names none runs on.
+A kind of runner: the shape of the machines a group of the installation's cloud starts for it, which the control plane makes and sizes. What a machine boots is the installation's launch template, never this. "default" is the class a size that names none runs on.
 
 | Field | Type | What it is |
 |---|---|---|
@@ -590,6 +612,12 @@ A kind of runner: the shape of the machines a group of the installation's cloud 
 | `spot` | boolean | A machine the cloud may take back (each host drains first), or an on-demand one. |
 | `maxHosts` | integer (int32) | The most hosts of it; 0 is no limit of its own (the setting autoscaling_max_hosts bounds them all). |
 | `fallbackOnDemand` | boolean | A spot class whose group the cloud refuses spot machines for capacity starts on-demand ones for a while, and then spot again (FleetClass.on_demand_until); spot itself is not changed. Off, the class's workspaces wait until somebody changes spot. Only a spot class has it. |
+
+## HostCordonReason
+
+HostCordonReason is why a host takes no new workspace while it keeps the ones it has. - `HOST_CORDON_REASON_OPERATOR`: An administrator; only one puts it back. - `HOST_CORDON_REASON_DEVICE_PRESSURE`: Its disk is fuller than the installation lets it take more on; it comes back once it drains. - `HOST_CORDON_REASON_STALLED_PUBLISH`: A disk on it is not reaching the object store. - `HOST_CORDON_REASON_SCALE_IN`: The fleet is giving the machine back. - `HOST_CORDON_REASON_AT_RISK`: Its cloud said the machine may be taken away (a spot rebalance recommendation): what nobody is using is suspended off it while there is time, and it is not given more to lose.
+
+One of: `HOST_CORDON_REASON_UNSPECIFIED`, `HOST_CORDON_REASON_OPERATOR`, `HOST_CORDON_REASON_DEVICE_PRESSURE`, `HOST_CORDON_REASON_STALLED_PUBLISH`, `HOST_CORDON_REASON_SCALE_IN`, `HOST_CORDON_REASON_AT_RISK`.
 
 ## HostDeparture
 
@@ -628,6 +656,7 @@ One of: `HOST_HOLDER_KIND_UNSPECIFIED`, `HOST_HOLDER_KIND_WORKSPACE`, `HOST_HOLD
 |---|---|---|
 | `hostId` | string |  |
 | `rules` | list of [NetworkRule](/reference/api/types/#networkrule) |  |
+| `asDeclared` | boolean | as_declared says the host enforces what the installation declares under the name: every field of every rule, in any order, and for offline no rule at all. A name the installation no longer declares is enforced as declared nowhere. The one comparison of declared and enforced, so every client says the same of a host: two that each compared part of a rule disagreed. |
 
 ## HostPolicy
 
@@ -653,13 +682,34 @@ HostPolicy is what an installation decides about one host. An unset field is the
 | `maxWorkspaceIoOpsPerSecond` | integer or null (int32) |  |
 | `pooledBootMachines` | integer or null (int32) | Machines this host keeps launched ahead of the workspaces that will claim them, held for a boot and for a checkpoint; unset or zero keeps none. Each costs the host its QEMU at rest. |
 | `pooledRestoreMachines` | integer or null (int32) |  |
-| `fastLoad` | boolean or null | Resume a checkpoint as its guest touches its memory; unset is off, which reached the first login sooner on the bench. |
+| `reservedCpuCores` | integer or null (int32) | What the host keeps for itself, which placement never sells: cores for the runner, the volume agent and QEMU's I/O threads, memory for the kernel, the runner and the page cache. Unset keeps 1 core and 1024 MB plus 4% of its memory capacity, so hosts of one type report one allocatable; zero keeps nothing back. |
+| `reservedMemoryMb` | integer or null (int32) |  |
+| `machineOverheadMb` | integer or null (int32) | What each running workspace's machine costs the host beyond its size: QEMU itself. Unset is 170 MB, an idle workspace's QEMU as measured (spin-stack/machine#278); zero charges nothing. |
 
 ## HostRemoval
 
 HostRemoval is how a host leaves the fleet. - `HOST_REMOVAL_REVOKE`: A host registered with a token, or a machine of a cloud no group of this installation sizes: RevokeRunner. Nothing else can take its machine away. - `HOST_REMOVAL_GIVE_BACK`: A machine of an autoscaling group, connected: RemoveHost gives it back to its group, which terminates it and is asked for one less. Revoking it would leave the machine running and paid for, in a group that counts it. - `HOST_REMOVAL_FORGET`: A machine of an autoscaling group, not connected: RemoveHost gives back a machine the group still has, and forgets the host now rather than once it has been silent for host_forget_after_hours.
 
 One of: `HOST_REMOVAL_UNSPECIFIED`, `HOST_REMOVAL_REVOKE`, `HOST_REMOVAL_GIVE_BACK`, `HOST_REMOVAL_FORGET`.
+
+## HostRoom
+
+HostRoom is a host's cores and memory as its runner counts them on each beat. The runner lends from the same count it reports, so what placement reads and what a workspace may borrow agree. What placement may still sell is allocatable less sold, less overhead, less what the control plane has placed there and not yet heard held.
+
+| Field | Type | What it is |
+|---|---|---|
+| `capacity` | [Resources](/reference/api/types/#resources) | capacity is the machine as it is advertised: its HostPolicy capacity, or what it detected. |
+| `allocatable` | [Resources](/reference/api/types/#resources) | allocatable is capacity less what the host keeps for itself (its policy's reserved_cpu_cores and reserved_memory_mb): all that placement may sell here. |
+| `sold` | [Resources](/reference/api/types/#resources) | sold is the sizes its running workspaces hold - each one's floor, or a grant above it - and the disk of every workspace it has. |
+| `overhead` | [Resources](/reference/api/types/#resources) | overhead is what their machines cost the host beyond that: machine_overhead_mb for each running workspace. |
+| `loans` | list of [WorkspaceLoan](/reference/api/types/#workspaceloan) | loans is what each of its running workspaces has borrowed above what it was sold, now: one for each workspace that holds a loan, by workspace id. What the host has lent is their sum. Each is the memory that workspace's suspend uploads beyond its size, so whose loan it is decides whose memory an evacuation reaches. |
+| `coresRefused` | integer (int32) | How many loans of a core, and of memory, the host refused since its previous beat. |
+| `memoryRefused` | integer (int32) |  |
+| `machineOverhead` | [Resources](/reference/api/types/#resources) | machine_overhead is what one more running machine would cost the host beyond its size, as its policy says or its default: what the control plane adds to a size it places here, as Kubernetes adds a pod's overhead to its request, so a placement holds its machine too. |
+| `poolLeft` | [Resources](/reference/api/types/#resources) | pool_left is what its scalers could still lend now: allocatable less sold, less overhead, less its loans for memory, bounded by what the machine has free; allocatable cores less its loans for cores. Placement prefers a host with more of it, so a host whose growing workspaces have spent its pool stops looking as empty as when they were small. |
+| `memoryPressure` | [MemoryPressure](/reference/api/types/#memorypressure) | memory_pressure is set while the host is short of memory, and for five minutes after it stops being, as Kubernetes holds a node's MemoryPressure so it does not flap: placement sends it nothing, it lends no memory, and each beat takes a loan back. Unset: not under pressure. |
+| `storeBytesPerSecond` | string (int64) | store_bytes_per_second is the rate the host's volumes upload to the object store: the bytes of its uploads of 1 MiB and up over the time any of them was in flight, recent ones weighing most. 0 until one has finished. |
+| `saveableMemoryMb` | integer or null (int32) | saveable_memory_mb is the memory the host could upload at that rate in the time an evacuation on its policy's shutdown grace has to suspend its workspaces: that grace less what it keeps to stop their machines after, the time the control plane plans the evacuation against (internal/departure). It is what of its workspaces' memory would be saved if its cloud took it now with that notice. Placement puts no more memory on it than 80% of this. Unset for a host its cloud does not take at notice, and for one whose rate is not measured yet. |
 
 ## HostShell
 
@@ -733,8 +783,8 @@ InjectionStatus is one header the egress proxy sets on the workspace's requests 
 | `policy` | string | The policy, by name, and the names its rule brokers. |
 | `names` | list of string |  |
 | `header` | string |  |
-| `from` | string | What the header is set from: a team secret by name, "&lt;forge> app", or "identity for &lt;audience>". |
-| `held` | boolean | Whether the team holds it: the secret is set, the forge app is set, an identity is always held. False is a request refused with credentials. |
+| `from` | string | What the header is set from: a team secret by name, "&lt;forge> account", "identity for &lt;audience>", or "the team's &lt;provider> key". |
+| `held` | boolean | Whether the team holds it: the secret is set, the forge app is set, an identity is always held, a model key is given for one of names. False is a request refused with credentials, except for a model key, whose request goes on with the machine's own header. |
 
 ## InstallationEventType
 
@@ -843,6 +893,21 @@ LogRecord is one record as OpenTelemetry names its parts.
 | `traceId` | string | The trace it was written in, hex; empty for none. |
 | `spanId` | string |  |
 
+## MemoryPressure
+
+MemoryPressure is when a host's memory pressure began and what it was short of.
+
+| Field | Type | What it is |
+|---|---|---|
+| `since` | `Timestamp` |  |
+| `cause` | [MemoryPressureCause](/reference/api/types/#memorypressurecause) |  |
+
+## MemoryPressureCause
+
+MemoryPressureCause is what put a host under memory pressure, the latest while it held. - `MEMORY_PRESSURE_CAUSE_LOW`: The machine's MemAvailable fell below the floor it keeps free whatever it advertises.
+
+One of: `MEMORY_PRESSURE_CAUSE_UNSPECIFIED`, `MEMORY_PRESSURE_CAUSE_LOW`.
+
 ## MemoryUsagePoint
 
 MemoryUsagePoint is the most the machine used over a step - running out is a peak, not a mean - against what it held, as CpuUsagePoint.
@@ -854,6 +919,12 @@ MemoryUsagePoint is the most the machine used over a step - running out is a pea
 | `heldBytes` | string (int64) |  |
 | `memoryBytes` | string (int64) |  |
 | `maxMemoryBytes` | string (int64) |  |
+
+## ModelProvider
+
+ModelProvider is whose model API an agent's CLI talks to: Claude Code Anthropic's, Codex OpenAI's, directly or through a gateway a team names.
+
+One of: `MODEL_PROVIDER_UNSPECIFIED`, `MODEL_PROVIDER_ANTHROPIC`, `MODEL_PROVIDER_OPENAI`.
 
 ## NetworkPolicy
 
@@ -1153,6 +1224,7 @@ Problem is one thing wrong with the installation, said whole: why, what it takes
 | `hostname` | string |  |
 | `job` | string | The job (Job.name) the problem is of, and its title; empty for one that is not a job's. |
 | `jobTitle` | string |  |
+| `configChange` | [ConfigChange](/reference/api/types/#configchange) | The config file's change the problem is of, as ListConfigChanges gives it: what DecideConfigChange is asked with. Unset for a problem that is not one. |
 
 ## ProblemAction
 
@@ -1191,9 +1263,9 @@ A project: a repository and the shape of the workspace that opens it.
 | `repository` | string | An https URL, with nothing of a credential in it |
 | `ref` | string | The branch or tag a workspace opens at unless the open names one |
 | `image` | string | As CreateWorkspaceRequest.image; empty is the installation's default when opened |
-| `preset` | string | As CreateWorkspaceRequest.preset; empty likewise |
+| `size` | string | As CreateWorkspaceRequest.size; empty likewise |
 | `networkTags` | list of string |  |
-| `workspaceCount` | integer (int32) | Workspaces open on it, the trash included |
+| `yourWorkspaceCount` | integer (int32) | The workspaces of it the caller can open: what ListWorkspaces lists of it for them - theirs and those they are a guest of, neither deleted (the trash is deleted) nor a prebuild's build. Never anybody else's: a list of projects said "1 open" of somebody else's workspace (#1437). |
 | `createdAt` | `Timestamp` |  |
 | `updatedAt` | `Timestamp` |  |
 | `prebuildRefs` | list of string | The refs it prebuilds (spin#480 §3): none is none. Each is built as it moves, and opening the project at one clones its newest ready prebuild. |
@@ -1208,6 +1280,7 @@ A project: a repository and the shape of the workspace that opens it.
 | `prebuildKeep` | integer (int32) | How many of each ref's newest ready prebuilds are kept when no workspace was opened from them. |
 | `timeToReady` | [ProjectTimeToReady](/reference/api/types/#projecttimetoready) | In GetProject: how long its workspaces took to be ready. Unset where none has been. |
 | `prebuildOwnerName` | string | The name of who the builds run as (prebuild_owner_id), so the page says whose forge credentials they use. |
+| `holdingWorkspaceCount` | integer (int32) | In GetProject, UpdateProject and ShareProject, to who administers it: the workspaces that keep it from being deleted (DeleteProject) - everybody's, its prebuilds' builds, and the trash, which an owner can still take back. Zero to everybody else. |
 
 ## ProjectTimeToReady
 
@@ -1305,45 +1378,18 @@ One of: `REKEY_STATE_UNSPECIFIED`, `REKEY_STATE_PENDING`, `REKEY_STATE_COPYING`,
 | `outcome` | string | filtered, refused, upstream_failed or malformed. |
 | `at` | `Timestamp` |  |
 
-## ResourcePreset
-
-ResourcePreset is a class of workspace: its size, and how a workspace of it may grow. Every workspace is created from one.
-
-| Field | Type | What it is |
-|---|---|---|
-| `id` | string |  |
-| `name` | string | Display name (e.g., "Small", "Medium", "Large") |
-| `description` | string | Description of the preset |
-| `cpuCores` | integer (int32) | Number of CPU cores |
-| `memoryMb` | integer (int32) | Memory in megabytes |
-| `diskGb` | integer (int32) | Disk space in gigabytes |
-| `burst` | [BurstMode](/reference/api/types/#burstmode) |  |
-| `isDefault` | boolean | This is the default preset |
-| `enabled` | boolean | Preset is available for selection |
-| `sortOrder` | integer (int32) | Display order (lower = first) |
-| `createdAt` | `Timestamp` |  |
-| `updatedAt` | `Timestamp` |  |
-| `burstFloorCpuCores` | integer (int32) | What a workspace of a burst mode starts with; at most cpu_cores and memory_mb. |
-| `burstFloorMemoryMb` | integer (int32) |  |
-| `bandwidthMbps` | integer (int32) | What a workspace of it may carry each way, in megabits a second; 0 is unshaped. |
-| `rpoSeconds` | integer (int32) | How far behind the object store a workspace of it may fall, in seconds; 0 is the installation's (the setting volume_rpo_seconds). |
-| `hostClass` | string | The host class its workspaces run on (HostClass). |
-| `agentMinMemoryMb` | integer (int32) | What a workspace has to hold for its agent to start there, in MB, for whoever picks a preset. |
-| `fromConfig` | boolean | Seeded or applied from the installation's config file (the release's presets where it names none); false is one an administrator added. An edit since does not change it. |
-| `minMemoryMb` | integer (int32) | The least any preset may start its workspaces at, in MB: memory_mb for a fixed one, burst_floor_memory_mb for a burst one. A create or update below it is refused; one written before it was asked keeps what it has until an administrator changes it. |
-
 ## Resources
 
-Resource allocation for workspaces. Initial values (cpu_cores, memory_mb) are used at boot time. Max values control scaling limits: - 0 = unlimited (burstable to host capacity) - >0 = hard limit (cannot exceed)
+What a workspace holds of its own (cpu_cores, memory_mb: its size's floor, or a grant above it) and the ceiling its host may lend it up to (max_\*: its size's), never less than what it holds. Its host lends no more than it has.
 
 | Field | Type | What it is |
 |---|---|---|
-| `cpuCores` | integer (int32) | Initial CPU cores at boot (default: 1) |
-| `memoryMb` | integer (int32) | Initial memory in MB at boot (default: 512) |
-| `diskGb` | integer (int32) | Disk size in GB (default: 10) |
-| `maxCpuCores` | integer (int32) | Max CPU cores (0 = unlimited) |
-| `maxMemoryMb` | integer (int32) | Max memory in MB (0 = unlimited) |
-| `bandwidthMbps` | integer (int32) | What a workspace's network carries each way, in megabits a second (0 = unshaped): its preset's, held on its host by a token bucket on each way out of its machine's namespace. Its vsock - ssh, the editor, forwarded ports - is not shaped. |
+| `cpuCores` | integer (int32) |  |
+| `memoryMb` | integer (int32) |  |
+| `diskGb` | integer (int32) |  |
+| `maxCpuCores` | integer (int32) |  |
+| `maxMemoryMb` | integer (int32) |  |
+| `bandwidthMbps` | integer (int32) | What a workspace's network carries each way, in megabits a second (0 = unshaped): its size's, held on its host by a token bucket on each way out of its machine's namespace. Its vsock - ssh, the editor, forwarded ports - is not shaped. |
 
 ## RoleCost
 
@@ -1457,6 +1503,31 @@ SettingWriter is who writes a setting, and so where an administrator changes it.
 
 One of: `SETTING_WRITER_UNSPECIFIED`, `SETTING_WRITER_ADMIN`, `SETTING_WRITER_FILE`, `SETTING_WRITER_STORE`, `SETTING_WRITER_CONTROL_PLANE`.
 
+## Size
+
+Size is a kind of workspace, picked by name when one is made: a floor its workspaces hold and are charged for, and a ceiling they may grow to while they run, by borrowing from their host (memory and cores plugged in and taken back). The floor is at most the ceiling in each; one equal to it is a size that never grows. Every workspace is created from one.
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string |  |
+| `name` | string | What people pick it by: Small, Standard, Large |
+| `description` | string | What it runs, in a few words: the create page shows it beside the name |
+| `floor` | [Compute](/reference/api/types/#compute) |  |
+| `ceiling` | [Compute](/reference/api/types/#compute) |  |
+| `diskGb` | integer (int32) | Disk space in gigabytes |
+| `isDefault` | boolean | This is the default size |
+| `enabled` | boolean | Size is available for selection |
+| `sortOrder` | integer (int32) | Display order (lower = first) |
+| `createdAt` | `Timestamp` |  |
+| `updatedAt` | `Timestamp` |  |
+| `bandwidthMbps` | integer (int32) | What a workspace of it may carry each way, in megabits a second; 0 is unshaped. |
+| `rpoSeconds` | integer (int32) | How far behind the object store a workspace of it may fall, in seconds; 0 is the installation's (the setting volume_rpo_seconds). |
+| `hostClass` | string | The host class its workspaces run on (HostClass). |
+| `agentMinMemoryMb` | integer (int32) | What a workspace has to hold for its agent to start there, in MB, for whoever picks a size. |
+| `fromConfig` | boolean | Seeded or applied from the installation's config file (the release's sizes where it names none); false is one an administrator added. An edit since does not change it. |
+| `minMemoryMb` | integer (int32) | The least floor any size may have, in MB. A create or update below it is refused. |
+| `includesAgent` | boolean | Its workspaces serve the agent from boot and keep it serving while they run, rather than starting it when someone opens it: about 0.4 GB while one runs, nothing while it sleeps, and a memory checkpoint resumes it serving. Its floor has to hold agent_min_memory_mb for it. Its workspaces also sleep while their agent's turn waits on a person, held awake only by a turn the agent works. |
+
 ## Snapshot
 
 A snapshot is a rotation of a workspace's volume, published as a commit. It has no name outside its id.
@@ -1474,6 +1545,7 @@ A snapshot is a rotation of a workspace's volume, published as a commit. It has 
 | `withMemory` | boolean | with_memory: the snapshot also kept the running machine's memory, so restoring it resumes the processes where they were instead of booting the disk. The memory is on the host the workspace ran on. |
 | `parentSnapshotId` | string | The snapshot the disk this one was taken of had been cloned from. A restore gives the workspace a new disk cloned from the snapshot restored, so the snapshots with one parent are one disk's, and one whose parent is not ListSnapshotsResponse.base_snapshot_id was taken on a disk a restore left detached. Empty for a disk that was not cloned. |
 | `sharedBy` | string | Who it is from, where its owner shared it with the caller by name (ListSharedSnapshots): they chose to give it, so saying who did is no leak. Empty for one reached only as public, which names nobody, and for the caller's own. |
+| `timeline` | list of [SnapshotStep](/reference/api/types/#snapshotstep) | What happened to it from its request to its publish, in order: each step once, as the control plane and the host that took it recorded it. Empty for one reached only by a share, and for an image's or a prebuild's, which nobody asked for by hand. |
 
 ## SnapshotAccessType
 
@@ -1500,6 +1572,25 @@ A share record for a snapshot
 How far along a snapshot is. A snapshot is taken by the host serving the volume, so it exists before it is usable: CREATING is the window between asking for one and the host reporting the commit it published. - `SNAPSHOT_STATE_CREATING`: Requested; the host has not published a commit yet - `SNAPSHOT_STATE_PUBLISHED`: Usable: a workspace can be created from it
 
 One of: `SNAPSHOT_STATE_UNSPECIFIED`, `SNAPSHOT_STATE_CREATING`, `SNAPSHOT_STATE_PUBLISHED`, `SNAPSHOT_STATE_FAILED`, `SNAPSHOT_STATE_DELETING`.
+
+## SnapshotStep
+
+SnapshotStep is one step of a snapshot's way from its request to published, when it happened and what it cost. took_ms, bytes and retries are each set where the step has one.
+
+| Field | Type | What it is |
+|---|---|---|
+| `kind` | [SnapshotStepKind](/reference/api/types/#snapshotstepkind) |  |
+| `at` | `Timestamp` |  |
+| `tookMs` | string (int64) | How long the step took: the guest's flush, the guest stopped, the seal, the upload. |
+| `bytes` | string (int64) | The bytes it wrote: the memory's state, the disk's changes uploaded. |
+| `retries` | integer (int32) | How many times the upload failed before it landed. |
+| `detail` | string | FAILED's reason, or a flush missed's. |
+
+## SnapshotStepKind
+
+- `SNAPSHOT_STEP_KIND_REQUESTED`: Asked for, by its owner or for a suspension. - `SNAPSHOT_STEP_KIND_GUEST_FLUSHED`: A disk snapshot's guest wrote its page cache out before the seal, in took_ms. - `SNAPSHOT_STEP_KIND_GUEST_FLUSH_MISSED`: The guest did not answer the flush in time, or failed it: the disk is sealed as a power cut would leave it. detail says which. - `SNAPSHOT_STEP_KIND_GUEST_STOPPED`: With its memory: the guest stopped, for took_ms until it ran again. - `SNAPSHOT_STEP_KIND_DISK_SEALED`: The disk sealed under the snapshot: the layer it names stops taking writes. took_ms is the seal. - `SNAPSHOT_STEP_KIND_STATE_WRITTEN`: With its memory: the machine's whole state written, bytes of the guest's memory. - `SNAPSHOT_STEP_KIND_GUEST_RUNNING`: With its memory: the guest running again. - `SNAPSHOT_STEP_KIND_UPLOADED`: What the disk changed since the last publish is in object storage: bytes, in took_ms, after retries failed attempts. Zero bytes is a disk with nothing unpublished, which costs nothing. - `SNAPSHOT_STEP_KIND_PUBLISHED`: Published: a workspace can be created or restored from it. - `SNAPSHOT_STEP_KIND_FAILED`: It will not be published; detail says why.
+
+One of: `SNAPSHOT_STEP_KIND_UNSPECIFIED`, `SNAPSHOT_STEP_KIND_REQUESTED`, `SNAPSHOT_STEP_KIND_GUEST_FLUSHED`, `SNAPSHOT_STEP_KIND_GUEST_FLUSH_MISSED`, `SNAPSHOT_STEP_KIND_GUEST_STOPPED`, `SNAPSHOT_STEP_KIND_DISK_SEALED`, `SNAPSHOT_STEP_KIND_STATE_WRITTEN`, `SNAPSHOT_STEP_KIND_GUEST_RUNNING`, `SNAPSHOT_STEP_KIND_UPLOADED`, `SNAPSHOT_STEP_KIND_PUBLISHED`, `SNAPSHOT_STEP_KIND_FAILED`.
 
 ## Span
 
@@ -1651,6 +1742,17 @@ What the supervisor inside the guest last reported. Absent (`connected` false wi
 | `role` | [TeamRole](/reference/api/types/#teamrole) |  |
 | `joinedAt` | `Timestamp` |  |
 
+## TeamModelKey
+
+The key a team's workspaces' agents reach one provider with: the team's own, or the nearest team above it that gives one, which its workspaces use until it sets its own.
+
+| Field | Type | What it is |
+|---|---|---|
+| `provider` | [ModelProvider](/reference/api/types/#modelprovider) |  |
+| `url` | string |  |
+| `updatedAt` | `Timestamp` |  |
+| `inheritedFrom` | string | The path of the team above this one the key is set on; empty where the key is this team's own, the only one DeleteModelKey removes. A path, because this team's own path already spells it out to its members, who may be members of no team above it: nothing else of that team is answered. |
+
 ## TeamRole
 
 Team member role enum - `TEAM_ROLE_OWNER`: Full control, can delete team - `TEAM_ROLE_ADMIN`: Can manage members and settings - `TEAM_ROLE_MEMBER`: Can create workspaces, view team resources
@@ -1665,6 +1767,7 @@ One of: `TEAM_ROLE_UNSPECIFIED`, `TEAM_ROLE_OWNER`, `TEAM_ROLE_ADMIN`, `TEAM_ROL
 | `updatedAt` | `Timestamp` |  |
 | `hosts` | list of string |  |
 | `ref` | string | Where the team keeps the value; empty where the control plane does. |
+| `inheritedFrom` | string | The path of the team above this one the secret is set on, which its workspaces use until it sets its own; empty where the secret is this team's own, the only one DeleteSecret removes. A path and nothing else of that team, as TeamModelKey's. |
 
 ## TeamWorkspaceCost
 
@@ -1837,6 +1940,18 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `hostId` | string | The host copying it, empty while pending. |
 | `reason` | string |  |
 
+## Vulnerability
+
+| Field | Type | What it is |
+|---|---|---|
+| `id` | string | OSV's id: `https://osv.dev/vulnerability/<id>`. |
+| `package` | string | The package's purl without its version, qualifiers or subpath. |
+| `version` | string |  |
+| `summary` | string |  |
+| `fixed` | list of string | The versions that fix it, as OSV's report names them. |
+| `sboms` | list of string | The SBOMs that name the package. |
+| `ignored` | string | Why the release's list ignores it; empty where it does not. An ignored one is not counted by the job, and so does not fire the alert. |
+
 ## Workspace
 
 | Field | Type | What it is |
@@ -1859,7 +1974,7 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `waitingReason` | string | waiting_reason is why a WAITING workspace has no host yet, as of the last attempt to place it: which runner was full of what, or that none is connected. Empty in every other state. |
 | `failure` | [WorkspaceFailure](/reference/api/types/#workspacefailure) | failure is which part failed when state=FAILED, UNSPECIFIED in every other state: what a client says a person can do is decided by it, and failure_reason is the detail. |
 | `networkWatch` | boolean | network_watch says its host records where it connects into its logs (SetWorkspaceNetworkWatch). |
-| `floorCpuCores` | integer (int32) | What its preset started it at. resources.cpu_cores and memory_mb are what it holds now, and above these they are a grant (GrantWorkspaceResources). |
+| `floorCpuCores` | integer (int32) | What its size started it at. resources.cpu_cores and memory_mb are what it holds now, and above these they are a grant (GrantWorkspaceResources). |
 | `floorMemoryMb` | integer (int32) |  |
 | `grantExpiresAt` | `Timestamp` | When its grant is given back on its own; unset for one kept until it is given back, and for a workspace holding none. |
 | `quarantineHeld` | boolean | quarantine_held says a quarantine holds it: in force (state QUARANTINED), or asked for and its stop still on the way or ended FAILED. Until an administrator releases it, its own person cannot start, move or delete it, whatever the state says. |
@@ -1871,7 +1986,7 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `durability` | [WorkspaceDurability](/reference/api/types/#workspacedurability) | durability is how much of its disk is in the object store, in every state - running, stopped or suspended. Answered by GetWorkspace only, and only for a workspace with a volume: a listing does not ask every volume. |
 | `role` | string | role is the caller's in it: "owner", or "guest" - who may connect, see it and open its ports, and nothing that changes it. |
 | `checkoutPath` | string | checkout_path is where the workspace's project is checked out (projects.CheckoutPath), empty for a workspace that opened none: where its agent works unless told otherwise. GetWorkspace alone says it. |
-| `memoryMachineGone` | boolean | memory_machine_gone says it is suspended with memory taken on a machine no host of the installation registers now (WORKSPACE_FAILURE_MACHINE_CHANGED): a start cannot resume it, and WORKSPACE_ACTION_START_FROM_DISK, which drops the memory, is what is offered instead. |
+| `memoryMachineGone` | boolean | memory_machine_gone says it is suspended with memory taken on a machine no host of the installation that takes work runs now, or has been heard from lately (WORKSPACE_FAILURE_MACHINE_CHANGED): a start cannot resume it. Its start boots it from its disk, unless ask_before_dropping_memory, where WORKSPACE_ACTION_START_FROM_DISK is offered instead. |
 | `suspendsAt` | `Timestamp` | The question before a suspension: when the installation suspends it unless somebody keeps it (KeepWorkspace), asked ten minutes ahead, and which of the two suspensions is due (WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED or WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED). Unset while none is due within the warning: somebody used it since, or it is kept. |
 | `suspendsFor` | [WorkspaceEventType](/reference/api/types/#workspaceeventtype) |  |
 | `keptUntil` | `Timestamp` | An answer: kept awake until then, and neither suspension fires before it. |
@@ -1886,16 +2001,19 @@ VolumeRekey is a workspace's disk to re-key or being re-keyed.
 | `ownerId` | string | Whose it is: on a team's workspace, which member's. owner_id is in every answer; the name and email are answered by GetWorkspace and ListWorkspaces, whose callers - its owner and the guests its owner let in - are who may see it at all. |
 | `ownerName` | string |  |
 | `ownerEmail` | string |  |
-| `hostClass` | string | host_class is the host class it runs on (HostClass.name), from its preset: placed only on a host of it, "default" where its preset named none. |
+| `hostClass` | string | host_class is the host class it runs on (HostClass.name), from its size: placed only on a host of it, "default" where its size named none. |
 | `attempts` | list of [WorkspaceAttempt](/reference/api/types/#workspaceattempt) | attempts are the attempts its host failed at its current generation, oldest first: each one the host retried, and the last when the host ended the generation FAILED. Kept once it settles - FAILED says which attempt it was and what the ones before it hit - and gone with the next start, which is a new generation. An attempt whose report never reached the control plane is not here: the host reports why the attempt before failed, and a lost report is replaced by the next. |
 | `projectReportedAt` | `Timestamp` | project_reported_at is when its guest said how its project went in this run, unset until it has: an empty project_error before then is a clone still going, not one that went. project_head is the commit it checked out, as the guest said it; empty when it did not say one. |
 | `projectHead` | string |  |
 | `hostName` | string | host_name is the name host_id's machine registered, for a person to tell hosts apart; empty with no host, or one that registered none. Answered by GetWorkspace and ListWorkspaces, so a list row says where each runs without a status read per row; never placed or trusted by. |
 | `withoutPrebuild` | string | without_prebuild is why a workspace opening a project at a ref it prebuilds started from none of its prebuilds, and cloned the repository at its first boot: none ready, the ready one of another image, its disk not cloneable yet. Empty with from_prebuild_id set, or for a project that prebuilds nothing. |
+| `agent` | [AgentThread](/reference/api/types/#agentthread) | agent is the agent's thread that most asks for its owner, as its supervisor last reported them: one waiting for them, else one at work, else the newest. It is what tells a person, wherever the workspace is shown, that its agent waits for them, and which thread to open. An archived thread is never it. Answered to its owner alone, by GetWorkspace and ListWorkspaces: the agent is theirs. Unset where the agent reported no thread that is not archived. |
+| `askBeforeDroppingMemory` | boolean | Suspended with memory no host will resume - its machine run by no host there is, or refused by every host that tried - it stays suspended for its owner to start from its disk (WORKSPACE_ACTION_START_FROM_DISK). Unset, the default, its next start boots it from that disk on its own and records why in its events: waiting gives nobody the memory back. |
+| `memoryNotSaveable` | boolean | memory_not_saveable says its memory would not be saved if its host were taken now with the notice its policy expects, at the rate it uploads: it runs on a host its cloud takes at notice, and that host's evacuation, which suspends its running workspaces smallest memory first, each with its loan, would spend what the host's last beat said it could upload (HostRoom.saveable_memory_mb) before reaching it. A shorter notice or a slower store saves less. It would start again from its disk as last published (durability). False on a host with no such budget, and while it is not running. Answered by GetWorkspace only: a listing does not read every host's workspaces. |
 
 ## WorkspaceAction
 
-WorkspaceAction is an act a person can ask of a workspace. - `WORKSPACE_ACTION_FORCE_STOP`: Stop without waiting for the guest: also what ends a stop that does not finish. - `WORKSPACE_ACTION_SUSPEND`: Put down with its memory, to be resumed where it was. - `WORKSPACE_ACTION_START_FROM_DISK`: Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk): offered when that memory's machine is run by no host (Workspace.memory_machine_gone).
+WorkspaceAction is an act a person can ask of a workspace. - `WORKSPACE_ACTION_FORCE_STOP`: Stop without waiting for the guest: also what ends a stop that does not finish. - `WORKSPACE_ACTION_SUSPEND`: Put down with its memory, to be resumed where it was. - `WORKSPACE_ACTION_START_FROM_DISK`: Boot a suspended workspace from its disk, dropping its memory (StartWorkspaceRequest.from_disk): offered in place of a start when that memory's machine is run by no host (Workspace.memory_machine_gone) and its owner asked to decide (Workspace.ask_before_dropping_memory); beside the start to an owner who asked while every host that could resume it has refused it or only its cordoned host can, and to every owner once a resume failed with its machine (WORKSPACE_FAILURE_MACHINE), which the next start may repeat.
 
 One of: `WORKSPACE_ACTION_UNSPECIFIED`, `WORKSPACE_ACTION_START`, `WORKSPACE_ACTION_STOP`, `WORKSPACE_ACTION_FORCE_STOP`, `WORKSPACE_ACTION_DELETE`, `WORKSPACE_ACTION_FORCE_DELETE`, `WORKSPACE_ACTION_SUSPEND`, `WORKSPACE_ACTION_START_FROM_DISK`.
 
@@ -1984,13 +2102,13 @@ Timeline event for workspace state changes
 
 ## WorkspaceEventType
 
-- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back - `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published - `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner - `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why - `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause "guest", with the kills and their victims), its host found it short at its ceiling for a while (cause "ceiling"), or its host killed the machine (cause "host"). Its details say what it held, its grant and its ceiling. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half its own, and a smaller preset would fit what it used. Its details say what it used, what it holds, and that preset. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline: its processes are lost, and it comes back from its disk as last published. Its details say when that was, how long before the deadline, and why the memory was not saved.
+- `WORKSPACE_EVENT_TYPE_CREATED`: Workspace was created - `WORKSPACE_EVENT_TYPE_STARTED`: Workspace was started - `WORKSPACE_EVENT_TYPE_STOPPED`: Workspace was stopped; its disk is kept, and no snapshot is taken - `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`: Manual snapshot - `WORKSPACE_EVENT_TYPE_DELETED`: Workspace was deleted - `WORKSPACE_EVENT_TYPE_FAILED`: Workspace start failed - `WORKSPACE_EVENT_TYPE_RESTORED`: Its disk was put back to a snapshot - `WORKSPACE_EVENT_TYPE_RESUMED`: It went on from a snapshot's memory - `WORKSPACE_EVENT_TYPE_BOOTED`: Suspended, its memory could not be resumed, and its disk was booted - `WORKSPACE_EVENT_TYPE_QUARANTINED`: An administrator held it: stopped, and startable by nobody until released - `WORKSPACE_EVENT_TYPE_UNQUARANTINED`: The hold was released: back to stopped, where it was held from - `WORKSPACE_EVENT_TYPE_PLACED`: A workspace that waited for a host was given one, and its disk there - `WORKSPACE_EVENT_TYPE_TRASHED`: Deleted into the trash: its disk kept, its owner able to undelete it - `WORKSPACE_EVENT_TYPE_UNDELETED`: Taken back out of the trash - `WORKSPACE_EVENT_TYPE_MOVED`: Suspended on its host and resumed on another, which had room for what it was granted - `WORKSPACE_EVENT_TYPE_DISPLACED`: Its host was drained or went away: suspended there, it is resumed on another on its own - `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`: A stop on a host that can be taken away could not publish its disk first, so it runs on - `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`: Nobody used it for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`: It ran at a stretch for as long as the installation allows: suspended with its processes, a start resumes them - `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`: A suspension is minutes away and the question was asked: its terminals, its page, the CLI; a keep answers it - `WORKSPACE_EVENT_TYPE_KEPT`: Somebody kept it awake until a time: no suspension before it - `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`: Its supervisor said nothing for longer than the control plane waits: stopped by force, and a start brings it back - `WORKSPACE_EVENT_TYPE_REHOMED`: Its host stopped answering and it was moved to another on its own, giving up what that host had not published - `WORKSPACE_EVENT_TYPE_HELD`: Its host stopped answering and moving it would give up more than the installation does on its own: it waits for its owner - `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`: An administrator moved it off a host that is gone, giving up for its owner what that host had not published; its details say who and why - `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`: It ran out of memory: its guest's kernel killed a process (cause "guest", with the kills and their victims), its host found it short at its ceiling for a while (cause "ceiling"), or its host killed the machine (cause "host"). Its details say what it held, its grant and its ceiling. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_OVERSIZED`: It held far more than it used for a week: the most memory its processes used stayed under half its own, and a smaller size would fit what it used. Its details say what it used, what it holds, and that size. Said, never acted on: nothing resizes a workspace on its own. - `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`: Its host was being taken away and its memory could not be saved before the host's deadline: its processes are lost, and it comes back from its disk as last published. Its details say when that was, how long before the deadline, and why the memory was not saved. - `WORKSPACE_EVENT_TYPE_LIMITED`: Its host held it at a rate limit: a disk it held because the workspace's IO stalled the others on the host, or the network bandwidth an administrator set. Its details say which limit, on what, the limit and what it used a second, the packets dropped a second, and since when. Said, never acted on, and never told to the guest.
 
-One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`, `WORKSPACE_EVENT_TYPE_REHOMED`, `WORKSPACE_EVENT_TYPE_HELD`, `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`, `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`, `WORKSPACE_EVENT_TYPE_OVERSIZED`, `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`.
+One of: `WORKSPACE_EVENT_TYPE_UNSPECIFIED`, `WORKSPACE_EVENT_TYPE_CREATED`, `WORKSPACE_EVENT_TYPE_STARTED`, `WORKSPACE_EVENT_TYPE_STOPPED`, `WORKSPACE_EVENT_TYPE_SNAPSHOT_CREATED`, `WORKSPACE_EVENT_TYPE_DELETED`, `WORKSPACE_EVENT_TYPE_FAILED`, `WORKSPACE_EVENT_TYPE_RESTORED`, `WORKSPACE_EVENT_TYPE_RESUMED`, `WORKSPACE_EVENT_TYPE_BOOTED`, `WORKSPACE_EVENT_TYPE_QUARANTINED`, `WORKSPACE_EVENT_TYPE_UNQUARANTINED`, `WORKSPACE_EVENT_TYPE_PLACED`, `WORKSPACE_EVENT_TYPE_TRASHED`, `WORKSPACE_EVENT_TYPE_UNDELETED`, `WORKSPACE_EVENT_TYPE_MOVED`, `WORKSPACE_EVENT_TYPE_DISPLACED`, `WORKSPACE_EVENT_TYPE_STOP_BACKUP_FAILED`, `WORKSPACE_EVENT_TYPE_IDLE_SUSPENDED`, `WORKSPACE_EVENT_TYPE_RUNNING_CAP_SUSPENDED`, `WORKSPACE_EVENT_TYPE_SUSPENSION_DUE`, `WORKSPACE_EVENT_TYPE_KEPT`, `WORKSPACE_EVENT_TYPE_UNRESPONSIVE`, `WORKSPACE_EVENT_TYPE_REHOMED`, `WORKSPACE_EVENT_TYPE_HELD`, `WORKSPACE_EVENT_TYPE_RECOVERED_BY_ADMIN`, `WORKSPACE_EVENT_TYPE_OUT_OF_MEMORY`, `WORKSPACE_EVENT_TYPE_OVERSIZED`, `WORKSPACE_EVENT_TYPE_MEMORY_NOT_SAVED`, `WORKSPACE_EVENT_TYPE_LIMITED`.
 
 ## WorkspaceFailure
 
-WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a person can do about it - and a failure rate split by the repair it needs - is decided by the kind rather than by the text of an error. The reason beside it is the detail. One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a person is shown is the one the host named, with no second list to keep in step. - `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification. - `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says why), or what the disk was to be made from is gone. - `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named. - `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up. - `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for. - `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot. - `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem. - `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory cannot be resumed anywhere, and the control plane boots the disk with the newest releases. - `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to, and not by a panic of its guest's kernel: its guest reset it, or its QEMU was killed, exited with an error or crashed. The detail says which. - `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed. - `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's. - `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host that is not connected. The control plane's verdict, never a host's. - `WORKSPACE_FAILURE_MACHINE_CHANGED`: Its memory was taken on a machine no host of the installation runs now: the machine's contract moved (a release that changed it), or the processor did. The memory resumes nowhere; the workspace stays suspended, and booting it from its disk, which drops the memory, is its owner's to choose (StartWorkspaceRequest.from_disk). - `WORKSPACE_FAILURE_GUEST_PANIC`: The guest's kernel panicked, which ended its machine. The cause is inside the guest: the detail quotes the console's panic line, and the console has what led to it.
+WorkspaceFailure is why a FAILED workspace failed: which part of its run, closed so what a person can do about it - and a failure rate split by the repair it needs - is decided by the kind rather than by the text of an error. The reason beside it is the detail. One enum for the client and the host's report (spin.agent.v1.ObservedWorkspace): the kind a person is shown is the one the host named, with no second list to keep in step. - `WORKSPACE_FAILURE_UNSPECIFIED`: Not classified. A failure that lands here is a site missing its classification. - `WORKSPACE_FAILURE_VOLUME`: Its disk could not be served or made: the host is not serving its volume (its refusal says why), or what the disk was to be made from is gone. - `WORKSPACE_FAILURE_EXTENSION`: An extension could not be attached, or the releases it starts with could not be named. - `WORKSPACE_FAILURE_NETWORK`: The machine's network namespace or its tags could not be set up. - `WORKSPACE_FAILURE_RESOURCES`: The machine could not be given the cores or memory it was asked for. - `WORKSPACE_FAILURE_MACHINE`: QEMU could not be prepared or did not boot. - `WORKSPACE_FAILURE_GUEST`: The guest booted and did not take its identity or its own filesystem. - `WORKSPACE_FAILURE_RELEASE_GONE`: A resume needs an extension release that is no longer in the object store: the memory cannot be resumed anywhere, and the control plane boots the disk with the newest releases. - `WORKSPACE_FAILURE_EXITED`: The machine ended without being asked to, and not by a panic of its guest's kernel: its guest reset it, or its QEMU was killed, exited with an error or crashed. The detail says which. - `WORKSPACE_FAILURE_STOP`: The machine could not be stopped or removed. - `WORKSPACE_FAILURE_TIMED_OUT`: Its host did not bring a start or a stop to an end before the deadline: unreachable, or its attempts outlasted it. The control plane's verdict (the stuck sweep), never a host's. - `WORKSPACE_FAILURE_NO_HOST`: No host could take it: none came with room while it waited, or its disk is only on a host that is not connected. The control plane's verdict, never a host's. - `WORKSPACE_FAILURE_MACHINE_CHANGED`: A host's machine cannot take the memory itself: it was taken on another machine (the machine's contract moved with a release, or the processor did, and spin-machine refuses it), or the checkpoint does not fit this machine. The detail is the host's words on what differs. The control plane tries the next host that could take the memory, and boots the disk once every one has refused, unless its owner asked to decide (Workspace.ask_before_dropping_memory). A resume that failed for anything else is WORKSPACE_FAILURE_MACHINE, and is tried again. - `WORKSPACE_FAILURE_GUEST_PANIC`: The guest's kernel panicked, which ended its machine. The cause is inside the guest: the detail quotes the console's panic line, and the console has what led to it.
 
 One of: `WORKSPACE_FAILURE_UNSPECIFIED`, `WORKSPACE_FAILURE_VOLUME`, `WORKSPACE_FAILURE_EXTENSION`, `WORKSPACE_FAILURE_NETWORK`, `WORKSPACE_FAILURE_RESOURCES`, `WORKSPACE_FAILURE_MACHINE`, `WORKSPACE_FAILURE_GUEST`, `WORKSPACE_FAILURE_RELEASE_GONE`, `WORKSPACE_FAILURE_EXITED`, `WORKSPACE_FAILURE_STOP`, `WORKSPACE_FAILURE_TIMED_OUT`, `WORKSPACE_FAILURE_NO_HOST`, `WORKSPACE_FAILURE_MACHINE_CHANGED`, `WORKSPACE_FAILURE_GUEST_PANIC`.
 
@@ -2026,6 +2144,16 @@ WorkspaceLease is a process in the workspace keeping it awake while it lives.
 | `name` | string | name is the command, or the .spin.yaml task, that holds it. |
 | `since` | `Timestamp` |  |
 | `until` | `Timestamp` | until is when the lease stops counting whether or not the process lives: since plus the installation's workspace_lease_max_minutes. |
+
+## WorkspaceLoan
+
+WorkspaceLoan is what one running workspace has borrowed of its host above what it was sold.
+
+| Field | Type | What it is |
+|---|---|---|
+| `workspaceId` | string |  |
+| `cpuCores` | integer (int32) |  |
+| `memoryMb` | integer (int32) |  |
 
 ## WorkspaceNetworkStatus
 

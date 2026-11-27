@@ -148,7 +148,7 @@ Global Flags:
 ```
 Create a new workspace from an image or a snapshot. An image is a published starting disk
 the installation allows; without --image, the installation's default is used. Its size is a
-preset the installation offers; without --preset, the installation's default.
+size the installation offers; without --size, the installation's default.
 
 You log in to it with a key you added ('spin ssh-key add'), and so does each guest you let in
 ('spin workspace guests add').
@@ -156,19 +156,19 @@ You log in to it with a key you added ('spin ssh-key add'), and so does each gue
 What it applies of yours - dotfiles, shell, environment, editor settings, Taskfile, and this
 workspace's own --env over your environment - is your settings, as you saved them.
 
-A project (--project) is the workspace's shape - its image and network policies, and its preset
-unless --preset names another - and the repository its guest clones into
+A project (--project) is the workspace's shape - its image and network policies, and its size
+unless --size names another - and the repository its guest clones into
 /workspace/<repository name>, at --ref or the project's own;
 the workspace is made in --team, or your personal team. A project whose repository is on GitHub opens once you have
 connected your GitHub account (Settings → Git in the dashboard).
 
 Examples:
   spin workspace create --name mydev
-  spin workspace create --name mydev --preset large
+  spin workspace create --name mydev --size large
   spin workspace create --name build --env GOPROXY=direct --network-tag registry-only
   spin workspace create --name copy --from-snapshot <snapshot-id>
   spin workspace create --team /engineering --project qboot --ref release/2
-  spin workspace create --project qboot --preset large
+  spin workspace create --project qboot --size large
 
 Usage:
   spin workspace create [flags]
@@ -181,9 +181,9 @@ Flags:
       --image string           the ref of the disk image to start from, with its version (default: the base image of the machine this installation runs)
       --name string            Workspace name (auto-generated if empty)
       --network-tag strings    Network policy to run under, by name (repeatable)
-      --preset string          The preset it is sized by, by name (default: the project's, or the installation's)
-      --project string         A project to open, by slug: its image, preset and policies, and its repository cloned
+      --project string         A project to open, by slug: its image, size and policies, and its repository cloned
       --ref string             The branch or tag to open the project at (default: the project's)
+      --size string            The size it is made in, by name (default: the project's, or the installation's)
       --team string            The team, by id, path or me (your personal team if empty)
       --timeout duration       How long --wait waits; by default, until the control plane gives up on it
       --wait[=true|false]      Return once the workspace is running
@@ -307,8 +307,8 @@ and its machine is grown at once. It keeps them - across stops and starts - unti
 given back with 'spin workspace release', the workspace is deleted, or the time --for gives is
 up. Each grant says its time anew: one without --for is kept until it is given back.
 
-What it may hold is its preset's: at least what it started at, and at most the preset's size,
-or as much as its host has room for where the preset grows to the host's. A running
+What it may hold is its size's: at least what it started at, and at most the size's ceiling.
+A running
 workspace's host has to have the room now; with --move, a host that has not is left for one
 that has: the workspace is suspended where it runs, its processes as they are, and resumed
 there from the instant its memory was checkpointed. It is paused from that instant until it
@@ -536,13 +536,14 @@ Global Flags:
 ## spin workspace policies
 
 ```
-List the network policies the hosts report they enforce, by name: these are the words
+List the network policies a workspace can be created with, by name: these are the words
 'spin workspace create --network-tag' takes.
 
-A policy is an installation's, not a workspace's: an operator writes it on each host, and the
-host is what enforces it. A tag no host reports is refused at create rather than failing when
-the workspace starts. Where two hosts give one name different prefixes, both are shown: a tag
-that means two things is a misconfiguration worth seeing.
+A policy is the installation's, not a workspace's: an administrator or the installation's config
+file declares it, each host is given it on its next heartbeat, and the host is what enforces it.
+offline is the one every host has without being told, and reaches nothing. A tag no host enforces
+is refused at create rather than failing when the workspace starts. A host that enforces anything
+else under a name than the installation declares is shown with what it enforces, after DIFFERS.
 
 Usage:
   spin workspace policies [flags]
@@ -608,7 +609,7 @@ Global Flags:
 ## spin workspace release
 
 ```
-Give back the cores and memory a workspace was granted: it holds what its preset started it
+Give back the cores and memory a workspace was granted: it holds what its size started it
 at again, and a running machine is shrunk to it at once. Memory the guest will not let go of is
 lent to it instead, and taken back as it frees it.
 
@@ -719,8 +720,9 @@ Global Flags:
 Start a stopped workspace on its disk, or resume a suspended one from the memory it kept.
 
 --from-disk boots a suspended workspace from its disk instead, and drops that memory: its
-processes start again as after a power cut. It is what is left when the memory was taken on a
-machine no host of this installation runs now ('spin workspace get' says so).
+processes start again as after a power cut. A start does that on its own when no host will
+resume the memory, and the workspace's events say why; a workspace updated with
+--ask-before-dropping-memory stays suspended instead, for this flag to drop it.
 
 Usage:
   spin workspace start <workspace> [flags]
@@ -891,11 +893,12 @@ Usage:
   spin workspace update <workspace> [flags]
 
 Flags:
-      --env strings                   Environment variables (KEY=VALUE)
-  -h, --help[=true|false]             help for update
-      --name string                   New workspace name
-      --replace-env[=true|false]      The --env given are all its variables: the others are taken away, every one when no --env is given
-      --wake-on-access[=true|false]   Resume it, when suspended, for a signed-in visitor of one of its ports (never an anonymous one)
+      --ask-before-dropping-memory[=true|false]   Suspended with memory no host will resume, keep it suspended for you to start it from its disk, rather than booting its disk at its next start
+      --env strings                               Environment variables (KEY=VALUE)
+  -h, --help[=true|false]                         help for update
+      --name string                               New workspace name
+      --replace-env[=true|false]                  The --env given are all its variables: the others are taken away, every one when no --env is given
+      --wake-on-access[=true|false]               Resume it, when suspended, for a signed-in visitor of one of its ports (never an anonymous one)
 
 Global Flags:
       --config string        config file (default is $HOME/.spin/config.yaml)

@@ -148,11 +148,11 @@ Create a new workspace
 | `name` | string | Optional, generated if empty |
 | `teamId` | string | Optional: team ID (personal workspace if empty) |
 | `image` | string | A published image (ListImages); required unless from_snapshot_id is set |
-| `preset` | string | The preset it is sized by, by name (AdminService.ListResourcePresets): its cores, memory, disk and how it grows. Empty is the project's preset when project_id names one, otherwise the installation's default preset, or with none marked 1 core, 2048 MB and 10 GB free. A disabled preset is refused. |
+| `size` | string | The size it is made in, by name (AdminService.ListSizes): the floor it holds, the ceiling it may grow to, and its disk. Empty is the project's size when project_id names one, otherwise the installation's default size, or with none marked the release's default (Standard). A disabled size is refused. |
 | `env` | map of string to string | Environment variables |
 | `fromSnapshotId` | string | Create workspace from a shared snapshot |
 | `networkTags` | list of string | network_tags are the network policies this workspace runs under, by name - the same idea as a GCP instance's network tags. The host's ruleset names the tag and holds the set of machines carrying it, so this decides which rules apply without naming a rule. Empty runs the workspace under the installation's default, and under "offline" where it declares none: a create that names nothing reaches nothing, rather than everything. A tag the host has no policy for fails the start rather than being ignored: a workspace asking for a policy the node does not have is a question with two answers, and quietly choosing "run it without" is how one ends up less contained than whoever launched it believes. |
-| `projectId` | string | A project the caller sees: the workspace is the project's - its image and tags, which the request then names neither of, and its preset unless preset names another - in team_id, the caller's personal team when empty, and its guest clones the project's repository at ref, the project's own when empty. Refused while the repository is on a forge the installation connects to (ForgeService) and the caller has not connected their account there. |
+| `projectId` | string | A project the caller sees: the workspace is the project's - its image and tags, which the request then names neither of, and its size unless size names another - in team_id, the caller's personal team when empty, and its guest clones the project's repository at ref, the project's own when empty. Refused while the repository is on a forge the installation connects to (ForgeService) and the caller has not connected their account there. |
 | `ref` | string |  |
 | `requestId` | string | Optional, at most 128 bytes: the client's key for this create, so a retry after an answer it never got is answered with the workspace the first attempt made. The same key with another request is refused (FAILED_PRECONDITION). |
 | `agentVolumeId` | string | Optional: an agent's home of the caller's to mount (ListAgentVolumes), one no workspace mounts now - the history of a workspace since erased, found again in this one. Empty makes the workspace a new one. Refused while no host has room: a workspace that waits for a host gets its new home when it is placed, and mounts none it was named. |
@@ -501,7 +501,7 @@ What the workspace's machine used of what it held, over the last hour at most, a
 
 `POST /spin.v1.WorkspaceService/GrantWorkspaceResources`
 
-Give a workspace more cores and memory of its own, up to its preset's ceiling: its host reserves them and its machine is grown while it runs. The grant lasts until it is released or the workspace is deleted.
+Give a workspace more cores and memory of its own, up to its size's ceiling: its host reserves them and its machine is grown while it runs. The grant lasts until it is released or the workspace is deleted.
 
 **Request**
 
@@ -1037,7 +1037,7 @@ Start a stopped workspace on its own disk, or resume a suspended one from the me
 | Field | Type | What it is |
 |---|---|---|
 | `id` | string |  |
-| `fromDisk` | boolean | Boot a suspended workspace from its disk, dropping the memory it was suspended with: what is left when that memory was taken on a machine no host runs now (WORKSPACE_FAILURE_MACHINE_CHANGED). The guest boots as from a power cut. Refused for a workspace that is not suspended. |
+| `fromDisk` | boolean | Boot a suspended workspace from its disk, dropping the memory it was suspended with. A start does it on its own when no host will resume the memory; this is how an owner who asked to decide (Workspace.ask_before_dropping_memory) does it, or anyone who would rather not wait for a host that is away. The guest boots as from a power cut. Refused for a workspace that is not suspended. |
 
 **Response**
 
@@ -1131,6 +1131,7 @@ Update workspace properties (name, env)
 | `env` | map of string to string | Optional: replace environment variables |
 | `wakeOnAccess` | boolean or null | Note: resource changes require stop/start Optional: Workspace.wake_on_access |
 | `replaceEnv` | boolean | env replaces the variables even when it is empty, which is how the last one is taken away; without it an empty env leaves them as they are. |
+| `askBeforeDroppingMemory` | boolean or null | Optional: Workspace.ask_before_dropping_memory |
 
 **Response**
 
