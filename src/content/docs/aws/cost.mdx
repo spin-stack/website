@@ -70,13 +70,14 @@ and a gp3 root disk.
 
 [The control plane sizes the runners' group](<feature:Runners start when a workspace waits for one and stop when nothing runs>):
 
-- It starts the first runner when a workspace waits for one, and adds another only when a
-  workspace has waited ten minutes, up to `max_runners`.
+- When workspaces wait, it works out where they would go on the runners there are and asks at
+  once for every new runner they need, up to `max_runners`.
 - When no workspace has run, started or waited for
   [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it empties the group,
-  and at once during `quiet_hours`.
+  unless the host class keeps room free (its buffer, Admin → Runners). The default class keeps
+  none.
 - While workspaces run on other runners, it gives back a runner that has held nothing only it
-  has for as long, one at a time.
+  has for as long, one at a time, unless that runner keeps the class's buffer.
 
 [Runners and hosts](/concepts/runners/#scaling-from-zero) has the details. A workspace nobody uses
 is suspended, and so is one that runs past the installation's limit, so a forgotten workspace
@@ -164,8 +165,8 @@ when it is passed.
 | Setting | Effect |
 |---|---|
 | `runner_idle_minutes` | How long runners stay up once nothing runs, and how long a spare one is kept |
-| `quiet_hours`, `time_zone` | A window, such as nights, when runners go as soon as nothing runs |
-| `max_runners` | The most runners at once |
+| `max_runners` | The most runners at once, 2 by default |
+| A host class's buffer (Admin → Runners) | Room kept free so the next workspace does not wait for a runner to start: a runner kept up while nothing runs. The default class keeps none |
 | `runner_spot = false` | On-demand runners: more expensive, never reclaimed |
 | `runner_instance_types`, `runner_vcpus` | Smaller or larger runners |
 | `instance_type`, `proxy_instance_type` | The size of the control plane and the proxy |

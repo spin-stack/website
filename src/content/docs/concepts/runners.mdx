@@ -62,14 +62,23 @@ a workspace is waiting, and when the last one stopped.
 
 - With no runner up, the first workspace to start waits in *Waiting for a host* while the control
   plane asks for one. It is placed on the runner as soon as it registers.
-- If a workspace has waited ten minutes, and no runner was added in that time, the control plane
-  adds one.
+- When workspaces wait, the control plane places them, as placement would, on the runners there
+  are, the runners already coming, and new ones of the class, and asks at once for every new
+  runner that takes. This is how Kubernetes' Cluster Autoscaler sizes a node group.
 - When nothing has run for [`runner_idle_minutes`](/reference/terraform/root/#runner_idle_minutes), it scales the groups back to
-  none. During the installation's `quiet_hours`, it does so as soon as nothing is running.
-- It never asks for more than `max_runners`.
+  none, except a class that keeps room free.
+- It never asks for more than `max_runners`, nor for more than a class's own most.
+
+A host class can keep room free, its **buffer**, so that the next workspace does not wait for a
+runner to start: a number of workspaces of a size, or a share of the class's workspaces where that
+is more, up to limits in cores and memory. The control plane places that room as it places a
+waiting workspace, and keeps up the runners it needs, even with nothing running. A class's buffer
+is set in Admin → Runners or in the installation file's `host_classes`. The default class keeps
+none.
 
 While workspaces run and none waits, a runner that holds nothing only it has, for as long as
-`runner_idle_minutes`, is emptied and given back to its group, one at a time.
+`runner_idle_minutes`, is emptied and given back to its group, one at a time. A runner that keeps
+the class's buffer is not given back.
 
 ## When a runner goes away
 
